@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duka POS - Customers</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/nav-styles.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1a2030;
+            --border: #21262d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent-orange: #f59e0b;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --danger: #f85149;
+        }
+        body { 
+            font-family: 'Archivo', sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 32px 24px; 
+        }
+        .customer-form { 
+            background: var(--bg-secondary); 
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 12px; 
+            margin-bottom: 32px; 
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .form-group { 
+            margin-bottom: 16px; 
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600;
+            color: var(--text);
+        }
+        .form-input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: var(--bg-primary); 
+            color: var(--text);
+            font-size: 14px;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+        }
+        textarea.form-input {
+            resize: vertical;
+            font-family: inherit;
+        }
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary { 
+            background: var(--accent-green); 
+            color: white; 
+        }
+        .btn-secondary {
+            background: var(--accent-blue);
+            color: white;
+        }
+        .btn-danger { 
+            background: var(--danger); 
+            color: white; 
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+        .table-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .table { 
+            width: 100%; 
+            border-collapse: collapse;
+        }
+        th, td { 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border); 
+        }
+        th { 
+            background: var(--bg-tertiary); 
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        tr:hover {
+            background: rgba(88, 166, 255, 0.08);
+        }
+        .error { 
+            color: var(--danger); 
+            margin-top: 8px; 
+        }
+        .success { 
+            color: var(--accent-green); 
+            margin-top: 8px; 
+        }
+        .loading { 
+            text-align: center; 
+            padding: 40px;
+            color: var(--text-muted);
+        }
+        .loyalty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-orange);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo">DUKA POS</div>
+            <div class="nav-tabs">
+                <a href="dashboard.html" class="nav-tab">Dashboard</a>
+                <a href="pos.html" class="nav-tab">Point of Sale</a>
+                <a href="products.html" class="nav-tab">Products</a>
+                <a href="inventory.html" class="nav-tab">Inventory</a>
+                <a href="customers.html" class="nav-tab active">Customers</a>
+                <a href="suppliers.html" class="nav-tab">Suppliers</a>
+                <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
+            </div>
+            <div class="user-badge">
+                <div class="user-avatar">👤</div>
+                <div>
+                    <div id="currentUserName">User</div>
+                    <div id="currentDate"></div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="authModule.logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Customers Management</h1>
+
+        <div class="customer-form">
+            <h2 id="formTitle">Add New Customer</h2>
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input type="text" id="name" class="form-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" id="phone" class="form-input" placeholder="+254...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="email" class="form-input" placeholder="customer@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" id="address" class="form-input">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Notes</label>
+                        <textarea id="notes" class="form-input" rows="3" placeholder="Additional customer information..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 16px;">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">+ Add Customer</button>
+                    <button type="button" class="btn btn-danger" id="clearBtn" style="margin-left: 10px;">Clear Form</button>
+                </div>
+
+                <div id="formMessage"></div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Customers List</h2>
+                <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search by name or phone..." style="width: 300px;">
+            </div>
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Loyalty Points</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <tr><td colspan="7" class="loading">Loading customers...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="assets/script.js"></script>
+    <script src="assets/auth.js"></script>
+
+    <script>
+    (function() {
+        let customers = [];
+        let editingId = null;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await window.DukaPOS.initializeSupabase();
+
+                const isAuthenticated = await authModule.requireAuth();
+                if (!isAuthenticated) return;
+
+                const currentUser = authModule.getCurrentUser();
+                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+
+                if (currentUser.role === 'administrator') {
+                    document.getElementById('adminTab').style.display = 'flex';
+                }
+
+                await loadCustomers();
+
+                document.getElementById('customerForm').addEventListener('submit', handleFormSubmit);
+                document.getElementById('clearBtn').addEventListener('click', clearForm);
+                document.getElementById('searchInput').addEventListener('input', filterCustomers);
+
+                console.log('✅ Customers page ready');
+            } catch (err) {
+                console.error('Customers init failed:', err);
+                document.getElementById('customersTableBody').innerHTML = 
+                    `<tr><td colspan="7" style="color:var(--danger);text-align:center;padding:40px;">Error: ${err.message}</td></tr>`;
+            }
+        });
+
+        async function loadCustomers() {
+            try {
+                const { data, error } = await window.DukaPOS.supabaseClient
+                    .from('customers')
+                    .select('*')
+                    .order('name');
+
+                if (error) throw error;
+
+                customers = data || [];
+                renderCustomersTable();
+                console.log('✅ Loaded customers:', customers.length);
+            } catch (err) {
+                console.error('Failed to load customers:', err);
+                document.getElementById('customersTableBody').innerHTML = 
+                    `<tr><td colspan="7" style="color:var(--danger);text-align:center;padding:40px;">Failed to load: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderCustomersTable(filter = '') {
+            const tbody = document.getElementById('customersTableBody');
+            const filtered = customers.filter(c => 
+                c.name.toLowerCase().includes(filter.toLowerCase()) ||
+                (c.phone && c.phone.includes(filter))
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">No customers found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(c => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>👤 ${c.name}</td>
+                    <td>${c.phone || '—'}</td>
+                    <td>${c.email || '—'}</td>
+                    <td>${c.address || '—'}</td>
+                    <td><span class="loyalty-badge">${c.loyalty_points || 0} pts</span></td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="customersPage.editCustomer(${c.id})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="customersPage.deleteCustomer(${c.id})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterCustomers(e) {
+            renderCustomersTable(e.target.value);
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!name) {
+                showMessage('Name is required', 'error');
+                return;
+            }
+
+            try {
+                const customerData = { 
+                    name, 
+                    phone: phone || null, 
+                    email: email || null, 
+                    address: address || null, 
+                    notes: notes || null 
+                };
+
+                let result;
+                if (editingId) {
+                    result = await window.DukaPOS.supabaseClient
+                        .from('customers')
+                        .update(customerData)
+                        .eq('id', editingId);
+                } else {
+                    result = await window.DukaPOS.supabaseClient
+                        .from('customers')
+                        .insert([customerData]);
+                }
+
+                if (result.error) throw result.error;
+
+                showMessage(editingId ? '✅ Customer updated successfully!' : '✅ Customer added successfully!', 'success');
+                clearForm();
+                await loadCustomers();
+            } catch (err) {
+                console.error('Save failed:', err);
+                showMessage('❌ Error saving customer: ' + err.message, 'error');
+            }
+        }
+
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+
+            editingId = id;
+            document.getElementById('formTitle').textContent = 'Edit Customer';
+            document.getElementById('submitBtn').textContent = 'Update Customer';
+
+            document.getElementById('customerId').value = customer.id;
+            document.getElementById('name').value = customer.name;
+            document.getElementById('phone').value = customer.phone || '';
+            document.getElementById('email').value = customer.email || '';
+            document.getElementById('address').value = customer.address || '';
+            document.getElementById('notes').value = customer.notes || '';
+
+            document.querySelector('.customer-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function deleteCustomer(id) {
+            if (!confirm('Are you sure you want to delete this customer? This action cannot be undone.')) return;
+
+            try {
+                const { error } = await window.DukaPOS.supabaseClient
+                    .from('customers')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showMessage('✅ Customer deleted successfully!', 'success');
+                await loadCustomers();
+            } catch (err) {
+                console.error('Delete failed:', err);
+                showMessage('❌ Error deleting: ' + err.message, 'error');
+            }
+        }
+
+        function clearForm() {
+            editingId = null;
+            document.getElementById('formTitle').textContent = 'Add New Customer';
+            document.getElementById('submitBtn').textContent = '+ Add Customer';
+            document.getElementById('customerForm').reset();
+            document.getElementById('formMessage').textContent = '';
+        }
+
+        function showMessage(text, type = 'success') {
+            const msgEl = document.getElementById('formMessage');
+            msgEl.textContent = text;
+            msgEl.className = type === 'success' ? 'success' : 'error';
+            setTimeout(() => msgEl.textContent = '', 5000);
+        }
+
+        // ✅ CRITICAL: Expose functions to global scope
+        window.customersPage = {
+            editCustomer,
+            deleteCustomer
+        };
+
+        console.log('✅ Customers page script loaded');
+    })();
+    </script>
+</body>
+</html>

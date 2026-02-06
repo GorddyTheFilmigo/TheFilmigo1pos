@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duka POS - Point of Sale</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo">DUKA POS</div>
+            <div class="nav-tabs">
+                <a href="index.html" class="nav-tab active">💰 Point of Sale</a>
+                <a href="products.html" class="nav-tab">📦 Products</a>
+                <a href="inventory.html" class="nav-tab">📊 Inventory</a>
+            </div>
+            <div class="user-badge">
+                <div class="user-avatar">👤</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 14px;">Cashier</div>
+                    <div style="font-size: 12px; color: var(--text-muted);" id="currentDate"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="pos-grid">
+            <div class="products-panel">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search products...">
+                </div>
+                <div class="category-filters" id="categoryFilters">
+                    <button class="filter-btn active" data-category="all">All</button>
+                </div>
+                <div id="productsGrid" class="products-grid">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading products...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cart-panel">
+                <div class="cart-header">🛒 Current Order</div>
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛍️</div>
+                        <p>Cart is empty<br>Add products to start</p>
+                    </div>
+                </div>
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Items:</span>
+                        <span id="itemCount">0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">KSh 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (16%):</span>
+                        <span id="tax">KSh 0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span id="total">KSh 0.00</span>
+                    </div>
+                    <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>
+                        Complete Sale
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Success Modal (only used from POS) -->
+    <div id="successModal" class="modal success-modal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h3>Sale Completed!</h3>
+            <p id="modalMessage">Transaction recorded successfully</p>
+            <button class="btn-primary" onclick="closeSuccessModal()">New Sale</button>
+        </div>
+    </div>
+
+    <script src="assets/script.js"></script>
+    <script>
+        // Page-specific init for POS
+        window.addEventListener('DOMContentLoaded', async () => {
+            await initializeSupabase();
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                filterProducts();
+            });
+
+            // checkout button already has onclick="checkout()"
+        });
+    </script>
+
+</body>
+</html>

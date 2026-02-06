@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Tables Schema Checker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { color: #f59e0b; }
+        .result {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #3fb950;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover { background: #2ea043; }
+        .loading { color: #8b949e; }
+        .error { color: #f85149; }
+        .success { color: #3fb950; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Sales & Sale_Items Tables Schema Checker</h1>
+    <p>This will show you the structure of your sales-related tables.</p>
+    
+    <button onclick="checkSalesSchema()">Check Sales Table</button>
+    <button onclick="checkSaleItemsSchema()">Check Sale_Items Table</button>
+    <button onclick="testCheckout()">Test Checkout Function</button>
+    
+    <div id="result" class="result" style="display:none;">
+        <h2>Results:</h2>
+        <div id="output"></div>
+    </div>
+
+    <script src="assets/script.js"></script>
+    <script>
+    async function checkSalesSchema() {
+        const output = document.getElementById('output');
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        output.innerHTML = '<p class="loading">⏳ Checking sales table...</p>';
+
+        try {
+            await window.DukaPOS.initializeSupabase();
+
+            // Get a sample sale
+            const { data: sample, error: sampleError } = await window.DukaPOS.supabaseClient
+                .from('sales')
+                .select('*')
+                .limit(1);
+
+            let html = '<div class="success">✅ Sales Table Structure:</div>';
+            
+            if (sample && sample.length > 0) {
+                html += '<h3>Sample Sale:</h3>';
+                html += '<pre>' + JSON.stringify(sample[0], null, 2) + '</pre>';
+                html += '<h3>Column Names:</h3>';
+                html += '<pre>' + JSON.stringify(Object.keys(sample[0]), null, 2) + '</pre>';
+            } else {
+                html += '<p class="loading">No sales in database yet. Will show required structure:</p>';
+                html += '<h3>Expected Columns for Sales Table:</h3>';
+                html += '<pre>' + JSON.stringify([
+                    'id',
+                    'user_id',
+                    'total_amount',
+                    'items_sold',
+                    'payment_method',
+                    'created_at',
+                    'updated_at'
+                ], null, 2) + '</pre>';
+            }
+
+            output.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error:', error);
+            output.innerHTML = `<div class="error"><h3>❌ Error:</h3><p>${error.message}</p></div>`;
+        }
+    }
+
+    async function checkSaleItemsSchema() {
+        const output = document.getElementById('output');
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        output.innerHTML = '<p class="loading">⏳ Checking sale_items table...</p>';
+
+        try {
+            await window.DukaPOS.initializeSupabase();
+
+            const { data: sample, error } = await window.DukaPOS.supabaseClient
+                .from('sale_items')
+                .select('*')
+                .limit(1);
+
+            let html = '<div class="success">✅ Sale_Items Table Structure:</div>';
+            
+            if (sample && sample.length > 0) {
+                html += '<h3>Sample Sale Item:</h3>';
+                html += '<pre>' + JSON.stringify(sample[0], null, 2) + '</pre>';
+                html += '<h3>Column Names:</h3>';
+                html += '<pre>' + JSON.stringify(Object.keys(sample[0]), null, 2) + '</pre>';
+            } else {
+                html += '<p class="loading">No sale items in database yet. Will show required structure:</p>';
+                html += '<h3>Expected Columns for Sale_Items Table:</h3>';
+                html += '<pre>' + JSON.stringify([
+                    'id',
+                    'sale_id',
+                    'product_id',
+                    'quantity',
+                    'unit_price',
+                    'subtotal',
+                    'created_at'
+                ], null, 2) + '</pre>';
+            }
+
+            output.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error:', error);
+            output.innerHTML = `<div class="error"><h3>❌ Error:</h3><p>${error.message}</p></div>`;
+        }
+    }
+
+    async function testCheckout() {
+        const output = document.getElementById('output');
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        output.innerHTML = '<p class="loading">⏳ Testing checkout with dummy data...</p>';
+
+        try {
+            await window.DukaPOS.initializeSupabase();
+
+            // Test data
+            const testCart = [
+                {
+                    id: 1,
+                    name: 'kuon',
+                    price: 5000,
+                    quantity: 1
+                }
+            ];
+
+            const testTotal = 5000;
+            const testPayment = 'Cash';
+
+            let html = '<h3>Test Data:</h3>';
+            html += '<pre>' + JSON.stringify({ cart: testCart, total: testTotal, payment: testPayment }, null, 2) + '</pre>';
+
+            // Try to checkout
+            html += '<h3>Attempting Checkout...</h3>';
+
+            if (window.DukaPOS && window.DukaPOS.checkout) {
+                try {
+                    const result = await window.DukaPOS.checkout(testCart, testTotal, testPayment);
+                    html += '<div class="success">✅ Checkout succeeded!</div>';
+                    html += '<pre>' + JSON.stringify(result, null, 2) + '</pre>';
+                } catch (checkoutError) {
+                    html += '<div class="error">❌ Checkout failed:</div>';
+                    html += '<pre>' + JSON.stringify({
+                        message: checkoutError.message,
+                        details: checkoutError.details || 'No details',
+                        hint: checkoutError.hint || 'No hint'
+                    }, null, 2) + '</pre>';
+                }
+            } else {
+                html += '<div class="error">❌ window.DukaPOS.checkout function not found!</div>';
+            }
+
+            output.innerHTML = html;
+
+        } catch (error) {
+            console.error('Error:', error);
+            output.innerHTML = `<div class="error"><h3>❌ Error:</h3><p>${error.message}</p><pre>${JSON.stringify(error, null, 2)}</pre></div>`;
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GorddyTheFilmigoPro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       GLOBAL VARIABLES & RESET
+    ══════════════════════════════════════════════════════════════ */
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #1a2030;
+      --border: #21262d;
+      --border-hover: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6b7a8d;
+      --accent-orange: #f59e0b;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-yellow: #f59e0b;
+      --danger: #f85149;
+      --card-bg: #161b22;
+      --sidebar-bg: #0a0e17;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       NAVIGATION BAR
+    ══════════════════════════════════════════════════════════════ */
+    .nav {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent-orange), #fb923c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      background: #21262d;
+      color: var(--text);
+    }
+
+    .nav-tab.active {
+      background: var(--accent-orange);
+      color: white;
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: #21262d;
+      border-radius: 10px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #58a6ff, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       MAIN LAYOUT - 3 COLUMN
+    ══════════════════════════════════════════════════════════════ */
+    .pos-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 400px;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       LEFT SIDEBAR - CATEGORIES
+    ══════════════════════════════════════════════════════════════ */
+    .sidebar {
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+
+    .sidebar h3 {
+      padding: 0 24px 16px;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .category-item {
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-left: 3px solid transparent;
+    }
+
+    .category-item:hover {
+      background: rgba(88, 166, 255, 0.08);
+      color: var(--text);
+    }
+
+    .category-item.active {
+      background: rgba(88, 166, 255, 0.12);
+      color: white;
+      border-left-color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CENTER - PRODUCTS
+    ══════════════════════════════════════════════════════════════ */
+    .products-area {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .search-bar {
+      background: var(--bg-secondary);
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 14px center;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      background: #0d1117;
+    }
+
+    .products-grid {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 8px 24px rgba(88, 166, 255, 0.15);
+    }
+
+    .product-card.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .product-image {
+      height: 120px;
+      background: linear-gradient(135deg, #1a2332 0%, #0d1117 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .product-info {
+      padding: 12px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--text);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-price {
+      color: var(--accent-orange);
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .product-stock {
+      font-size: 0.8rem;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .stock-good { color: var(--accent-green); }
+    .stock-low { color: var(--accent-yellow); }
+    .stock-out { color: var(--danger); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       RIGHT SIDEBAR - CART
+    ══════════════════════════════════════════════════════════════ */
+    .cart-sidebar {
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .cart-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-header h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cart-items-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-cart-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .cart-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .cart-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .remove-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .remove-btn:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+
+    .cart-item-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .qty-btn {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .quantity {
+      font-weight: 700;
+      font-size: 1rem;
+      min-width: 30px;
+      text-align: center;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .item-total {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--accent-orange);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       CART SUMMARY
+    ══════════════════════════════════════════════════════════════ */
+    .cart-summary {
+      padding: 20px 24px;
+      border-top: 2px solid var(--border);
+      background: var(--bg-tertiary);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .summary-value {
+      font-weight: 700;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .summary-row.total {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 1.3rem;
+    }
+
+    .summary-row.total .summary-label {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .summary-row.total .summary-value {
+      color: var(--accent-orange);
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .checkout-btn:hover {
+      background: #2ea043;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(63, 185, 80, 0.3);
+    }
+
+    .checkout-btn:disabled {
+      background: var(--border);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SUCCESS MODAL
+    ══════════════════════════════════════════════════════════════ */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      margin-bottom: 16px;
+    }
+
+    .modal-message {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .modal-btn {
+      padding: 14px 32px;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-btn:hover {
+      background: #4a95e8;
+      transform: translateY(-2px);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════════════════════════════════ */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--border-hover);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       NAVIGATION BAR
+  ══════════════════════════════════════════════════════════════ -->
+  <nav class="nav">
+    <div class="nav-container">
+      <div class="logo">GorddyTheFilmigoPro</div>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab">🏠 Home</a>
+        <a href="pos.html" class="nav-tab active">💰 Point of Sale</a>
+        <a href="products.html" class="nav-tab">📦 Products</a>
+        <a href="inventory.html" class="nav-tab">📊 Inventory</a>
+      </div>
+      <div class="user-badge">
+        <div class="user-avatar">👤</div>
+        <div>
+          <div style="font-weight: 700; font-size: 14px;">Cashier</div>
+          <div style="font-size: 12px; color: var(--text-muted);" id="currentDate"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- ═══════════════════════════════════════════════════════════════
+       AUTHENTICATION PROTECTION
+  ══════════════════════════════════════════════════════════════ -->
+  <script src="assets/auth.js"></script>
+  <script>
+    // Require authentication before loading page content
+    window.addEventListener('DOMContentLoaded', async () => {
+      await initializeSupabase();
+      const isAuthenticated = await authModule.requireAuth();
+
+      if (!isAuthenticated) {
+        return; // redirect already happened in auth.js
+      }
+
+      // ────────────────────────────────────────────────
+      // Only proceed if user is authenticated
+      // ────────────────────────────────────────────────
+      console.log('🚀 User authenticated — initializing POS...');
+
+      renderPOSProducts(products);
+      updateCategoryList();
+      renderCart();
+      updateSummary();
+
+      // Search
+      document.getElementById('searchInput')?.addEventListener('input', filterAndRenderProducts);
+
+      // Category clicks
+      document.getElementById('sidebarRoot').addEventListener('click', (e) => {
+        const item = e.target.closest('.category-item');
+        if (!item) return;
+
+        document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        currentCategoryFilter = item.dataset.category || 'all';
+        filterAndRenderProducts();
+      });
+
+      console.log('✅ POS Ready');
+    });
+  </script>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       MAIN POS LAYOUT
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="pos-layout">
+    
+    <!-- ──────────────────────────────────────────────────────────
+         LEFT: CATEGORIES
+    ─────────────────────────────────────────────────────────── -->
+    <div class="sidebar" id="sidebarRoot">
+      <h3>📂 Categories</h3>
+      <div class="category-item active" data-category="all">All Products</div>
+      <div id="categoryList"></div>
+    </div>
+
+    <!-- ──────────────────────────────────────────────────────────
+         CENTER: PRODUCTS
+    ─────────────────────────────────────────────────────────── -->
+    <div class="products-area">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          class="search-input" 
+          id="searchInput" 
+          placeholder="Search products or scan barcode..."
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-muted);">
+          Loading products...
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────────────────────────
+         RIGHT: SHOPPING CART
+    ─────────────────────────────────────────────────────────── -->
+    <div class="cart-sidebar">
+      <div class="cart-header">
+        <h2>🛒 Cart (<span id="itemCount">0</span>)</h2>
+      </div>
+
+      <div class="cart-items-container" id="cartItems">
+        <div class="empty-cart">
+          <div class="empty-cart-icon">🛍️</div>
+          <p>Cart is empty<br>Add products to start</p>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span class="summary-label">Subtotal:</span>
+          <span class="summary-value" id="subtotal">KSh 0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Tax (16%):</span>
+          <span class="summary-value" id="tax">KSh 0.00</span>
+        </div>
+        <div class="summary-row total">
+          <span class="summary-label">Total:</span>
+          <span class="summary-value" id="total">KSh 0.00</span>
+        </div>
+        <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>
+          <span>💳</span>
+          <span>Checkout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SUCCESS MODAL
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="modal" id="successModal">
+    <div class="modal-content">
+      <div class="modal-icon">✅</div>
+      <h2 class="modal-title">Payment Successful!</h2>
+      <p class="modal-message" id="modalMessage">Transaction completed</p>
+      <button class="modal-btn" onclick="closeSuccessModal()">Continue</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════════════════════════ -->
+  <script src="assets/script.js"></script>
+  <script>
+    // ══════════════════════════════════════════════════════════════
+    // POS PAGE - Full Cart Functionality
+    // ══════════════════════════════════════════════════════════════
+
+    let currentCategoryFilter = 'all';
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      console.log('🚀 Initializing POS...');
+      
+      await initializeSupabase();
+      renderPOSProducts(products);
+      updateCategoryList();
+      renderCart();
+      updateSummary();
+
+      // Search
+      document.getElementById('searchInput')?.addEventListener('input', filterAndRenderProducts);
+
+      // Category clicks
+      document.getElementById('sidebarRoot').addEventListener('click', (e) => {
+        const item = e.target.closest('.category-item');
+        if (!item) return;
+
+        document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        currentCategoryFilter = item.dataset.category || 'all';
+        filterAndRenderProducts();
+      });
+
+      console.log('✅ POS Ready');
+    });
+
+    // ══════════════════════════════════════════════════════════════
+    // Category List
+    // ══════════════════════════════════════════════════════════════
+    function updateCategoryList() {
+      const container = document.getElementById('categoryList');
+      if (!container) return;
+
+      const categories = [...new Set(products.map(p => p.category).filter(Boolean))].sort();
+      container.innerHTML = categories.map(cat => `
+        <div class="category-item" data-category="${cat}">${cat}</div>
+      `).join('');
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // Filter & Render
+    // ══════════════════════════════════════════════════════════════
+    function filterAndRenderProducts() {
+      const term = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+      let filtered = products;
+
+      if (currentCategoryFilter !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategoryFilter);
+      }
+
+      if (term) {
+        filtered = filtered.filter(p =>
+          (p.name?.toLowerCase() || '').includes(term) ||
+          (p.barcode?.toLowerCase() || '').includes(term) ||
+          (p.category?.toLowerCase() || '').includes(term)
+        );
+      }
+
+      renderPOSProducts(filtered);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // Render Products
+    // ══════════════════════════════════════════════════════════════
+    function renderPOSProducts(list) {
+      const grid = document.getElementById('productsGrid');
+      if (!grid) return;
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:80px; color:var(--text-muted);">No products found</div>`;
+        return;
+      }
+
+      grid.innerHTML = list.map(p => {
+        const stock = Number(p.stock) || 0;
+        const price = Number(p.price) || 0;
+        
+        let stockClass = 'stock-good';
+        let stockText = `Stock: ${stock}`;
+        
+        if (stock === 0) {
+          stockClass = 'stock-out';
+          stockText = 'Out of Stock';
+        } else if (stock < 10) {
+          stockClass = 'stock-low';
+        }
+
+        const disabled = stock === 0 ? 'disabled' : '';
+        const clickAction = stock > 0 ? `onclick="addToCart(${p.id})"` : '';
+
+        return `
+          <div class="product-card ${disabled}" ${clickAction}>
+            <div class="product-image">${p.icon || '📦'}</div>
+            <div class="product-info">
+              <div class="product-name">${p.name || 'Unnamed'}</div>
+              <div class="product-price">KES ${price.toLocaleString()}</div>
+              <div class="product-stock ${stockClass}">${stockText}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+
+</body>
+</html>
