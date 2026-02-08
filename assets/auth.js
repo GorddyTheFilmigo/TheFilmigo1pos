@@ -99,7 +99,8 @@
                 username: user.username,
                 full_name: user.full_name,
                 role: user.role,
-                email: user.email
+                email: user.email,
+                created_by: user.created_by // Store who created this user
             }));
 
             console.log('✅ Login successful:', user.full_name);
@@ -211,7 +212,7 @@
         }
     }
 
-    async function requireAuth(requiredRole = null) {
+    async function requireAuth(requiredRole = null, requireNonDefaultAdmin = false) {
         const isValid = await checkSession();
         if (!isValid) {
             console.log('⚠️ No valid session, redirecting to login...');
@@ -220,6 +221,18 @@
         }
 
         const user = getCurrentUser();
+        
+        // Check if this is a default admin (created_by is null) trying to access admin panel
+        if (requireNonDefaultAdmin && user.role === 'administrator' && !user.created_by) {
+            console.log('⚠️ Default admin blocked from admin panel');
+            alert('Access Denied: The initial admin account cannot access the admin panel.\n\nPlease use the admin panel to create a new administrator account, then login with that account to manage users.');
+            // Force redirect
+            setTimeout(() => {
+                window.location.replace('dashboard.html');
+            }, 100);
+            return false;
+        }
+
         if (requiredRole) {
             const roleHierarchy = {
                 'administrator': 3,
@@ -231,7 +244,7 @@
 
             if (userLevel < requiredLevel) {
                 alert('You do not have permission to access this page.');
-                window.location.href = 'pos.html';
+                window.location.href = 'dashboard.html';
                 return false;
             }
         }
@@ -244,6 +257,17 @@
             const currentUser = getCurrentUser();
             if (currentUser.role !== 'administrator') {
                 throw new Error('Only administrators can create users');
+            }
+
+            // Check if username already exists
+            const { data: existingUser } = await window.DukaPOS.supabaseClient
+                .from('users')
+                .select('id')
+                .eq('username', userData.username)
+                .single();
+
+            if (existingUser) {
+                throw new Error('Username already exists. Please choose a different username.');
             }
 
             const passwordHash = await hashPassword(userData.password);
@@ -333,7 +357,7 @@
 
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('users')
-                .select('id, username, full_name, role, email, phone, is_active, created_at, last_login')
+                .select('id, username, full_name, role, email, phone, is_active, created_at, last_login, created_by')
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
@@ -347,14 +371,20 @@
 
     async function setupFirstAdmin(adminData) {
         try {
+            // Check if this is truly the first user
             const { data: existingUsers, error: checkError } = await window.DukaPOS.supabaseClient
                 .from('users')
-                .select('id')
-                .limit(1);
+                .select('id, created_by')
+                .limit(10);
 
             if (checkError) throw checkError;
+            
+            // Only allow signup if there are NO users, OR if there's only one user with created_by = null
             if (existingUsers && existingUsers.length > 0) {
-                throw new Error('System already has users. Please login.');
+                const nonDefaultAdmins = existingUsers.filter(u => u.created_by !== null);
+                if (nonDefaultAdmins.length > 0) {
+                    throw new Error('System already has users. Please login.');
+                }
             }
 
             const passwordHash = await hashPassword(adminData.password);
@@ -367,7 +397,8 @@
                     full_name: adminData.full_name,
                     role: 'administrator',
                     email: adminData.email,
-                    phone: adminData.phone
+                    phone: adminData.phone,
+                    created_by: null // First admin has no creator
                 }])
                 .select();
 

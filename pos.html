@@ -276,6 +276,42 @@
             margin: 20px 0;
             text-align: center;
         }
+        @media (max-width: 768px) {
+
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+  .pos-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 12px;
+  }
+}
+
+
+
+  .nav-tabs {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .nav-tab {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .nav-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+}
+
         .spinner {
             border: 3px solid var(--border);
             border-top: 3px solid var(--accent-green);
@@ -328,7 +364,26 @@
                     <div id="currentUserName">User</div>
                 </div>
             </div>
-            <button class="logout-btn" onclick="authModule.logout()">Logout</button>
+            <button
+  onclick="authModule.logout()"
+  style="
+    padding: 10px 18px;
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  "
+  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+>
+  Logout
+</button>
+
         </div>
     </nav>
 

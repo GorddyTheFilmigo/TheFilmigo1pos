@@ -19,6 +19,123 @@
       background: var(--bg-primary);
       color: var(--text);
     }
+    @media (max-width: 768px) {
+
+  /* Container padding */
+  .container {
+    padding: 16px 12px;
+  }
+
+  /* Page header */
+  .page-header h1 {
+    font-size: 1.4rem;
+  }
+
+  /* Stats grid: 1 column on phone */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  /* Tabs become scrollable */
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 4px;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  /* Section padding */
+  .section {
+    padding: 16px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Buttons full width on mobile */
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-small {
+    width: auto;
+  }
+
+  /* Tables: better mobile scrolling */
+  .table th,
+  .table td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+
+  /* Action buttons stack */
+  .action-btns {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Modal full-screen feel on phone */
+  .modal-content {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    font-size: 1.2rem;
+  }
+
+  /* User detail rows stack */
+  .user-detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+}
+  
+  @media (max-width: 768px) {
+
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav-tabs {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .nav-tab {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .nav-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+}
+
 
     .container {
       max-width: 1600px;
@@ -355,7 +472,7 @@
 
   <nav class="nav">
     <div class="nav-container">
-      <div class="logo">TheFilmigoPro</div>
+      <div class="logo">DUKA POS</div>
       <div class="nav-tabs">
         <a href="admin.html" class="nav-tab active">👥 Users</a>
         <a href="pos.html" class="nav-tab">💰 POS</a>
@@ -373,9 +490,26 @@
             <div class="user-date" id="currentDate"></div>
           </div>
         </div>
-        <button class="logout-btn" onclick="authModule.logout()">
-          <span>🚪</span>
-          <span>Logout</span>
+        <button
+  onclick="authModule.logout()"
+  style="
+    padding: 10px 18px;
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  "
+  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+>
+  Logout
+</button>
+
         </button>
       </div>
     </div>
@@ -573,7 +707,8 @@
     window.addEventListener('DOMContentLoaded', async () => {
       await window.DukaPOS.initializeSupabase();
       
-      await authModule.requireAuth('administrator');
+      // Require administrator role AND ensure it's not the default admin
+      await authModule.requireAuth('administrator', true);
 
       const currentUser = authModule.getCurrentUser();
       document.getElementById('currentUserName').textContent = currentUser.full_name;

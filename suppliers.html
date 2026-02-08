@@ -9,145 +9,266 @@
     <link rel="stylesheet" href="assets/nav-styles.css">
     <style>
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #1a2030;
-            --border: #21262d;
-            --text: #e6edf3;
-            --text-muted: #8b949e;
-            --accent-orange: #f59e0b;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --danger: #f85149;
-        }
-        body { 
-            font-family: 'Archivo', sans-serif; 
-            background: var(--bg-primary); 
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-        .container { 
-            max-width: 1400px; 
-            margin: 0 auto; 
-            padding: 32px 24px; 
-        }
-        .supplier-form { 
-            background: var(--bg-secondary); 
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: 12px; 
-            margin-bottom: 32px; 
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        .form-group { 
-            margin-bottom: 16px; 
-        }
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-        .form-label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 600;
-            color: var(--text);
-        }
-        .form-input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            background: var(--bg-primary); 
-            color: var(--text);
-            font-size: 14px;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent-orange);
-        }
-        textarea.form-input {
-            resize: vertical;
-            font-family: inherit;
-        }
-        .btn { 
-            padding: 12px 24px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        .btn-primary { 
-            background: var(--accent-green); 
-            color: white; 
-        }
-        .btn-secondary {
-            background: var(--accent-blue);
-            color: white;
-        }
-        .btn-danger { 
-            background: var(--danger); 
-            color: white; 
-        }
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 13px;
-            margin-right: 8px;
-        }
-        .table-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-        }
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .table { 
-            width: 100%; 
-            border-collapse: collapse;
-        }
-        th, td { 
-            padding: 12px; 
-            text-align: left; 
-            border-bottom: 1px solid var(--border); 
-        }
-        th { 
-            background: var(--bg-tertiary); 
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-        tr:hover {
-            background: rgba(88, 166, 255, 0.08);
-        }
-        .error { 
-            color: var(--danger); 
-            margin-top: 8px; 
-        }
-        .success { 
-            color: var(--accent-green); 
-            margin-top: 8px; 
-        }
-        .loading { 
-            text-align: center; 
-            padding: 40px;
-            color: var(--text-muted);
-        }
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1a2030;
+    --border: #21262d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent-orange: #f59e0b;
+    --accent-blue: #58a6ff;
+    --accent-green: #3fb950;
+    --danger: #f85149;
+}
+
+/* Reset and body */
+body {
+    font-family: 'Archivo', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar container */
+.nav {
+    background-color: var(--bg-secondary);
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.btn-danger:hover {
+    background-color: #d63939; /* darker red */
+}
+
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+/* Logo */
+.logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--accent-orange);
+    letter-spacing: 2px;
+    user-select: none;
+}
+
+/* Nav Tabs container */
+.nav-tabs {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    min-width: 300px;
+}
+
+/* Nav Tab links */
+.nav-tab {
+    color: var(--text-muted);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    white-space: nowrap;
+}
+
+.nav-tab:hover {
+    background-color: rgba(245, 158, 11, 0.15); /* subtle orange bg */
+    color: var(--accent-orange);
+}
+
+.nav-tab.active {
+    color: var(--accent-orange);
+    font-weight: 700;
+    border-bottom: 3px solid var(--accent-orange);
+    background-color: rgba(245, 158, 11, 0.25);
+}
+
+/* User badge container */
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-weight: 600;
+    min-width: 180px;
+    white-space: nowrap;
+}
+
+/* User avatar circle */
+.user-avatar {
+    background: var(--accent-orange);
+    border-radius: 50%;
+    padding: 8px 10px;
+    font-size: 18px;
+    color: var(--bg-primary);
+    user-select: none;
+}
+
+/* Current user name and date */
+#currentUserName {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+#currentDate {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.1;
+}
+
+/* Logout button styling */
+button.logout-btn, 
+nav .logout-btn {
+    padding: 10px 18px;
+    background-color: var(--danger);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(248, 81, 73, 0.3);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    user-select: none;
+    white-space: nowrap;
+}
+
+button.logout-btn:hover, 
+nav .logout-btn:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+}
+
+/* Responsive behavior */
+@media (max-width: 900px) {
+    .nav-container {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .nav-tabs {
+        flex-grow: 1;
+        justify-content: center;
+        gap: 12px;
+        min-width: auto;
+    }
+
+    .user-badge {
+        min-width: auto;
+        justify-content: center;
+    }
+}
+/* Container for form buttons */
+.form-group.buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 12px; /* spacing between buttons */
+    flex-wrap: wrap;
+}
+.table-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 32px;
+    overflow-x: auto;  /* Allow horizontal scroll if content overflows */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;  /* Minimum width to prevent squishing columns */
+    table-layout: auto; /* Let columns size based on content */
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap; /* Prevent text from wrapping and breaking cells */
+}
+
+th {
+    background: var(--bg-tertiary);
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+tr:hover {
+    background: rgba(88, 166, 255, 0.08);
+}
+
+
+/* Primary button (+ Add Customer) */
+.btn-primary {
+    background: var(--accent-orange);
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #d17a00; /* slightly darker orange */
+    transform: translateY(-2px);
+}
+
+/* Secondary button (Clear Form) */
+.btn-secondary {
+    background: transparent;
+    color: var(--accent-orange);
+    border: 2px solid var(--accent-orange);
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: var(--accent-orange);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Ensure the input search box under "Customers List" is wider and visually consistent */
+#searchInput {
+    width: 320px !important;
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
+    color: var(--text);
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+#searchInput:focus {
+    border-color: var(--accent-orange);
+    outline: none;
+}
+
     </style>
+
 </head>
 <body>
     <nav class="nav">
@@ -169,7 +290,26 @@
                     <div id="currentDate"></div>
                 </div>
             </div>
-            <button class="logout-btn" onclick="authModule.logout()">Logout</button>
+            <button
+  onclick="authModule.logout()"
+  style="
+    padding: 10px 18px;
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  "
+  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+>
+  Logout
+</button>
+
         </div>
     </nav>
 

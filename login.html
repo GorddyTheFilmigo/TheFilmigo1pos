@@ -1,363 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GorddyTheFilmigoPro - Login</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-primary: #0d1117;
-      --bg-secondary: #161b22;
-      --bg-tertiary: #1a2030;
-      --border: #21262d;
-      --text: #e6edf3;
-      --text-muted: #8b949e;
-      --text-dim: #6b7a8d;
-      --accent-orange: #f59e0b;
-      --accent-blue: #58a6ff;
-      --accent-green: #3fb950;
-      --danger: #f85149;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-      background: linear-gradient(135deg, #0d1117 0%, #1a1f2e 100%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .login-container {
-      width: 100%;
-      max-width: 440px;
-    }
-    .logo-section {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .logo {
-      font-size: 2.5rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--accent-orange), #fb923c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
-    }
-    .logo-subtitle {
-      font-size: 1rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-    .login-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-    .login-header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .login-header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .login-header p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-    .form-input {
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 1rem;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
-    .form-input:focus {
-      outline: none;
-      border-color: var(--accent-blue);
-      background: #0a0e17;
-    }
-    .form-input::placeholder {
-      color: var(--text-dim);
-    }
-    .login-btn {
-      width: 100%;
-      padding: 16px;
-      background: var(--accent-orange);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 8px;
-    }
-    .login-btn:hover {
-      background: #fb923c;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
-    }
-    .login-btn:disabled {
-      background: var(--border);
-      cursor: not-allowed;
-      transform: none;
-    }
-    .alert {
-      padding: 14px 16px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      font-size: 0.9rem;
-      display: none;
-    }
-    .alert.show {
-      display: block;
-    }
-    .alert-error {
-      background: rgba(248, 81, 73, 0.15);
-      border: 1px solid rgba(248, 81, 73, 0.3);
-      color: var(--danger);
-    }
-    .alert-success {
-      background: rgba(63, 185, 80, 0.15);
-      border: 1px solid rgba(63, 185, 80, 0.3);
-      color: var(--accent-green);
-    }
-    .footer-links {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-    .footer-links a {
-      color: var(--accent-blue);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .footer-links a:hover {
-      color: #7ab6ff;
-    }
-    .loading-spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid white;
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      margin-right: 8px;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    .password-toggle {
-      position: relative;
-    }
-    .password-toggle-btn {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.2rem;
-      padding: 4px;
-    }
-    .password-toggle-btn:hover {
-      color: var(--text);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Duka POS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1a2030;
+            --border: #21262d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent-orange: #f59e0b;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --danger: #f85149;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Archivo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .logo h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-orange);
+            margin-bottom: 8px;
+        }
+        
+        .logo p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-login:hover {
+            background: #2ea043;
+            transform: translateY(-2px);
+        }
+        
+        .btn-login:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .message.error {
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        
+        .message.success {
+            background: rgba(63, 185, 80, 0.2);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+        }
+        
+        .signup-link {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        
+        .signup-link a {
+            color: var(--accent-orange);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo-section">
-      <div class="logo">TheFilmigoPro</div>
-      <p class="logo-subtitle">Point of Sale System</p>
-    </div>
-    <div class="login-card">
-      <div class="login-header">
-        <h1>Welcome Back</h1>
-        <p>Sign in to continue to Duka POS</p>
-      </div>
-      <div id="alertBox" class="alert"></div>
-      <form id="loginForm">
-        <div class="form-group">
-          <label for="username" class="form-label">Username</label>
-          <input
-            type="text"
-            id="username"
-            class="form-input"
-            placeholder="Enter your username"
-            required
-            autocomplete="username"
-          />
+    <div class="login-container">
+        <div class="logo">
+            <h1>DUKA POS</h1>
+            <p>Point of Sale System</p>
         </div>
-        <div class="form-group password-toggle">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            class="form-input"
-            placeholder="Enter your password"
-            required
-            autocomplete="current-password"
-          />
-          <button
-            type="button"
-            class="password-toggle-btn"
-            onclick="togglePassword()"
-            tabindex="-1"
-          >
-            👁️
-          </button>
+        
+        <div id="message" class="message" style="display: none;"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter your username" required autofocus>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+        </form>
+        
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Create Account</a>
         </div>
-        <button type="submit" class="login-btn" id="loginBtn">
-          Sign In
-        </button>
-      </form>
-      <div class="footer-links">
-        Need help? Contact your administrator
-      </div>
     </div>
-  </div>
 
-  <script src="assets/script.js"></script>
-  <script src="assets/auth.js"></script>
-
-  <script>
-    // ────────────────────────────────────────────────────────────────
-    // Global helper: Toggle password visibility
-    // ────────────────────────────────────────────────────────────────
+    <script src="assets/script.js"></script>
+    <script src="assets/auth.js"></script>
+    
+    <script>
     function togglePassword() {
-      const passwordInput = document.getElementById('password');
-      const btn = document.querySelector('.password-toggle-btn');
-     
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        btn.textContent = '🙈';
-      } else {
-        passwordInput.type = 'password';
-        btn.textContent = '👁️';
-      }
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.querySelector('.toggle-password');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.textContent = '👁️‍🗨️';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
     }
 
-    // ────────────────────────────────────────────────────────────────
-    // Page logic (wrapped in IIFE)
-    // ────────────────────────────────────────────────────────────────
-    (function() {
-      const loginForm = document.getElementById('loginForm');
-      const loginBtn = document.getElementById('loginBtn');
-      const alertBox = document.getElementById('alertBox');
-
-      // Initialize Supabase as early as possible
-      window.addEventListener('DOMContentLoaded', async () => {
-        try {
-          await window.DukaPOS.initializeSupabase();
-          console.log('Login page: Supabase initialized');
-
-          // Check if already logged in
-          const isValid = await authModule.checkSession();
-          if (isValid) {
-            console.log('Already logged in – redirecting');
-            window.location.href = 'pos.html'; // or 'admin.html' if admin
-          }
-        } catch (err) {
-          console.error('Failed to init Supabase on login:', err);
-          showAlert('error', 'Cannot connect to the system. Please try again later.');
-        }
-      });
-
-      // Handle form submission
-      if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
-
-          const username = document.getElementById('username').value.trim();
-          const password = document.getElementById('password').value;
-
-          if (!username || !password) {
-            showAlert('error', 'Please enter both username and password');
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        
+        if (!username || !password) {
+            showMessage('Please enter username and password', 'error');
             return;
-          }
-
-          // Disable button & show loading
-          loginBtn.disabled = true;
-          loginBtn.innerHTML = '<span class="loading-spinner"></span>Signing in...';
-
-          try {
-            const result = await authModule.login(username, password);
-            if (result.success) {
-              showAlert('success', `Welcome back, ${result.user.full_name}!`);
-             
-              // Redirect based on role
-              setTimeout(() => {
-                if (result.user.role === 'administrator') {
-                  window.location.href = 'admin.html';
-                } else {
-                  window.location.href = 'pos.html';
-                }
-              }, 1000);
-            } else {
-              showAlert('error', result.error || 'Login failed');
-              resetButton();
-            }
-          } catch (err) {
-            console.error('Login error:', err);
-            showAlert('error', 'An unexpected error occurred: ' + err.message);
-            resetButton();
-          }
-        });
-      }
-
-      function showAlert(type, message) {
-        alertBox.className = `alert alert-${type} show`;
-        alertBox.textContent = message;
-      }
-
-      function resetButton() {
-        loginBtn.disabled = false;
-        loginBtn.innerHTML = 'Sign In';
-      }
-
-      // Allow Enter key on password field to submit
-      document.getElementById('password')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          loginForm.dispatchEvent(new Event('submit'));
         }
-      });
+        
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Signing in...';
+        
+        try {
+            await window.DukaPOS.initializeSupabase();
+            
+            // Use the auth module's login function
+            const result = await window.authModule.login(username, password);
+            
+            if (!result.success) {
+                showMessage(result.error || 'Invalid username or password', 'error');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+                return;
+            }
+            
+            showMessage('✅ Login successful! Redirecting...', 'success');
+            
+            const user = result.user;
+            
+            // Check if this is the initial admin and if proper admin exists
+            if (user.created_by === null && user.role === 'administrator') {
+                // This is the initial admin - check if proper admin exists
+                const { data: properAdmins } = await window.DukaPOS.supabaseClient
+                    .from('users')
+                    .select('id')
+                    .eq('role', 'administrator')
+                    .neq('created_by', null);
+                
+                if (!properAdmins || properAdmins.length === 0) {
+                    // No proper admin exists - force to create one
+                    setTimeout(() => {
+                        window.location.href = 'create-first-admin.html';
+                    }, 1000);
+                    return;
+                }
+            }
+            
+            // Normal redirect to dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+            
+        } catch (error) {
+            console.error('Login error:', error);
+            showMessage('Login failed: ' + error.message, 'error');
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Sign In';
+        }
+    });
 
-      console.log('Login page ready');
-    })();
-  </script>
+    function showMessage(text, type) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = text;
+        messageDiv.className = 'message ' + type;
+        messageDiv.style.display = 'block';
+        
+        if (type === 'error') {
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
+    window.togglePassword = togglePassword;
+    </script>
 </body>
 </html>
