@@ -197,78 +197,6 @@
       background: rgba(63, 185, 80, 0.15);
       color: var(--accent-green);
     }
-    @media (max-width: 768px) {
-
-  .nav-container {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  @media (max-width: 768px) {
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .stat-card {
-    padding: 16px;
-  }
-  @media (max-width: 768px) {
-
-  .search-input {
-    max-width: 100%;
-    font-size: 15px;
-    padding: 14px 16px 14px 44px;
-  }
-
-}
-@media (max-width: 768px) {
-
-  .table-container {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .table {
-    min-width: 900px;
-  }
-
-  .table th,
-  .table td {
-    padding: 12px;
-    font-size: 0.85rem;
-  }
-
-}
-
-
-  .stat-value {
-    font-size: 1.5rem;
-  }
-
-}
-
-
-  .nav-tabs {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .nav-tab {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .nav-right {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-}
-
     
     .stock-medium {
       background: rgba(245, 158, 11, 0.15);
@@ -309,7 +237,7 @@
       <div class="nav-tabs">
         <a href="pos.html" class="nav-tab">💰 Point of Sale</a>
         <a href="products.html" class="nav-tab active">📦 Products</a>
-        <a href="inventory.html" class="nav-tab">📊 Inventory</a>
+        <a href="inventory.html" class="nav-tab" id="adminTab" style="display:none;">📊 Inventory</a>
         <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">👥 Users</a>
       </div>
       <div class="nav-right">
@@ -320,26 +248,9 @@
             <div class="user-date" id="currentDate"></div>
           </div>
         </div>
-        <button
-  onclick="authModule.logout()"
-  style="
-    padding: 10px 18px;
-    background-color: #ef4444;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-    transition: all 0.2s ease;
-  "
-  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
->
-  Logout
-</button>
-
+        <button onclick="authModule.logout()" style="padding: 10px 18px; background-color: #ef4444; color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'" onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'">
+          Logout
+        </button>
       </div>
     </div>
   </nav>
@@ -379,13 +290,7 @@
     </div>
 
     <div class="search-section">
-      <input
-        type="text"
-        class="search-input"
-        id="searchInput"
-        placeholder="Search products by name, barcode, or category..."
-        autocomplete="off"
-      />
+      <input type="text" class="search-input" id="searchInput" placeholder="Search products by name, barcode, or category..." autocomplete="off" />
     </div>
 
     <div class="table-container">
@@ -419,33 +324,54 @@
 
   <script src="assets/script.js"></script>
   <script src="assets/auth.js"></script>
+  <script src="assets/data-module.js"></script>
   <script>
+    let products = [];
+
     window.addEventListener('DOMContentLoaded', async () => {
       console.log('🚀 Initializing Products Management...');
       
       await window.DukaPOS.initializeSupabase();
-
       
-      // Require authentication
       const isAuthenticated = await authModule.requireAuth();
       if (!isAuthenticated) return;
 
-      // Display current user
       const currentUser = authModule.getCurrentUser();
       document.getElementById('currentUserName').textContent = currentUser.full_name;
 
-      // Show admin tab if administrator
       if (currentUser.role === 'administrator') {
         document.getElementById('adminTab').style.display = 'flex';
       }
       
-      renderProductsTable();
-      updateProductStats();
+      await loadProducts();
 
       document.getElementById('searchInput')?.addEventListener('input', handleProductSearch);
 
       console.log('✅ Products Management Ready');
     });
+
+    async function loadProducts() {
+      try {
+        const result = await window.dataModule.getAllProducts();
+        
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        
+        products = result.data || [];
+        renderProductsTable();
+        updateProductStats();
+        
+        console.log('✅ Loaded products for current shop:', products.length);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        document.getElementById('productsTableBody').innerHTML = `
+          <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--danger);">
+            Error loading products: ${error.message}
+          </td></tr>
+        `;
+      }
+    }
 
     function renderProductsTable(list = products) {
       const tbody = document.getElementById('productsTableBody');

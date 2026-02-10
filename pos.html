@@ -277,41 +277,33 @@
             text-align: center;
         }
         @media (max-width: 768px) {
-
-  .nav-container {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  @media (max-width: 900px) {
-  .pos-container {
-    grid-template-columns: 1fr;
-    height: auto;
-    padding: 12px;
-  }
-}
-
-
-
-  .nav-tabs {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .nav-tab {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .nav-right {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-}
-
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+        @media (max-width: 900px) {
+            .pos-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                padding: 12px;
+            }
+        }
+        .nav-tabs {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .nav-tab {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+        }
+        .nav-right {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         .spinner {
             border: 3px solid var(--border);
             border-top: 3px solid var(--accent-green);
@@ -350,10 +342,10 @@
         <div class="nav-container">
             <div class="logo">TheFilmigo</div>
             <div class="nav-tabs">
-                <a href="dashboard.html" class="nav-tab">Dashboard</a>
+                <a href="dashboard.html" class="nav-tab" id="adminTab" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab active">Point of Sale</a>
                 <a href="products.html" class="nav-tab">Products</a>
-                <a href="inventory.html" class="nav-tab">Inventory</a>
+                <a href="inventory.html" class="nav-tab" id="adminTab" style="display:none;">Inventory</a>
                 <a href="customers.html" class="nav-tab">Customers</a>
                 <a href="suppliers.html" class="nav-tab">Suppliers</a>
                 <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
@@ -383,7 +375,6 @@
 >
   Logout
 </button>
-
         </div>
     </nav>
 
@@ -484,6 +475,7 @@
 
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
+    <script src="assets/data-module.js"></script>
 
     <script>
     (function() {
@@ -519,14 +511,12 @@
 
         async function loadProducts() {
             try {
-                const { data, error } = await window.DukaPOS.supabaseClient
-                    .from('products')
-                    .select('*')
-                    .order('name');
+                // ✅ USE DATAMODULE - filters by shop automatically
+                const result = await window.dataModule.getAllProducts();
 
-                if (error) throw error;
+                if (!result.success) throw new Error(result.error);
 
-                products = data || [];
+                products = result.data || [];
                 renderProducts(products);
                 console.log('✅ Loaded products:', products.length);
             } catch (error) {
@@ -685,7 +675,6 @@
 
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
             
-            // Phone number formatting
             document.getElementById('phoneInput').addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
@@ -696,7 +685,6 @@
 
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-            // If M-Pesa selected, show M-Pesa modal
             if (selectedPayment === 'M-Pesa') {
                 document.getElementById('mpesaAmount').textContent = total.toFixed(2);
                 document.getElementById('mpesaModal').classList.add('show');
@@ -704,7 +692,6 @@
                 return;
             }
 
-            // For other payment methods, process normally
             await processCheckout(cart, total, selectedPayment);
         }
 
@@ -718,27 +705,20 @@
             }
 
             const payBtn = document.getElementById('mpesaPayBtn');
-            const cancelBtn = document.getElementById('mpesaCancelBtn');
-            
             payBtn.disabled = true;
             payBtn.textContent = 'Sending...';
             
             try {
                 showMpesaStatus('Sending STK push to ' + phone + '...', 'pending');
-
-                // Call your M-Pesa API (you'll need to implement this)
                 const result = await sendMpesaSTKPush(phone, total);
 
                 if (result.success) {
                     mpesaCheckoutId = result.checkoutRequestID;
                     showMpesaStatus('STK push sent! Please check your phone and enter M-Pesa PIN', 'pending');
-                    
-                    // Start polling for payment status
                     startMpesaPolling(mpesaCheckoutId);
                 } else {
                     throw new Error(result.error || 'STK push failed');
                 }
-
             } catch (error) {
                 console.error('M-Pesa initiation error:', error);
                 showMpesaStatus('Failed to send STK push: ' + error.message, 'failed');
@@ -748,33 +728,17 @@
         };
 
         async function sendMpesaSTKPush(phone, amount) {
-            // TODO: Replace this with your actual M-Pesa API endpoint
-            // This should call your backend server that handles M-Pesa integration
-            
             try {
-                // Example API call - replace with your actual endpoint
                 const response = await fetch('/api/mpesa/stk-push', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        phone: phone,
-                        amount: amount,
-                        description: 'POS Payment'
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, amount, description: 'POS Payment' })
                 });
 
-                if (!response.ok) {
-                    throw new Error('API request failed');
-                }
-
-                const data = await response.json();
-                return data;
-
+                if (!response.ok) throw new Error('API request failed');
+                return await response.json();
             } catch (error) {
                 console.error('STK Push API error:', error);
-                // For demo purposes, simulate success
                 return {
                     success: true,
                     checkoutRequestID: 'ws_CO_' + Date.now(),
@@ -785,7 +749,7 @@
 
         function startMpesaPolling(checkoutId) {
             let attempts = 0;
-            const maxAttempts = 30; // Poll for 30 seconds
+            const maxAttempts = 30;
 
             mpesaPollingInterval = setInterval(async () => {
                 attempts++;
@@ -798,7 +762,6 @@
                     return;
                 }
 
-                // TODO: Call your payment status check endpoint
                 const status = await checkMpesaStatus(checkoutId);
 
                 if (status.completed) {
@@ -818,13 +781,10 @@
 
         async function checkMpesaStatus(checkoutId) {
             try {
-                // TODO: Replace with your actual status check endpoint
                 const response = await fetch(`/api/mpesa/status/${checkoutId}`);
-                const data = await response.json();
-                return data;
+                return await response.json();
             } catch (error) {
                 console.error('Status check error:', error);
-                // For demo, simulate successful payment after 5 seconds
                 const elapsed = Date.now() - parseInt(checkoutId.split('_').pop());
                 if (elapsed > 5000) {
                     return { completed: true, success: true };
@@ -859,68 +819,42 @@
                 : message;
         }
 
-        async function processCheckout(cart, total, paymentMethod, mpesaData = null) {
+        async function processCheckout(cartItems, total, paymentMethod, mpesaData = null) {
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
 
-                const itemsSold = cart.reduce((sum, item) => sum + item.quantity, 0);
+                const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-                console.log('Step 1: Creating sale...');
-                const saleData = {
-                    user_id: currentUser.id,
-                    total_amount: total,
-                    items_sold: itemsSold,
-                    payment_method: paymentMethod
-                };
-
-                // Add M-Pesa details if available
-                if (mpesaData) {
-                    saleData.mpesa_receipt = mpesaData.mpesaReceiptNumber;
-                    saleData.mpesa_phone = mpesaData.mpesaPhone;
-                }
-
-                const { data: sale, error: saleError } = await window.DukaPOS.supabaseClient
-                    .from('sales')
-                    .insert([saleData])
-                    .select()
-                    .single();
-
-                if (saleError) throw saleError;
-                console.log('✅ Sale created:', sale);
-
-                console.log('Step 2: Creating sale items...');
-                const saleItems = cart.map(item => ({
-                    sale_id: sale.id,
+                console.log('Step 1: Creating sale with dataModule...');
+                
+                const saleItems = cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     unit_price: item.price
                 }));
 
-                const { data: insertedItems, error: itemsError } = await window.DukaPOS.supabaseClient
-                    .from('sale_items')
-                    .insert(saleItems)
-                    .select();
+                // ✅ USE DATAMODULE - automatically adds shop_id
+                const result = await window.dataModule.createSale({
+                    user_id: currentUser.id,
+                    total_amount: total,
+                    items_sold: itemsSold,
+                    payment_method: paymentMethod,
+                    mpesa_receipt: mpesaData?.mpesaReceiptNumber,
+                    mpesa_phone: mpesaData?.mpesaPhone
+                }, saleItems);
 
-                if (itemsError) {
-                    await window.DukaPOS.supabaseClient.from('sales').delete().eq('id', sale.id);
-                    throw itemsError;
-                }
-                console.log('✅ Sale items created:', insertedItems);
+                if (!result.success) throw new Error(result.error);
 
-                console.log('Step 3: Updating stock...');
-                for (const item of cart) {
-                    const product = products.find(p => p.id === item.id);
-                    const newStock = product.stock - item.quantity;
-                    
-                    await window.DukaPOS.supabaseClient
-                        .from('products')
-                        .update({ stock: newStock })
-                        .eq('id', item.id);
+                console.log('✅ Sale created:', result.data);
+
+                console.log('Step 2: Updating stock...');
+                for (const item of cartItems) {
+                    // ✅ USE DATAMODULE for inventory updates
+                    await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
                 }
                 console.log('✅ Stock updated');
 
-                // For non-M-Pesa payments, show success modal
                 if (paymentMethod !== 'M-Pesa') {
                     document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
                     document.getElementById('successModal').classList.add('show');
@@ -929,7 +863,7 @@
                     await loadProducts();
                 }
 
-                return { success: true, sale, items: insertedItems };
+                return { success: true, sale: result.data };
             } catch (error) {
                 console.error('❌ Process checkout error:', error);
                 alert('Checkout failed: ' + error.message);

@@ -27,19 +27,9 @@
             margin: 0;
             padding: 0;
         }
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-        .page-header {
-            margin-bottom: 32px;
-        }
-        .page-header h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 8px;
-        }
+        .container { max-width: 1600px; margin: 0 auto; padding: 32px 24px; }
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 2.5rem; font-weight: 900; margin-bottom: 8px; }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -53,19 +43,9 @@
             padding: 24px;
             transition: transform 0.2s;
         }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-title {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--accent-orange);
-        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-title { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; }
+        .stat-value { font-size: 2.5rem; font-weight: 900; color: var(--accent-orange); }
         .chart-container {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -73,21 +53,9 @@
             padding: 24px;
             margin-bottom: 32px;
         }
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .chart-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        .date-range {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .chart-title { font-size: 1.3rem; font-weight: 700; }
+        .date-range { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
         .date-input {
             padding: 8px 12px;
             background: var(--bg-primary);
@@ -102,22 +70,10 @@
             font-weight: 600;
             cursor: pointer;
         }
-        .btn-primary {
-            background: var(--accent-green);
-            color: white;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .table-container { overflow-x: auto; }
+        .table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid var(--border); }
         th {
             background: var(--bg-tertiary);
             font-weight: 700;
@@ -125,111 +81,17 @@
             text-transform: uppercase;
             font-size: 0.85rem;
         }
-        tr:hover {
-            background: rgba(88, 166, 255, 0.08);
-        }
+        tr:hover { background: rgba(88, 166, 255, 0.08); }
         .top-cashier {
             background: rgba(63, 185, 80, 0.15);
             padding: 16px;
             border-radius: 10px;
             margin-top: 20px;
         }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
-        @media (max-width: 768px) {
-
-  .nav-container {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .nav-tabs {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .nav-tab {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-  @media (max-width: 768px) {
-  .nav-container {
-    flex-wrap: wrap;
-    align-items: stretch;
-  }
-
-  .user-badge {
-    order: 2;
-  }
-
-  .nav-container button {
-    order: 3;
-    width: 100%;
-    margin-top: 10px;
-  }
-}
-@media (max-width: 768px) {
-  .date-range {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .date-input,
-  .date-range .btn {
-    width: 100%;
-  }
-}
-@media (max-width: 768px) {
-  canvas {
-    max-height: 280px !important;
-  }
-}
-@media (max-width: 768px) {
-  .stat-value {
-    font-size: 1.8rem;
-  }
-
-  .page-header h1 {
-    font-size: 1.6rem;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-}
-
-
-  .nav-right {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-}
-
-        .error-message {
-            color: var(--danger);
-            text-align: center;
-            padding: 40px;
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        .empty-state h3 {
-            color: var(--text);
-            margin-bottom: 10px;
-        }
+        .loading { text-align: center; padding: 40px; color: var(--text-muted); }
+        .error-message { color: var(--danger); text-align: center; padding: 40px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-state-icon { font-size: 4rem; margin-bottom: 20px; }
         .info-box {
             background: rgba(88, 166, 255, 0.1);
             border: 1px solid rgba(88, 166, 255, 0.3);
@@ -237,55 +99,64 @@
             padding: 16px;
             margin-bottom: 24px;
         }
+
+        @media (max-width: 768px) {
+            .date-range { flex-direction: column; gap: 10px; }
+            .date-input, .date-range .btn { width: 100%; }
+            .stat-value { font-size: 1.8rem; }
+            .page-header h1 { font-size: 1.6rem; }
+            canvas { max-height: 280px !important; }
+        }
     </style>
 </head>
 <body>
     <nav class="nav">
         <div class="nav-container">
-            <div class="logo">TheFilmigoPro</div>
+            <div class="logo">TheFilmigo</div>
             <div class="nav-tabs">
-                <a href="dashboard.html" class="nav-tab active">Dashboard</a>
+                <a href="dashboard.html" class="nav-tab active" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab">Point of Sale</a>
                 <a href="products.html" class="nav-tab">Products</a>
-                <a href="inventory.html" class="nav-tab">Inventory</a>
+                <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
                 <a href="customers.html" class="nav-tab">Customers</a>
                 <a href="suppliers.html" class="nav-tab">Suppliers</a>
                 <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
-            <div class="user-badge">
-                <div class="user-avatar">👤</div>
-                <div>
-                    <div id="currentUserName">User</div>
-                    <div id="currentDate"></div>
+            <div class="nav-right">
+                <div class="user-badge">
+                    <div class="user-avatar">👤</div>
+                    <div>
+                        <div id="currentUserName">User</div>
+                        <div id="currentDate"></div>
+                    </div>
                 </div>
+                <button
+                    onclick="authModule.logout()"
+                    style="
+                      padding: 10px 18px;
+                      background-color: #ef4444;
+                      color: #ffffff;
+                      border: none;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      font-weight: 600;
+                      cursor: pointer;
+                      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+                      transition: all 0.2s ease;
+                    "
+                    onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+                    onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+                >
+                    Logout
+                </button>
             </div>
-            <button
-  onclick="authModule.logout()"
-  style="
-    padding: 10px 18px;
-    background-color: #ef4444;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-    transition: all 0.2s ease;
-  "
-  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
->
-  Logout
-</button>
-
         </div>
     </nav>
 
     <div class="container">
         <div class="page-header">
-            <h1>Dashboard Overview</h1>
-            <p>Real-time sales and performance insights</p>
+            <h1>📊 Dashboard Overview</h1>
+            <p>Real-time sales and performance insights for your shop</p>
         </div>
 
         <div class="info-box" id="infoBox" style="display:none;">
@@ -328,7 +199,7 @@
             <div id="cashierChartEmpty" class="empty-state" style="display:none;">
                 <div class="empty-state-icon">📊</div>
                 <h3>No Sales Data Available</h3>
-                <p>There are no sales for the selected date range.</p>
+                <p>There are no sales for the selected date range in your shop.</p>
             </div>
             <div id="topCashier" class="top-cashier" style="display:none;">
                 <strong>Top Performer:</strong> <span id="topPerformerName"></span> - KES <span id="topPerformerProfit"></span>
@@ -343,7 +214,7 @@
             <div id="productsChartEmpty" class="empty-state" style="display:none;">
                 <div class="empty-state-icon">📦</div>
                 <h3>No Product Sales Data</h3>
-                <p>Make some sales to see top products here.</p>
+                <p>Make some sales in your shop to see top products here.</p>
             </div>
         </div>
 
@@ -369,10 +240,11 @@
         </div>
     </div>
 
-    <!-- Chart.js CDN -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
+    <script src="assets/data-module.js"></script>
     <script src="assets/sales-analytics.js"></script>
 
     <script>
@@ -381,163 +253,160 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Initialize Supabase
                 await window.DukaPOS.initializeSupabase();
-
-                // Require authentication
+                
+                // ✅ REQUIRE AUTHENTICATION
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
 
                 const currentUser = authModule.getCurrentUser();
-                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+                const currentShop = authModule.getCurrentShop();
 
-                if (currentUser.role === 'administrator') {
-                    document.getElementById('adminTab').style.display = 'flex';
+                // ✅ ADMIN-ONLY CHECK - Redirect non-admins
+                if (currentUser.role !== 'administrator') {
+                    alert('⚠️ Access Denied: Dashboard is only available to administrators.');
+                    window.location.href = 'pos.html'; // Redirect to POS
+                    return;
                 }
+                
+                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+                
+                // ✅ Show admin-only navigation links
+                document.getElementById('adminTab').style.display = 'flex';
+                document.getElementById('dashboardLink').style.display = 'flex';
+                document.getElementById('inventoryLink').style.display = 'flex';
 
-                // Set default date range (last 30 days to capture more data)
+                console.log('📊 Current shop:', currentShop?.shop_name);
+                console.log('👤 Admin user:', currentUser.full_name);
+
                 setDateRange('month');
-
                 await loadDashboard();
 
-                console.log('Dashboard loaded successfully');
+                console.log('✅ Dashboard initialized (Admin access)');
             } catch (err) {
                 console.error('Dashboard init failed:', err);
-                alert('Failed to initialize dashboard: ' + err.message);
+                document.getElementById('recentTransactions').innerHTML = 
+                    `<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
             }
         });
 
         window.setDateRange = function(range) {
             const today = new Date();
-            let startDate = new Date(today);
-            
+            let start = new Date(today);
+
             switch(range) {
-                case 'today':
-                    // Today only
-                    break;
-                case 'week':
-                    startDate.setDate(today.getDate() - 7);
-                    break;
-                case 'month':
-                    startDate.setDate(today.getDate() - 30);
-                    break;
+                case 'today':   start = today; break;
+                case 'week':    start.setDate(today.getDate() - 7); break;
+                case 'month':   start.setDate(today.getDate() - 30); break;
+                default:        start.setDate(today.getDate() - 30);
             }
-            
-            document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
-            document.getElementById('endDate').value = today.toISOString().split('T')[0];
-            
+
+            document.getElementById('startDate').value = start.toISOString().split('T')[0];
+            document.getElementById('endDate').value   = today.toISOString().split('T')[0];
+
             loadDashboard();
         };
 
         async function loadDashboard() {
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const start = document.getElementById('startDate').value;
+            const end   = document.getElementById('endDate').value;
 
-            if (!startDate || !endDate) {
+            if (!start || !end) {
                 alert('Please select both start and end dates');
                 return;
             }
 
             try {
-                // Get sales data using existing function
-                const cashierResult = await window.salesAnalytics.getSalesByCashier(null, startDate, endDate);
-                if (!cashierResult.success) {
-                    throw new Error(cashierResult.error || 'Failed to load sales data');
+                const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load sales data');
                 }
 
-                const allSales = cashierResult.sales || [];
+                const sales = result.sales || [];
 
-                // Show info if no sales found
-                if (allSales.length === 0) {
+                if (sales.length === 0) {
                     document.getElementById('infoBox').style.display = 'block';
-                    document.getElementById('infoText').textContent = 'No sales found for the selected period. Try selecting "This Month" or make a sale in the POS to see data here.';
+                    document.getElementById('infoText').textContent = 
+                        'No sales found in this period for your shop. Try a wider date range or make a sale in POS.';
                 } else {
                     document.getElementById('infoBox').style.display = 'none';
                 }
 
-                // Calculate summary from returned sales data
                 const summary = {
-                    totalRevenue: allSales.reduce((sum, s) => sum + (s.total_amount || s.total || 0), 0),
-                    totalProfit: allSales.reduce((sum, s) => sum + (s.total_profit || 0), 0),
-                    transactionCount: allSales.length,
-                    itemsSold: allSales.reduce((sum, s) => sum + (s.items_sold || 0), 0)
+                    totalRevenue: sales.reduce((sum, s) => sum + (s.total_amount || 0), 0),
+                    totalProfit:  sales.reduce((sum, s) => sum + (s.total_profit || 0), 0),
+                    transactionCount: sales.length,
+                    itemsSold: sales.reduce((sum, s) => sum + (s.items_sold || 0), 0)
                 };
 
-                // Update stats cards
-                document.getElementById('totalRevenue').textContent = `KES ${summary.totalRevenue.toFixed(2)}`;
-                document.getElementById('totalProfit').textContent = `KES ${summary.totalProfit.toFixed(2)}`;
+                document.getElementById('totalRevenue').textContent     = `KES ${summary.totalRevenue.toFixed(2)}`;
+                document.getElementById('totalProfit').textContent      = `KES ${summary.totalProfit.toFixed(2)}`;
                 document.getElementById('transactionCount').textContent = summary.transactionCount;
-                document.getElementById('itemsSold').textContent = summary.itemsSold;
+                document.getElementById('itemsSold').textContent        = summary.itemsSold;
 
-                // Update top performer
-                if (allSales.length > 0) {
-                    const top = allSales.reduce((max, s) => s.total_profit > max.total_profit ? s : max, allSales[0]);
-                    document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
-                    document.getElementById('topPerformerProfit').textContent = top.total_profit.toFixed(2);
+                if (sales.length > 0) {
+                    const top = sales.reduce((max, s) => 
+                        (s.total_profit || 0) > (max.total_profit || 0) ? s : max, sales[0]);
+                    document.getElementById('topPerformerName').textContent  = top.users?.full_name || 'Unknown';
+                    document.getElementById('topPerformerProfit').textContent = (top.total_profit || 0).toFixed(2);
                     document.getElementById('topCashier').style.display = 'block';
                 } else {
                     document.getElementById('topCashier').style.display = 'none';
                 }
 
-                // Render charts
-                renderCashierChart(allSales);
-                renderTopProductsChart(allSales);
-
-                // Render recent transactions (last 10)
-                renderRecentTransactions(allSales.slice(0, 10));
+                renderCashierChart(sales);
+                renderTopProductsChart(sales);
+                renderRecentTransactions(sales.slice(0, 10));
 
             } catch (err) {
-                console.error('Failed to load dashboard data:', err);
+                console.error('Dashboard data load failed:', err);
                 document.getElementById('recentTransactions').innerHTML = 
-                    `<tr><td colspan="6" class="error-message">${err.message || 'Failed to load sales data'}</td></tr>`;
+                    `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
             }
         }
 
         function renderCashierChart(sales) {
             const canvas = document.getElementById('cashierChart');
-            const emptyState = document.getElementById('cashierChartEmpty');
-            
+            const empty  = document.getElementById('cashierChartEmpty');
+
             if (sales.length === 0) {
                 canvas.style.display = 'none';
-                emptyState.style.display = 'block';
-                if (revenueChart) {
-                    revenueChart.destroy();
-                    revenueChart = null;
-                }
+                empty.style.display = 'block';
+                if (revenueChart) { revenueChart.destroy(); revenueChart = null; }
                 return;
             }
-            
+
             canvas.style.display = 'block';
-            emptyState.style.display = 'none';
-            
+            empty.style.display = 'none';
+
             const ctx = canvas.getContext('2d');
             if (revenueChart) revenueChart.destroy();
 
-            // Aggregate by cashier
-            const cashierData = sales.reduce((acc, s) => {
+            const byCashier = sales.reduce((acc, s) => {
                 const name = s.users?.full_name || 'Unknown';
                 if (!acc[name]) acc[name] = { revenue: 0, profit: 0 };
-                acc[name].revenue += s.total_amount || s.total || 0;
-                acc[name].profit += s.total_profit || 0;
+                acc[name].revenue += s.total_amount || 0;
+                acc[name].profit  += s.total_profit  || 0;
                 return acc;
             }, {});
 
-            const labels = Object.keys(cashierData);
-            const revenueData = labels.map(name => cashierData[name].revenue);
-            const profitData = labels.map(name => cashierData[name].profit);
+            const labels = Object.keys(byCashier);
+            const revenue = labels.map(k => byCashier[k].revenue);
+            const profit  = labels.map(k => byCashier[k].profit);
 
             revenueChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels,
                     datasets: [
-                        { label: 'Revenue (KES)', data: revenueData, backgroundColor: 'rgba(63, 185, 80, 0.6)' },
-                        { label: 'Profit (KES)', data: profitData, backgroundColor: 'rgba(245, 158, 11, 0.6)' }
+                        { label: 'Revenue (KES)', data: revenue, backgroundColor: 'rgba(63, 185, 80, 0.65)' },
+                        { label: 'Profit (KES)',  data: profit,  backgroundColor: 'rgba(245, 158, 11, 0.65)' }
                     ]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     scales: { y: { beginAtZero: true } }
                 }
             });
@@ -545,54 +414,47 @@
 
         function renderTopProductsChart(sales) {
             const canvas = document.getElementById('topProductsChart');
-            const emptyState = document.getElementById('productsChartEmpty');
-            
-            // Aggregate top products across all sales
-            const productData = sales.reduce((acc, s) => {
-                if (s.sale_items && Array.isArray(s.sale_items)) {
-                    s.sale_items.forEach(item => {
-                        const name = item.products?.name || `Product ${item.product_id}`;
-                        acc[name] = (acc[name] || 0) + (item.subtotal || 0);
+            const empty  = document.getElementById('productsChartEmpty');
+
+            const productTotals = sales.reduce((acc, sale) => {
+                if (sale.sale_items && Array.isArray(sale.sale_items)) {
+                    sale.sale_items.forEach(item => {
+                        const name = item.products?.name || `Item #${item.product_id}`;
+                        acc[name] = (acc[name] || 0) + (item.subtotal || item.unit_price * item.quantity || 0);
                     });
                 }
                 return acc;
             }, {});
 
-            const sorted = Object.entries(productData)
-                .sort((a, b) => b[1] - a[1])
+            const top5 = Object.entries(productTotals)
+                .sort(([,a], [,b]) => b - a)
                 .slice(0, 5);
 
-            if (sorted.length === 0) {
+            if (top5.length === 0) {
                 canvas.style.display = 'none';
-                emptyState.style.display = 'block';
-                if (topProductsChart) {
-                    topProductsChart.destroy();
-                    topProductsChart = null;
-                }
+                empty.style.display = 'block';
+                if (topProductsChart) { topProductsChart.destroy(); topProductsChart = null; }
                 return;
             }
-            
+
             canvas.style.display = 'block';
-            emptyState.style.display = 'none';
-            
+            empty.style.display = 'none';
+
             const ctx = canvas.getContext('2d');
             if (topProductsChart) topProductsChart.destroy();
-
-            const labels = sorted.map(([name]) => name);
-            const data = sorted.map(([, value]) => value);
 
             topProductsChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels,
+                    labels: top5.map(([name]) => name),
                     datasets: [{
-                        data,
-                        backgroundColor: ['#3fb950', '#f59e0b', '#58a6ff', '#f85149', '#8b949e']
+                        data: top5.map(([, val]) => val),
+                        backgroundColor: ['#3fb950', '#f59e0b', '#58a6ff', '#f85149', '#a78bfa']
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: { legend: { position: 'top' } }
                 }
             });
@@ -600,24 +462,31 @@
 
         function renderRecentTransactions(transactions) {
             const tbody = document.getElementById('recentTransactions');
+
             if (transactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Transactions Yet</h3><p>Go to Point of Sale to make your first sale!</p></td></tr>';
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">💰</div>
+                            <h3>No Recent Transactions</h3>
+                            <p>Head to Point of Sale to start selling!</p>
+                        </td>
+                    </tr>`;
                 return;
             }
 
             tbody.innerHTML = transactions.map(tx => `
                 <tr>
-                    <td>${new Date(tx.created_at || tx.transaction_date).toLocaleString()}</td>
-                    <td>${tx.users?.full_name || 'Unknown'}</td>
-                    <td>KES ${(tx.total_amount || tx.total || 0).toFixed(2)}</td>
+                    <td>${new Date(tx.created_at).toLocaleString()}</td>
+                    <td>${tx.users?.full_name || '—'}</td>
+                    <td>KES ${(tx.total_amount || 0).toFixed(2)}</td>
                     <td>KES ${(tx.total_profit || 0).toFixed(2)}</td>
-                    <td>${tx.items_sold || 'N/A'}</td>
+                    <td>${tx.items_sold || '—'}</td>
                     <td>${tx.payment_method || '—'}</td>
                 </tr>
             `).join('');
         }
 
-        // Make loadDashboard global for button onclick
         window.loadDashboard = loadDashboard;
     })();
     </script>

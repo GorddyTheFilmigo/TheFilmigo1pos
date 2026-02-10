@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - TheFilmigo</title>
+    <title>Login - Duka POS</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
-            --bg-tertiary: #1a2030;
             --border: #21262d;
             --text: #e6edf3;
             --text-muted: #8b949e;
             --accent-orange: #f59e0b;
-            --accent-blue: #58a6ff;
             --accent-green: #3fb950;
             --danger: #f85149;
         }
@@ -177,7 +175,7 @@
 <body>
     <div class="login-container">
         <div class="logo">
-            <h1>TheFilmigo</h1>
+            <h1>TheFilmigoPro</h1>
             <p>Point of Sale System</p>
         </div>
         
@@ -201,7 +199,7 @@
         </form>
         
         <div class="signup-link">
-            Don't have an account? <a href="signup.html">Create Account</a>
+            Don't have a shop? <a href="signup.html">Register Your Shop</a>
         </div>
     </div>
 
@@ -240,7 +238,6 @@
         try {
             await window.DukaPOS.initializeSupabase();
             
-            // Use the auth module's login function
             const result = await window.authModule.login(username, password);
             
             if (!result.success) {
@@ -250,29 +247,8 @@
                 return;
             }
             
-            showMessage('✅ Login successful! Redirecting...', 'success');
+            showMessage('✅ Login successful! Welcome to ' + result.shop.shop_name, 'success');
             
-            const user = result.user;
-            
-            // Check if this is the initial admin and if proper admin exists
-            if (user.created_by === null && user.role === 'administrator') {
-                // This is the initial admin - check if proper admin exists
-                const { data: properAdmins } = await window.DukaPOS.supabaseClient
-                    .from('users')
-                    .select('id')
-                    .eq('role', 'administrator')
-                    .neq('created_by', null);
-                
-                if (!properAdmins || properAdmins.length === 0) {
-                    // No proper admin exists - force to create one
-                    setTimeout(() => {
-                        window.location.href = 'create-first-admin.html';
-                    }, 1000);
-                    return;
-                }
-            }
-            
-            // Normal redirect to dashboard
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1000);

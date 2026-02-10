@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TheFilmigo - Admin Dashboard</title>
+  <title>TheFilmigoPro - Admin Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/nav-styles.css">
@@ -111,28 +111,29 @@
   
   @media (max-width: 768px) {
 
-  .nav-container {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+  /* Navbar container */
+.nav {
+    background-color: var(--bg-secondary);
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.btn-danger:hover {
+    background-color: #d63939; /* darker red */
+}
 
-  .nav-tabs {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 
-  .nav-tab {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .nav-right {
-    width: 100%;
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
 
 }
 
