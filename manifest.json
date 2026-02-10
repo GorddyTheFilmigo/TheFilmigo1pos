@@ -1,0 +1,25 @@
+{
+  "name": "TheFilmigo POS",
+  "short_name": "Filmigo POS",
+  "description": "Point of Sale system for TheFilmigo shops",
+  "start_url": "/login.html",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+  "background_color": "#0d1117",
+  "theme_color": "#f59e0b",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
