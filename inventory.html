@@ -57,7 +57,7 @@
             font-weight: 600;
             color: var(--text);
         }
-        .form-input, .form-select {
+        .form-input, .form-select, .form-file {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border);
@@ -66,9 +66,22 @@
             color: var(--text);
             font-size: 14px;
         }
-        .form-input:focus {
+        .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--accent-orange);
+        }
+        .icon-preview {
+            margin-top: 8px;
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
         }
         .btn {
             padding: 12px 24px;
@@ -82,23 +95,10 @@
         .btn:hover {
             transform: translateY(-2px);
         }
-        .btn-primary {
-            background: var(--accent-green);
-            color: white;
-        }
-        .btn-secondary {
-            background: var(--accent-blue);
-            color: white;
-        }
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 13px;
-            margin-right: 8px;
-        }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-secondary { background: var(--accent-blue); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-small { padding: 8px 16px; font-size: 13px; margin-right: 8px; }
         .table-container {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -131,19 +131,9 @@
         tr:hover {
             background: rgba(88, 166, 255, 0.08);
         }
-        .error {
-            color: var(--danger);
-            margin-top: 8px;
-        }
-        .success {
-            color: var(--accent-green);
-            margin-top: 8px;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
+        .error { color: var(--danger); margin-top: 8px; }
+        .success { color: var(--accent-green); margin-top: 8px; }
+        .loading { text-align: center; padding: 40px; color: var(--text-muted); }
         .stock-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -151,10 +141,9 @@
             font-size: 0.85rem;
             font-weight: 600;
         }
-        .stock-low  { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
+        .stock-low { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
         .stock-medium { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
         .stock-good { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
-
         @media (max-width: 768px) {
             .container { padding: 16px 12px; }
             .form-grid { grid-template-columns: 1fr; }
@@ -186,25 +175,7 @@
                     <div id="currentDate"></div>
                 </div>
             </div>
-            <button
-                onclick="authModule.logout()"
-                style="
-                  padding: 10px 18px;
-                  background-color: #ef4444;
-                  color: #ffffff;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 14px;
-                  font-weight: 600;
-                  cursor: pointer;
-                  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-                  transition: all 0.2s ease;
-                "
-                onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-                onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
-            >
-                Logout
-            </button>
+            <button onclick="authModule.logout()" style="padding: 10px 18px; background-color: #ef4444; color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'" onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'">Logout</button>
         </div>
     </nav>
 
@@ -240,9 +211,12 @@
                         <label class="form-label">Category</label>
                         <input type="text" id="category" class="form-input" placeholder="e.g., Electronics, Food, etc.">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Icon (Emoji)</label>
-                        <input type="text" id="icon" class="form-input" placeholder="📦" maxlength="2">
+                    <div class="form-group full-width">
+                        <label class="form-label">Icon (Emoji or Upload Image)</label>
+                        <input type="text" id="iconEmoji" class="form-input" placeholder="📦 Type emoji here" maxlength="2">
+                        <div style="margin: 10px 0; font-size: 0.9rem; color: var(--text-muted);">OR upload an image:</div>
+                        <input type="file" id="iconUpload" class="form-file" accept="image/*">
+                        <div id="iconPreview" class="icon-preview">📦</div>
                     </div>
                 </div>
                 <div class="form-group full-width" style="margin-top: 16px;">
@@ -258,11 +232,12 @@
                 <h2>Products List</h2>
                 <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search products..." style="width: 300px;">
             </div>
-            
+           
             <table class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Icon</th>
                         <th>Name</th>
                         <th>Barcode</th>
                         <th>Price</th>
@@ -274,7 +249,7 @@
                     </tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <tr><td colspan="9" class="loading">Loading products...</td></tr>
+                    <tr><td colspan="10" class="loading">Loading products...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -292,26 +267,20 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
-                
-                // ✅ REQUIRE AUTHENTICATION
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
 
                 const currentUser = authModule.getCurrentUser();
-
-                // ✅ ADMIN-ONLY CHECK - Redirect non-admins
                 if (currentUser.role !== 'administrator') {
-                    alert('⚠️ Access Denied: Inventory management is only available to administrators.');
-                    window.location.href = 'products.html'; // Redirect to Products (read-only)
+                    alert('⚠️ Access Denied: Inventory management is only for administrators.');
+                    window.location.href = 'products.html';
                     return;
                 }
 
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                
-                // ✅ Show admin-only navigation links
-                document.getElementById('adminTab').style.display = 'flex';
                 document.getElementById('dashboardLink').style.display = 'flex';
                 document.getElementById('inventoryLink').style.display = 'flex';
+                document.getElementById('adminTab').style.display = 'flex';
 
                 await loadProducts();
 
@@ -319,26 +288,43 @@
                 document.getElementById('clearBtn').addEventListener('click', clearForm);
                 document.getElementById('searchInput').addEventListener('input', filterProducts);
 
+                // NEW: Handle image upload → convert to base64
+                document.getElementById('iconUpload').addEventListener('change', handleImageUpload);
+
                 console.log('✅ Inventory page ready (Admin access)');
             } catch (err) {
                 console.error('Inventory init failed:', err);
-                document.getElementById('productsTableBody').innerHTML = 
-                    `<tr><td colspan="9" style="color:var(--danger);text-align:center;padding:40px;">Error: ${err.message}</td></tr>`;
+                document.getElementById('productsTableBody').innerHTML =
+                    `<tr><td colspan="10" style="color:var(--danger);text-align:center;padding:40px;">Error: ${err.message}</td></tr>`;
             }
         });
+
+        // NEW: Convert uploaded image to base64 and preview
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const base64 = event.target.result;
+                document.getElementById('iconPreview').innerHTML = `<img src="${base64}" alt="Preview" style="max-width:100%; max-height:100%;">`;
+                // Store base64 in hidden field or directly use in submit
+                document.getElementById('iconEmoji').value = base64; // we'll use this field for both emoji & image
+            };
+            reader.readAsDataURL(file);
+        }
 
         async function loadProducts() {
             try {
                 const result = await window.dataModule.getAllProducts();
                 if (!result.success) throw new Error(result.error || 'Failed to load products');
-
                 products = result.data || [];
                 renderProductsTable();
                 console.log('✅ Loaded products:', products.length);
             } catch (err) {
                 console.error('Failed to load products:', err);
-                document.getElementById('productsTableBody').innerHTML = 
-                    `<tr><td colspan="9" style="color:var(--danger);text-align:center;padding:40px;">Failed to load: ${err.message}</td></tr>`;
+                document.getElementById('productsTableBody').innerHTML =
+                    `<tr><td colspan="10" style="color:var(--danger);text-align:center;padding:40px;">Failed to load: ${err.message}</td></tr>`;
             }
         }
 
@@ -351,7 +337,7 @@
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted);">No products found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);">No products found</td></tr>';
                 return;
             }
 
@@ -359,10 +345,17 @@
                 const profit = p.cost ? (p.price - p.cost) : 0;
                 const stockClass = p.stock < 10 ? 'stock-low' : p.stock < 50 ? 'stock-medium' : 'stock-good';
 
+                // Render icon: emoji if short text, image if base64
+                let iconDisplay = p.icon || '📦';
+                if (iconDisplay.startsWith('data:image')) {
+                    iconDisplay = `<img src="${iconDisplay}" alt="Product icon" style="width:40px;height:40px;object-fit:contain;">`;
+                }
+
                 return `
                 <tr>
                     <td>${p.id}</td>
-                    <td>${p.icon || '📦'} ${p.name}</td>
+                    <td>${iconDisplay}</td>
+                    <td>${p.name}</td>
                     <td>${p.barcode || '—'}</td>
                     <td>KES ${p.price.toFixed(2)}</td>
                     <td>KES ${p.cost ? p.cost.toFixed(2) : '0.00'}</td>
@@ -393,7 +386,7 @@
             const cost     = parseFloat(document.getElementById('cost').value) || 0;
             const stock    = parseInt(document.getElementById('stock').value);
             const category = document.getElementById('category').value.trim();
-            const icon     = document.getElementById('icon').value.trim();
+            const icon     = document.getElementById('iconEmoji').value.trim(); // now holds either emoji or base64
 
             if (!name || isNaN(price) || isNaN(stock)) {
                 showMessage('Please fill required fields correctly', 'error');
@@ -407,7 +400,7 @@
                 cost,
                 stock,
                 category: category || null,
-                icon: icon || '📦'
+                icon: icon || '📦' // base64 or emoji
             };
 
             try {
@@ -417,7 +410,6 @@
                 } else {
                     result = await window.dataModule.createProduct(productData);
                 }
-
                 if (!result.success) throw new Error(result.error);
 
                 showMessage(
@@ -448,18 +440,25 @@
             document.getElementById('cost').value     = product.cost || '';
             document.getElementById('stock').value    = product.stock;
             document.getElementById('category').value = product.category || '';
-            document.getElementById('icon').value     = product.icon || '';
+
+            // Show current icon in preview
+            const iconValue = product.icon || '📦';
+            document.getElementById('iconEmoji').value = iconValue;
+            const preview = document.getElementById('iconPreview');
+            if (iconValue.startsWith('data:image')) {
+                preview.innerHTML = `<img src="${iconValue}" alt="Current icon" style="max-width:100%; max-height:100%;">`;
+            } else {
+                preview.textContent = iconValue;
+            }
 
             document.querySelector('.product-form').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function deleteProduct(id) {
             if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
-
             try {
                 const result = await window.dataModule.deleteProduct(id);
                 if (!result.success) throw new Error(result.error);
-
                 showMessage('✅ Product deleted successfully!', 'success');
                 await loadProducts();
             } catch (err) {
@@ -473,6 +472,7 @@
             document.getElementById('formTitle').textContent = 'Add New Product';
             document.getElementById('submitBtn').textContent = '+ Add Product';
             document.getElementById('productForm').reset();
+            document.getElementById('iconPreview').textContent = '📦';
             document.getElementById('formMessage').textContent = '';
         }
 
@@ -488,7 +488,7 @@
             deleteProduct
         };
 
-        console.log('✅ Inventory page script loaded (using dataModule)');
+        console.log('✅ Inventory page script loaded (with image upload support)');
     })();
     </script>
     <script src="assets/pwa-registration.js"></script>
