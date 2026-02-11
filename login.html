@@ -4,10 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TheFilmigo POS">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <title>TheFilmigo POS</title>
+    
+    <!-- ✅ PWA META TAGS - ADD THESE -->
+    <meta name="theme-color" content="#f59e0b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TheFilmigo">
+    <meta name="description" content="Multi-tenant Point of Sale system">
+    
+    <!-- ✅ PWA MANIFEST LINK -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- ✅ APPLE TOUCH ICONS -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
+    
+    <!-- ✅ FAVICON -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    
+    <!-- Your existing styles and scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <title>Login - Duka POS</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -183,6 +202,23 @@
         <div class="logo">
             <h1>TheFilmigoPro</h1>
             <p>Point of Sale System</p>
+            <button 
+    id="installBtn" 
+    onclick="installPWA()" 
+    style="
+        display: none;
+        margin: 20px auto;
+        padding: 12px 24px;
+        background: #f59e0b;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    "
+>
+    📱 Install App
+</button>
         </div>
         
         <div id="message" class="message" style="display: none;"></div>
@@ -207,7 +243,9 @@
         <div class="signup-link">
             Don't have a shop? <a href="signup.html">Register Your Shop</a>
         </div>
+
     </div>
+
 
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
@@ -282,6 +320,59 @@
     
     window.togglePassword = togglePassword;
     </script>
-    <script src="assets/pwa-registration.js"></script>
+    <script>
+    // ✅ PWA SERVICE WORKER REGISTRATION
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('✅ PWA: Service Worker registered', registration.scope);
+                })
+                .catch(error => {
+                    console.error('❌ PWA: Service Worker registration failed', error);
+                });
+        });
+    }
+
+    // ✅ PWA INSTALL PROMPT (Optional - shows install button)
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent the default install prompt
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show your custom install button
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn) {
+            installBtn.style.display = 'block';
+        }
+        
+        console.log('💡 PWA: Install prompt ready');
+    });
+
+    // Function to trigger install
+    window.installPWA = function() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('✅ PWA: User accepted install');
+                } else {
+                    console.log('❌ PWA: User dismissed install');
+                }
+                deferredPrompt = null;
+            });
+        }
+    };
+
+    // Detect if running as installed PWA
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            window.navigator.standalone === true) {
+            console.log('✅ Running as installed PWA');
+        }
+    });
+</script>
 </body>
 </html>
