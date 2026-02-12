@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
     <title>TheFilmigo POS</title>
-    
+   
     <!-- PWA META TAGS -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
-    
+   
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <!-- Offline Mode Styles -->
-<link rel="stylesheet" href="assets/offline-styles.css">
-    
+    <link rel="stylesheet" href="assets/offline-styles.css">
+   
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
@@ -41,7 +41,7 @@
             background: var(--bg-primary);
             color: var(--text);
         }
-        
+       
         /* Tab Navigation */
         .pos-tabs {
             display: flex;
@@ -67,10 +67,10 @@
             color: white;
             border-color: var(--accent-orange);
         }
-        
+       
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        
+       
         /* POS Section */
         .pos-container {
             display: grid;
@@ -254,7 +254,7 @@
             padding: 40px 20px;
             color: var(--text-muted);
         }
-        
+       
         /* Expenses Section */
         .expenses-container {
             padding: 20px;
@@ -328,7 +328,7 @@
             font-weight: 700;
             color: var(--danger);
         }
-        
+       
         /* Modal Styles */
         .modal {
             display: none;
@@ -412,7 +412,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        
+       
         @media (max-width: 900px) {
             .pos-container {
                 grid-template-columns: 1fr;
@@ -494,6 +494,7 @@
                         <p>Cart is empty</p>
                     </div>
                 </div>
+
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Items:</span>
@@ -503,12 +504,14 @@
                         <strong>Total:</strong>
                         <strong class="summary-total" id="totalAmount">KES 0.00</strong>
                     </div>
+
                     <div class="payment-methods" style="margin-top:15px;">
                         <button class="payment-btn active" data-method="Cash">💵 Cash</button>
                         <button class="payment-btn" data-method="M-Pesa">📱 M-Pesa</button>
                         <button class="payment-btn" data-method="Card">💳 Card</button>
                         <button class="payment-btn" data-method="Credit">📋 Credit</button>
                     </div>
+
                     <button class="checkout-btn" id="checkoutBtn" disabled>
                         Complete Sale
                     </button>
@@ -564,6 +567,7 @@
                 <h2>Add New Expense</h2>
                 <p style="color: var(--text-muted);">Record a business expense</p>
             </div>
+
             <form id="expenseForm">
                 <div class="form-group">
                     <label for="expenseCategory">Category *</label>
@@ -580,18 +584,22 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="expenseAmount">Amount (KES) *</label>
                     <input type="number" id="expenseAmount" step="0.01" min="0" required>
                 </div>
+
                 <div class="form-group">
                     <label for="expenseDescription">Description *</label>
                     <textarea id="expenseDescription" required placeholder="What was this expense for?"></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="expenseDate">Date *</label>
                     <input type="date" id="expenseDate" required>
                 </div>
+
                 <div class="modal-actions">
                     <button type="submit" class="modal-btn modal-btn-primary">Save Expense</button>
                     <button type="button" class="modal-btn modal-btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
@@ -615,7 +623,6 @@
     <script src="assets/auth.js"></script>
     <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
-
     <script>
     // ════════════════════════════════════════════════════════════
     // TAB SWITCHING
@@ -623,10 +630,10 @@
     function switchTab(tab) {
         const tabs = document.querySelectorAll('.pos-tab-btn');
         const contents = document.querySelectorAll('.tab-content');
-       
+      
         tabs.forEach(t => t.classList.remove('active'));
         contents.forEach(c => c.classList.remove('active'));
-       
+      
         if (tab === 'sales') {
             document.querySelector('[onclick*="sales"]').classList.add('active');
             document.getElementById('salesTab').classList.add('active');
@@ -654,7 +661,7 @@
         try {
             const result = await window.dataModule.getAllExpenses();
             if (!result.success) throw new Error(result.error);
-           
+          
             const expenses = result.data || [];
             renderExpenses(expenses);
             calculateExpenseStats(expenses);
@@ -667,7 +674,7 @@
 
     function renderExpenses(expenses) {
         const container = document.getElementById('expensesList');
-       
+      
         if (expenses.length === 0) {
             container.innerHTML = `
                 <div style="text-align:center; padding:40px; color:var(--text-muted);">
@@ -685,7 +692,7 @@
                 month: 'short',
                 day: 'numeric'
             });
-           
+          
             return `
                 <div class="expense-item">
                     <div class="expense-info">
@@ -713,7 +720,6 @@
         expenses.forEach(expense => {
             const expenseDate = new Date(expense.date);
             const amount = parseFloat(expense.amount);
-
             if (expenseDate >= today) todayTotal += amount;
             if (expenseDate >= weekStart) weekTotal += amount;
             if (expenseDate >= monthStart) monthTotal += amount;
@@ -728,7 +734,7 @@
 
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-       
+      
         const expenseData = {
             category: document.getElementById('expenseCategory').value,
             amount: parseFloat(document.getElementById('expenseAmount').value),
@@ -739,7 +745,7 @@
         try {
             const result = await window.dataModule.createExpense(expenseData);
             if (!result.success) throw new Error(result.error);
-           
+          
             closeAddExpenseModal();
             await loadExpenses();
             alert('✅ Expense added successfully!');
@@ -760,18 +766,18 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
-               
+              
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
-               
+              
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-               
+              
                 // Setup navigation based on role
                 if (window.setupNavigationForRole) {
                     window.setupNavigationForRole();
                 }
-               
+              
                 await loadProducts();
                 setupEventListeners();
                 console.log('✅ POS initialized');
@@ -799,7 +805,6 @@
         function renderCategoryButtons() {
             const container = document.getElementById('categoriesContainer');
             container.innerHTML = '';
-
             const allBtn = document.createElement('button');
             allBtn.className = 'category-btn active';
             allBtn.dataset.category = 'All';
@@ -822,7 +827,6 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-
                     const category = btn.dataset.category;
                     const filtered = category === 'All'
                         ? products
@@ -834,7 +838,7 @@
 
         function renderProducts(productsToRender) {
             const grid = document.getElementById('productsGrid');
-           
+          
             if (productsToRender.length === 0) {
                 grid.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">No products found</div>';
                 return;
@@ -857,8 +861,9 @@
                 alert('Product out of stock!');
                 return;
             }
+
             const existingItem = cart.find(item => item.id === productId);
-           
+          
             if (existingItem) {
                 if (existingItem.quantity >= product.stock) {
                     alert('Cannot add more than available stock!');
@@ -874,13 +879,14 @@
                     maxStock: product.stock
                 });
             }
+
             renderCart();
         };
 
         function renderCart() {
             const cartContainer = document.getElementById('cartItems');
             const checkoutBtn = document.getElementById('checkoutBtn');
-           
+          
             if (cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
@@ -892,7 +898,7 @@
                 updateSummary();
                 return;
             }
-           
+          
             cartContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-info">
@@ -907,7 +913,7 @@
                     </div>
                 </div>
             `).join('');
-           
+          
             checkoutBtn.disabled = false;
             updateSummary();
         }
@@ -915,9 +921,9 @@
         window.updateQuantity = function(productId, change) {
             const item = cart.find(i => i.id === productId);
             if (!item) return;
-           
+          
             const newQty = item.quantity + change;
-           
+          
             if (newQty <= 0) {
                 removeFromCart(productId);
                 return;
@@ -926,6 +932,7 @@
                 alert('Cannot exceed available stock!');
                 return;
             }
+
             item.quantity = newQty;
             renderCart();
         };
@@ -965,7 +972,7 @@
 
         async function checkout() {
             if (cart.length === 0) return;
-           
+          
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             await processCheckout(cart, total, selectedPayment);
         }
@@ -974,35 +981,62 @@
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-               
+              
                 const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-               
+              
                 const saleItems = cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     unit_price: item.price
                 }));
-               
-                const result = await window.dataModule.createSale({
+              
+                // 1. Create the sale record
+                const saleResult = await window.dataModule.createSale({
                     user_id: currentUser.id,
                     total_amount: total,
                     items_sold: itemsSold,
                     payment_method: paymentMethod
                 }, saleItems);
-               
-                if (!result.success) throw new Error(result.error);
-               
+
+                if (!saleResult.success) throw new Error(saleResult.error);
+
+                // 2. Update stock for each item with better error handling
+                let stockUpdateFailed = false;
+                let failedProducts = [];
+
                 for (const item of cartItems) {
-                    await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
+                    const updateResult = await window.dataModule.updateInventory(
+                        item.id,
+                        item.quantity,
+                        'subtract'
+                    );
+
+                    if (!updateResult.success) {
+                        console.warn(`Stock update failed for product ${item.id} (${item.name}): ${updateResult.error}`);
+                        stockUpdateFailed = true;
+                        failedProducts.push(item.name);
+                    }
                 }
-               
+
+                // 3. Show warning if any stock update failed
+                if (stockUpdateFailed) {
+                    alert(
+                        'Sale completed successfully, but stock could not be updated for:\n' +
+                        failedProducts.join(', ') +
+                        '\n\nPlease check inventory manually or contact support.'
+                    );
+                }
+
+                // 4. Show success modal
                 document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
                 document.getElementById('successModal').classList.add('show');
+
+                // 5. Clear cart & refresh products
                 cart = [];
                 renderCart();
                 await loadProducts();
-               
-                return { success: true, sale: result.data };
+
+                return { success: true, sale: saleResult.data };
             } catch (error) {
                 console.error('❌ Checkout error:', error);
                 alert('Checkout failed: ' + error.message);
@@ -1015,6 +1049,5 @@
         };
     })();
     </script>
-    
 </body>
 </html>
