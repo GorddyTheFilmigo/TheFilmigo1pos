@@ -7,7 +7,6 @@
     <title>TheFilmigo POS</title>
     
     <!-- PWA META TAGS -->
-    <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,10 +14,10 @@
     <meta name="description" content="Multi-tenant Point of Sale system">
     
     <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <!-- Offline Mode Styles -->
+<link rel="stylesheet" href="assets/offline-styles.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -43,7 +42,7 @@
             color: var(--text);
         }
         
-        /* Tab Navigation for POS/Expenses */
+        /* Tab Navigation */
         .pos-tabs {
             display: flex;
             gap: 10px;
@@ -62,22 +61,17 @@
             font-size: 16px;
             transition: all 0.2s;
         }
-        .pos-tab-btn:hover {
-            border-color: var(--accent-orange);
-        }
+        .pos-tab-btn:hover { border-color: var(--accent-orange); }
         .pos-tab-btn.active {
             background: var(--accent-orange);
             color: white;
             border-color: var(--accent-orange);
         }
         
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         
+        /* POS Section */
         .pos-container {
             display: grid;
             grid-template-columns: 1fr 400px;
@@ -85,18 +79,14 @@
             padding: 20px;
             height: calc(100vh - 160px);
         }
-        .products-section {
+        .products-section, .cart-section {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            overflow-y: auto;
         }
+        .products-section { overflow-y: auto; }
         .cart-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
             display: flex;
             flex-direction: column;
         }
@@ -116,7 +106,6 @@
             margin-bottom: 20px;
             flex-wrap: wrap;
             overflow-x: auto;
-            padding-bottom: 10px;
         }
         .category-btn {
             padding: 10px 20px;
@@ -156,17 +145,8 @@
             margin: 0 auto 10px;
             font-size: 3rem;
             line-height: 60px;
-            object-fit: contain;
         }
-        .product-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .product-name {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
+        .product-name { font-weight: 600; margin-bottom: 5px; }
         .product-price {
             color: var(--accent-orange);
             font-weight: 700;
@@ -192,7 +172,11 @@
         .cart-item-info { flex: 1; }
         .cart-item-name { font-weight: 600; margin-bottom: 5px; }
         .cart-item-price { color: var(--text-muted); font-size: 0.9rem; }
-        .cart-item-controls { display: flex; align-items: center; gap: 10px; }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .qty-btn {
             width: 30px;
             height: 30px;
@@ -203,7 +187,11 @@
             cursor: pointer;
             font-weight: 700;
         }
-        .qty-value { min-width: 30px; text-align: center; font-weight: 600; }
+        .qty-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
         .remove-btn {
             background: var(--danger);
             color: white;
@@ -213,10 +201,26 @@
             cursor: pointer;
             font-weight: 600;
         }
-        .cart-summary { border-top: 2px solid var(--border); padding-top: 15px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .summary-total { font-size: 1.5rem; font-weight: 900; color: var(--accent-orange); }
-        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .cart-summary {
+            border-top: 2px solid var(--border);
+            padding-top: 15px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .summary-total {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent-orange);
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
         .payment-btn {
             padding: 12px;
             border: 2px solid var(--border);
@@ -245,9 +249,13 @@
             background: var(--text-muted);
             cursor: not-allowed;
         }
-        .empty-cart { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
         
-        /* Expenses Section Styles */
+        /* Expenses Section */
         .expenses-container {
             padding: 20px;
             max-width: 1400px;
@@ -322,17 +330,17 @@
         }
         
         /* Modal Styles */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            z-index: 1000; 
-            justify-content: center; 
-            align-items: center; 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
         .modal.show { display: flex; }
         .modal-content {
@@ -399,41 +407,20 @@
             background: var(--danger);
             color: white;
         }
-        .modal-icon { font-size: 4rem; margin-bottom: 20px; text-align: center; }
-        .mpesa-modal .modal-content { border-color: var(--accent-green); }
-        .phone-input {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 16px;
-            margin: 20px 0;
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
             text-align: center;
         }
-        .spinner {
-            border: 3px solid var(--border);
-            border-top: 3px solid var(--accent-green);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .status-message { margin: 15px 0; padding: 12px; border-radius: 8px; font-size: 14px; }
-        .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
-        .status-success { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
-        .status-failed { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
         
-        @media (max-width: 768px) {
-            .nav-container { flex-wrap: wrap; gap: 12px; }
-            .pos-tabs { padding: 10px; overflow-x: auto; }
-        }
         @media (max-width: 900px) {
-            .pos-container { grid-template-columns: 1fr; height: auto; padding: 12px; }
-            .expenses-stats { grid-template-columns: 1fr; }
+            .pos-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            .expenses-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -442,10 +429,10 @@
         <div class="nav-container">
             <div class="logo">TheFilmigo</div>
             <div class="nav-tabs">
-                <a href="dashboard.html" class="nav-tab" id="adminTab" style="display:none;">Dashboard</a>
+                <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab active">Point of Sale</a>
                 <a href="products.html" class="nav-tab">Products</a>
-                <a href="inventory.html" class="nav-tab" id="adminTab" style="display:none;">Inventory</a>
+                <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
                 <a href="customers.html" class="nav-tab">Customers</a>
                 <a href="suppliers.html" class="nav-tab">Suppliers</a>
                 <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
@@ -481,7 +468,7 @@
     <!-- POS/Expenses Tab Navigation -->
     <div class="pos-tabs">
         <button class="pos-tab-btn active" onclick="switchTab('sales')">💰 Sales</button>
-        <button class="pos-tab-btn" onclick="switchTab('expenses')">📊 Expenses</button>
+        <button class="pos-tab-btn" onclick="switchTab('expenses')">💸 Expenses</button>
     </div>
 
     <!-- Sales Tab Content -->
@@ -534,7 +521,7 @@
     <div id="expensesTab" class="tab-content">
         <div class="expenses-container">
             <div class="expenses-header">
-                <h1>Expenses Tracking</h1>
+                <h1>💸 Expenses Tracking</h1>
                 <button class="add-expense-btn" onclick="openAddExpenseModal()">
                     ➕ Add Expense
                 </button>
@@ -624,49 +611,22 @@
         </div>
     </div>
 
-    <!-- M-Pesa STK Push Modal -->
-    <div class="modal mpesa-modal" id="mpesaModal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="modal-icon">📱</div>
-            <h2 style="margin-bottom:10px;">M-Pesa Payment</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Enter phone number to receive STK push</p>
-           
-            <input type="tel"
-                   id="phoneInput"
-                   class="phone-input"
-                   placeholder="254712345678"
-                   maxlength="12"
-                   pattern="[0-9]*">
-           
-            <div style="font-size:1.5rem; font-weight:700; color:var(--accent-orange); margin-bottom:20px;">
-                Amount: KES <span id="mpesaAmount">0.00</span>
-            </div>
-            <div id="mpesaStatus"></div>
-           
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button class="modal-btn modal-btn-primary" onclick="initiateMpesaPayment()" id="mpesaPayBtn">
-                    Send STK Push
-                </button>
-                <button class="modal-btn modal-btn-secondary" onclick="closeMpesaModal()" id="mpesaCancelBtn">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
+    <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
 
     <script>
-    // Tab Switching
+    // ════════════════════════════════════════════════════════════
+    // TAB SWITCHING
+    // ════════════════════════════════════════════════════════════
     function switchTab(tab) {
         const tabs = document.querySelectorAll('.pos-tab-btn');
         const contents = document.querySelectorAll('.tab-content');
-        
+       
         tabs.forEach(t => t.classList.remove('active'));
         contents.forEach(c => c.classList.remove('active'));
-        
+       
         if (tab === 'sales') {
             document.querySelector('[onclick*="sales"]').classList.add('active');
             document.getElementById('salesTab').classList.add('active');
@@ -677,7 +637,9 @@
         }
     }
 
-    // Expenses Functions
+    // ════════════════════════════════════════════════════════════
+    // EXPENSES FUNCTIONS
+    // ════════════════════════════════════════════════════════════
     function openAddExpenseModal() {
         document.getElementById('expenseDate').valueAsDate = new Date();
         document.getElementById('addExpenseModal').classList.add('show');
@@ -692,20 +654,20 @@
         try {
             const result = await window.dataModule.getAllExpenses();
             if (!result.success) throw new Error(result.error);
-            
+           
             const expenses = result.data || [];
             renderExpenses(expenses);
             calculateExpenseStats(expenses);
         } catch (error) {
             console.error('Failed to load expenses:', error);
-            document.getElementById('expensesList').innerHTML = 
+            document.getElementById('expensesList').innerHTML =
                 '<div style="text-align:center; padding:40px; color:var(--danger);">Failed to load expenses</div>';
         }
     }
 
     function renderExpenses(expenses) {
         const container = document.getElementById('expensesList');
-        
+       
         if (expenses.length === 0) {
             container.innerHTML = `
                 <div style="text-align:center; padding:40px; color:var(--text-muted);">
@@ -718,12 +680,12 @@
 
         container.innerHTML = expenses.map(expense => {
             const date = new Date(expense.date);
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric' 
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
             });
-            
+           
             return `
                 <div class="expense-item">
                     <div class="expense-info">
@@ -766,7 +728,7 @@
 
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+       
         const expenseData = {
             category: document.getElementById('expenseCategory').value,
             amount: parseFloat(document.getElementById('expenseAmount').value),
@@ -777,23 +739,23 @@
         try {
             const result = await window.dataModule.createExpense(expenseData);
             if (!result.success) throw new Error(result.error);
-            
+           
             closeAddExpenseModal();
             await loadExpenses();
-            alert('Expense added successfully!');
+            alert('✅ Expense added successfully!');
         } catch (error) {
             console.error('Failed to add expense:', error);
-            alert('Failed to add expense: ' + error.message);
+            alert('❌ Failed to add expense: ' + error.message);
         }
     });
 
-    // POS Functions (keeping your existing code)
+    // ════════════════════════════════════════════════════════════
+    // POS FUNCTIONS
+    // ════════════════════════════════════════════════════════════
     (function() {
         let cart = [];
         let products = [];
         let selectedPayment = 'Cash';
-        let mpesaCheckoutId = null;
-        let mpesaPollingInterval = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -801,16 +763,15 @@
                
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
-                
+               
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                
-                if (currentUser.role === 'administrator') {
-                    document.querySelectorAll('#adminTab').forEach(tab => {
-                        tab.style.display = 'flex';
-                    });
+               
+                // Setup navigation based on role
+                if (window.setupNavigationForRole) {
+                    window.setupNavigationForRole();
                 }
-                
+               
                 await loadProducts();
                 setupEventListeners();
                 console.log('✅ POS initialized');
@@ -836,7 +797,7 @@
         }
 
         function renderCategoryButtons() {
-            const container = document.querySelector('.categories');
+            const container = document.getElementById('categoriesContainer');
             container.innerHTML = '';
 
             const allBtn = document.createElement('button');
@@ -879,21 +840,14 @@
                 return;
             }
 
-            grid.innerHTML = productsToRender.map(product => {
-                let iconHtml = product.icon || '📦';
-                if (typeof iconHtml === 'string' && iconHtml.startsWith('data:image')) {
-                    iconHtml = `<img src="${iconHtml}" alt="${product.name}" style="width:100%;height:100%;object-fit:contain;">`;
-                }
-
-                return `
+            grid.innerHTML = productsToRender.map(product => `
                 <div class="product-card" onclick="addToCart(${product.id})">
-                    <div class="product-icon">${iconHtml}</div>
+                    <div class="product-icon">${product.icon || '📦'}</div>
                     <div class="product-name">${product.name}</div>
                     <div class="product-price">KES ${product.price.toFixed(2)}</div>
                     <div class="product-stock">Stock: ${product.stock}</div>
                 </div>
-                `;
-            }).join('');
+            `).join('');
         }
 
         window.addToCart = function(productId) {
@@ -926,7 +880,7 @@
         function renderCart() {
             const cartContainer = document.getElementById('cartItems');
             const checkoutBtn = document.getElementById('checkoutBtn');
-            
+           
             if (cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
@@ -938,7 +892,7 @@
                 updateSummary();
                 return;
             }
-            
+           
             cartContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-info">
@@ -953,7 +907,7 @@
                     </div>
                 </div>
             `).join('');
-            
+           
             checkoutBtn.disabled = false;
             updateSummary();
         }
@@ -961,7 +915,7 @@
         window.updateQuantity = function(productId, change) {
             const item = cart.find(i => i.id === productId);
             if (!item) return;
-            
+           
             const newQty = item.quantity + change;
            
             if (newQty <= 0) {
@@ -1007,188 +961,47 @@
             });
 
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
-           
-            document.getElementById('phoneInput').addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            });
         }
 
         async function checkout() {
             if (cart.length === 0) return;
-            
+           
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            if (selectedPayment === 'M-Pesa') {
-                document.getElementById('mpesaAmount').textContent = total.toFixed(2);
-                document.getElementById('mpesaModal').classList.add('show');
-                document.getElementById('phoneInput').focus();
-                return;
-            }
-            
             await processCheckout(cart, total, selectedPayment);
         }
 
-        window.initiateMpesaPayment = async function() {
-            const phone = document.getElementById('phoneInput').value.trim();
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
-            if (!phone || phone.length < 10) {
-                showMpesaStatus('Please enter a valid phone number (254...)', 'failed');
-                return;
-            }
-            
-            const payBtn = document.getElementById('mpesaPayBtn');
-            payBtn.disabled = true;
-            payBtn.textContent = 'Sending...';
-           
-            try {
-                showMpesaStatus('Sending STK push to ' + phone + '...', 'pending');
-                const result = await sendMpesaSTKPush(phone, total);
-                
-                if (result.success) {
-                    mpesaCheckoutId = result.checkoutRequestID;
-                    showMpesaStatus('STK push sent! Please check your phone and enter M-Pesa PIN', 'pending');
-                    startMpesaPolling(mpesaCheckoutId);
-                } else {
-                    throw new Error(result.error || 'STK push failed');
-                }
-            } catch (error) {
-                console.error('M-Pesa initiation error:', error);
-                showMpesaStatus('Failed to send STK push: ' + error.message, 'failed');
-                payBtn.disabled = false;
-                payBtn.textContent = 'Retry';
-            }
-        };
-
-        async function sendMpesaSTKPush(phone, amount) {
-            try {
-                const response = await fetch('/api/mpesa/stk-push', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone, amount, description: 'POS Payment' })
-                });
-                if (!response.ok) throw new Error('API request failed');
-                return await response.json();
-            } catch (error) {
-                console.error('STK Push API error:', error);
-                return {
-                    success: true,
-                    checkoutRequestID: 'ws_CO_' + Date.now(),
-                    message: 'STK push sent (Demo mode)'
-                };
-            }
-        }
-
-        function startMpesaPolling(checkoutId) {
-            let attempts = 0;
-            const maxAttempts = 30;
-            
-            mpesaPollingInterval = setInterval(async () => {
-                attempts++;
-                if (attempts > maxAttempts) {
-                    clearInterval(mpesaPollingInterval);
-                    showMpesaStatus('Payment timeout. Please try again.', 'failed');
-                    document.getElementById('mpesaPayBtn').disabled = false;
-                    document.getElementById('mpesaPayBtn').textContent = 'Retry';
-                    return;
-                }
-                
-                const status = await checkMpesaStatus(checkoutId);
-                if (status.completed) {
-                    clearInterval(mpesaPollingInterval);
-                   
-                    if (status.success) {
-                        showMpesaStatus('Payment successful! Processing order...', 'success');
-                        await completeMpesaCheckout(status);
-                    } else {
-                        showMpesaStatus('Payment failed or cancelled', 'failed');
-                        document.getElementById('mpesaPayBtn').disabled = false;
-                        document.getElementById('mpesaPayBtn').textContent = 'Retry';
-                    }
-                }
-            }, 1000);
-        }
-
-        async function checkMpesaStatus(checkoutId) {
-            try {
-                const response = await fetch(`/api/mpesa/status/${checkoutId}`);
-                return await response.json();
-            } catch (error) {
-                console.error('Status check error:', error);
-                const elapsed = Date.now() - parseInt(checkoutId.split('_').pop());
-                if (elapsed > 5000) {
-                    return { completed: true, success: true };
-                }
-                return { completed: false };
-            }
-        }
-
-        async function completeMpesaCheckout(paymentStatus) {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-           
-            const result = await processCheckout(cart, total, 'M-Pesa', {
-                mpesaReceiptNumber: paymentStatus.receiptNumber || 'N/A',
-                mpesaPhone: paymentStatus.phone
-            });
-            
-            if (result.success) {
-                closeMpesaModal();
-                document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
-                document.getElementById('successModal').classList.add('show');
-                cart = [];
-                renderCart();
-                await loadProducts();
-            }
-        }
-
-        function showMpesaStatus(message, type) {
-            const statusDiv = document.getElementById('mpesaStatus');
-            statusDiv.className = `status-message status-${type}`;
-            statusDiv.innerHTML = type === 'pending'
-                ? `<div class="spinner"></div><p>${message}</p>`
-                : message;
-        }
-
-        async function processCheckout(cartItems, total, paymentMethod, mpesaData = null) {
+        async function processCheckout(cartItems, total, paymentMethod) {
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-                
+               
                 const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                console.log('Creating sale...');
                
                 const saleItems = cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     unit_price: item.price
                 }));
-                
+               
                 const result = await window.dataModule.createSale({
                     user_id: currentUser.id,
                     total_amount: total,
                     items_sold: itemsSold,
-                    payment_method: paymentMethod,
-                    mpesa_receipt: mpesaData?.mpesaReceiptNumber,
-                    mpesa_phone: mpesaData?.mpesaPhone
+                    payment_method: paymentMethod
                 }, saleItems);
-                
+               
                 if (!result.success) throw new Error(result.error);
-                console.log('✅ Sale created:', result.data);
-                
-                console.log('Updating stock...');
+               
                 for (const item of cartItems) {
                     await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
                 }
-                console.log('✅ Stock updated');
-                
-                if (paymentMethod !== 'M-Pesa') {
-                    document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
-                    document.getElementById('successModal').classList.add('show');
-                    cart = [];
-                    renderCart();
-                    await loadProducts();
-                }
-                
+               
+                document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
+                document.getElementById('successModal').classList.add('show');
+                cart = [];
+                renderCart();
+                await loadProducts();
+               
                 return { success: true, sale: result.data };
             } catch (error) {
                 console.error('❌ Checkout error:', error);
@@ -1200,20 +1013,29 @@
         window.closeSuccessModal = function() {
             document.getElementById('successModal').classList.remove('show');
         };
-
-        window.closeMpesaModal = function() {
-            if (mpesaPollingInterval) {
-                clearInterval(mpesaPollingInterval);
-            }
-            document.getElementById('mpesaModal').classList.remove('show');
-            document.getElementById('phoneInput').value = '';
-            document.getElementById('mpesaStatus').innerHTML = '';
-            document.getElementById('mpesaPayBtn').disabled = false;
-            document.getElementById('mpesaPayBtn').textContent = 'Send STK Push';
-        };
     })();
     </script>
+    <!-- Offline Manager -->
+<script src="assets/offline-manager.js"></script>
 
-    <script src="assets/pwa-registration.js"></script>
+<!-- Offline UI Elements -->
+<div id="onlineStatus" class="status-indicator status-online">🟢 Online</div>
+
+<div id="queueInfo" class="queue-info" style="display: none;">
+    <div class="queue-info-header">
+        <span class="queue-info-title">Pending Transactions</span>
+        <span class="queue-count-badge" id="queueCount">0</span>
+    </div>
+    <div class="queue-info-body">
+        These transactions will sync when you're back online
+    </div>
+    <button class="sync-now-btn" onclick="window.offlineManager.syncNow()">
+        Sync Now
+    </button>
+</div>
+
+<div id="offlineBanner" class="offline-banner">
+    📴 You're offline - Transactions will be saved and synced when online
+</div>
 </body>
 </html>

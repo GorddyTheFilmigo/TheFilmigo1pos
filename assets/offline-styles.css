@@ -1,0 +1,265 @@
+/* Offline Mode UI Styles */
+/* Add this to your existing CSS or create offline-styles.css */
+
+/* Online/Offline Status Indicator */
+.status-indicator {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.status-online {
+    background: #3fb950;
+    color: white;
+}
+
+.status-offline {
+    background: #f85149;
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Queue Info Panel */
+.queue-info {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-orange);
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+}
+
+.queue-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.queue-info-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--accent-orange);
+}
+
+.queue-count-badge {
+    background: var(--accent-orange);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.queue-info-body {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.sync-now-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent-green);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sync-now-btn:hover {
+    background: #2ea043;
+    transform: translateY(-1px);
+}
+
+.sync-now-btn:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+}
+
+/* Offline Notification Toast */
+.offline-notification {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.offline-notification.fade-out {
+    animation: slideOut 0.3s ease forwards;
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.offline-notification-info {
+    background: #58a6ff;
+    color: white;
+}
+
+.offline-notification-success {
+    background: #3fb950;
+    color: white;
+}
+
+.offline-notification-warning {
+    background: #f59e0b;
+    color: white;
+}
+
+.offline-notification-error {
+    background: #f85149;
+    color: white;
+}
+
+/* Offline Mode Banner */
+.offline-banner {
+    background: linear-gradient(135deg, #f85149 0%, #da3633 100%);
+    color: white;
+    padding: 12px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.offline-banner.show {
+    display: block;
+}
+
+/* Sync Queue Badge in Navigation */
+.sync-queue-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #f85149;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Offline Mode Product Card Indicator */
+.product-card-offline {
+    opacity: 0.8;
+    position: relative;
+}
+
+.product-card-offline::after {
+    content: 'Cached';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #f59e0b;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Loading Indicator for Sync */
+.sync-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .status-indicator {
+        top: 60px;
+        right: 10px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .queue-info {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        min-width: unset;
+    }
+
+    .offline-notification {
+        right: 10px;
+        left: 10px;
+        min-width: unset;
+    }
+
+    .offline-banner {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
