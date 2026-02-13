@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/login.html",
+      "status": 302
+    },
+    {
+      "src": "/index.html",
+      "dest": "/login.html",
+      "status": 302
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
