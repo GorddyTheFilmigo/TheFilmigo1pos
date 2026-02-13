@@ -5,34 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
     
-    <!-- ✅ PWA META TAGS - ADD THESE -->
-    <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
     
-    <!-- ✅ PWA MANIFEST LINK -->
     <link rel="manifest" href="/manifest.json">
-    <!-- Offline Mode Styles -->
-<link rel="stylesheet" href="assets/offline-styles.css">
+    <link rel="stylesheet" href="assets/offline-styles.css">
     
-    <!-- ✅ APPLE TOUCH ICONS -->
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
     
-    <!-- ✅ FAVICON -->
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     
-    <!-- Your existing styles and scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <title>TheFilmigo - Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
-    <link rel="manifest" href="/manifest.json">
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -72,6 +63,7 @@
         .stat-card:hover { transform: translateY(-5px); }
         .stat-title { font-size: 1rem; color: var(--text-muted); margin-bottom: 12px; }
         .stat-value { font-size: 2.5rem; font-weight: 900; color: var(--accent-orange); }
+        .stat-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; }
         .chart-container {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -204,8 +196,13 @@
                 <div class="stat-value" id="totalRevenue">KES 0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Total Profit</div>
+                <div class="stat-title">Net Profit</div>
                 <div class="stat-value" id="totalProfit">KES 0.00</div>
+                <div class="stat-subtitle" id="profitBreakdown">Profit - Expenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Expenses</div>
+                <div class="stat-value" style="color: var(--danger);" id="totalExpenses">KES 0.00</div>
             </div>
             <div class="stat-card">
                 <div class="stat-title">Transactions</div>
@@ -266,7 +263,6 @@
         </div>
     </div>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
@@ -281,23 +277,20 @@
             try {
                 await window.DukaPOS.initializeSupabase();
                 
-                // ✅ REQUIRE AUTHENTICATION
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
 
                 const currentUser = authModule.getCurrentUser();
                 const currentShop = authModule.getCurrentShop();
 
-                // ✅ ADMIN-ONLY CHECK - Redirect non-admins
                 if (currentUser.role !== 'administrator') {
                     alert('⚠️ Access Denied: Dashboard is only available to administrators.');
-                    window.location.href = 'pos.html'; // Redirect to POS
+                    window.location.href = 'pos.html';
                     return;
                 }
                 
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
                 
-                // ✅ Show admin-only navigation links
                 document.getElementById('adminTab').style.display = 'flex';
                 document.getElementById('dashboardLink').style.display = 'flex';
                 document.getElementById('inventoryLink').style.display = 'flex';
@@ -343,6 +336,7 @@
             }
 
             try {
+                // 1. ⭐ GET SALES DATA
                 const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
 
                 if (!result.success) {
@@ -351,36 +345,65 @@
 
                 const sales = result.sales || [];
 
-                if (sales.length === 0) {
+                // 2. ⭐ GET EXPENSES DATA
+                const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
+                const expenses = expensesResult.success ? (expensesResult.data || []) : [];
+                
+                // Calculate total expenses
+                const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(e.amount || 0), 0);
+                console.log('💸 Total expenses for period:', totalExpenses);
+
+                if (sales.length === 0 && expenses.length === 0) {
                     document.getElementById('infoBox').style.display = 'block';
                     document.getElementById('infoText').textContent = 
-                        'No sales found in this period for your shop. Try a wider date range or make a sale in POS.';
+                        'No sales or expenses found in this period for your shop. Try a wider date range.';
                 } else {
                     document.getElementById('infoBox').style.display = 'none';
                 }
 
+                // 3. ⭐ CALCULATE NET PROFIT (Gross Profit - Expenses)
+                const grossProfit = sales.reduce((sum, s) => sum + (s.total_profit || 0), 0);
+                const netProfit = grossProfit - totalExpenses;
+
                 const summary = {
                     totalRevenue: sales.reduce((sum, s) => sum + (s.total_amount || 0), 0),
-                    totalProfit:  sales.reduce((sum, s) => sum + (s.total_profit || 0), 0),
+                    grossProfit: grossProfit,
+                    totalExpenses: totalExpenses,
+                    netProfit: netProfit, // ⭐ NET PROFIT
                     transactionCount: sales.length,
                     itemsSold: sales.reduce((sum, s) => sum + (s.items_sold || 0), 0)
                 };
 
-                document.getElementById('totalRevenue').textContent     = `KES ${summary.totalRevenue.toFixed(2)}`;
-                document.getElementById('totalProfit').textContent      = `KES ${summary.totalProfit.toFixed(2)}`;
-                document.getElementById('transactionCount').textContent = summary.transactionCount;
-                document.getElementById('itemsSold').textContent        = summary.itemsSold;
+                console.log('📊 Dashboard Summary:', {
+                    revenue: summary.totalRevenue,
+                    grossProfit: summary.grossProfit,
+                    expenses: summary.totalExpenses,
+                    netProfit: summary.netProfit
+                });
 
+                // 4. ⭐ UPDATE DISPLAY WITH NET PROFIT
+                document.getElementById('totalRevenue').textContent = `KES ${summary.totalRevenue.toFixed(2)}`;
+                document.getElementById('totalProfit').textContent = `KES ${summary.netProfit.toFixed(2)}`; // NET PROFIT
+                document.getElementById('totalExpenses').textContent = `KES ${summary.totalExpenses.toFixed(2)}`;
+                document.getElementById('transactionCount').textContent = summary.transactionCount;
+                document.getElementById('itemsSold').textContent = summary.itemsSold;
+                
+                // Show profit breakdown
+                document.getElementById('profitBreakdown').textContent = 
+                    `Gross: KES ${summary.grossProfit.toFixed(2)} - Expenses: KES ${summary.totalExpenses.toFixed(2)}`;
+
+                // 5. Top performer
                 if (sales.length > 0) {
                     const top = sales.reduce((max, s) => 
                         (s.total_profit || 0) > (max.total_profit || 0) ? s : max, sales[0]);
-                    document.getElementById('topPerformerName').textContent  = top.users?.full_name || 'Unknown';
+                    document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
                     document.getElementById('topPerformerProfit').textContent = (top.total_profit || 0).toFixed(2);
                     document.getElementById('topCashier').style.display = 'block';
                 } else {
                     document.getElementById('topCashier').style.display = 'none';
                 }
 
+                // 6. Render charts
                 renderCashierChart(sales);
                 renderTopProductsChart(sales);
                 renderRecentTransactions(sales.slice(0, 10));
@@ -517,27 +540,23 @@
     })();
     </script>
     <script src="assets/pwa-registration.js"></script>
-    <!-- Offline Manager -->
-<script src="assets/offline-manager.js"></script>
+    <script src="assets/offline-manager.js"></script>
 
-<!-- Offline UI Elements -->
-<div id="onlineStatus" class="status-indicator status-online">🟢 Online</div>
-
-<div id="queueInfo" class="queue-info" style="display: none;">
-    <div class="queue-info-header">
-        <span class="queue-info-title">Pending Transactions</span>
-        <span class="queue-count-badge" id="queueCount">0</span>
+    <div id="onlineStatus" class="status-indicator status-online">🟢 Online</div>
+    <div id="queueInfo" class="queue-info" style="display: none;">
+        <div class="queue-info-header">
+            <span class="queue-info-title">Pending Transactions</span>
+            <span class="queue-count-badge" id="queueCount">0</span>
+        </div>
+        <div class="queue-info-body">
+            These transactions will sync when you're back online
+        </div>
+        <button class="sync-now-btn" onclick="window.offlineManager.syncNow()">
+            Sync Now
+        </button>
     </div>
-    <div class="queue-info-body">
-        These transactions will sync when you're back online
+    <div id="offlineBanner" class="offline-banner">
+        📴 You're offline - Transactions will be saved and synced when online
     </div>
-    <button class="sync-now-btn" onclick="window.offlineManager.syncNow()">
-        Sync Now
-    </button>
-</div>
-
-<div id="offlineBanner" class="offline-banner">
-    📴 You're offline - Transactions will be saved and synced when online
-</div>
 </body>
 </html>
