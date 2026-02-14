@@ -554,8 +554,11 @@
                 document.getElementById('dashboardLink').style.display = 'flex';
                 document.getElementById('inventoryLink').style.display = 'flex';
 
-                console.log('📊 Current shop:', currentShop?.shop_name);
+                // Get current shop info - use currentShop from DukaPOS or currentUser
+                const currentShop = window.DukaPOS?.currentShop || currentUser?.shops || null;
+                console.log('📊 Current shop:', currentShop?.shop_name || 'N/A');
                 console.log('👤 Admin user:', currentUser.full_name);
+                
                 setDateRange('month');
                 await loadDashboard();
                 
