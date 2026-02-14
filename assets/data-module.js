@@ -6,7 +6,7 @@
 (function() {
     'use strict';
 
-    // Get current user's shop_id
+    // Get current user's shop_id from authModule
     function getCurrentShopId() {
         const currentUser = authModule.getCurrentUser();
         if (!currentUser || !currentUser.shop_id) {
@@ -15,25 +15,44 @@
         return currentUser.shop_id;
     }
 
-    // Get current authenticated user's UUID from Supabase session
-    function getCurrentAuthUserId() {
-        try {
-            const session = window.DukaPOS.supabaseClient.auth.session();
-            if (session && session.user) {
-                return session.user.id;
+    // Get current authenticated user's UUID from Supabase with retries
+    async function getCurrentAuthUserId(maxRetries = 3, delayMs = 1000) {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // Primary: getUser() - most reliable for Supabase v2
+                const { data: { user }, error } = await window.DukaPOS.supabaseClient.auth.getUser();
+                if (error) throw error;
+                if (user && user.id) {
+                    console.log(`Auth user ID fetched (attempt ${attempt}):`, user.id);
+                    return user.id;
+                }
+
+                // Fallback: getSession()
+                const { data: sessionData } = await window.DukaPOS.supabaseClient.auth.getSession();
+                if (sessionData?.session?.user?.id) {
+                    console.log(`Auth user ID from session fallback (attempt ${attempt}):`, sessionData.session.user.id);
+                    return sessionData.session.user.id;
+                }
+
+                // Legacy fallback
+                const session = window.DukaPOS.supabaseClient.auth.session();
+                if (session?.user?.id) {
+                    console.log(`Auth user ID from legacy session (attempt ${attempt}):`, session.user.id);
+                    return session.user.id;
+                }
+
+                console.warn(`Auth user not ready yet (attempt ${attempt}/${maxRetries})`);
+            } catch (err) {
+                console.warn(`Auth fetch attempt ${attempt} failed:`, err.message);
             }
-           
-            // Fallback: Try to get from auth state
-            const { data } = window.DukaPOS.supabaseClient.auth.getSession();
-            if (data?.session?.user) {
-                return data.session.user.id;
+
+            if (attempt < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, delayMs));
             }
-           
-            throw new Error('No authenticated session found');
-        } catch (err) {
-            console.error('Failed to get auth user ID:', err);
-            throw new Error('Not authenticated');
         }
+
+        console.error('Failed to get authenticated user ID after retries');
+        throw new Error('Could not get authenticated user ID - please log out and log in again');
     }
 
     // ============================================================================
@@ -42,7 +61,6 @@
     async function getAllCustomers() {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('customers')
                 .select('*')
@@ -60,11 +78,7 @@
     async function createCustomer(customerData) {
         try {
             const shopId = getCurrentShopId();
-           
-            const dataToInsert = {
-                ...customerData,
-                shop_id: shopId
-            };
+            const dataToInsert = { ...customerData, shop_id: shopId };
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('customers')
                 .insert([dataToInsert])
@@ -88,9 +102,7 @@
                 .eq('id', customerId)
                 .eq('shop_id', shopId)
                 .single();
-            if (!existing) {
-                throw new Error('Customer not found or does not belong to your shop');
-            }
+            if (!existing) throw new Error('Customer not found or does not belong to your shop');
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('customers')
                 .update(updates)
@@ -130,7 +142,6 @@
     async function getAllProducts() {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .select('*')
@@ -148,11 +159,7 @@
     async function createProduct(productData) {
         try {
             const shopId = getCurrentShopId();
-           
-            const dataToInsert = {
-                ...productData,
-                shop_id: shopId
-            };
+            const dataToInsert = { ...productData, shop_id: shopId };
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .insert([dataToInsert])
@@ -209,7 +216,6 @@
     async function getAllSuppliers() {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('suppliers')
                 .select('*')
@@ -227,11 +233,7 @@
     async function createSupplier(supplierData) {
         try {
             const shopId = getCurrentShopId();
-           
-            const dataToInsert = {
-                ...supplierData,
-                shop_id: shopId
-            };
+            const dataToInsert = { ...supplierData, shop_id: shopId };
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('suppliers')
                 .insert([dataToInsert])
@@ -288,7 +290,6 @@
     async function getAllSales() {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('sales')
                 .select('*, sale_items(*)')
@@ -307,11 +308,10 @@
         try {
             const shopId = getCurrentShopId();
             const currentUser = authModule.getCurrentUser();
-            // Insert sale
             const saleDataToInsert = {
                 ...saleData,
                 shop_id: shopId,
-                user_id: currentUser.id
+                user_id: currentUser?.id || null
             };
             console.log('Inserting sale with data:', saleDataToInsert);
             const { data: sale, error: saleError } = await window.DukaPOS.supabaseClient
@@ -320,7 +320,7 @@
                 .select()
                 .single();
             if (saleError) throw saleError;
-            // Insert sale items
+
             const itemsToInsert = items.map(item => ({
                 ...item,
                 sale_id: sale.id,
@@ -331,6 +331,7 @@
                 .from('sale_items')
                 .insert(itemsToInsert);
             if (itemsError) throw itemsError;
+
             console.log('✅ Sale created:', sale);
             return { success: true, data: sale };
         } catch (err) {
@@ -339,58 +340,41 @@
         }
     }
 
-    /**
-     * Update product stock with safeguards
-     * @param {number|string} productId - Product ID
-     * @param {number} quantityChange - Amount to add/subtract
-     * @param {string} operation - 'subtract' or 'add'
-     * @returns {Promise<{success: boolean, newStock?: number, error?: string}>}
-     */
     async function updateInventory(productId, quantityChange, operation = 'subtract') {
         try {
             const shopId = getCurrentShopId();
-
-            // 1. Fetch current stock safely
             const { data: product, error: fetchError } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .select('stock')
                 .eq('id', productId)
                 .eq('shop_id', shopId)
                 .single();
-
             if (fetchError) throw new Error(`Fetch error: ${fetchError.message}`);
             if (!product) throw new Error('Product not found or does not belong to your shop');
 
-            // 2. Handle null/undefined stock (treat as 0)
             const currentStock = Number(product.stock) || 0;
-
-            // 3. Calculate new stock with bounds
             let newStock;
             if (operation === 'subtract') {
-                newStock = Math.max(0, currentStock - quantityChange); // Never go below 0
+                newStock = Math.max(0, currentStock - quantityChange);
             } else if (operation === 'add') {
                 newStock = currentStock + quantityChange;
             } else {
                 throw new Error('Invalid operation: must be "subtract" or "add"');
             }
 
-            // 4. Update only if stock actually changes
             if (newStock === currentStock) {
                 console.warn(`No stock change needed for product ${productId}`);
                 return { success: true, newStock };
             }
 
-            // 5. Perform update
             const { error: updateError } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .update({ stock: newStock })
                 .eq('id', productId)
                 .eq('shop_id', shopId);
-
             if (updateError) throw new Error(`Update error: ${updateError.message}`);
 
             console.log(`✅ Stock updated: Product ${productId} → ${newStock} units (was ${currentStock})`);
-
             return { success: true, newStock };
         } catch (err) {
             console.error('❌ updateInventory failed:', err.message);
@@ -401,14 +385,9 @@
     // ============================================================================
     // EXPENSES TRACKING
     // ============================================================================
-    /**
-     * Get all expenses for the current shop
-     * @returns {Promise<{success: boolean, data?: array, error?: string}>}
-     */
     async function getAllExpenses() {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses')
                 .select('*')
@@ -423,53 +402,17 @@
         }
     }
 
-    /**
-     * Create a new expense record
-     * @param {Object} expenseData - { category, amount, description, date }
-     * @returns {Promise<{success: boolean, data?: object, error?: string}>}
-     */
     async function createExpense(expenseData) {
         try {
             const shopId = getCurrentShopId();
-           
-            // Get auth user ID - try multiple methods
+
+            // Fetch authenticated user ID with retries
             let authUserId;
-           
             try {
-                // Method 1: Try getSession (Supabase v2)
-                const { data: sessionData } = await window.DukaPOS.supabaseClient.auth.getSession();
-                if (sessionData?.session?.user?.id) {
-                    authUserId = sessionData.session.user.id;
-                }
-            } catch (e) {
-                console.log('getSession failed, trying alternative method');
-            }
-           
-            if (!authUserId) {
-                // Method 2: Try session() (older Supabase)
-                try {
-                    const session = window.DukaPOS.supabaseClient.auth.session();
-                    if (session?.user?.id) {
-                        authUserId = session.user.id;
-                    }
-                } catch (e) {
-                    console.log('session() failed');
-                }
-            }
-           
-            if (!authUserId) {
-                // Method 3: Try user() (older Supabase)
-                try {
-                    const user = window.DukaPOS.supabaseClient.auth.user();
-                    if (user?.id) {
-                        authUserId = user.id;
-                    }
-                } catch (e) {
-                    console.log('user() failed');
-                }
-            }
-            if (!authUserId) {
-                throw new Error('Could not get authenticated user ID');
+                authUserId = await getCurrentAuthUserId();
+            } catch (authErr) {
+                console.error('Auth user ID fetch failed in createExpense:', authErr);
+                throw authErr;
             }
 
             const dataToInsert = {
@@ -491,7 +434,7 @@
                 .single();
 
             if (error) throw error;
-           
+
             console.log('✅ Expense created:', data);
             return { success: true, data };
         } catch (err) {
@@ -500,16 +443,9 @@
         }
     }
 
-    /**
-     * Get expenses by date range for the current shop
-     * @param {string} startDate - Start date (YYYY-MM-DD)
-     * @param {string} endDate - End date (YYYY-MM-DD)
-     * @returns {Promise<{success: boolean, data?: array, error?: string}>}
-     */
     async function getExpensesByDateRange(startDate, endDate) {
         try {
             const shopId = getCurrentShopId();
-           
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses')
                 .select('*')
@@ -518,8 +454,7 @@
                 .lte('date', endDate)
                 .order('date', { ascending: false });
             if (error) throw error;
-           
-            console.log(`✅ Loaded ${data.length} expenses for date range ${startDate} to ${endDate}`);
+            console.log(`✅ Loaded ${data.length} expenses for range ${startDate} to ${endDate}`);
             return { success: true, data: data || [] };
         } catch (err) {
             console.error('getExpensesByDateRange failed:', err);
@@ -527,12 +462,6 @@
         }
     }
 
-    /**
-     * Update an expense
-     * @param {number} expenseId - Expense ID
-     * @param {Object} updates - Fields to update
-     * @returns {Promise<{success: boolean, data?: object, error?: string}>}
-     */
     async function updateExpense(expenseId, updates) {
         try {
             const shopId = getCurrentShopId();
@@ -544,7 +473,6 @@
                 .select()
                 .single();
             if (error) throw error;
-           
             console.log('✅ Expense updated:', data);
             return { success: true, data };
         } catch (err) {
@@ -553,11 +481,6 @@
         }
     }
 
-    /**
-     * Delete an expense
-     * @param {number} expenseId - Expense ID
-     * @returns {Promise<{success: boolean, error?: string}>}
-     */
     async function deleteExpense(expenseId) {
         try {
             const shopId = getCurrentShopId();
@@ -567,7 +490,6 @@
                 .eq('id', expenseId)
                 .eq('shop_id', shopId);
             if (error) throw error;
-           
             console.log('✅ Expense deleted:', expenseId);
             return { success: true };
         } catch (err) {
@@ -576,10 +498,6 @@
         }
     }
 
-    /**
-     * Get expense statistics (today, week, month, year)
-     * @returns {Promise<{success: boolean, data?: object, error?: string}>}
-     */
     async function getExpenseStats() {
         try {
             const now = new Date();
@@ -590,32 +508,12 @@
             const yearStart = new Date(now.getFullYear(), 0, 1);
             const formatDate = (date) => date.toISOString().split('T')[0];
 
-            // Get today's expenses
-            const todayResult = await getExpensesByDateRange(
-                formatDate(today),
-                formatDate(now)
-            );
-           
-            // Get week's expenses
-            const weekResult = await getExpensesByDateRange(
-                formatDate(weekStart),
-                formatDate(now)
-            );
-           
-            // Get month's expenses
-            const monthResult = await getExpensesByDateRange(
-                formatDate(monthStart),
-                formatDate(now)
-            );
-           
-            // Get year's expenses
-            const yearResult = await getExpensesByDateRange(
-                formatDate(yearStart),
-                formatDate(now)
-            );
+            const todayResult = await getExpensesByDateRange(formatDate(today), formatDate(now));
+            const weekResult = await getExpensesByDateRange(formatDate(weekStart), formatDate(now));
+            const monthResult = await getExpensesByDateRange(formatDate(monthStart), formatDate(now));
+            const yearResult = await getExpensesByDateRange(formatDate(yearStart), formatDate(now));
 
-            const calculateTotal = (expenses) =>
-                expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
+            const calculateTotal = (expenses) => expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
 
             return {
                 success: true,
@@ -636,33 +534,27 @@
     // Export to global scope
     // ============================================================================
     window.dataModule = {
-        // Customers
         getAllCustomers,
         createCustomer,
         updateCustomer,
         deleteCustomer,
-        // Products
         getAllProducts,
         createProduct,
         updateProduct,
         deleteProduct,
-        // Suppliers
         getAllSuppliers,
         createSupplier,
         updateSupplier,
         deleteSupplier,
-        // Sales
         getAllSales,
         createSale,
         updateInventory,
-        // Expenses
         getAllExpenses,
         createExpense,
         getExpensesByDateRange,
         updateExpense,
         deleteExpense,
         getExpenseStats,
-        // Utility
         getCurrentShopId
     };
 

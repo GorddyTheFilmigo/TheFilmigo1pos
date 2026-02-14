@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
     <title>TheFilmigo POS</title>
-   
+
     <!-- PWA META TAGS -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
-   
+
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <!-- Offline Mode Styles -->
     <link rel="stylesheet" href="assets/offline-styles.css">
-   
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
@@ -41,7 +41,187 @@
             background: var(--bg-primary);
             color: var(--text);
         }
-       
+
+        /* ═══════════════════════════════════════════════════════════ */
+        /* MESSAGE NOTIFICATION STYLES - START */
+        /* ═══════════════════════════════════════════════════════════ */
+        .message-notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .message-notification-bell:hover {
+            background: rgba(88, 166, 255, 0.1);
+        }
+        .message-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: #f85149;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 0 0 2px var(--bg-primary);
+            min-width: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .messages-popup {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 400px;
+            max-height: 500px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+        .messages-popup.active {
+            display: flex;
+        }
+        .messages-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .messages-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .close-popup {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        .close-popup:hover {
+            background: rgba(248, 81, 73, 0.2);
+            color: var(--danger);
+        }
+        .messages-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            max-height: 400px;
+        }
+        .message-item {
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .message-item.unread {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+        .message-sender {
+            font-weight: 700;
+            color: var(--accent-orange);
+            font-size: 0.95rem;
+        }
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .message-text {
+            color: var(--text);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .message-expiry {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .mark-read-btn {
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .mark-read-btn:hover {
+            background: #2ea043;
+        }
+        .reply-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .reply-btn:hover {
+            background: #1f6feb;
+        }
+        .empty-messages {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-messages-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        @media (max-width: 768px) {
+            .messages-popup {
+                width: calc(100vw - 40px);
+                right: 20px;
+                max-height: 70vh;
+            }
+        }
+        /* ═══════════════════════════════════════════════════════════ */
+        /* MESSAGE NOTIFICATION STYLES - END */
+        /* ═══════════════════════════════════════════════════════════ */
+
         /* Tab Navigation */
         .pos-tabs {
             display: flex;
@@ -67,10 +247,10 @@
             color: white;
             border-color: var(--accent-orange);
         }
-       
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-       
+
         /* POS Section */
         .pos-container {
             display: grid;
@@ -254,7 +434,7 @@
             padding: 40px 20px;
             color: var(--text-muted);
         }
-       
+
         /* Expenses Section */
         .expenses-container {
             padding: 20px;
@@ -328,7 +508,7 @@
             font-weight: 700;
             color: var(--danger);
         }
-       
+
         /* Modal Styles */
         .modal {
             display: none;
@@ -412,7 +592,7 @@
             margin-bottom: 20px;
             text-align: center;
         }
-       
+
         @media (max-width: 900px) {
             .pos-container {
                 grid-template-columns: 1fr;
@@ -437,33 +617,56 @@
                 <a href="suppliers.html" class="nav-tab">Suppliers</a>
                 <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
-            <div class="user-badge">
-                <div class="user-avatar">👤</div>
-                <div>
-                    <div id="currentUserName">User</div>
+            <div class="nav-right">
+                <div class="user-badge">
+                    <div class="user-avatar">👤</div>
+                    <div>
+                        <div id="currentUserName">User</div>
+                    </div>
                 </div>
+
+                <!-- ⭐ MESSAGE NOTIFICATION BELL -->
+                <div class="message-notification-bell" onclick="toggleMessagesPopup()" id="messageBell">
+                    🔔
+                    <span class="message-badge" id="messageBadge" style="display: none;">0</span>
+                </div>
+
+                <button
+                    onclick="authModule.logout()"
+                    style="
+                      padding: 10px 18px;
+                      background-color: #ef4444;
+                      color: #ffffff;
+                      border: none;
+                      border-radius: 8px;
+                      font-size: 14px;
+                      font-weight: 600;
+                      cursor: pointer;
+                      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+                      transition: all 0.2s ease;
+                    "
+                    onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+                    onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+                >
+                    Logout
+                </button>
             </div>
-            <button
-                onclick="authModule.logout()"
-                style="
-                  padding: 10px 18px;
-                  background-color: #ef4444;
-                  color: #ffffff;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 14px;
-                  font-weight: 600;
-                  cursor: pointer;
-                  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-                  transition: all 0.2s ease;
-                "
-                onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-                onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
-            >
-                Logout
-            </button>
         </div>
     </nav>
+
+    <!-- ⭐ MESSAGES POPUP -->
+    <div class="messages-popup" id="messagesPopup">
+        <div class="messages-header">
+            <h3>📨 Messages</h3>
+            <button class="close-popup" onclick="toggleMessagesPopup()">×</button>
+        </div>
+        <div class="messages-list" id="messagesList">
+            <div class="empty-messages">
+                <div class="empty-messages-icon">📭</div>
+                <p>Loading messages...</p>
+            </div>
+        </div>
+    </div>
 
     <!-- POS/Expenses Tab Navigation -->
     <div class="pos-tabs">
@@ -483,7 +686,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="cart-section">
                 <div class="cart-header">
                     <h2>Shopping Cart</h2>
@@ -494,7 +696,6 @@
                         <p>Cart is empty</p>
                     </div>
                 </div>
-
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Items:</span>
@@ -504,14 +705,12 @@
                         <strong>Total:</strong>
                         <strong class="summary-total" id="totalAmount">KES 0.00</strong>
                     </div>
-
                     <div class="payment-methods" style="margin-top:15px;">
                         <button class="payment-btn active" data-method="Cash">💵 Cash</button>
                         <button class="payment-btn" data-method="M-Pesa">📱 M-Pesa</button>
                         <button class="payment-btn" data-method="Card">💳 Card</button>
                         <button class="payment-btn" data-method="Credit">📋 Credit</button>
                     </div>
-
                     <button class="checkout-btn" id="checkoutBtn" disabled>
                         Complete Sale
                     </button>
@@ -529,7 +728,6 @@
                     ➕ Add Expense
                 </button>
             </div>
-
             <div class="expenses-stats">
                 <div class="stat-card">
                     <div class="stat-label">📅 Today's Expenses</div>
@@ -548,7 +746,6 @@
                     <div class="stat-value" id="yearExpenses">KES 0.00</div>
                 </div>
             </div>
-
             <div class="expenses-list">
                 <h3 style="margin-bottom: 20px;">Recent Expenses</h3>
                 <div id="expensesList">
@@ -567,7 +764,6 @@
                 <h2>Add New Expense</h2>
                 <p style="color: var(--text-muted);">Record a business expense</p>
             </div>
-
             <form id="expenseForm">
                 <div class="form-group">
                     <label for="expenseCategory">Category *</label>
@@ -584,24 +780,20 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="expenseAmount">Amount (KES) *</label>
                     <input type="number" id="expenseAmount" step="0.01" min="0" required>
                 </div>
-
                 <div class="form-group">
                     <label for="expenseDescription">Description *</label>
                     <textarea id="expenseDescription" required placeholder="What was this expense for?"></textarea>
                 </div>
-
                 <div class="form-group">
                     <label for="expenseDate">Date *</label>
                     <input type="date" id="expenseDate" required>
                 </div>
-
                 <div class="modal-actions">
-                    <button type="submit" class="modal-btn modal-btn-primary">Save Expense</button>
+                    <button type="submit" class="modal-btn modal-btn-primary" id="saveExpenseBtn">Save Expense</button>
                     <button type="button" class="modal-btn modal-btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
                 </div>
             </form>
@@ -623,17 +815,178 @@
     <script src="assets/auth.js"></script>
     <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
+    <script src="assets/messaging-module.js"></script>
+
     <script>
+    // ════════════════════════════════════════════════════════════
+    // MESSAGE NOTIFICATION FUNCTIONS
+    // ════════════════════════════════════════════════════════════
+    let messagesCheckInterval = null;
+
+    function toggleMessagesPopup() {
+        const popup = document.getElementById('messagesPopup');
+        const isActive = popup.classList.contains('active');
+
+        if (isActive) {
+            popup.classList.remove('active');
+        } else {
+            popup.classList.add('active');
+            loadUserMessages();
+        }
+    }
+
+    document.addEventListener('click', function(event) {
+        const popup = document.getElementById('messagesPopup');
+        const bell = document.getElementById('messageBell');
+
+        if (popup && bell && popup.classList.contains('active')) {
+            if (!popup.contains(event.target) && !bell.contains(event.target)) {
+                popup.classList.remove('active');
+            }
+        }
+    });
+
+    async function loadUserMessages() {
+        try {
+            const result = await window.messagingModule.getAllMessages(20);
+            const messagesList = document.getElementById('messagesList');
+            if (!result.success || result.data.length === 0) {
+                messagesList.innerHTML = `
+                    <div class="empty-messages">
+                        <div class="empty-messages-icon">📭</div>
+                        <p>No messages</p>
+                    </div>
+                `;
+                return;
+            }
+            messagesList.innerHTML = result.data.map(msg => {
+                const sentAt = new Date(msg.created_at);
+                const expiresAt = new Date(msg.expires_at);
+                const now = new Date();
+                const hoursLeft = Math.round((expiresAt - now) / (1000 * 60 * 60));
+
+                const timeAgo = getTimeAgo(sentAt);
+                const senderId = msg.sender?.id || 'unknown';
+
+                return `
+                    <div class="message-item ${msg.is_read ? '' : 'unread'}">
+                        <div class="message-header">
+                            <div class="message-sender">
+                                👤 ${msg.sender?.full_name || 'Administrator'}
+                            </div>
+                            <div class="message-time">${timeAgo}</div>
+                        </div>
+                        <div class="message-text">${escapeHtml(msg.message_text)}</div>
+                        <div class="message-footer">
+                            <div class="message-expiry">
+                                ${hoursLeft > 0 ? `Expires in ${hoursLeft}h` : 'Expired'}
+                            </div>
+                            <div>
+                                ${!msg.is_read ? `
+                                    <button class="mark-read-btn" onclick="markMessageRead(${msg.id})">
+                                        ✓ Mark as Read
+                                    </button>
+                                ` : ''}
+                                <button class="reply-btn" onclick="replyToMessage(${senderId})">
+                                    ↩ Reply
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error('Load messages error:', err);
+            document.getElementById('messagesList').innerHTML = `
+                <div class="empty-messages">
+                    <div class="empty-messages-icon">⚠️</div>
+                    <p>Error loading messages</p>
+                </div>
+            `;
+        }
+    }
+
+    async function replyToMessage(senderId) {
+        if (!senderId || senderId === 'unknown') {
+            alert("Cannot reply — sender information missing.");
+            return;
+        }
+        const replyText = prompt("Enter your reply:");
+        if (!replyText || replyText.trim() === "") return;
+        try {
+            const result = await window.messagingModule.sendMessage(senderId, replyText.trim());
+            if (result.success) {
+                alert("Reply sent successfully!");
+                loadUserMessages();
+                updateUnreadCount();
+            } else {
+                alert("Failed to send reply: " + (result.error || "Unknown error"));
+            }
+        } catch (err) {
+            console.error("Error sending reply:", err);
+            alert("Error sending reply. Check console for details.");
+        }
+    }
+
+    async function markMessageRead(messageId) {
+        try {
+            const result = await window.messagingModule.markAsRead(messageId);
+            if (result.success) {
+                loadUserMessages();
+                updateUnreadCount();
+            } else {
+                console.error('Failed to mark as read:', result.error);
+            }
+        } catch (err) {
+            console.error('Mark as read error:', err);
+        }
+    }
+
+    async function updateUnreadCount() {
+        try {
+            const result = await window.messagingModule.getUnreadCount();
+            const badge = document.getElementById('messageBadge');
+            if (result.success) {
+                const count = result.count || 0;
+                badge.textContent = count > 99 ? '99+' : count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            } else {
+                badge.style.display = 'none';
+            }
+        } catch (err) {
+            console.error('Update unread count error:', err);
+            document.getElementById('messageBadge').style.display = 'none';
+        }
+    }
+
+    function getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        if (seconds < 60) return 'Just now';
+        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+        if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+        if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+        return date.toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function initializeMessageNotifications() {
+        updateUnreadCount();
+        messagesCheckInterval = setInterval(updateUnreadCount, 30000);
+        console.log('✅ Message notifications initialized');
+    }
+
     // ════════════════════════════════════════════════════════════
     // TAB SWITCHING
     // ════════════════════════════════════════════════════════════
     function switchTab(tab) {
-        const tabs = document.querySelectorAll('.pos-tab-btn');
-        const contents = document.querySelectorAll('.tab-content');
-      
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-      
+        document.querySelectorAll('.pos-tab-btn').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
         if (tab === 'sales') {
             document.querySelector('[onclick*="sales"]').classList.add('active');
             document.getElementById('salesTab').classList.add('active');
@@ -650,6 +1003,8 @@
     function openAddExpenseModal() {
         document.getElementById('expenseDate').valueAsDate = new Date();
         document.getElementById('addExpenseModal').classList.add('show');
+        document.getElementById('saveExpenseBtn').disabled = false;
+        document.getElementById('saveExpenseBtn').textContent = 'Save Expense';
     }
 
     function closeAddExpenseModal() {
@@ -661,7 +1016,7 @@
         try {
             const result = await window.dataModule.getAllExpenses();
             if (!result.success) throw new Error(result.error);
-          
+
             const expenses = result.data || [];
             renderExpenses(expenses);
             calculateExpenseStats(expenses);
@@ -674,7 +1029,7 @@
 
     function renderExpenses(expenses) {
         const container = document.getElementById('expensesList');
-      
+
         if (expenses.length === 0) {
             container.innerHTML = `
                 <div style="text-align:center; padding:40px; color:var(--text-muted);">
@@ -692,7 +1047,7 @@
                 month: 'short',
                 day: 'numeric'
             });
-          
+
             return `
                 <div class="expense-item">
                     <div class="expense-info">
@@ -716,7 +1071,6 @@
         const yearStart = new Date(now.getFullYear(), 0, 1);
 
         let todayTotal = 0, weekTotal = 0, monthTotal = 0, yearTotal = 0;
-
         expenses.forEach(expense => {
             const expenseDate = new Date(expense.date);
             const amount = parseFloat(expense.amount);
@@ -734,7 +1088,34 @@
 
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-      
+
+        const saveBtn = document.getElementById('saveExpenseBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Checking auth...';
+
+        let currentUser = null;
+        const maxWaitMs = 5000;
+        const start = Date.now();
+
+        while (Date.now() - start < maxWaitMs) {
+            currentUser = authModule.getCurrentUser();
+            if (currentUser && currentUser.id) {
+                console.log('User authenticated after wait:', currentUser.full_name);
+                break;
+            }
+            await new Promise(r => setTimeout(r, 300));
+        }
+
+        if (!currentUser || !currentUser.id) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Expense';
+            alert('Authentication not ready yet. Please wait a moment or refresh the page.');
+            console.error('User still not loaded after wait');
+            return;
+        }
+
+        saveBtn.textContent = 'Saving...';
+
         const expenseData = {
             category: document.getElementById('expenseCategory').value,
             amount: parseFloat(document.getElementById('expenseAmount').value),
@@ -744,14 +1125,17 @@
 
         try {
             const result = await window.dataModule.createExpense(expenseData);
-            if (!result.success) throw new Error(result.error);
-          
+            if (!result.success) throw new Error(result.error || 'Unknown error');
+
             closeAddExpenseModal();
             await loadExpenses();
             alert('✅ Expense added successfully!');
         } catch (error) {
             console.error('Failed to add expense:', error);
             alert('❌ Failed to add expense: ' + error.message);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Expense';
         }
     });
 
@@ -766,20 +1150,22 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
-              
+
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
-              
+
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-              
-                // Setup navigation based on role
+
                 if (window.setupNavigationForRole) {
                     window.setupNavigationForRole();
                 }
-              
+
                 await loadProducts();
                 setupEventListeners();
+
+                setTimeout(initializeMessageNotifications, 1000);
+
                 console.log('✅ POS initialized');
             } catch (err) {
                 console.error('POS init failed:', err);
@@ -810,11 +1196,9 @@
             allBtn.dataset.category = 'All';
             allBtn.textContent = 'All';
             container.appendChild(allBtn);
-
             const uniqueCategories = [...new Set(
                 products.map(p => p.category).filter(c => c && c.trim() !== '')
             )].sort();
-
             uniqueCategories.forEach(cat => {
                 const btn = document.createElement('button');
                 btn.className = 'category-btn';
@@ -822,7 +1206,6 @@
                 btn.textContent = cat;
                 container.appendChild(btn);
             });
-
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -838,12 +1221,11 @@
 
         function renderProducts(productsToRender) {
             const grid = document.getElementById('productsGrid');
-          
+
             if (productsToRender.length === 0) {
                 grid.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">No products found</div>';
                 return;
             }
-
             grid.innerHTML = productsToRender.map(product => `
                 <div class="product-card" onclick="addToCart(${product.id})">
                     <div class="product-icon">${product.icon || '📦'}</div>
@@ -861,9 +1243,8 @@
                 alert('Product out of stock!');
                 return;
             }
-
             const existingItem = cart.find(item => item.id === productId);
-          
+
             if (existingItem) {
                 if (existingItem.quantity >= product.stock) {
                     alert('Cannot add more than available stock!');
@@ -879,14 +1260,13 @@
                     maxStock: product.stock
                 });
             }
-
             renderCart();
         };
 
         function renderCart() {
             const cartContainer = document.getElementById('cartItems');
             const checkoutBtn = document.getElementById('checkoutBtn');
-          
+
             if (cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
@@ -898,7 +1278,7 @@
                 updateSummary();
                 return;
             }
-          
+
             cartContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-info">
@@ -913,7 +1293,7 @@
                     </div>
                 </div>
             `).join('');
-          
+
             checkoutBtn.disabled = false;
             updateSummary();
         }
@@ -921,9 +1301,9 @@
         window.updateQuantity = function(productId, change) {
             const item = cart.find(i => i.id === productId);
             if (!item) return;
-          
+
             const newQty = item.quantity + change;
-          
+
             if (newQty <= 0) {
                 removeFromCart(productId);
                 return;
@@ -932,7 +1312,6 @@
                 alert('Cannot exceed available stock!');
                 return;
             }
-
             item.quantity = newQty;
             renderCart();
         };
@@ -958,7 +1337,6 @@
                 );
                 renderProducts(filtered);
             });
-
             document.querySelectorAll('.payment-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
@@ -966,13 +1344,12 @@
                     selectedPayment = btn.dataset.method;
                 });
             });
-
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
         }
 
         async function checkout() {
             if (cart.length === 0) return;
-          
+
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             await processCheckout(cart, total, selectedPayment);
         }
@@ -981,36 +1358,31 @@
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-              
+
                 const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-              
+
                 const saleItems = cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     unit_price: item.price
                 }));
-              
-                // 1. Create the sale record
+
                 const saleResult = await window.dataModule.createSale({
                     user_id: currentUser.id,
                     total_amount: total,
                     items_sold: itemsSold,
                     payment_method: paymentMethod
                 }, saleItems);
-
                 if (!saleResult.success) throw new Error(saleResult.error);
 
-                // 2. Update stock for each item with better error handling
                 let stockUpdateFailed = false;
                 let failedProducts = [];
-
                 for (const item of cartItems) {
                     const updateResult = await window.dataModule.updateInventory(
                         item.id,
                         item.quantity,
                         'subtract'
                     );
-
                     if (!updateResult.success) {
                         console.warn(`Stock update failed for product ${item.id} (${item.name}): ${updateResult.error}`);
                         stockUpdateFailed = true;
@@ -1018,7 +1390,6 @@
                     }
                 }
 
-                // 3. Show warning if any stock update failed
                 if (stockUpdateFailed) {
                     alert(
                         'Sale completed successfully, but stock could not be updated for:\n' +
@@ -1027,15 +1398,12 @@
                     );
                 }
 
-                // 4. Show success modal
                 document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
                 document.getElementById('successModal').classList.add('show');
 
-                // 5. Clear cart & refresh products
                 cart = [];
                 renderCart();
                 await loadProducts();
-
                 return { success: true, sale: saleResult.data };
             } catch (error) {
                 console.error('❌ Checkout error:', error);
@@ -1048,6 +1416,12 @@
             document.getElementById('successModal').classList.remove('show');
         };
     })();
+
+    window.addEventListener('beforeunload', () => {
+        if (messagesCheckInterval) {
+            clearInterval(messagesCheckInterval);
+        }
+    });
     </script>
 </body>
 </html>

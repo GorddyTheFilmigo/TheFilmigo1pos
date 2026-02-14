@@ -1,5 +1,6 @@
 // ──────────────────────────────────────────────────────────────
 // Duka POS - Shared JavaScript (multi-page safe version)
+// ✅ FIXED: Added shop_id filtering to prevent multi-tenant data leaks
 // ──────────────────────────────────────────────────────────────
 
 (function () {
@@ -49,13 +50,28 @@
     };
 
     // ── Load & Render Products ────────────────────────────────────
+    // ✅ CRITICAL FIX: Filter by shop_id at database level
     window.DukaPOS.loadProducts = async function () {
         try {
             console.log('📦 Loading products...');
 
+            // ✅ FIX: Get current shop BEFORE querying
+            const currentUser = window.authModule?.getCurrentUser();
+            const currentShop = window.authModule?.getCurrentShop();
+            
+            if (!currentUser || !currentShop) {
+                console.warn('⚠️ No user/shop context - skipping product load');
+                window.DukaPOS.products = [];
+                return;
+            }
+
+            console.log(`🔒 Loading products for shop: ${currentShop.shop_name} (ID: ${currentShop.id})`);
+
+            // ✅ FIX: Filter by shop_id at query level (not client-side)
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .select('*')
+                .eq('shop_id', currentShop.id)  // ⭐ CRITICAL: Filter at database level
                 .order('name');
 
             if (error) {
@@ -64,7 +80,7 @@
             }
 
             window.DukaPOS.products = data || [];
-            console.log(`✅ Loaded ${window.DukaPOS.products.length} products:`, window.DukaPOS.products);
+            console.log(`✅ Loaded ${window.DukaPOS.products.length} products for ${currentShop.shop_name}`);
 
             // Render based on current page
             if (document.getElementById('productsGrid')) {
@@ -213,6 +229,13 @@
             return;
         }
 
+        // ✅ FIX: Add shop_id when creating products
+        const currentShop = window.authModule?.getCurrentShop();
+        if (!currentShop) {
+            alert('Error: No shop context found. Please log in again.');
+            return;
+        }
+
         const productData = {
             name,
             barcode: barcode || null,
@@ -220,17 +243,22 @@
             cost,
             stock,
             category,
-            icon: '📦'
+            icon: '📦',
+            shop_id: currentShop.id  // ⭐ CRITICAL: Always set shop_id
         };
 
         try {
             let error;
             if (window.DukaPOS.editingProductId) {
+                // Update: Remove shop_id from update (it shouldn't change)
+                const { shop_id, ...updateData } = productData;
                 ({ error } = await window.DukaPOS.supabaseClient
                     .from('products')
-                    .update(productData)
-                    .eq('id', window.DukaPOS.editingProductId));
+                    .update(updateData)
+                    .eq('id', window.DukaPOS.editingProductId)
+                    .eq('shop_id', currentShop.id)); // ⭐ Verify ownership
             } else {
+                // Insert: Include shop_id
                 ({ error } = await window.DukaPOS.supabaseClient
                     .from('products')
                     .insert([productData]));
@@ -269,10 +297,18 @@
         }
 
         try {
+            // ✅ FIX: Verify shop_id when deleting
+            const currentShop = window.authModule?.getCurrentShop();
+            if (!currentShop) {
+                alert('Error: No shop context found.');
+                return;
+            }
+
             const { error } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .delete()
-                .in('id', Array.from(window.DukaPOS.selectedProductIds));
+                .in('id', Array.from(window.DukaPOS.selectedProductIds))
+                .eq('shop_id', currentShop.id); // ⭐ Verify ownership
 
             if (error) throw error;
 
@@ -563,5 +599,5 @@
     setInterval(window.DukaPOS.updateDate, 60000);
     window.DukaPOS.updateDate();
 
-    console.log('🛠️ DukaPOS shared module loaded');
+    console.log('🛠️ DukaPOS shared module loaded (✅ Multi-tenant security enabled)');
 })();
