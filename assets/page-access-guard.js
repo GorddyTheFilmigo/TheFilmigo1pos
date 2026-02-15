@@ -1,93 +1,52 @@
 // ════════════════════════════════════════════════════════════
-// UNIVERSAL PAGE ACCESS GUARD
-// Add this script to EVERY page (except login.html)
-// Place it RIGHT AFTER auth.js script tag
+// PWA SERVICE WORKER REGISTRATION
+// With protocol check to prevent errors on file:// protocol
 // ════════════════════════════════════════════════════════════
 
-(async function() {
+(function() {
     'use strict';
+
+    // Check if running on supported protocol
+    const protocol = window.location.protocol;
     
-    console.log('🔒 Page Access Guard: Checking permissions...');
-    
-    // Wait for auth module to load
-    let retries = 0;
-    while (!window.authModule && retries < 10) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        retries++;
-    }
-    
-    if (!window.authModule) {
-        console.error('❌ Auth module not loaded - redirecting to login');
-        window.location.href = 'login.html';
+    if (protocol === 'file:') {
+        console.log('⚠️ PWA: Service Worker not supported on file:// protocol');
+        console.log('💡 To enable offline mode, run on a web server (http:// or https://)');
+        console.log('📌 Tip: Use VS Code Live Server extension for local development');
         return;
     }
-    
-    // Check if user is authenticated
-    const isAuthenticated = await window.authModule.checkSession();
-    if (!isAuthenticated) {
-        console.log('⚠️ Not authenticated - redirecting to login');
-        window.location.href = 'login.html';
+
+    // Check if service workers are supported
+    if (!('serviceWorker' in navigator)) {
+        console.log('⚠️ PWA: Service Workers not supported in this browser');
         return;
     }
-    
-    // Get current user
-    const user = window.authModule.getCurrentUser();
-    if (!user) {
-        console.log('⚠️ No user found - redirecting to login');
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Get current page
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Get access rules for user's role
-    const PAGE_ACCESS_RULES = {
-        'administrator': {
-            allowed: ['*'], // All pages
-            homepage: 'dashboard.html'
-        },
-        'manager': {
-            allowed: ['dashboard.html', 'pos.html', 'products.html', 'inventory.html', 'customers.html', 'suppliers.html', 'admin.html'],
-            homepage: 'dashboard.html'
-        },
-        'cashier': {
-            allowed: ['pos.html', 'products.html', 'customers.html'],
-            homepage: 'pos.html'
-        },
-        'supplier': {
-            allowed: ['suppliers.html'], // ONLY suppliers page
-            homepage: 'suppliers.html'
-        },
-        'customer': {
-            allowed: ['customers.html'], // ONLY customers page
-            homepage: 'customers.html'
+
+    // Register service worker
+    window.addEventListener('load', async () => {
+        try {
+            const registration = await navigator.serviceWorker.register('/service-worker.js');
+            
+            console.log('✅ PWA: Service Worker registered successfully');
+            console.log('📱 App can now work offline!');
+            
+            // Handle updates
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        console.log('🔄 New version available! Refresh to update.');
+                    }
+                });
+            });
+            
+        } catch (error) {
+            console.log('⚠️ PWA: Service Worker registration failed:', error.message);
+            console.log('💡 This is normal if not running on a web server');
         }
-    };
-    
-    const userRules = PAGE_ACCESS_RULES[user.role];
-    
-    if (!userRules) {
-        console.error('❌ Unknown role:', user.role);
-        alert('Invalid user role. Please contact administrator.');
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Check if user has access to this page
-    const hasAccess = userRules.allowed.includes('*') || userRules.allowed.includes(currentPage);
-    
-    if (!hasAccess) {
-        console.warn(`⛔ Access Denied: ${user.role} cannot access ${currentPage}`);
-        console.log(`🔄 Redirecting to ${userRules.homepage}`);
-        
-        // Show alert to user
-        alert(`Access Denied!\n\nYou don't have permission to access this page.\nRedirecting to your homepage...`);
-        
-        // Redirect to their allowed homepage
-        window.location.href = userRules.homepage;
-        return;
-    }
-    
-    console.log(`✅ Access Granted: ${user.role} can access ${currentPage}`);
+    });
+
+    // Log installation status
+    console.log('🔧 PWA: Service Worker registration script loaded');
 })();
