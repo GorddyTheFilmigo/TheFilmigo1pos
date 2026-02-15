@@ -1,6 +1,7 @@
-// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // DUKA POS - MULTI-TENANT AUTHENTICATION MODULE
-// ════════════════════════════════════════════════════════════════
+// With Role-Based Page Access Control
+// ════════════════════════════════════════════════════════════
 
 (function () {
     if (window.authModule && window.authModule.initialized) {
@@ -14,6 +15,65 @@
     const SESSION_KEY = 'duka_session';
     const USER_KEY = 'duka_user';
     const SHOP_KEY = 'duka_shop';
+
+    // ════════════════════════════════════════════════════════════
+    // ROLE-BASED PAGE ACCESS RULES
+    // ════════════════════════════════════════════════════════════
+    const PAGE_ACCESS_RULES = {
+        'administrator': {
+            allowed: ['*'], // All pages
+            homepage: 'dashboard.html'
+        },
+        'manager': {
+            allowed: ['dashboard.html', 'pos.html', 'products.html', 'inventory.html', 'customers.html', 'suppliers.html'],
+            homepage: 'dashboard.html'
+        },
+        'cashier': {
+            allowed: ['pos.html', 'products.html', 'customers.html'],
+            homepage: 'pos.html'
+        },
+        'supplier': {
+            allowed: ['suppliers.html'], // Only supplier page
+            homepage: 'suppliers.html'
+        },
+        'customer': {
+            allowed: ['customers.html'], // Only customer page
+            homepage: 'customers.html'
+        }
+    };
+
+    /**
+     * Check if user has access to current page
+     */
+    function checkPageAccess() {
+        const user = getCurrentUser();
+        if (!user) return false;
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const userRules = PAGE_ACCESS_RULES[user.role];
+
+        if (!userRules) {
+            console.error('Unknown role:', user.role);
+            return false;
+        }
+
+        // Administrators have access to all pages
+        if (userRules.allowed.includes('*')) {
+            return true;
+        }
+
+        // Check if current page is in allowed list
+        const hasAccess = userRules.allowed.includes(currentPage);
+
+        if (!hasAccess) {
+            console.warn(`Access denied: ${user.role} cannot access ${currentPage}`);
+            // Redirect to homepage
+            window.location.href = userRules.homepage;
+            return false;
+        }
+
+        return true;
+    }
 
     async function hashPassword(password) {
         const encoder = new TextEncoder();
@@ -230,18 +290,26 @@
 
         const user = getCurrentUser();
 
+        // ⭐ Check page access based on role
+        if (!checkPageAccess()) {
+            return false; // Redirect already handled in checkPageAccess
+        }
+
         if (requiredRole) {
             const roleHierarchy = {
-                'administrator': 3,
-                'manager': 2,
-                'cashier': 1
+                'administrator': 4,
+                'manager': 3,
+                'cashier': 2,
+                'supplier': 1,
+                'customer': 1
             };
             const userLevel = roleHierarchy[user.role] || 0;
             const requiredLevel = roleHierarchy[requiredRole] || 0;
 
             if (userLevel < requiredLevel) {
                 alert('You do not have permission to access this page.');
-                window.location.href = 'dashboard.html';
+                const userRules = PAGE_ACCESS_RULES[user.role];
+                window.location.href = userRules ? userRules.homepage : 'login.html';
                 return false;
             }
         }
@@ -641,8 +709,10 @@
         getUserSessions,
         getActivityLogs,
         getUserStatistics,
-        getUserStatisticsById
+        getUserStatisticsById,
+        checkPageAccess,
+        PAGE_ACCESS_RULES
     });
 
-    console.log('🔐 Multi-tenant authModule loaded');
+    console.log('🔐 Multi-tenant authModule loaded with role-based access control');
 })();

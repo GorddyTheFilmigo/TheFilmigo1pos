@@ -34,6 +34,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/nav-styles.css">
   <link rel="manifest" href="/manifest.json">
+  <script src="assets/page-access-guard.js"></script>
   <style>
     * {
       margin: 0;
@@ -690,10 +691,12 @@
         <div class="form-group">
           <label class="form-label">Role *</label>
           <select class="form-select" id="modalRole" required>
-            <option value="cashier">Cashier</option>
-            <option value="manager">Manager</option>
-            <option value="administrator">Administrator</option>
-          </select>
+    <option value="cashier">Cashier</option>
+    <option value="manager">Manager</option>
+    <option value="administrator">Administrator</option>
+    <option value="supplier">Supplier</option>   <!-- ⭐ ADD THIS -->
+    <option value="customer">Customer</option>   <!-- ⭐ ADD THIS -->
+</select>
         </div>
 
         <div class="form-group">
@@ -1042,6 +1045,6 @@
     updateDate();
   </script>
   <script src="assets/pwa-registration.js"></script>
-  
+
 </body>
 </html>
