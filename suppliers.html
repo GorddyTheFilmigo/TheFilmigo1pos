@@ -135,7 +135,7 @@
             <a href="products.html" class="nav-tab" style="display:none;">Products</a>
             <a href="inventory.html" class="nav-tab admin-only" style="display:none;">Inventory</a>
             <a href="customers.html" class="nav-tab" style="display:none;">Customers</a>
-            <a href="suppliers.html" class="nav-tab active">My Requests</a>
+            <a href="suppliers.html" class="nav-tab active" class="nav-tab suppliers only">My Requests</a>
             <a href="supply-requests.html" class="nav-tab" style="display:none;">Supply Requests</a>
             <a href="admin.html" class="nav-tab admin-only" style="display:none;">👥 Users</a>
         </div>
@@ -427,6 +427,11 @@
             showMessage('Accept failed: ' + err.message, 'error');
         }
     }
+     const userRole = "buyer"; // get this dynamically from backend
+
+  if (userRole !== "supplier") {
+    document.querySelector(".suppliers-only").style.display = "none";
+  }
 
     async function rejectRequest(id) {
         const reason = prompt('Reason for rejection (optional):')?.trim();
