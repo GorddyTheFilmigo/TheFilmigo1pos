@@ -371,11 +371,11 @@
             <div class="logo">G&H Solutions</div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab active" id="dashboardLink" style="display:none;">Dashboard</a>
-                <a href="pos.html" class="nav-tab">Point of Sale</a>
-                <a href="products.html" class="nav-tab">Products</a>
+                <a href="pos.html" class="nav-tab" id="posLink" style="display:none;">Point of Sale</a>
+                <a href="products.html" class="nav-tab" id="productsLink" style="display:none;">Products</a>
                 <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
-                <a href="customers.html" class="nav-tab">Customers</a>
-                <a href="suppliers.html" class="nav-tab">Suppliers</a>
+                <a href="customers.html" class="nav-tab" id="customersLink" style="display:none;">Customers</a>
+                <a href="suppliers.html" class="nav-tab" id="suppliersLink" style="display:none;">Suppliers</a>
                 <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
             <div class="nav-right">
@@ -644,6 +644,67 @@
 
     <script>
     // ═══════════════════════════════════════════════════════════
+    // NAVIGATION VISIBILITY CONTROL
+    // ═══════════════════════════════════════════════════════════
+    function setNavigationVisibility(userRole) {
+        const role = userRole.toLowerCase().trim();
+        
+        // Get all navigation links
+        const dashboardLink = document.getElementById('dashboardLink');
+        const posLink = document.getElementById('posLink');
+        const productsLink = document.getElementById('productsLink');
+        const inventoryLink = document.getElementById('inventoryLink');
+        const customersLink = document.getElementById('customersLink');
+        const suppliersLink = document.getElementById('suppliersLink');
+        const adminLink = document.getElementById('adminTab');
+
+        // Hide all by default
+        if (dashboardLink) dashboardLink.style.display = 'none';
+        if (posLink) posLink.style.display = 'none';
+        if (productsLink) productsLink.style.display = 'none';
+        if (inventoryLink) inventoryLink.style.display = 'none';
+        if (customersLink) customersLink.style.display = 'none';
+        if (suppliersLink) suppliersLink.style.display = 'none';
+        if (adminLink) adminLink.style.display = 'none';
+
+        // Show links based on role
+        if (role === 'admin' || role === 'administrator' || role === 'manager') {
+            // Admins see everything
+            if (dashboardLink) dashboardLink.style.display = 'flex';
+            if (posLink) posLink.style.display = 'flex';
+            if (productsLink) productsLink.style.display = 'flex';
+            if (inventoryLink) inventoryLink.style.display = 'flex';
+            if (customersLink) customersLink.style.display = 'flex';
+            if (suppliersLink) suppliersLink.style.display = 'flex';
+            if (adminLink) adminLink.style.display = 'flex';
+            
+            console.log('✅ Admin navigation: All links visible');
+        } else if (role === 'supplier') {
+            // Suppliers see only suppliers page
+            if (suppliersLink) suppliersLink.style.display = 'flex';
+            
+            console.log('✅ Supplier navigation: Only Suppliers link visible');
+        } else if (role === 'customer') {
+            // Customers see only POS (to make purchases)
+            if (posLink) posLink.style.display = 'flex';
+            
+            console.log('✅ Customer navigation: Only POS link visible');
+        } else if (role === 'cashier') {
+            // Cashiers see POS, Products, and Customers
+            if (posLink) posLink.style.display = 'flex';
+            if (productsLink) productsLink.style.display = 'flex';
+            if (customersLink) customersLink.style.display = 'flex';
+            
+            console.log('✅ Cashier navigation: POS, Products, Customers visible');
+        } else {
+            // Default fallback - show minimal access
+            if (posLink) posLink.style.display = 'flex';
+            
+            console.log('⚠️ Unknown role, showing minimal navigation');
+        }
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // DASHBOARD TAB SWITCHING
     // ═══════════════════════════════════════════════════════════
     function switchDashboardTab(tabName, clickedElement) {
@@ -708,9 +769,8 @@
 
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
                 
-                document.getElementById('adminTab').style.display = 'flex';
-                document.getElementById('dashboardLink').style.display = 'flex';
-                document.getElementById('inventoryLink').style.display = 'flex';
+                // Set navigation visibility based on role
+                setNavigationVisibility(userRole);
 
                 const currentShop = window.DukaPOS?.currentShop || currentUser?.shops || null;
                 console.log('📊 Current shop:', currentShop?.shop_name || 'N/A');

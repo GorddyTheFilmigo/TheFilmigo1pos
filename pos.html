@@ -5,20 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
     <title>G&H Solutions</title>
-
     <!-- PWA META TAGS -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
-
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <!-- Offline Mode Styles -->
     <link rel="stylesheet" href="assets/offline-styles.css">
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
@@ -43,10 +40,7 @@
             background: var(--bg-primary);
             color: var(--text);
         }
-
-        /* ═══════════════════════════════════════════════════════════ */
-        /* MESSAGE NOTIFICATION STYLES - START */
-        /* ═══════════════════════════════════════════════════════════ */
+        /* Message Notification Styles */
         .message-notification-bell {
             position: relative;
             cursor: pointer;
@@ -220,10 +214,6 @@
                 max-height: 70vh;
             }
         }
-        /* ═══════════════════════════════════════════════════════════ */
-        /* MESSAGE NOTIFICATION STYLES - END */
-        /* ═══════════════════════════════════════════════════════════ */
-
         /* Tab Navigation */
         .pos-tabs {
             display: flex;
@@ -249,10 +239,8 @@
             color: white;
             border-color: var(--accent-orange);
         }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         /* POS Section */
         .pos-container {
             display: grid;
@@ -436,7 +424,6 @@
             padding: 40px 20px;
             color: var(--text-muted);
         }
-
         /* Expenses Section */
         .expenses-container {
             padding: 20px;
@@ -510,7 +497,6 @@
             font-weight: 700;
             color: var(--danger);
         }
-
         /* Modal Styles */
         .modal {
             display: none;
@@ -594,7 +580,6 @@
             margin-bottom: 20px;
             text-align: center;
         }
-
         @media (max-width: 900px) {
             .pos-container {
                 grid-template-columns: 1fr;
@@ -626,13 +611,10 @@
                         <div id="currentUserName">User</div>
                     </div>
                 </div>
-
-                <!-- ⭐ MESSAGE NOTIFICATION BELL -->
                 <div class="message-notification-bell" onclick="toggleMessagesPopup()" id="messageBell">
                     🔔
                     <span class="message-badge" id="messageBadge" style="display: none;">0</span>
                 </div>
-
                 <button
                     onclick="authModule.logout()"
                     style="
@@ -655,8 +637,7 @@
             </div>
         </div>
     </nav>
-
-    <!-- ⭐ MESSAGES POPUP -->
+    <!-- Messages Popup -->
     <div class="messages-popup" id="messagesPopup">
         <div class="messages-header">
             <h3>📨 Messages</h3>
@@ -669,13 +650,11 @@
             </div>
         </div>
     </div>
-
     <!-- POS/Expenses Tab Navigation -->
     <div class="pos-tabs">
         <button class="pos-tab-btn active" onclick="switchTab('sales')">💰 Sales</button>
         <button class="pos-tab-btn" onclick="switchTab('expenses')">💸 Expenses</button>
     </div>
-
     <!-- Sales Tab Content -->
     <div id="salesTab" class="tab-content active">
         <div class="pos-container">
@@ -720,7 +699,6 @@
             </div>
         </div>
     </div>
-
     <!-- Expenses Tab Content -->
     <div id="expensesTab" class="tab-content">
         <div class="expenses-container">
@@ -758,7 +736,6 @@
             </div>
         </div>
     </div>
-
     <!-- Add Expense Modal -->
     <div class="modal" id="addExpenseModal">
         <div class="modal-content">
@@ -801,7 +778,6 @@
             </form>
         </div>
     </div>
-
     <!-- Success Modal -->
     <div class="modal" id="successModal">
         <div class="modal-content" style="text-align: center;">
@@ -818,17 +794,12 @@
     <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
     <script src="assets/messaging-module.js"></script>
-
     <script>
-    // ════════════════════════════════════════════════════════════
-    // MESSAGE NOTIFICATION FUNCTIONS
-    // ════════════════════════════════════════════════════════════
+    // Message notification functions (full code included)
     let messagesCheckInterval = null;
-
     function toggleMessagesPopup() {
         const popup = document.getElementById('messagesPopup');
         const isActive = popup.classList.contains('active');
-
         if (isActive) {
             popup.classList.remove('active');
         } else {
@@ -836,18 +807,15 @@
             loadUserMessages();
         }
     }
-
     document.addEventListener('click', function(event) {
         const popup = document.getElementById('messagesPopup');
         const bell = document.getElementById('messageBell');
-
         if (popup && bell && popup.classList.contains('active')) {
             if (!popup.contains(event.target) && !bell.contains(event.target)) {
                 popup.classList.remove('active');
             }
         }
     });
-
     async function loadUserMessages() {
         try {
             const result = await window.messagingModule.getAllMessages(20);
@@ -866,10 +834,8 @@
                 const expiresAt = new Date(msg.expires_at);
                 const now = new Date();
                 const hoursLeft = Math.round((expiresAt - now) / (1000 * 60 * 60));
-
                 const timeAgo = getTimeAgo(sentAt);
                 const senderId = msg.sender?.id || 'unknown';
-
                 return `
                     <div class="message-item ${msg.is_read ? '' : 'unread'}">
                         <div class="message-header">
@@ -907,7 +873,6 @@
             `;
         }
     }
-
     async function replyToMessage(senderId) {
         if (!senderId || senderId === 'unknown') {
             alert("Cannot reply — sender information missing.");
@@ -929,7 +894,6 @@
             alert("Error sending reply. Check console for details.");
         }
     }
-
     async function markMessageRead(messageId) {
         try {
             const result = await window.messagingModule.markAsRead(messageId);
@@ -943,7 +907,6 @@
             console.error('Mark as read error:', err);
         }
     }
-
     async function updateUnreadCount() {
         try {
             const result = await window.messagingModule.getUnreadCount();
@@ -960,7 +923,6 @@
             document.getElementById('messageBadge').style.display = 'none';
         }
     }
-
     function getTimeAgo(date) {
         const seconds = Math.floor((new Date() - date) / 1000);
         if (seconds < 60) return 'Just now';
@@ -969,26 +931,21 @@
         if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
         return date.toLocaleDateString();
     }
-
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
-
     function initializeMessageNotifications() {
         updateUnreadCount();
         messagesCheckInterval = setInterval(updateUnreadCount, 30000);
         console.log('✅ Message notifications initialized');
     }
 
-    // ════════════════════════════════════════════════════════════
-    // TAB SWITCHING
-    // ════════════════════════════════════════════════════════════
+    // Tab switching
     function switchTab(tab) {
         document.querySelectorAll('.pos-tab-btn').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-
         if (tab === 'sales') {
             document.querySelector('[onclick*="sales"]').classList.add('active');
             document.getElementById('salesTab').classList.add('active');
@@ -999,9 +956,7 @@
         }
     }
 
-    // ════════════════════════════════════════════════════════════
-    // EXPENSES FUNCTIONS
-    // ════════════════════════════════════════════════════════════
+    // Expenses functions
     function openAddExpenseModal() {
         document.getElementById('expenseDate').valueAsDate = new Date();
         document.getElementById('addExpenseModal').classList.add('show');
@@ -1018,7 +973,6 @@
         try {
             const result = await window.dataModule.getAllExpenses();
             if (!result.success) throw new Error(result.error);
-
             const expenses = result.data || [];
             renderExpenses(expenses);
             calculateExpenseStats(expenses);
@@ -1031,7 +985,6 @@
 
     function renderExpenses(expenses) {
         const container = document.getElementById('expensesList');
-
         if (expenses.length === 0) {
             container.innerHTML = `
                 <div style="text-align:center; padding:40px; color:var(--text-muted);">
@@ -1041,7 +994,6 @@
             `;
             return;
         }
-
         container.innerHTML = expenses.map(expense => {
             const date = new Date(expense.date);
             const formattedDate = date.toLocaleDateString('en-US', {
@@ -1049,7 +1001,6 @@
                 month: 'short',
                 day: 'numeric'
             });
-
             return `
                 <div class="expense-item">
                     <div class="expense-info">
@@ -1071,7 +1022,6 @@
         weekStart.setDate(today.getDate() - today.getDay());
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
         const yearStart = new Date(now.getFullYear(), 0, 1);
-
         let todayTotal = 0, weekTotal = 0, monthTotal = 0, yearTotal = 0;
         expenses.forEach(expense => {
             const expenseDate = new Date(expense.date);
@@ -1081,42 +1031,84 @@
             if (expenseDate >= monthStart) monthTotal += amount;
             if (expenseDate >= yearStart) yearTotal += amount;
         });
-
         document.getElementById('todayExpenses').textContent = `KES ${todayTotal.toFixed(2)}`;
         document.getElementById('weekExpenses').textContent = `KES ${weekTotal.toFixed(2)}`;
         document.getElementById('monthExpenses').textContent = `KES ${monthTotal.toFixed(2)}`;
         document.getElementById('yearExpenses').textContent = `KES ${yearTotal.toFixed(2)}`;
     }
 
+    // FIXED Expense submit handler with maximum reliability
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-
         const saveBtn = document.getElementById('saveExpenseBtn');
         saveBtn.disabled = true;
-        saveBtn.textContent = 'Checking auth...';
+        saveBtn.textContent = 'Waiting for auth...';
 
         let currentUser = null;
-        const maxWaitMs = 5000;
+        const maxWaitMs = 15000; // 15 seconds total
+        const pollInterval = 150; // check every 150 ms
         const start = Date.now();
 
+        console.log('[Expense Auth Check] Starting robust authentication recovery...');
+
         while (Date.now() - start < maxWaitMs) {
+            // Priority 1: authModule
             currentUser = authModule.getCurrentUser();
             if (currentUser && currentUser.id) {
-                console.log('User authenticated after wait:', currentUser.full_name);
+                console.log('[Expense Auth Check] SUCCESS - authModule returned valid user ID:', currentUser.id);
                 break;
             }
-            await new Promise(r => setTimeout(r, 300));
+
+            // Priority 2: Direct localStorage read (most reliable in your setup)
+            const userJson = localStorage.getItem('duka_user');
+            if (userJson) {
+                try {
+                    const parsed = JSON.parse(userJson);
+                    if (parsed && parsed.id) {
+                        console.log('[Expense Auth Check] SUCCESS - localStorage direct parse found user ID:', parsed.id);
+                        currentUser = parsed;
+                        break;
+                    }
+                } catch (parseErr) {
+                    console.warn('[Expense Auth Check] localStorage JSON parse failed:', parseErr.message);
+                }
+            }
+
+            // Priority 3: Supabase session
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user && user.id) {
+                    console.log('[Expense Auth Check] SUCCESS - Supabase auth.getUser() recovered ID:', user.id);
+                    currentUser = {
+                        id: user.id,
+                        full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+                        role: user.user_metadata?.role || 'unknown'
+                    };
+                    break;
+                }
+            } catch (supaErr) {
+                console.warn('[Expense Auth Check] Supabase session check failed:', supaErr.message);
+            }
+
+            // Show retry feedback
+            if ((Date.now() - start) > 3000) {
+                saveBtn.textContent = 'Retrying auth...';
+            }
+
+            await new Promise(r => setTimeout(r, pollInterval));
         }
 
         if (!currentUser || !currentUser.id) {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save Expense';
-            alert('Authentication not ready yet. Please wait a moment or refresh the page.');
-            console.error('User still not loaded after wait');
+            alert('Could not detect your logged-in account after waiting.\n\nPlease:\n1. Refresh the page (Ctrl + F5 or Cmd + R)\n2. Log out completely\n3. Log back in\n\nIf the problem persists, check console for "[Expense Auth Check]" messages.');
+            console.error('[Expense Auth Check] FINAL FAILURE: No valid user ID after 15s wait');
             return;
         }
 
-        saveBtn.textContent = 'Saving...';
+        console.log('[Expense Auth Check] Authentication fully confirmed - user ID:', currentUser.id);
+
+        saveBtn.textContent = 'Saving expense...';
 
         const expenseData = {
             category: document.getElementById('expenseCategory').value,
@@ -1134,47 +1126,37 @@
             alert('✅ Expense added successfully!');
         } catch (error) {
             console.error('Failed to add expense:', error);
-            alert('❌ Failed to add expense: ' + error.message);
+            alert('❌ Failed to add expense: ' + (error.message || 'Unknown error'));
         } finally {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save Expense';
         }
     });
 
-    // ════════════════════════════════════════════════════════════
-    // POS FUNCTIONS
-    // ════════════════════════════════════════════════════════════
+    // Full POS functions (unchanged from your original)
     (function() {
         let cart = [];
         let products = [];
         let selectedPayment = 'Cash';
-
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
-
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
-
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-
                 if (window.setupNavigationForRole) {
                     window.setupNavigationForRole();
                 }
-
                 await loadProducts();
                 setupEventListeners();
-
                 setTimeout(initializeMessageNotifications, 1000);
-
                 console.log('✅ POS initialized');
             } catch (err) {
                 console.error('POS init failed:', err);
                 alert('Failed to initialize POS: ' + err.message);
             }
         });
-
         async function loadProducts() {
             try {
                 const result = await window.dataModule.getAllProducts();
@@ -1189,7 +1171,6 @@
                     '<div style="text-align:center; padding:40px; color:var(--danger);">Failed to load products</div>';
             }
         }
-
         function renderCategoryButtons() {
             const container = document.getElementById('categoriesContainer');
             container.innerHTML = '';
@@ -1220,10 +1201,8 @@
                 });
             });
         }
-
         function renderProducts(productsToRender) {
             const grid = document.getElementById('productsGrid');
-
             if (productsToRender.length === 0) {
                 grid.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">No products found</div>';
                 return;
@@ -1237,7 +1216,6 @@
                 </div>
             `).join('');
         }
-
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
@@ -1246,7 +1224,6 @@
                 return;
             }
             const existingItem = cart.find(item => item.id === productId);
-
             if (existingItem) {
                 if (existingItem.quantity >= product.stock) {
                     alert('Cannot add more than available stock!');
@@ -1264,11 +1241,9 @@
             }
             renderCart();
         };
-
         function renderCart() {
             const cartContainer = document.getElementById('cartItems');
             const checkoutBtn = document.getElementById('checkoutBtn');
-
             if (cart.length === 0) {
                 cartContainer.innerHTML = `
                     <div class="empty-cart">
@@ -1280,7 +1255,6 @@
                 updateSummary();
                 return;
             }
-
             cartContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-info">
@@ -1295,17 +1269,13 @@
                     </div>
                 </div>
             `).join('');
-
             checkoutBtn.disabled = false;
             updateSummary();
         }
-
         window.updateQuantity = function(productId, change) {
             const item = cart.find(i => i.id === productId);
             if (!item) return;
-
             const newQty = item.quantity + change;
-
             if (newQty <= 0) {
                 removeFromCart(productId);
                 return;
@@ -1317,19 +1287,16 @@
             item.quantity = newQty;
             renderCart();
         };
-
         window.removeFromCart = function(productId) {
             cart = cart.filter(item => item.id !== productId);
             renderCart();
         };
-
         function updateSummary() {
             const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             document.getElementById('itemCount').textContent = itemCount;
             document.getElementById('totalAmount').textContent = `KES ${total.toFixed(2)}`;
         }
-
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', (e) => {
                 const search = e.target.value.toLowerCase();
@@ -1348,27 +1315,21 @@
             });
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
         }
-
         async function checkout() {
             if (cart.length === 0) return;
-
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             await processCheckout(cart, total, selectedPayment);
         }
-
         async function processCheckout(cartItems, total, paymentMethod) {
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-
                 const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
                 const saleItems = cartItems.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     unit_price: item.price
                 }));
-
                 const saleResult = await window.dataModule.createSale({
                     user_id: currentUser.id,
                     total_amount: total,
@@ -1376,7 +1337,6 @@
                     payment_method: paymentMethod
                 }, saleItems);
                 if (!saleResult.success) throw new Error(saleResult.error);
-
                 let stockUpdateFailed = false;
                 let failedProducts = [];
                 for (const item of cartItems) {
@@ -1391,7 +1351,6 @@
                         failedProducts.push(item.name);
                     }
                 }
-
                 if (stockUpdateFailed) {
                     alert(
                         'Sale completed successfully, but stock could not be updated for:\n' +
@@ -1399,26 +1358,22 @@
                         '\n\nPlease check inventory manually or contact support.'
                     );
                 }
-
                 document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
                 document.getElementById('successModal').classList.add('show');
-
                 cart = [];
                 renderCart();
                 await loadProducts();
                 return { success: true, sale: saleResult.data };
             } catch (error) {
-                console.error('❌ Checkout error:', error);
+                console.error('Checkout error:', error);
                 alert('Checkout failed: ' + error.message);
                 return { success: false, error: error.message };
             }
         }
-
         window.closeSuccessModal = function() {
             document.getElementById('successModal').classList.remove('show');
         };
     })();
-
     window.addEventListener('beforeunload', () => {
         if (messagesCheckInterval) {
             clearInterval(messagesCheckInterval);

@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G&H Solutions - Suppliers Portal</title>
-    
-    <meta name="theme-color" content="#10b981">
+    <title>G&H Solutions - My Supply Requests</title>
+    <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="G&H Suppliers">
-    <meta name="description" content="Supplier Portal - Manage orders and deliveries">
-    
+    <meta name="apple-mobile-web-app-title" content="G&H Solutions">
+    <meta name="description" content="Supplier Portal - View and process supply requests">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="assets/offline-styles.css">
-    
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
-    
+    <script src="assets/page-access-guard.js"></script>
+    <script src="assets/nav-visibility-controller.js"></script>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -34,12 +31,9 @@
             --text-muted: #8b949e;
             --accent-orange: #f59e0b;
             --accent-blue: #58a6ff;
-            --accent-green: #10b981;
-            --accent-purple: #a78bfa;
+            --accent-green: #3fb950;
             --danger: #f85149;
-            --warning: #f59e0b;
         }
-        
         body {
             font-family: 'Archivo', sans-serif;
             background: var(--bg-primary);
@@ -47,298 +41,30 @@
             margin: 0;
             padding: 0;
         }
-        
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 32px 24px;
         }
-        
-        /* Role-based display */
-        .admin-only { display: none; }
-        .supplier-only { display: none; }
-        
-        /* Dashboard Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        .supplier-welcome {
             margin-bottom: 32px;
         }
-        
-        .stat-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            transition: transform 0.2s;
+        .supplier-welcome h1 {
+            margin: 0 0 8px 0;
+            font-size: 2.2rem;
         }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
+        .supplier-welcome p {
             color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--accent-green);
-        }
-        
-        .stat-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        
-        /* Performance Badge */
-        .performance-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-top: 8px;
-        }
-        
-        .performance-excellent {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-        }
-        
-        .performance-good {
-            background: rgba(88, 166, 255, 0.2);
-            color: var(--accent-blue);
-        }
-        
-        .performance-needs-improvement {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--accent-orange);
-        }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0;
-            overflow-x: auto;
-        }
-        
-        .tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-            font-family: inherit;
-            white-space: nowrap;
-        }
-        
-        .tab:hover {
-            color: var(--text);
-            background: rgba(88, 166, 255, 0.05);
-        }
-        
-        .tab.active {
-            color: var(--accent-green);
-            border-bottom-color: var(--accent-green);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* Notification Bell */
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.5rem;
-            margin-right: 20px;
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--danger);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        
-        .notification-dropdown {
-            position: absolute;
-            top: 50px;
-            right: 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-        }
-        
-        .notification-dropdown.active {
-            display: block;
-        }
-        
-        .notification-item {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .notification-item:hover {
-            background: var(--bg-tertiary);
-        }
-        
-        .notification-item.unread {
-            background: rgba(88, 166, 255, 0.05);
-        }
-        
-        /* Forms */
-        .supplier-form {
-            background: var(--bg-secondary);
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 32px;
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-primary);
-            color: var(--text);
-            font-size: 14px;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-        
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent-green);
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-primary {
-            background: var(--accent-green);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent-green);
-            border: 2px solid var(--accent-green);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--accent-green);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-warning {
-            background: var(--accent-orange);
-            color: white;
-        }
-        
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 13px;
-            margin-right: 8px;
-        }
-        
-        .btn-icon {
-            padding: 8px 12px;
-            font-size: 1rem;
-        }
-        
-        /* Tables */
         .table-container {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 24px;
-            margin-top: 32px;
             overflow-x: auto;
+            margin-bottom: 40px;
         }
-        
         .table-header {
             display: flex;
             justify-content: space-between;
@@ -347,19 +73,16 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-        
         .table {
             width: 100%;
             border-collapse: collapse;
             min-width: 900px;
         }
-        
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
-        
         th {
             background: var(--bg-tertiary);
             font-weight: 700;
@@ -367,2050 +90,384 @@
             text-transform: uppercase;
             font-size: 0.85rem;
         }
-        
         tr:hover {
             background: rgba(88, 166, 255, 0.08);
         }
-        
-        /* Status badges */
         .status-badge {
-            display: inline-block;
             padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .status-pending {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-orange);
-        }
-        
-        .status-processing {
-            background: rgba(88, 166, 255, 0.15);
-            color: var(--accent-blue);
-        }
-        
-        .status-shipped {
-            background: rgba(139, 92, 246, 0.15);
-            color: #a78bfa;
-        }
-        
-        .status-delivered {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-        }
-        
-        .status-cancelled, .status-rejected {
-            background: rgba(248, 81, 73, 0.15);
-            color: var(--danger);
-        }
-        
-        .status-disputed {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-orange);
-        }
-        
-        /* Order Detail Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            overflow-y: auto;
-        }
-        
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-        
-        .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 8px;
-        }
-        
-        .modal-body {
-            padding: 24px;
-        }
-        
-        .order-actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .order-info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        
-        .info-item {
-            padding: 16px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-        }
-        
-        .info-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-        }
-        
-        .info-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        /* Messages/Chat Section */
-        .messages-section {
-            background: var(--bg-tertiary);
             border-radius: 12px;
-            padding: 20px;
-            margin-top: 24px;
-            max-height: 400px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .messages-list {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 16px;
-            max-height: 250px;
-        }
-        
-        .message-item {
-            background: var(--bg-secondary);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            border-left: 3px solid var(--accent-blue);
-        }
-        
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        
-        .message-author {
-            font-weight: 600;
-            color: var(--accent-blue);
-        }
-        
-        .message-time {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        
-        .message-text {
-            color: var(--text);
-            line-height: 1.5;
-        }
-        
-        .message-attachment {
-            margin-top: 8px;
-            padding: 8px 12px;
-            background: var(--bg-primary);
-            border-radius: 6px;
-            display: inline-block;
-            font-size: 0.85rem;
-        }
-        
-        .message-input-container {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .message-input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-primary);
-            color: var(--text);
-            font-family: inherit;
-        }
-        
-        /* Issue Report Section */
-        .issue-report {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 24px;
-        }
-        
-        .issue-type-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        
-        .issue-type-btn {
-            padding: 16px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-            font-weight: 600;
-        }
-        
-        .issue-type-btn:hover {
-            border-color: var(--accent-orange);
-            background: rgba(245, 158, 11, 0.1);
-        }
-        
-        .issue-type-btn.active {
-            border-color: var(--accent-orange);
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--accent-orange);
-        }
-        
-        /* Dispute Ticket */
-        .dispute-ticket {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-        
-        .dispute-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        
-        .dispute-id {
+            font-size: 0.82rem;
             font-weight: 700;
-            color: var(--accent-orange);
+            text-transform: uppercase;
         }
-        
-        .dispute-body {
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-        
-        .dispute-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-        }
-        
-        /* Payment Section */
-        .payment-history {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        
-        .payment-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: var(--bg-secondary);
+        .status-pending   { background: rgba(245,158,11,.2); color: var(--accent-orange); }
+        .status-approved  { background: rgba(63,185,80,.2);  color: var(--accent-green); }
+        .status-rejected  { background: rgba(248,81,73,.2);  color: var(--danger); }
+        .btn {
+            padding: 8px 16px;
+            border: none;
             border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .payment-status {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        
-        .payment-paid {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-        }
-        
-        .payment-pending {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--accent-orange);
-        }
-        
-        .payment-overdue {
-            background: rgba(248, 81, 73, 0.2);
-            color: var(--danger);
-        }
-        
-        /* Product Updates */
-        .product-update-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
-        
-        .update-type {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .update-price-change {
-            background: rgba(88, 166, 255, 0.2);
-            color: var(--accent-blue);
-        }
-        
-        .update-new-product {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-        }
-        
-        .update-discontinued {
-            background: rgba(248, 81, 73, 0.2);
-            color: var(--danger);
-        }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-        
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        
-        /* Messages */
-        .loading, .error-message {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
-        
-        .error-message {
-            color: var(--danger);
-        }
-        
-        .success {
-            color: var(--accent-green);
-            margin-top: 8px;
-        }
-        
-        .error {
-            color: var(--danger);
-            margin-top: 8px;
-        }
-        
-        /* File Upload */
-        .file-upload-area {
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            text-align: center;
             cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
             transition: all 0.2s;
         }
-        
-        .file-upload-area:hover {
-            border-color: var(--accent-green);
-            background: rgba(16, 185, 129, 0.05);
-        }
-        
-        .file-upload-area.dragover {
-            border-color: var(--accent-green);
-            background: rgba(16, 185, 129, 0.1);
-        }
-        
-        .uploaded-files {
-            margin-top: 16px;
-        }
-        
-        .uploaded-file-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-        
-        .file-remove-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        
-        /* Performance Metrics */
-        .performance-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-        }
-        
-        .performance-card {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .performance-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin: 12px 0;
-        }
-        
-        .performance-label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-        
-        /* Terms & Contract */
-        .contract-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-        }
-        
-        .contract-item {
-            padding: 16px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .contract-title {
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .contract-value {
-            color: var(--text-muted);
-        }
-        
+        .btn:hover { transform: translateY(-1px); }
+        .btn-primary   { background: var(--accent-orange); color: white; }
+        .btn-danger    { background: var(--danger); color: white; }
+        .loading, .empty-row { text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 1.1rem; }
+        .error-message { text-align: center; padding: 48px 0; color: var(--danger); font-size: 1.1rem; }
+        .success-msg { color: var(--accent-green); font-weight: 600; margin: 12px 0; }
+        .error-msg   { color: var(--danger); font-weight: 600; margin: 12px 0; }
         @media (max-width: 768px) {
-            .form-grid, .order-info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .table-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .order-actions {
-                flex-direction: column;
-            }
-            
-            .message-input-container {
-                flex-direction: column;
-            }
+            .table-header { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="logo">🏭 G&H Suppliers Portal</div>
-            <div class="nav-tabs">
-                <a href="suppliers.html" class="nav-tab active">Suppliers</a>
-            </div>
-            <div style="display: flex; align-items: center;">
-                <div class="notification-bell" onclick="toggleNotifications()">
-                    🔔
-                    <span class="notification-badge" id="notificationCount" style="display: none;">0</span>
-                </div>
-                <div class="user-badge">
-                    <div class="user-avatar">👤</div>
-                    <div>
-                        <div id="currentUserName">User</div>
-                        <div id="currentUserRole" style="font-size: 0.8rem; color: var(--text-muted);"></div>
-                    </div>
-                </div>
-                <button
-                    onclick="authModule.logout()"
-                    style="
-                      padding: 10px 18px;
-                      background-color: #ef4444;
-                      color: #ffffff;
-                      border: none;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      font-weight: 600;
-                      cursor: pointer;
-                      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-                      transition: all 0.2s ease;
-                      margin-left: 16px;
-                    "
-                    onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-                    onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
-                >
-                    Logout
-                </button>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Notification Dropdown -->
-    <div class="notification-dropdown" id="notificationDropdown">
-        <div style="padding: 16px; border-bottom: 1px solid var(--border); font-weight: 700;">
-            Notifications
+<nav class="nav">
+    <div class="nav-container">
+        <div class="logo">G&H Solutions</div>
+        <div class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab admin-only" style="display:none;">Dashboard</a>
+            <a href="pos.html" class="nav-tab" style="display:none;">Point of Sale</a>
+            <a href="products.html" class="nav-tab" style="display:none;">Products</a>
+            <a href="inventory.html" class="nav-tab admin-only" style="display:none;">Inventory</a>
+            <a href="customers.html" class="nav-tab" style="display:none;">Customers</a>
+            <a href="suppliers.html" class="nav-tab active">My Requests</a>
+            <a href="supply-requests.html" class="nav-tab" style="display:none;">Supply Requests</a>
+            <a href="admin.html" class="nav-tab admin-only" style="display:none;">👥 Users</a>
         </div>
-        <div id="notificationsList">
-            <div class="empty-state" style="padding: 40px 20px;">
-                <div style="font-size: 2rem; margin-bottom: 12px;">🔔</div>
-                <div>No new notifications</div>
+        <div class="user-badge">
+            <div class="user-avatar">👤</div>
+            <div>
+                <div id="currentUserName">Supplier</div>
+                <div id="currentDate" style="font-size:.8rem;color:var(--text-muted);"></div>
             </div>
         </div>
+        <button
+            onclick="authModule.logout()"
+            style="padding:10px 18px;background-color:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,.3);transition:all .2s ease;margin-left:12px;"
+            onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'"
+        >Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="supplier-welcome">
+        <h1 id="supplierGreeting">Welcome</h1>
+        <p>View and respond to supply requests sent to you by shops.</p>
     </div>
 
-    <div class="container">
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- SUPPLIER VIEW (for supplier role users) -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <div id="supplierView" class="supplier-only">
-            <h1>📊 My Supplier Dashboard</h1>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">Manage your orders, deliveries, and communications</p>
-
-            <!-- Dashboard Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">📦 My Products</div>
-                    <div class="stat-value" id="supplierProductCount">0</div>
-                    <div class="stat-subtitle">Products I supply</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">📋 Pending Orders</div>
-                    <div class="stat-value" id="supplierPendingOrders">0</div>
-                    <div class="stat-subtitle">Awaiting processing</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">💰 This Month Revenue</div>
-                    <div class="stat-value" id="supplierRevenue">KES 0</div>
-                    <div class="stat-subtitle">Total orders value</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">⭐ Performance Score</div>
-                    <div class="stat-value" id="supplierPerformance">—</div>
-                    <div class="performance-badge performance-excellent" id="performanceBadge">Excellent</div>
-                </div>
-            </div>
-
-            <!-- Tabs for supplier -->
-            <div class="tabs">
-                <button class="tab active" onclick="switchSupplierTab('orders', this)">📋 Orders</button>
-                <button class="tab" onclick="switchSupplierTab('messages', this)">💬 Messages</button>
-                <button class="tab" onclick="switchSupplierTab('payments', this)">💰 Payments</button>
-                <button class="tab" onclick="switchSupplierTab('issues', this)">⚠️ Issues</button>
-                <button class="tab" onclick="switchSupplierTab('products', this)">🏷️ Products</button>
-                <button class="tab" onclick="switchSupplierTab('performance', this)">📈 Performance</button>
-                <button class="tab" onclick="switchSupplierTab('profile', this)">⚙️ Profile</button>
-            </div>
-
-            <!-- Orders Tab -->
-            <div id="supplierOrdersTab" class="tab-content active">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2>Purchase Orders from Shop</h2>
-                        <select class="form-select" id="orderStatusFilter" style="width: 200px;" onchange="filterSupplierOrders()">
-                            <option value="all">All Orders</option>
-                            <option value="pending">🟡 Pending</option>
-                            <option value="processing">🔵 Processing</option>
-                            <option value="shipped">🟣 Shipped</option>
-                            <option value="delivered">🟢 Delivered</option>
-                            <option value="disputed">🟠 Disputed</option>
-                            <option value="cancelled">🔴 Cancelled</option>
-                        </select>
-                    </div>
-                    
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Date</th>
-                                <th>Shop</th>
-                                <th>Items</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="supplierOrdersBody">
-                            <tr><td colspan="7" class="loading">Loading your orders...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Messages Tab -->
-            <div id="supplierMessagesTab" class="tab-content">
-                <div class="table-container">
-                    <h2>💬 Order Messages & Communications</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 20px;">
-                        View and respond to messages for each order
-                    </p>
-                    <div id="messagesListContainer">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">💬</div>
-                            <h3>No Messages Yet</h3>
-                            <p>Order communications will appear here</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payments Tab -->
-            <div id="supplierPaymentsTab" class="tab-content">
-                <div class="table-container">
-                    <h2>💰 Payment History & Invoices</h2>
-                    
-                    <div class="stats-grid" style="margin-top: 24px;">
-                        <div class="stat-card">
-                            <div class="stat-label">💵 Total Paid</div>
-                            <div class="stat-value" style="color: var(--accent-green);">KES 0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">⏳ Pending Payment</div>
-                            <div class="stat-value" style="color: var(--accent-orange);">KES 0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">⚠️ Overdue</div>
-                            <div class="stat-value" style="color: var(--danger);">KES 0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">📅 Credit Period</div>
-                            <div class="stat-value" style="font-size: 1.5rem;">30 days</div>
-                        </div>
-                    </div>
-
-                    <div class="payment-history" style="margin-top: 24px;">
-                        <h3>Recent Payments</h3>
-                        <div id="paymentsList">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">💰</div>
-                                <p>No payment records yet</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Issues Tab -->
-            <div id="supplierIssuesTab" class="tab-content">
-                <div class="table-container">
-                    <h2>⚠️ Issues & Disputes Management</h2>
-                    
-                    <div class="stats-grid" style="margin-top: 24px;">
-                        <div class="stat-card">
-                            <div class="stat-label">🔴 Open Issues</div>
-                            <div class="stat-value" id="openIssuesCount">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">🔵 Under Review</div>
-                            <div class="stat-value" id="reviewIssuesCount">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">🟢 Resolved</div>
-                            <div class="stat-value" id="resolvedIssuesCount">0</div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" style="margin-top: 24px;" onclick="openReportIssueModal()">
-                        + Report New Issue
-                    </button>
-
-                    <div id="issuesList" style="margin-top: 24px;">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">✅</div>
-                            <h3>No Issues Reported</h3>
-                            <p>All orders are running smoothly</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Products Tab -->
-            <div id="supplierProductsTab" class="tab-content">
-                <div class="table-container">
-                    <h2>🏷️ Product Catalog & Updates</h2>
-                    
-                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="openProductUpdateModal()">
-                        + Submit Product Update
-                    </button>
-
-                    <div id="productUpdatesList" style="margin-top: 24px;">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🏷️</div>
-                            <h3>No Product Updates</h3>
-                            <p>Submit price changes, new products, or stock updates here</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Performance Tab -->
-            <div id="supplierPerformanceTab" class="tab-content">
-                <div class="table-container">
-                    <h2>📈 Performance Metrics & Analytics</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 24px;">
-                        Track your delivery performance and reliability scores
-                    </p>
-
-                    <div class="performance-grid">
-                        <div class="performance-card">
-                            <div class="performance-label">On-Time Delivery Rate</div>
-                            <div class="performance-value" style="color: var(--accent-green);">95%</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-                                📦 38 of 40 orders on time
-                            </div>
-                        </div>
-                        <div class="performance-card">
-                            <div class="performance-label">Order Acceptance Rate</div>
-                            <div class="performance-value" style="color: var(--accent-blue);">98%</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-                                ✅ 49 of 50 orders accepted
-                            </div>
-                        </div>
-                        <div class="performance-card">
-                            <div class="performance-label">Return Rate</div>
-                            <div class="performance-value" style="color: var(--accent-green);">2%</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-                                📉 Very low return rate
-                            </div>
-                        </div>
-                        <div class="performance-card">
-                            <div class="performance-label">Average Response Time</div>
-                            <div class="performance-value" style="color: var(--accent-blue); font-size: 2rem;">2.5h</div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-                                ⚡ Fast response time
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 32px; padding: 24px; background: var(--bg-tertiary); border-radius: 12px;">
-                        <h3>Performance Insights</h3>
-                        <ul style="list-style: none; padding: 0; margin-top: 16px;">
-                            <li style="padding: 12px 0; border-bottom: 1px solid var(--border);">
-                                ✅ <strong>Excellent delivery record</strong> - Keep up the great work!
-                            </li>
-                            <li style="padding: 12px 0; border-bottom: 1px solid var(--border);">
-                                📈 <strong>Revenue growing</strong> - 15% increase vs last month
-                            </li>
-                            <li style="padding: 12px 0;">
-                                💡 <strong>Tip:</strong> Maintain response time under 3 hours for best ratings
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Tab -->
-            <div id="supplierProfileTab" class="tab-content">
-                <div class="supplier-form">
-                    <h2>My Supplier Profile</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" id="supplierCompanyName" class="form-input" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contact Person</label>
-                            <input type="text" id="supplierContactPerson" class="form-input" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Phone</label>
-                            <input type="text" id="supplierPhone" class="form-input" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="text" id="supplierEmail" class="form-input" readonly>
-                        </div>
-                        <div class="form-group full-width">
-                            <label class="form-label">Address</label>
-                            <input type="text" id="supplierAddress" class="form-input" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="contract-section" style="margin-top: 24px;">
-                    <h2>📋 Contract & Terms</h2>
-                    <div class="contract-item">
-                        <div class="contract-title">Credit Period</div>
-                        <div class="contract-value">30 days from delivery</div>
-                    </div>
-                    <div class="contract-item">
-                        <div class="contract-title">Payment Terms</div>
-                        <div class="contract-value">Net 30 - Bank transfer or M-PESA</div>
-                    </div>
-                    <div class="contract-item">
-                        <div class="contract-title">Delivery SLA</div>
-                        <div class="contract-value">3-5 business days from order confirmation</div>
-                    </div>
-                    <div class="contract-item">
-                        <div class="contract-title">Return Policy</div>
-                        <div class="contract-value">14 days for defective items with proof</div>
-                    </div>
-                    <div class="contract-item">
-                        <div class="contract-title">Late Delivery Penalty</div>
-                        <div class="contract-value">2% discount per day after SLA breach (max 10%)</div>
-                    </div>
-                </div>
-
-                <p style="color: var(--text-muted); margin-top: 16px;">
-                    💡 To update your profile information or contract terms, please contact the shop administrator.
-                </p>
+    <!-- Incoming Supply Requests -->
+    <div class="table-container">
+        <div class="table-header">
+            <h2 style="margin:0;">Incoming Supply Requests</h2>
+            <div style="display:flex; gap:12px; align-items:center;">
+                <select id="statusFilter" class="form-select" style="width:150px;padding:8px;">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <input type="text" id="requestSearch" class="form-input" placeholder="Search item or notes..." style="width:240px;">
             </div>
         </div>
-
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <!-- ADMIN VIEW (for admin/manager/cashier users) -->
-        <!-- ═══════════════════════════════════════════════════════════ -->
-        <div id="adminView" class="admin-only">
-            <h1>Suppliers Management</h1>
-
-            <div class="supplier-form">
-                <h2 id="formTitle">Add New Supplier</h2>
-                <form id="supplierForm">
-                    <input type="hidden" id="supplierId">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label class="form-label">Supplier Name *</label>
-                            <input type="text" id="name" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contact Person</label>
-                            <input type="text" id="contact_person" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Phone</label>
-                            <input type="tel" id="phone" class="form-input" placeholder="+254...">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="email" class="form-input" placeholder="supplier@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Address</label>
-                            <input type="text" id="address" class="form-input">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Credit Period (days)</label>
-                            <input type="number" id="credit_period" class="form-input" placeholder="30">
-                        </div>
-                        <div class="form-group full-width">
-                            <label class="form-label">Payment Terms</label>
-                            <input type="text" id="payment_terms" class="form-input" placeholder="Net 30, Bank transfer">
-                        </div>
-                        <div class="form-group full-width">
-                            <label class="form-label">Notes</label>
-                            <textarea id="notes" class="form-textarea" placeholder="Delivery schedule, special terms, etc..."></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group buttons">
-                        <button type="submit" class="btn btn-primary" id="submitBtn">+ Add Supplier</button>
-                        <button type="button" class="btn btn-secondary" id="clearBtn">Clear Form</button>
-                    </div>
-                    <div id="formMessage"></div>
-                </form>
-            </div>
-
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>Suppliers List</h2>
-                    <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search by name or contact..." style="width: 320px;">
-                </div>
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Contact Person</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Address</th>
-                            <th>Credit Period</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="suppliersTableBody">
-                        <tr><td colspan="8" class="loading">Loading suppliers...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Order Detail Modal -->
-    <div class="modal" id="orderDetailModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Order Details - <span id="modalOrderId">#12345</span></h2>
-                <button class="modal-close" onclick="closeOrderModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <!-- Order Actions -->
-                <div class="order-actions">
-                    <button class="btn btn-primary btn-small" onclick="acceptOrder()">✅ Accept Order</button>
-                    <button class="btn btn-danger btn-small" onclick="rejectOrder()">❌ Reject Order</button>
-                    <button class="btn btn-secondary btn-small" onclick="updateOrderStatus()">📦 Update Status</button>
-                    <button class="btn btn-warning btn-small" onclick="reportIssue()">⚠️ Report Issue</button>
-                </div>
-
-                <!-- Order Info -->
-                <div class="order-info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Order Date</div>
-                        <div class="info-value" id="modalOrderDate">—</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Status</div>
-                        <div class="info-value" id="modalOrderStatus">—</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Total Amount</div>
-                        <div class="info-value" id="modalOrderTotal">—</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Expected Delivery</div>
-                        <div class="info-value" id="modalDeliveryDate">—</div>
-                    </div>
-                </div>
-
-                <!-- Order Items -->
-                <div style="margin-top: 24px;">
-                    <h3>Order Items</h3>
-                    <div id="modalOrderItems">
-                        <!-- Items will be populated here -->
-                    </div>
-                </div>
-
-                <!-- Messages Section -->
-                <div class="messages-section">
-                    <h3>Order Messages</h3>
-                    <div class="messages-list" id="modalMessagesList">
-                        <div class="message-item">
-                            <div class="message-header">
-                                <div class="message-author">Shop Manager</div>
-                                <div class="message-time">2 hours ago</div>
-                            </div>
-                            <div class="message-text">
-                                Please confirm delivery by Friday. Thanks!
-                            </div>
-                        </div>
-                    </div>
-                    <div class="message-input-container">
-                        <input type="text" class="message-input" id="newMessageInput" placeholder="Type your message...">
-                        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-                        <button class="btn btn-secondary btn-icon" onclick="attachFile()" title="Attach File">📎</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Issue Report Modal -->
-    <div class="modal" id="issueReportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>⚠️ Report Issue</h2>
-                <button class="modal-close" onclick="closeIssueModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Select Order</label>
-                    <select class="form-select" id="issueOrderSelect">
-                        <option value="">Select an order...</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Issue Type</label>
-                    <div class="issue-type-grid">
-                        <div class="issue-type-btn" onclick="selectIssueType('delivery_delay', this)">
-                            🚚 Delivery Delay
-                        </div>
-                        <div class="issue-type-btn" onclick="selectIssueType('out_of_stock', this)">
-                            📦 Out of Stock
-                        </div>
-                        <div class="issue-type-btn" onclick="selectIssueType('damaged_goods', this)">
-                            💔 Damaged Goods
-                        </div>
-                        <div class="issue-type-btn" onclick="selectIssueType('wrong_item', this)">
-                            ❌ Wrong Item
-                        </div>
-                        <div class="issue-type-btn" onclick="selectIssueType('payment_dispute', this)">
-                            💰 Payment Issue
-                        </div>
-                        <div class="issue-type-btn" onclick="selectIssueType('quality_issue', this)">
-                            ⚠️ Quality Issue
-                        </div>
-                    </div>
-                    <input type="hidden" id="selectedIssueType">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-textarea" id="issueDescription" placeholder="Describe the issue in detail..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Attach Evidence (Optional)</label>
-                    <div class="file-upload-area" onclick="document.getElementById('issueFileInput').click()">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">📎</div>
-                        <div>Click to upload images or documents</div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
-                            PNG, JPG, PDF up to 5MB
-                        </div>
-                    </div>
-                    <input type="file" id="issueFileInput" style="display: none;" accept="image/*,.pdf" multiple>
-                    <div class="uploaded-files" id="issueUploadedFiles"></div>
-                </div>
-
-                <button class="btn btn-primary" onclick="submitIssue()">Submit Issue Report</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Product Update Modal -->
-    <div class="modal" id="productUpdateModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🏷️ Submit Product Update</h2>
-                <button class="modal-close" onclick="closeProductUpdateModal()">✕</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Update Type</label>
-                    <select class="form-select" id="productUpdateType">
-                        <option value="">Select update type...</option>
-                        <option value="price_change">💵 Price Change</option>
-                        <option value="new_product">✨ New Product</option>
-                        <option value="discontinued">🚫 Product Discontinued</option>
-                        <option value="moq_change">📦 MOQ Change</option>
-                        <option value="stock_alert">⚠️ Stock Alert</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Product Name/SKU</label>
-                    <input type="text" class="form-input" id="productName" placeholder="Enter product name or SKU">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Details</label>
-                    <textarea class="form-textarea" id="productUpdateDetails" placeholder="Provide details about the update..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Effective Date</label>
-                    <input type="date" class="form-input" id="productEffectiveDate">
-                </div>
-
-                <button class="btn btn-primary" onclick="submitProductUpdate()">Submit Update</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="assets/script.js"></script>
-    <script src="assets/auth.js"></script>
-    <script src="assets/page-access-guard.js"></script>
-    <script src="assets/nav-visibility-controller.js"></script>
-    <script src="assets/data-module.js"></script>
-    <script src="assets/supplier-orders-module.js"></script>
-
-    <script>
-    (function() {
-        let suppliers = [];
-        let supplierOrders = [];
-        let editingId = null;
-        let currentUserRole = null;
-        let selectedIssueType = null;
-        let notifications = [];
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await window.DukaPOS.initializeSupabase();
-                const isAuthenticated = await authModule.requireAuth();
-                if (!isAuthenticated) return;
-
-                const currentUser = authModule.getCurrentUser();
-                currentUserRole = currentUser.role;
-                
-                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                document.getElementById('currentUserRole').textContent = currentUser.role;
-
-                // Wait for supplier orders module to load
-                await waitForSupplierOrdersModule();
-
-                // Show appropriate view based on role
-                if (currentUserRole === 'supplier') {
-                    showSupplierView();
-                    await loadSupplierDashboard(currentUser);
-                    loadNotifications();
-                } else {
-                    showAdminView();
-                    await loadSuppliers();
-                }
-
-                setupEventListeners();
-                console.log('✅ Suppliers page initialized for role:', currentUserRole);
-            } catch (err) {
-                console.error('Suppliers init failed:', err);
-                alert('Failed to initialize page: ' + err.message);
-            }
-        });
-
-        function waitForSupplierOrdersModule() {
-            return new Promise((resolve) => {
-                let attempts = 0;
-                const maxAttempts = 20;
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    if (window.supplierOrdersModule) {
-                        clearInterval(checkInterval);
-                        console.log('✅ Supplier orders module loaded');
-                        resolve();
-                    } else if (attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        console.warn('⚠️ Supplier orders module not loaded after 6 seconds');
-                        resolve(); // Continue anyway
-                    }
-                }, 300);
-            });
-        }
-
-        function showSupplierView() {
-            document.querySelector('.supplier-only').style.display = 'block';
-            document.querySelector('.admin-only').style.display = 'none';
-            document.querySelector('.logo').textContent = '🏭 My Supplier Portal';
-        }
-
-        function showAdminView() {
-            document.querySelector('.supplier-only').style.display = 'none';
-            document.querySelector('.admin-only').style.display = 'block';
-            document.querySelector('.logo').textContent = '🏭 G&H Solutions';
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // NOTIFICATIONS
-        // ═══════════════════════════════════════════════════════════
-
-        function loadNotifications() {
-            // Load real notifications from database
-            if (!window.supplierOrdersModule) {
-                console.warn('Supplier orders module not available for notifications');
-                notifications = [];
-                updateNotificationBadge();
-                renderNotifications();
-                return;
-            }
-
-            window.supplierOrdersModule.getNotifications(20)
-                .then(result => {
-                    if (result.success && result.data) {
-                        notifications = result.data.map(n => ({
-                            id: n.id,
-                            type: n.notification_type,
-                            message: n.message,
-                            time: getRelativeTime(new Date(n.created_at)),
-                            unread: !n.is_read,
-                            order_id: n.related_order_id,
-                            issue_id: n.related_issue_id
-                        }));
-                    } else {
-                        notifications = [];
-                    }
-                    updateNotificationBadge();
-                    renderNotifications();
-                })
-                .catch(err => {
-                    console.error('Failed to load notifications:', err);
-                    notifications = [];
-                    updateNotificationBadge();
-                    renderNotifications();
-                });
-        }
-
-        function getRelativeTime(date) {
-            const now = new Date();
-            const diff = Math.floor((now - date) / 1000); // seconds
-            
-            if (diff < 60) return 'Just now';
-            if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
-            if (diff < 86400) return `${Math.floor(diff / 3600)} hour${Math.floor(diff / 3600) > 1 ? 's' : ''} ago`;
-            if (diff < 604800) return `${Math.floor(diff / 86400)} day${Math.floor(diff / 86400) > 1 ? 's' : ''} ago`;
-            return date.toLocaleDateString();
-        }
-
-        function updateNotificationBadge() {
-            const unreadCount = notifications.filter(n => n.unread).length;
-            const badge = document.getElementById('notificationCount');
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        function renderNotifications() {
-            const container = document.getElementById('notificationsList');
-            if (notifications.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state" style="padding: 40px 20px;">
-                        <div style="font-size: 2rem; margin-bottom: 12px;">🔔</div>
-                        <div>No new notifications</div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = notifications.map(n => `
-                <div class="notification-item ${n.unread ? 'unread' : ''}" onclick="handleNotificationClick(${n.id})">
-                    <div style="font-weight: 600; margin-bottom: 4px;">${n.message}</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted);">${n.time}</div>
-                </div>
-            `).join('');
-        }
-
-        window.toggleNotifications = function() {
-            const dropdown = document.getElementById('notificationDropdown');
-            dropdown.classList.toggle('active');
-        };
-
-        window.handleNotificationClick = function(id) {
-            const notification = notifications.find(n => n.id === id);
-            if (notification) {
-                // Mark as read in database
-                if (notification.unread && window.supplierOrdersModule) {
-                    window.supplierOrdersModule.markNotificationAsRead(id)
-                        .then(result => {
-                            if (result.success) {
-                                notification.unread = false;
-                                updateNotificationBadge();
-                                renderNotifications();
-                            }
-                        })
-                        .catch(err => console.error('Failed to mark notification as read:', err));
-                }
-                
-                // Navigate to related order/issue if available
-                if (notification.order_id) {
-                    openOrderDetail(notification.order_id);
-                } else if (notification.issue_id) {
-                    // Open issues tab
-                    switchSupplierTab('issues', document.querySelector('.tab:nth-child(4)'));
-                }
-            }
-        };
-
-        // Close notifications when clicking outside
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('notificationDropdown');
-            const bell = document.querySelector('.notification-bell');
-            if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-
-        // ═══════════════════════════════════════════════════════════
-        // SUPPLIER VIEW FUNCTIONS
-        // ═══════════════════════════════════════════════════════════
-
-        async function loadSupplierDashboard(user) {
-            try {
-                // Load supplier profile from suppliers table
-                let supplierRecord = null;
-                const suppliersResult = await window.dataModule.getAllSuppliers();
-                if (suppliersResult.success && suppliersResult.data) {
-                    supplierRecord = suppliersResult.data.find(s => 
-                        s.email === user.email || s.phone === user.phone
-                    );
-                    
-                    if (supplierRecord) {
-                        document.getElementById('supplierCompanyName').value = supplierRecord.name || '';
-                        document.getElementById('supplierContactPerson').value = supplierRecord.contact_person || '';
-                        document.getElementById('supplierPhone').value = supplierRecord.phone || '';
-                        document.getElementById('supplierEmail').value = supplierRecord.email || '';
-                        document.getElementById('supplierAddress').value = supplierRecord.address || '';
-
-                        // Load real orders data for this supplier
-                        if (window.supplierOrdersModule) {
-                            const ordersResult = await window.supplierOrdersModule.getAllOrders({
-                                supplier_id: supplierRecord.id
-                            });
-
-                            if (ordersResult.success && ordersResult.data) {
-                                const orders = ordersResult.data;
-                                
-                                // Calculate stats
-                                const pendingOrders = orders.filter(o => o.status === 'pending').length;
-                                const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
-                                const totalRevenue = orders.reduce((sum, o) => sum + (parseFloat(o.final_amount) || 0), 0);
-                                
-                                // Count unique products from order items
-                                const uniqueProducts = new Set();
-                                orders.forEach(order => {
-                                    if (order.supplier_order_items) {
-                                        order.supplier_order_items.forEach(item => {
-                                            if (item.product_id) uniqueProducts.add(item.product_id);
-                                        });
-                                    }
-                                });
-
-                                // Calculate performance score
-                                const totalOrders = orders.length;
-                                const onTimeDeliveries = orders.filter(o => 
-                                    o.status === 'delivered' && 
-                                    o.actual_delivery && 
-                                    o.expected_delivery &&
-                                    new Date(o.actual_delivery) <= new Date(o.expected_delivery)
-                                ).length;
-                                const performanceScore = totalOrders > 0 ? 
-                                    Math.round((onTimeDeliveries / totalOrders) * 100) : 100;
-
-                                // Update dashboard stats
-                                document.getElementById('supplierProductCount').textContent = uniqueProducts.size || '0';
-                                document.getElementById('supplierPendingOrders').textContent = pendingOrders;
-                                document.getElementById('supplierRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
-                                document.getElementById('supplierPerformance').textContent = `${performanceScore}%`;
-
-                                // Update performance badge
-                                const badge = document.getElementById('performanceBadge');
-                                if (performanceScore >= 90) {
-                                    badge.textContent = 'Excellent';
-                                    badge.className = 'performance-badge performance-excellent';
-                                } else if (performanceScore >= 75) {
-                                    badge.textContent = 'Good';
-                                    badge.className = 'performance-badge performance-good';
-                                } else {
-                                    badge.textContent = 'Needs Improvement';
-                                    badge.className = 'performance-badge performance-needs-improvement';
-                                }
-
-                                // Store supplier ID for later use
-                                window.currentSupplierId = supplierRecord.id;
-                            }
-                        } else {
-                            console.warn('⚠️ Supplier orders module not loaded');
-                            document.getElementById('supplierProductCount').textContent = '—';
-                            document.getElementById('supplierPendingOrders').textContent = '0';
-                            document.getElementById('supplierRevenue').textContent = 'KES 0';
-                            document.getElementById('supplierPerformance').textContent = '—';
-                        }
-                    } else {
-                        console.warn('⚠️ No supplier record found for current user');
-                        document.getElementById('supplierProductCount').textContent = '—';
-                        document.getElementById('supplierPendingOrders').textContent = '0';
-                        document.getElementById('supplierRevenue').textContent = 'KES 0';
-                        document.getElementById('supplierPerformance').textContent = '—';
-                    }
-                }
-
-                renderSupplierOrders();
-                console.log('✅ Supplier dashboard loaded');
-            } catch (err) {
-                console.error('Failed to load supplier dashboard:', err);
-                document.getElementById('supplierProductCount').textContent = '—';
-                document.getElementById('supplierPendingOrders').textContent = '0';
-                document.getElementById('supplierRevenue').textContent = 'KES 0';
-                document.getElementById('supplierPerformance').textContent = '—';
-            }
-        }
-
-        function renderSupplierOrders(filter = 'all') {
-            const tbody = document.getElementById('supplierOrdersBody');
-            
-            if (!window.currentSupplierId) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <div class="empty-state-icon">⚠️</div>
-                            <h3>Supplier Not Found</h3>
-                            <p>Your user account is not linked to a supplier record</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            // Load real orders from database
-            if (!window.supplierOrdersModule) {
-                tbody.innerHTML = `<tr><td colspan="7" class="loading">Loading supplier orders module...</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = `<tr><td colspan="7" class="loading">Loading your orders...</td></tr>`;
-
-            window.supplierOrdersModule.getAllOrders({
-                supplier_id: window.currentSupplierId,
-                status: filter === 'all' ? null : filter
-            }).then(result => {
-                if (!result.success) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="7" class="error-message">
-                                Failed to load orders: ${result.error || 'Unknown error'}
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                const orders = result.data || [];
-
-                if (orders.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="7" class="empty-state">
-                                <div class="empty-state-icon">📋</div>
-                                <h3>No Orders Found</h3>
-                                <p>${filter === 'all' ? 'Purchase orders from the shop will appear here' : `No ${filter} orders found`}</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                tbody.innerHTML = orders.map(order => {
-                    const itemCount = order.supplier_order_items?.length || 0;
-                    const orderDate = new Date(order.created_at).toLocaleDateString();
-                    const shopName = order.shops?.shop_name || 'G&H Main Store';
-                    
-                    return `
-                        <tr>
-                            <td><strong>#${order.id}</strong></td>
-                            <td>${orderDate}</td>
-                            <td>${shopName}</td>
-                            <td>${itemCount} items</td>
-                            <td><strong>KES ${(parseFloat(order.final_amount) || 0).toLocaleString()}</strong></td>
-                            <td><span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span></td>
-                            <td>
-                                <button class="btn btn-primary btn-small" onclick="openOrderDetail(${order.id})">
-                                    View Details
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }).catch(err => {
-                console.error('Error loading orders:', err);
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="error-message">
-                            Error loading orders: ${err.message}
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function filterSupplierOrders() {
-            const filter = document.getElementById('orderStatusFilter').value;
-            renderSupplierOrders(filter);
-        }
-
-        window.switchSupplierTab = function(tabName, clickedElement) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            if (clickedElement) clickedElement.classList.add('active');
-            document.getElementById('supplier' + tabName.charAt(0).toUpperCase() + tabName.slice(1) + 'Tab').classList.add('active');
-        };
-
-        // ═══════════════════════════════════════════════════════════
-        // ORDER DETAIL MODAL
-        // ═══════════════════════════════════════════════════════════
-
-        window.openOrderDetail = function(orderId) {
-            if (!window.supplierOrdersModule) {
-                alert('Order management system not available');
-                return;
-            }
-
-            // Show loading state
-            document.getElementById('modalOrderId').textContent = '#' + orderId;
-            document.getElementById('modalOrderDate').textContent = 'Loading...';
-            document.getElementById('modalOrderStatus').innerHTML = '<span class="status-badge">Loading...</span>';
-            document.getElementById('modalOrderTotal').textContent = 'Loading...';
-            document.getElementById('modalDeliveryDate').textContent = 'Loading...';
-            document.getElementById('modalOrderItems').innerHTML = '<div class="loading">Loading order details...</div>';
-            document.getElementById('orderDetailModal').classList.add('active');
-
-            // Load order details
-            window.supplierOrdersModule.getOrderById(orderId)
-                .then(result => {
-                    if (!result.success || !result.data) {
-                        alert('Failed to load order details: ' + (result.error || 'Unknown error'));
-                        closeOrderModal();
-                        return;
-                    }
-
-                    const order = result.data;
-                    
-                    // Update modal with real data
-                    document.getElementById('modalOrderDate').textContent = new Date(order.created_at).toLocaleDateString();
-                    document.getElementById('modalOrderStatus').innerHTML = `<span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>`;
-                    document.getElementById('modalOrderTotal').textContent = `KES ${(parseFloat(order.final_amount) || 0).toLocaleString()}`;
-                    document.getElementById('modalDeliveryDate').textContent = order.expected_delivery ? 
-                        new Date(order.expected_delivery).toLocaleDateString() : '—';
-                    
-                    // Render order items
-                    if (order.supplier_order_items && order.supplier_order_items.length > 0) {
-                        document.getElementById('modalOrderItems').innerHTML = `
-                            <div style="border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 12px;">
-                                <table class="table" style="margin: 0;">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${order.supplier_order_items.map(item => `
-                                            <tr>
-                                                <td>${item.product_name}</td>
-                                                <td>${item.quantity} units</td>
-                                                <td>KES ${(parseFloat(item.unit_price) || 0).toLocaleString()}</td>
-                                                <td>KES ${(parseFloat(item.subtotal) || 0).toLocaleString()}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        `;
-                    } else {
-                        document.getElementById('modalOrderItems').innerHTML = '<p style="color: var(--text-muted);">No items in this order</p>';
-                    }
-
-                    // Load messages for this order
-                    loadOrderMessages(orderId);
-                })
-                .catch(err => {
-                    console.error('Failed to load order:', err);
-                    alert('Error loading order details: ' + err.message);
-                    closeOrderModal();
-                });
-        };
-
-        function loadOrderMessages(orderId) {
-            if (!window.supplierOrdersModule) return;
-
-            window.supplierOrdersModule.getOrderMessages(orderId)
-                .then(result => {
-                    const messagesList = document.getElementById('modalMessagesList');
-                    if (!result.success || !result.data || result.data.length === 0) {
-                        messagesList.innerHTML = `
-                            <div style="text-align: center; padding: 20px; color: var(--text-muted);">
-                                No messages yet. Start the conversation!
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    messagesList.innerHTML = result.data.map(msg => `
-                        <div class="message-item">
-                            <div class="message-header">
-                                <div class="message-author">${msg.sender?.full_name || 'Unknown'} (${msg.sender_type})</div>
-                                <div class="message-time">${new Date(msg.created_at).toLocaleString()}</div>
-                            </div>
-                            <div class="message-text">${msg.message}</div>
-                        </div>
-                    `).join('');
-                    messagesList.scrollTop = messagesList.scrollHeight;
-                })
-                .catch(err => {
-                    console.error('Failed to load messages:', err);
-                });
-        }
-
-        window.closeOrderModal = function() {
-            document.getElementById('orderDetailModal').classList.remove('active');
-        };
-
-        window.acceptOrder = function() {
-            const orderId = parseInt(document.getElementById('modalOrderId').textContent.replace('#', ''));
-            if (!orderId || !window.supplierOrdersModule) return;
-
-            if (confirm('Accept this order? This will update the order status to "Accepted".')) {
-                window.supplierOrdersModule.acceptOrder(orderId)
-                    .then(result => {
-                        if (result.success) {
-                            alert('✅ Order accepted! Status updated to Accepted.');
-                            closeOrderModal();
-                            renderSupplierOrders();
-                            loadSupplierDashboard(authModule.getCurrentUser());
-                        } else {
-                            alert('Failed to accept order: ' + (result.error || 'Unknown error'));
-                        }
-                    })
-                    .catch(err => {
-                        alert('Error accepting order: ' + err.message);
-                    });
-            }
-        };
-
-        window.rejectOrder = function() {
-            const orderId = parseInt(document.getElementById('modalOrderId').textContent.replace('#', ''));
-            if (!orderId || !window.supplierOrdersModule) return;
-
-            const reason = prompt('Please provide a reason for rejecting this order:');
-            if (reason) {
-                window.supplierOrdersModule.rejectOrder(orderId, reason)
-                    .then(result => {
-                        if (result.success) {
-                            alert('❌ Order rejected. The shop has been notified.');
-                            closeOrderModal();
-                            renderSupplierOrders();
-                            loadSupplierDashboard(authModule.getCurrentUser());
-                        } else {
-                            alert('Failed to reject order: ' + (result.error || 'Unknown error'));
-                        }
-                    })
-                    .catch(err => {
-                        alert('Error rejecting order: ' + err.message);
-                    });
-            }
-        };
-
-        window.updateOrderStatus = function() {
-            const orderId = parseInt(document.getElementById('modalOrderId').textContent.replace('#', ''));
-            if (!orderId || !window.supplierOrdersModule) return;
-
-            const status = prompt('Enter new status (processing/shipped/delivered):');
-            const validStatuses = ['processing', 'shipped', 'delivered'];
-            
-            if (status && validStatuses.includes(status.toLowerCase())) {
-                window.supplierOrdersModule.updateOrderStatus(orderId, status.toLowerCase())
-                    .then(result => {
-                        if (result.success) {
-                            alert(`✅ Order status updated to: ${status.toUpperCase()}`);
-                            closeOrderModal();
-                            renderSupplierOrders();
-                            loadSupplierDashboard(authModule.getCurrentUser());
-                        } else {
-                            alert('Failed to update status: ' + (result.error || 'Unknown error'));
-                        }
-                    })
-                    .catch(err => {
-                        alert('Error updating status: ' + err.message);
-                    });
-            } else if (status) {
-                alert('Invalid status. Please use: processing, shipped, or delivered');
-            }
-        };
-
-        window.sendMessage = function() {
-            const orderId = parseInt(document.getElementById('modalOrderId').textContent.replace('#', ''));
-            const input = document.getElementById('newMessageInput');
-            const message = input.value.trim();
-            
-            if (!message || !orderId || !window.supplierOrdersModule) return;
-
-            const currentUser = authModule.getCurrentUser();
-            const senderType = currentUser.role === 'supplier' ? 'supplier' : 'admin';
-
-            window.supplierOrdersModule.sendOrderMessage(orderId, message, senderType)
-                .then(result => {
-                    if (result.success) {
-                        input.value = '';
-                        loadOrderMessages(orderId); // Reload messages
-                    } else {
-                        alert('Failed to send message: ' + (result.error || 'Unknown error'));
-                    }
-                })
-                .catch(err => {
-                    alert('Error sending message: ' + err.message);
-                });
-        };
-
-        window.attachFile = function() {
-            alert('📎 File attachment feature - upload invoices, delivery notes, receipts');
-        };
-
-        // ═══════════════════════════════════════════════════════════
-        // ISSUE REPORTING
-        // ═══════════════════════════════════════════════════════════
-
-        window.openReportIssueModal = function() {
-            document.getElementById('issueReportModal').classList.add('active');
-            
-            // Populate order dropdown with supplier's orders
-            if (window.supplierOrdersModule && window.currentSupplierId) {
-                window.supplierOrdersModule.getAllOrders({
-                    supplier_id: window.currentSupplierId
-                }).then(result => {
-                    const select = document.getElementById('issueOrderSelect');
-                    select.innerHTML = '<option value="">Select an order...</option>';
-                    
-                    if (result.success && result.data) {
-                        result.data.forEach(order => {
-                            const option = document.createElement('option');
-                            option.value = order.id;
-                            option.textContent = `Order #${order.id} - ${order.status.toUpperCase()} - KES ${(parseFloat(order.final_amount) || 0).toLocaleString()}`;
-                            select.appendChild(option);
-                        });
-                    }
-                }).catch(err => {
-                    console.error('Failed to load orders for issue dropdown:', err);
-                });
-            }
-        };
-
-        window.closeIssueModal = function() {
-            document.getElementById('issueReportModal').classList.remove('active');
-        };
-
-        window.reportIssue = function() {
-            openReportIssueModal();
-        };
-
-        window.selectIssueType = function(type, element) {
-            document.querySelectorAll('.issue-type-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('selectedIssueType').value = type;
-            selectedIssueType = type;
-        };
-
-        window.submitIssue = function() {
-            const orderId = document.getElementById('issueOrderSelect').value;
-            const type = document.getElementById('selectedIssueType').value;
-            const description = document.getElementById('issueDescription').value;
-
-            if (!orderId || !type || !description) {
-                alert('Please fill in all required fields');
-                return;
-            }
-
-            if (!window.supplierOrdersModule) {
-                alert('Issue reporting system not available');
-                return;
-            }
-
-            const currentUser = authModule.getCurrentUser();
-            const issueData = {
-                order_id: parseInt(orderId),
-                reporter_type: currentUser.role === 'supplier' ? 'supplier' : 'admin',
-                issue_type: type,
-                title: `${type.replace(/_/g, ' ').toUpperCase()} - Order #${orderId}`,
-                description: description,
-                priority: 'medium'
-            };
-
-            window.supplierOrdersModule.reportIssue(issueData)
-                .then(result => {
-                    if (result.success) {
-                        alert('✅ Issue reported successfully! Ticket #' + result.data.id + ' created.');
-                        closeIssueModal();
-                        
-                        // Reset form
-                        document.getElementById('issueOrderSelect').value = '';
-                        document.getElementById('selectedIssueType').value = '';
-                        document.getElementById('issueDescription').value = '';
-                        document.querySelectorAll('.issue-type-btn').forEach(btn => btn.classList.remove('active'));
-                        
-                        // Reload issues if on issues tab
-                        loadSupplierIssues();
-                    } else {
-                        alert('Failed to report issue: ' + (result.error || 'Unknown error'));
-                    }
-                })
-                .catch(err => {
-                    alert('Error reporting issue: ' + err.message);
-                });
-        };
-
-        function loadSupplierIssues() {
-            // This would be called when issues tab is opened
-            // Implementation to load and display issues
-            console.log('Loading supplier issues...');
-        }
-
-        // ═══════════════════════════════════════════════════════════
-        // PRODUCT UPDATES
-        // ═══════════════════════════════════════════════════════════
-
-        window.openProductUpdateModal = function() {
-            document.getElementById('productUpdateModal').classList.add('active');
-        };
-
-        window.closeProductUpdateModal = function() {
-            document.getElementById('productUpdateModal').classList.remove('active');
-        };
-
-        window.submitProductUpdate = function() {
-            const type = document.getElementById('productUpdateType').value;
-            const name = document.getElementById('productName').value;
-            const details = document.getElementById('productUpdateDetails').value;
-            const date = document.getElementById('productEffectiveDate').value;
-
-            if (!type || !name || !details) {
-                alert('Please fill in all required fields');
-                return;
-            }
-
-            if (!window.supplierOrdersModule || !window.currentSupplierId) {
-                alert('Product update system not available');
-                return;
-            }
-
-            const updateData = {
-                supplier_id: window.currentSupplierId,
-                update_type: type,
-                product_name: name,
-                details: details,
-                effective_date: date || null
-            };
-
-            window.supplierOrdersModule.submitProductUpdate(updateData)
-                .then(result => {
-                    if (result.success) {
-                        alert('✅ Product update submitted successfully!');
-                        closeProductUpdateModal();
-                        
-                        // Reset form
-                        document.getElementById('productUpdateType').value = '';
-                        document.getElementById('productName').value = '';
-                        document.getElementById('productUpdateDetails').value = '';
-                        document.getElementById('productEffectiveDate').value = '';
-                    } else {
-                        alert('Failed to submit update: ' + (result.error || 'Unknown error'));
-                    }
-                })
-                .catch(err => {
-                    alert('Error submitting update: ' + err.message);
-                });
-        };
-
-        // ═══════════════════════════════════════════════════════════
-        // ADMIN VIEW FUNCTIONS
-        // ═══════════════════════════════════════════════════════════
-
-        async function loadSuppliers() {
-            try {
-                const result = await window.dataModule.getAllSuppliers();
-                if (!result.success) throw new Error(result.error || 'Failed to load suppliers');
-
-                suppliers = result.data || [];
-                renderSuppliersTable();
-                console.log('✅ Loaded suppliers:', suppliers.length);
-            } catch (err) {
-                console.error('Failed to load suppliers:', err);
-                document.getElementById('suppliersTableBody').innerHTML =
-                    `<tr><td colspan="8" class="error-message">Failed to load suppliers: ${err.message}</td></tr>`;
-            }
-        }
-
-        function renderSuppliersTable(filter = '') {
-            const tbody = document.getElementById('suppliersTableBody');
-            const filtered = suppliers.filter(s =>
-                s.name?.toLowerCase().includes(filter.toLowerCase()) ||
-                (s.contact_person && s.contact_person.toLowerCase().includes(filter.toLowerCase())) ||
-                (s.phone && s.phone.includes(filter))
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">No suppliers found</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = filtered.map(s => `
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>${s.id}</td>
-                    <td>🏢 ${s.name}</td>
-                    <td>${s.contact_person || '—'}</td>
-                    <td>${s.phone || '—'}</td>
-                    <td>${s.email || '—'}</td>
-                    <td>${s.address || '—'}</td>
-                    <td>${s.credit_period ? s.credit_period + ' days' : '—'}</td>
-                    <td>
-                        <button class="btn btn-secondary btn-small" onclick="suppliersPage.editSupplier(${s.id})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="suppliersPage.deleteSupplier(${s.id})">Delete</button>
-                    </td>
+                    <th>Request #</th>
+                    <th>Item Name</th>
+                    <th>Priority</th>
+                    <th>Qty / Unit</th>
+                    <th>Requested By</th>
+                    <th>Est. Cost</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            `).join('');
-        }
+            </thead>
+            <tbody id="requestsTableBody">
+                <tr><td colspan="8" class="loading">Loading your supply requests…</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-        function filterSuppliers(e) {
-            renderSuppliersTable(e.target.value);
-        }
+    <!-- Processed Orders History -->
+    <div class="table-container" style="margin-top: 40px;">
+        <h2 style="margin:0 0 20px 0;">Processed Orders (History)</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Delivery Date</th>
+                    <th>Amount (KES)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+                <tr><td colspan="5" class="loading">Loading order history…</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-        async function handleFormSubmit(e) {
-            e.preventDefault();
+</div>
 
-            const name = document.getElementById('name').value.trim();
-            const contact_person = document.getElementById('contact_person').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const credit_period = document.getElementById('credit_period').value.trim();
-            const payment_terms = document.getElementById('payment_terms').value.trim();
-            const notes = document.getElementById('notes').value.trim();
+<script src="assets/script.js"></script>
+<script src="assets/auth.js"></script>
+<script src="assets/data-module.js"></script>
+<script>
+(function () {
+    let supplyRequests = [];
+    let orders = [];
+    let currentUser = null;
+    let supabaseClient = null;
 
-            if (!name) {
-                showMessage('Supplier name is required', 'error');
-                return;
-            }
+    window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            console.log('Supplier portal starting...');
 
-            const supplierData = {
-                name,
-                contact_person: contact_person || null,
-                phone: phone || null,
-                email: email || null,
-                address: address || null,
-                credit_period: credit_period ? parseInt(credit_period) : null,
-                payment_terms: payment_terms || null,
-                notes: notes || null
-            };
-
-            try {
-                let result;
-                if (editingId) {
-                    result = await window.dataModule.updateSupplier(editingId, supplierData);
-                } else {
-                    result = await window.dataModule.createSupplier(supplierData);
-                }
-
-                if (!result.success) throw new Error(result.error);
-
-                showMessage(
-                    editingId ? '✅ Supplier updated successfully!' : '✅ Supplier added successfully!',
-                    'success'
+            // Safe Supabase client creation
+            if (!window.DukaPOS?.supabaseClient) {
+                console.log('Creating standalone Supabase client...');
+                window.DukaPOS.supabaseClient = window.supabase.createClient(
+                    'https://zylhlftiqvrcogxaqgof.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5bGhsZnRpcXZyY29neGFxZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3NjQyMzAsImV4cCI6MjA4NTM0MDIzMH0.AVcH8iGuK8--BRR133KvXgMecoNl-_bv2rFYgBuuk9s'
                 );
-
-                clearForm();
-                await loadSuppliers();
-            } catch (err) {
-                console.error('Save failed:', err);
-                showMessage('❌ Error saving supplier: ' + err.message, 'error');
             }
-        }
 
-        function editSupplier(id) {
-            const supplier = suppliers.find(s => s.id === id);
-            if (!supplier) return;
+            supabaseClient = window.DukaPOS.supabaseClient;
 
-            editingId = id;
-            document.getElementById('formTitle').textContent = 'Edit Supplier';
-            document.getElementById('submitBtn').textContent = 'Update Supplier';
-
-            document.getElementById('supplierId').value = supplier.id;
-            document.getElementById('name').value = supplier.name || '';
-            document.getElementById('contact_person').value = supplier.contact_person || '';
-            document.getElementById('phone').value = supplier.phone || '';
-            document.getElementById('email').value = supplier.email || '';
-            document.getElementById('address').value = supplier.address || '';
-            document.getElementById('credit_period').value = supplier.credit_period || '';
-            document.getElementById('payment_terms').value = supplier.payment_terms || '';
-            document.getElementById('notes').value = supplier.notes || '';
-
-            document.querySelector('.supplier-form').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        async function deleteSupplier(id) {
-            if (!confirm('Are you sure you want to delete this supplier? This action cannot be undone.')) return;
-
-            try {
-                const result = await window.dataModule.deleteSupplier(id);
-                if (!result.success) throw new Error(result.error);
-
-                showMessage('✅ Supplier deleted successfully!', 'success');
-                await loadSuppliers();
-            } catch (err) {
-                console.error('Delete failed:', err);
-                showMessage('❌ Error deleting supplier: ' + err.message, 'error');
+            if (!supabaseClient) {
+                throw new Error('Failed to get Supabase client');
             }
-        }
 
-        function clearForm() {
-            editingId = null;
-            document.getElementById('formTitle').textContent = 'Add New Supplier';
-            document.getElementById('submitBtn').textContent = '+ Add Supplier';
-            document.getElementById('supplierForm').reset();
-            document.getElementById('formMessage').textContent = '';
-        }
+            console.log('Supabase client ready');
 
-        function showMessage(text, type = 'success') {
-            const msgEl = document.getElementById('formMessage');
-            msgEl.textContent = text;
-            msgEl.className = type === 'success' ? 'success' : 'error';
-            setTimeout(() => msgEl.textContent = '', 5000);
-        }
+            const isAuthenticated = await authModule.requireAuth();
+            if (!isAuthenticated) return;
 
-        function setupEventListeners() {
-            if (currentUserRole !== 'supplier') {
-                const form = document.getElementById('supplierForm');
-                const clearBtn = document.getElementById('clearBtn');
-                const searchInput = document.getElementById('searchInput');
-                
-                if (form) form.addEventListener('submit', handleFormSubmit);
-                if (clearBtn) clearBtn.addEventListener('click', clearForm);
-                if (searchInput) searchInput.addEventListener('input', filterSuppliers);
+            currentUser = authModule.getCurrentUser();
+            if (!currentUser?.id) {
+                throw new Error('No authenticated user found');
             }
+
+            console.log('Logged in as:', currentUser.full_name || currentUser.email);
+
+            // Set UI
+            const supplierName = currentUser.full_name || currentUser.email?.split('@')[0] || 'Supplier';
+            document.getElementById('currentUserName').textContent = supplierName;
+            document.getElementById('supplierGreeting').textContent = `Welcome, ${supplierName}`;
+
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-KE', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            // Restrict nav
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.style.display = 'none');
+            const myTab = document.querySelector('a[href="suppliers.html"]');
+            if (myTab) myTab.style.display = 'flex';
+
+            await Promise.all([
+                loadSupplyRequests(),
+                loadProcessedOrders()
+            ]);
+
+            document.getElementById('statusFilter')?.addEventListener('change', e => {
+                renderSupplyRequests(document.getElementById('requestSearch').value, e.target.value);
+            });
+            document.getElementById('requestSearch')?.addEventListener('input', e => {
+                renderSupplyRequests(e.target.value, document.getElementById('statusFilter').value);
+            });
+
+            console.log('Supplier portal loaded');
+        } catch (err) {
+            console.error('Init failed:', err);
+            const msg = `Failed to start: ${err.message}`;
+            document.getElementById('requestsTableBody').innerHTML = `<tr><td colspan="8" class="error-message">${msg}</td></tr>`;
+            document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="5" class="error-message">${msg}</td></tr>`;
+        }
+    });
+
+    async function loadSupplyRequests() {
+        if (!supabaseClient) {
+            document.getElementById('requestsTableBody').innerHTML = 
+                '<tr><td colspan="8" class="error-message">No database connection</td></tr>';
+            return;
         }
 
-        // Expose to global scope for onclick handlers
-        window.suppliersPage = {
-            editSupplier,
-            deleteSupplier
-        };
+        try {
+            console.log('Fetching requests for supplier ID:', currentUser.id);
+            const { data, error } = await supabaseClient
+                .from('supply_requests')
+                .select(`
+                    id,
+                    item_name,
+                    quantity,
+                    unit,
+                    priority,
+                    status,
+                    estimated_cost,
+                    requested_by,
+                    requested_by_user:requested_by ( full_name ),
+                    created_at,
+                    approved_at,
+                    notes
+                `)
+                .eq('supplier_id', currentUser.id)
+                .order('created_at', { ascending: false });
 
-        console.log('✅ Suppliers page script loaded');
-    })();
-    </script>
-    <script src="assets/pwa-registration.js"></script>
+            if (error) throw error;
+
+            supplyRequests = data || [];
+            console.log(`Loaded ${supplyRequests.length} requests`);
+            renderSupplyRequests();
+        } catch (err) {
+            console.error('Load requests failed:', err);
+            document.getElementById('requestsTableBody').innerHTML = 
+                `<tr><td colspan="8" class="error-message">${err.message}</td></tr>`;
+        }
+    }
+
+    function renderSupplyRequests(filter = '', statusFilter = '') {
+        const tbody = document.getElementById('requestsTableBody');
+        let filtered = [...supplyRequests];
+
+        if (statusFilter) filtered = filtered.filter(r => r.status === statusFilter);
+        if (filter.trim()) {
+            const term = filter.toLowerCase().trim();
+            filtered = filtered.filter(r =>
+                (r.item_name || '').toLowerCase().includes(term) ||
+                (r.notes || '').toLowerCase().includes(term)
+            );
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-row">No matching supply requests found</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(r => `
+            <tr>
+                <td>${r.id}</td>
+                <td>${r.item_name || '—'}</td>
+                <td><span class="status-badge status-${r.priority || 'medium'}">${r.priority || 'medium'}</span></td>
+                <td>${r.quantity || '—'} ${r.unit || ''}</td>
+                <td>${r.requested_by_user?.full_name || '—'}</td>
+                <td>${r.estimated_cost ? 'KES ' + Number(r.estimated_cost).toLocaleString() : '—'}</td>
+                <td><span class="status-badge status-${r.status}">${r.status || 'pending'}</span></td>
+                <td>
+                    ${r.status === 'pending' ? `
+                        <button class="btn btn-primary" onclick="supplierPortal.acceptRequest(${r.id})">Accept</button>
+                        <button class="btn btn-danger"   onclick="supplierPortal.rejectRequest(${r.id})">Reject</button>
+                    ` : (r.approved_at ? 'Approved' : 'Processed')}
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function loadProcessedOrders() {
+        if (!supabaseClient) return;
+
+        try {
+            const { data, error } = await supabaseClient
+                .from('supplier_purchase_orders')
+                .select('id, order_number, order_date, expected_delivery_date, total_amount, status')
+                .eq('supplier_id', currentUser.id)
+                .order('order_date', { ascending: false })
+                .limit(20);
+
+            if (error) throw error;
+
+            orders = data || [];
+            renderOrders();
+        } catch (err) {
+            console.warn('Order history failed:', err.message);
+            document.getElementById('ordersTableBody').innerHTML =
+                '<tr><td colspan="5" class="empty-row">Order history not available</td></tr>';
+        }
+    }
+
+    function renderOrders() {
+        const tbody = document.getElementById('ordersTableBody');
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-row">No processed orders yet</td></tr>';
+            return;
+        }
+        tbody.innerHTML = orders.map(o => `
+            <tr>
+                <td>${o.order_number || o.id}</td>
+                <td>${fmtDate(o.order_date)}</td>
+                <td>${fmtDate(o.expected_delivery_date)}</td>
+                <td><strong>KES ${Number(o.total_amount || 0).toLocaleString()}</strong></td>
+                <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    async function acceptRequest(id) {
+        if (!confirm('Accept this supply request?')) return;
+        try {
+            const { error } = await supabaseClient
+                .from('supply_requests')
+                .update({
+                    status: 'approved',
+                    approved_at: new Date().toISOString()
+                })
+                .eq('id', id)
+                .eq('supplier_id', currentUser.id);
+
+            if (error) throw error;
+            await loadSupplyRequests();
+            showMessage('Request accepted', 'success');
+        } catch (err) {
+            showMessage('Accept failed: ' + err.message, 'error');
+        }
+    }
+
+    async function rejectRequest(id) {
+        const reason = prompt('Reason for rejection (optional):')?.trim();
+        try {
+            const { error } = await supabaseClient
+                .from('supply_requests')
+                .update({
+                    status: 'rejected',
+                    approved_at: null
+                })
+                .eq('id', id)
+                .eq('supplier_id', currentUser.id);
+
+            if (error) throw error;
+            await loadSupplyRequests();
+            showMessage('Request rejected', 'success');
+        } catch (err) {
+            showMessage('Reject failed: ' + err.message, 'error');
+        }
+    }
+
+    function fmtDate(d) {
+        if (!d) return '—';
+        return new Date(d).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
+    }
+
+    function showMessage(text, type = 'success') {
+        const msg = document.createElement('div');
+        msg.className = type === 'success' ? 'success-msg' : 'error-msg';
+        msg.textContent = text;
+        document.querySelector('.container').prepend(msg);
+        setTimeout(() => msg.remove(), 6000);
+    }
+
+    window.supplierPortal = {
+        acceptRequest,
+        rejectRequest
+    };
+
+})();
+</script>
+<script src="assets/pwa-registration.js"></script>
 </body>
 </html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G&H Solutions - Supply Requests</title>
+    <meta name="theme-color" content="#f59e0b">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="G&H Solutions">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="assets/offline-styles.css">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/nav-styles.css">
+    <style>
+        :root {
+            --bg-primary: #0d1117; --bg-secondary: #161b22; --bg-tertiary: #1a2030;
+            --border: #21262d; --text: #e6edf3; --text-muted: #8b949e;
+            --accent-orange: #f59e0b; --accent-blue: #58a6ff;
+            --accent-green: #3fb950; --danger: #f85149;
+        }
+        body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+        .request-form { background: var(--bg-secondary); padding: 24px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 32px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+            background: var(--bg-primary); color: var(--text); font-size: 14px;
+            font-family: 'Archivo', sans-serif; box-sizing: border-box;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-orange); }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+        .stat-label { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+        .stat-value { font-size: 1.8rem; font-weight: 900; color: var(--accent-orange); }
+        .table-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
+        .table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-tertiary); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: .82rem; }
+        tr:hover { background: rgba(88,166,255,.05); }
+        .status-badge, .priority-badge { padding: 3px 10px; border-radius: 12px; font-size: .75rem; font-weight: 700; text-transform: uppercase; }
+        .status-pending  { background: rgba(245,158,11,.15); color: var(--accent-orange); }
+        .status-approved { background: rgba(63,185,80,.15);  color: var(--accent-green); }
+        .status-ordered  { background: rgba(88,166,255,.15); color: var(--accent-blue); }
+        .status-rejected { background: rgba(248,81,73,.15);  color: var(--danger); }
+        .priority-low    { background: rgba(88,166,255,.12); color: var(--accent-blue); }
+        .priority-medium { background: rgba(245,158,11,.12); color: var(--accent-orange); }
+        .priority-high   { background: rgba(248,81,73,.12);  color: var(--danger); }
+        .btn { padding: 11px 22px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all .2s; font-family: 'Archivo', sans-serif; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary   { background: var(--accent-orange); color: #fff; }
+        .btn-secondary { background: transparent; color: var(--accent-orange); border: 2px solid var(--accent-orange); }
+        .btn-secondary:hover { background: var(--accent-orange); color: #fff; }
+        .btn-success   { background: var(--accent-green); color: #fff; }
+        .btn-danger    { background: var(--danger); color: #fff; }
+        .btn-small     { padding: 7px 13px; font-size: 13px; margin-right: 6px; }
+        .loading, .empty-row { text-align: center; padding: 40px; color: var(--text-muted); }
+        .error-message { text-align: center; padding: 40px; color: var(--danger); }
+        .success { color: var(--accent-green); font-size: .9rem; }
+        .error   { color: var(--danger); font-size: .9rem; }
+        @media(max-width:768px) { .form-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-container">
+        <div class="logo">G&H Solutions</div>
+        <div class="nav-tabs">
+            <a href="dashboard.html"       class="nav-tab" id="dashboardLink"      style="display:none;">Dashboard</a>
+            <a href="pos.html"             class="nav-tab" id="posLink"             style="display:none;">Point of Sale</a>
+            <a href="products.html"        class="nav-tab" id="productsLink"        style="display:none;">Products</a>
+            <a href="inventory.html"       class="nav-tab" id="inventoryLink"       style="display:none;">Inventory</a>
+            <a href="customers.html"       class="nav-tab" id="customersLink"       style="display:none;">Customers</a>
+            <a href="suppliers.html"       class="nav-tab" id="suppliersLink"       style="display:none;">Suppliers</a>
+            <a href="supply-requests.html" class="nav-tab active" id="supplyRequestsLink">Supply Requests</a>
+            <a href="admin.html"           class="nav-tab" id="adminLink"           style="display:none;">Users</a>
+        </div>
+        <div class="user-badge">
+            <div class="user-avatar">👤</div>
+            <div>
+                <div id="currentUserName">User</div>
+                <div id="currentDate" style="font-size:.8rem;color:var(--text-muted);"></div>
+            </div>
+        </div>
+        <button onclick="authModule.logout()"
+            style="padding:10px 18px;background-color:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,.3);transition:all .2s ease;margin-left:12px;"
+            onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>📋 Supply Requests</h1>
+
+    <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" id="statPending">—</div></div>
+        <div class="stat-card"><div class="stat-label">Approved</div><div class="stat-value" id="statApproved">—</div></div>
+        <div class="stat-card"><div class="stat-label">Ordered</div><div class="stat-value" id="statOrdered">—</div></div>
+        <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" id="statMonth">—</div></div>
+    </div>
+
+    <div class="request-form">
+        <h2 id="formTitle">New Supply Request</h2>
+        <form id="requestForm">
+            <input type="hidden" id="requestId">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Item Name *</label>
+                    <input type="text" id="itemName" class="form-input" required placeholder="e.g. Printer Paper A4">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Quantity *</label>
+                    <input type="number" id="quantity" class="form-input" required min="1" placeholder="e.g. 10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Unit</label>
+                    <input type="text" id="unit" class="form-input" placeholder="boxes, reams, pieces…">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority *</label>
+                    <select id="priority" class="form-select" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Send Request To (Supplier)</label>
+                    <select id="supplierId" class="form-select">
+                        <option value="">— Loading suppliers… —</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estimated Cost (KES)</label>
+                    <input type="number" id="estimatedCost" class="form-input" min="0" step="0.01" placeholder="Optional">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Notes / Justification</label>
+                    <textarea id="notes" class="form-textarea" rows="3" placeholder="Why is this item needed?"></textarea>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:4px;">
+                <button type="submit" class="btn btn-primary" id="submitBtn">+ Submit Request</button>
+                <button type="button" class="btn btn-secondary" id="clearBtn">Clear Form</button>
+            </div>
+            <div id="formMessage" style="margin-top:12px;"></div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <h2>All Requests</h2>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                <select id="filterStatus" class="form-input" style="width:150px;">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="ordered">Ordered</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search items…" style="width:220px;">
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th><th>Item</th><th>Qty / Unit</th><th>Priority</th>
+                    <th>Supplier</th><th>Est. Cost</th><th>Status</th><th>Requested By</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="requestsTableBody">
+                <tr><td colspan="9" class="loading">Loading requests…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="assets/script.js"></script>
+<script src="assets/auth.js"></script>
+<script src="assets/page-access-guard.js"></script>
+<script src="assets/nav-visibility-controller.js"></script>
+<script src="assets/data-module.js"></script>
+
+<script>
+(function () {
+    var allRequests = [], suppliers = [], currentUser = null, db = null, editingId = null, isAdmin = false;
+
+    window.addEventListener('DOMContentLoaded', async function() {
+        try {
+            await window.DukaPOS.initializeSupabase();
+
+            var isAuthenticated = await authModule.requireAuth();
+            if (!isAuthenticated) return;
+
+            currentUser = authModule.getCurrentUser();
+
+            // ✅ FIXED: was window.DukaPOS.supabase — correct name is supabaseClient
+            db = window.DukaPOS.supabaseClient;
+
+            if (!db) {
+                throw new Error('Supabase client is not available. Make sure script.js loaded correctly.');
+            }
+
+            isAdmin = ['admin', 'administrator', 'manager'].includes((currentUser.role || '').toLowerCase());
+
+            document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-KE', {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+            });
+
+            await loadSuppliers();
+            await loadRequests();
+
+            document.getElementById('requestForm').addEventListener('submit', handleSubmit);
+            document.getElementById('clearBtn').addEventListener('click', clearForm);
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('filterStatus').addEventListener('change', applyFilters);
+
+            console.log('✅ Supply Requests ready, role:', currentUser.role);
+        } catch (err) {
+            console.error('Init failed:', err);
+            document.getElementById('requestsTableBody').innerHTML =
+                '<tr><td colspan="9" class="error-message">Error: ' + err.message + '</td></tr>';
+        }
+    });
+
+    // ════════════════════════════════════════════════════════════
+    // LOAD SUPPLIERS — filtered to current shop
+    // ════════════════════════════════════════════════════════════
+    async function loadSuppliers() {
+        var sel = document.getElementById('supplierId');
+        try {
+            var currentShop = authModule.getCurrentShop();
+            if (!currentShop || !currentShop.id) {
+                sel.innerHTML = '<option value="">— No shop found —</option>';
+                return;
+            }
+
+            // ✅ FIXED: Query users with role=supplier in same shop
+            var result = await db
+                .from('users')
+                .select('id, full_name, email')
+                .eq('role', 'supplier')
+                .eq('shop_id', currentShop.id)
+                .eq('is_active', true)
+                .order('full_name');
+
+            if (result.error) throw result.error;
+
+            suppliers = result.data || [];
+            sel.innerHTML = suppliers.length === 0
+                ? '<option value="">— No suppliers found —</option>'
+                : '<option value="">— Any / unspecified —</option>' +
+                  suppliers.map(function(s) {
+                      return '<option value="' + s.id + '">' + (s.full_name || s.email) + '</option>';
+                  }).join('');
+
+            console.log('✅ Loaded', suppliers.length, 'suppliers');
+        } catch (err) {
+            console.warn('Could not load suppliers:', err.message);
+            sel.innerHTML = '<option value="">— Could not load suppliers —</option>';
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // LOAD REQUESTS — filtered to current shop
+    // ════════════════════════════════════════════════════════════
+    async function loadRequests() {
+        try {
+            var currentShop = authModule.getCurrentShop();
+            if (!currentShop || !currentShop.id) {
+                throw new Error('No shop found. Please log out and log in again.');
+            }
+
+            // ✅ FIXED: Flat select only — no joins (avoids FK schema errors)
+            var query = db
+                .from('supply_requests')
+                .select('id, item_name, quantity, unit, priority, status, notes, estimated_cost, created_at, requested_by, supplier_id')
+                .eq('shop_id', currentShop.id)
+                .order('created_at', { ascending: false });
+
+            // Non-admins only see their own requests
+            if (!isAdmin) {
+                query = query.eq('requested_by', currentUser.id);
+            }
+
+            var result = await query;
+            if (result.error) throw result.error;
+
+            var rows = result.data || [];
+
+            // Resolve user names for requested_by and supplier_id
+            var userIds = [...new Set(
+                rows.flatMap(function(r) {
+                    return [r.requested_by, r.supplier_id].filter(Boolean);
+                })
+            )];
+
+            var userMap = {};
+            if (userIds.length > 0) {
+                var usersResult = await db
+                    .from('users')
+                    .select('id, full_name')
+                    .in('id', userIds);
+
+                if (!usersResult.error && usersResult.data) {
+                    usersResult.data.forEach(function(u) { userMap[u.id] = u.full_name; });
+                }
+            }
+
+            // Attach names to each row
+            allRequests = rows.map(function(r) {
+                return Object.assign({}, r, {
+                    requester: { full_name: userMap[r.requested_by] || null },
+                    supplier:  { full_name: userMap[r.supplier_id]  || null }
+                });
+            });
+            updateStats();
+            renderTable(allRequests);
+            console.log('✅ Loaded', allRequests.length, 'requests');
+        } catch (err) {
+            console.error('Load requests failed:', err);
+            document.getElementById('requestsTableBody').innerHTML =
+                '<tr><td colspan="9" class="error-message">Failed to load: ' + err.message + '</td></tr>';
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // RENDER
+    // ════════════════════════════════════════════════════════════
+    function renderTable(list) {
+        var tbody = document.getElementById('requestsTableBody');
+        if (!list.length) {
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-row">No supply requests found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = list.map(function(r) {
+            var actions = '';
+            if (r.status === 'pending' && isAdmin) {
+                actions =
+                    '<button class="btn btn-success btn-small" onclick="supplyPage.approve(' + r.id + ')">✅ Approve</button>' +
+                    '<button class="btn btn-danger  btn-small" onclick="supplyPage.reject('  + r.id + ')">❌ Reject</button>';
+            } else if (r.status === 'approved' && isAdmin) {
+                actions = '<button class="btn btn-primary btn-small" onclick="supplyPage.markOrdered(' + r.id + ')">📦 Mark Ordered</button>';
+            } else if (r.status === 'pending' && r.requested_by === currentUser.id) {
+                actions =
+                    '<button class="btn btn-secondary btn-small" onclick="supplyPage.edit('  + r.id + ')">✏️ Edit</button>' +
+                    '<button class="btn btn-danger   btn-small" onclick="supplyPage.remove(' + r.id + ')">🗑️ Delete</button>';
+            }
+            var supplierName  = (r.supplier  && r.supplier.full_name)  ? r.supplier.full_name  : '<em style="color:var(--text-muted)">Any</em>';
+            var requesterName = (r.requester && r.requester.full_name) ? r.requester.full_name : '—';
+            var cost          = r.estimated_cost ? 'KES ' + Number(r.estimated_cost).toLocaleString() : '—';
+
+            return '<tr>' +
+                '<td>' + fmtDate(r.created_at) + '</td>' +
+                '<td><strong>' + (r.item_name || '') + '</strong></td>' +
+                '<td>' + r.quantity + (r.unit ? ' ' + r.unit : '') + '</td>' +
+                '<td><span class="priority-badge priority-' + r.priority + '">' + r.priority + '</span></td>' +
+                '<td>' + supplierName + '</td>' +
+                '<td>' + cost + '</td>' +
+                '<td><span class="status-badge status-' + r.status + '">' + r.status + '</span></td>' +
+                '<td>' + requesterName + '</td>' +
+                '<td>' + (actions || '—') + '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function applyFilters() {
+        var search = document.getElementById('searchInput').value.toLowerCase();
+        var status = document.getElementById('filterStatus').value;
+        renderTable(allRequests.filter(function(r) {
+            return (!search || (r.item_name||'').toLowerCase().includes(search) || (r.notes||'').toLowerCase().includes(search)) &&
+                   (!status || r.status === status);
+        }));
+    }
+
+    function updateStats() {
+        document.getElementById('statPending').textContent  = allRequests.filter(function(r){ return r.status === 'pending';  }).length;
+        document.getElementById('statApproved').textContent = allRequests.filter(function(r){ return r.status === 'approved'; }).length;
+        document.getElementById('statOrdered').textContent  = allRequests.filter(function(r){ return r.status === 'ordered';  }).length;
+        var now = new Date();
+        document.getElementById('statMonth').textContent = allRequests.filter(function(r){
+            var d = new Date(r.created_at);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        }).length;
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // FORM SUBMIT
+    // ════════════════════════════════════════════════════════════
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        var itemName      = document.getElementById('itemName').value.trim();
+        var quantity      = parseInt(document.getElementById('quantity').value);
+        var unit          = document.getElementById('unit').value.trim();
+        var priority      = document.getElementById('priority').value;
+        var supplierIdVal = document.getElementById('supplierId').value;
+        var estimatedCost = document.getElementById('estimatedCost').value;
+        var notes         = document.getElementById('notes').value.trim();
+        var currentShop   = authModule.getCurrentShop();
+
+        if (!itemName)               { showMsg('Item name is required.', 'error'); return; }
+        if (!quantity || quantity < 1){ showMsg('Quantity must be at least 1.', 'error'); return; }
+        if (!currentShop)             { showMsg('No shop found. Please log in again.', 'error'); return; }
+
+        var payload = {
+            shop_id:        currentShop.id,   // ✅ Always include shop_id
+            item_name:      itemName,
+            quantity:       quantity,
+            unit:           unit || null,
+            priority:       priority,
+            status:         'pending',
+            supplier_id:    supplierIdVal ? parseInt(supplierIdVal) : null,
+            estimated_cost: estimatedCost ? parseFloat(estimatedCost) : null,
+            notes:          notes || null,
+            requested_by:   currentUser.id
+        };
+
+        try {
+            var result;
+            if (editingId) {
+                // Don't change shop_id on update
+                var updatePayload = Object.assign({}, payload);
+                delete updatePayload.shop_id;
+                result = await db.from('supply_requests').update(updatePayload).eq('id', editingId).select();
+            } else {
+                result = await db.from('supply_requests').insert([payload]).select();
+            }
+            if (result.error) throw result.error;
+
+            showMsg(editingId ? '✅ Request updated!' : '✅ Request submitted!', 'success');
+            clearForm();
+            await loadRequests();
+        } catch (err) {
+            console.error('Save failed:', err);
+            showMsg('❌ Error: ' + err.message, 'error');
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // STATUS ACTIONS
+    // ════════════════════════════════════════════════════════════
+    async function approve(id) {
+        if (!confirm('Approve this supply request?')) return;
+        await updateStatus(id, 'approved');
+    }
+
+    async function reject(id) {
+        var reason = prompt('Reason for rejection (optional):');
+        if (reason === null) return;
+        await updateStatus(id, 'rejected', reason ? 'REJECTED: ' + reason : null);
+    }
+
+    async function markOrdered(id) {
+        if (!confirm('Mark this request as ordered?')) return;
+        await updateStatus(id, 'ordered');
+    }
+
+    async function updateStatus(id, status, notesOverride) {
+        try {
+            var update = {
+                status:      status,
+                approved_by: currentUser.id,
+                approved_at: new Date().toISOString()
+            };
+            if (notesOverride) update.notes = notesOverride;
+
+            var result = await db.from('supply_requests').update(update).eq('id', id);
+            if (result.error) throw result.error;
+
+            await loadRequests();
+            showMsg('✅ Status updated to: ' + status, 'success');
+        } catch (err) {
+            console.error('Update status failed:', err);
+            showMsg('❌ ' + err.message, 'error');
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // EDIT & DELETE
+    // ════════════════════════════════════════════════════════════
+    function editRequest(id) {
+        var req = allRequests.find(function(r){ return r.id === id; });
+        if (!req) return;
+        editingId = id;
+        document.getElementById('formTitle').textContent   = 'Edit Supply Request';
+        document.getElementById('submitBtn').textContent   = 'Update Request';
+        document.getElementById('itemName').value          = req.item_name      || '';
+        document.getElementById('quantity').value          = req.quantity        || '';
+        document.getElementById('unit').value              = req.unit            || '';
+        document.getElementById('priority').value          = req.priority        || 'medium';
+        document.getElementById('supplierId').value        = req.supplier_id     || '';
+        document.getElementById('estimatedCost').value     = req.estimated_cost  || '';
+        document.getElementById('notes').value             = req.notes           || '';
+        document.querySelector('.request-form').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function removeRequest(id) {
+        if (!confirm('Delete this request? This cannot be undone.')) return;
+        try {
+            var result = await db.from('supply_requests').delete().eq('id', id);
+            if (result.error) throw result.error;
+            showMsg('✅ Request deleted.', 'success');
+            await loadRequests();
+        } catch (err) {
+            showMsg('❌ ' + err.message, 'error');
+        }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // UTILITIES
+    // ════════════════════════════════════════════════════════════
+    function clearForm() {
+        editingId = null;
+        document.getElementById('formTitle').textContent  = 'New Supply Request';
+        document.getElementById('submitBtn').textContent  = '+ Submit Request';
+        document.getElementById('requestForm').reset();
+        document.getElementById('formMessage').textContent = '';
+    }
+
+    function showMsg(text, type) {
+        var el = document.getElementById('formMessage');
+        el.textContent = text;
+        el.className   = type || 'success';
+        setTimeout(function(){ el.textContent = ''; el.className = ''; }, 5000);
+    }
+
+    function fmtDate(d) {
+        if (!d) return '—';
+        return new Date(d).toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    window.supplyPage = {
+        approve: approve, reject: reject, markOrdered: markOrdered,
+        edit: editRequest, remove: removeRequest
+    };
+})();
+</script>
+
+<!-- Also run this SQL in Supabase to create the table if it doesn't exist:
+
+CREATE TABLE IF NOT EXISTS supply_requests (
+    id              BIGSERIAL PRIMARY KEY,
+    shop_id         BIGINT NOT NULL REFERENCES shops(id),
+    item_name       TEXT NOT NULL,
+    quantity        INT NOT NULL DEFAULT 1,
+    unit            TEXT,
+    priority        TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('low','medium','high')),
+    status          TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','ordered','rejected')),
+    notes           TEXT,
+    estimated_cost  DECIMAL(10,2),
+    requested_by    BIGINT REFERENCES users(id),
+    supplier_id     BIGINT REFERENCES users(id),
+    approved_by     BIGINT REFERENCES users(id),
+    approved_at     TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_supply_requests_shop    ON supply_requests(shop_id);
+CREATE INDEX IF NOT EXISTS idx_supply_requests_status  ON supply_requests(status);
+CREATE INDEX IF NOT EXISTS idx_supply_requests_requester ON supply_requests(requested_by);
+
+-->
+
+<script src="assets/pwa-registration.js"></script>
+</body>
+</html>

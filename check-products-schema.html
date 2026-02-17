@@ -3,170 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Module Diagnostic Test</title>
+    <title>Debug - User Info</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             background: #0d1117;
             color: #e6edf3;
             padding: 40px;
             max-width: 800px;
             margin: 0 auto;
         }
-        .test-result {
+        .section {
             background: #161b22;
             border: 1px solid #21262d;
-            padding: 20px;
-            margin: 20px 0;
             border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .success { color: #3fb950; }
-        .error { color: #f85149; }
-        .warning { color: #f59e0b; }
+        h2 {
+            color: #58a6ff;
+            margin-top: 0;
+        }
+        pre {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        .success {
+            color: #3fb950;
+        }
+        .error {
+            color: #f85149;
+        }
         button {
-            background: #f59e0b;
+            background: #238636;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
-            margin: 10px 5px;
+            margin-right: 10px;
         }
         button:hover {
-            background: #d97706;
+            background: #2ea043;
         }
     </style>
 </head>
 <body>
-    <h1>🔍 Data Module Diagnostic Test</h1>
-    <p>This page will test if your data-module.js is working correctly.</p>
+    <h1>🔍 Debug User Authentication</h1>
+    
+    <div class="section">
+        <h2>1. Supabase Connection</h2>
+        <div id="connectionStatus">Checking...</div>
+    </div>
 
-    <button onclick="runTests()">Run Diagnostic Tests</button>
-    <button onclick="location.reload()">Refresh Page</button>
+    <div class="section">
+        <h2>2. Auth User (from Supabase Auth)</h2>
+        <pre id="authUser">Loading...</pre>
+    </div>
 
-    <div id="results"></div>
+    <div class="section">
+        <h2>3. Application User (from users table)</h2>
+        <pre id="appUser">Loading...</pre>
+    </div>
 
-    <script src="assets/script.js"></script>
-    <script src="assets/auth.js"></script>
-    <script src="assets/data-module.js"></script>
+    <div class="section">
+        <h2>4. Suppliers (users with role=supplier)</h2>
+        <pre id="suppliers">Loading...</pre>
+    </div>
+
+    <div class="section">
+        <h2>5. Test Queries</h2>
+        <button onclick="testSupplyRequest()">Test Create Supply Request</button>
+        <button onclick="testPurchaseOrder()">Test Create Purchase Order</button>
+        <pre id="testResults">Results will appear here...</pre>
+    </div>
+
+    <div class="section">
+        <h2>Actions</h2>
+        <button onclick="location.reload()">🔄 Refresh</button>
+        <button onclick="location.href='dashboard.html'">← Back to Dashboard</button>
+    </div>
 
     <script>
-        async function runTests() {
-            const results = document.getElementById('results');
-            results.innerHTML = '<h2>Running tests...</h2>';
+        const SUPABASE_URL = 'https://tzcejcxqennwtnzxmsxg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6Y2VqY3hxZW5ud3Ruenhtc3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY1MTM4MzEsImV4cCI6MjA1MjA4OTgzMX0.ZjhXnOWwVDo1CjzhQWLBQcJnRr3Z3pTt8RWz2xJdAuY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            let html = '';
+        let authUser = null;
+        let appUser = null;
 
-            // Test 1: Check if data-module is loaded
-            html += '<div class="test-result">';
-            html += '<h3>Test 1: Data Module Loaded</h3>';
-            if (window.dataModule) {
-                html += '<p class="success">✅ window.dataModule exists</p>';
-                html += '<p>Available functions: ' + Object.keys(window.dataModule).join(', ') + '</p>';
-            } else {
-                html += '<p class="error">❌ window.dataModule is NOT loaded!</p>';
-                html += '<p class="warning">⚠️ Make sure data-module.js is in your assets/ folder</p>';
-            }
-            html += '</div>';
-
-            // Test 2: Check if user is authenticated
-            html += '<div class="test-result">';
-            html += '<h3>Test 2: Authentication</h3>';
+        async function init() {
+            // Test connection
             try {
-                await window.DukaPOS.initializeSupabase();
-                const currentUser = authModule.getCurrentUser();
-                if (currentUser) {
-                    html += '<p class="success">✅ User is logged in</p>';
-                    html += '<p>User: ' + currentUser.full_name + '</p>';
-                    html += '<p>Shop ID: ' + currentUser.shop_id + '</p>';
-                    html += '<p>Role: ' + currentUser.role + '</p>';
-                } else {
-                    html += '<p class="error">❌ No user logged in</p>';
-                }
-            } catch (err) {
-                html += '<p class="error">❌ Auth error: ' + err.message + '</p>';
+                document.getElementById('connectionStatus').innerHTML = '<span class="success">✓ Connected to Supabase</span>';
+            } catch (e) {
+                document.getElementById('connectionStatus').innerHTML = '<span class="error">✗ Connection failed</span>';
             }
-            html += '</div>';
 
-            // Test 3: Try to load customers
-            html += '<div class="test-result">';
-            html += '<h3>Test 3: Load Customers (Filtered by Shop)</h3>';
+            // Get auth user
             try {
-                if (!window.dataModule) {
-                    throw new Error('dataModule not loaded');
-                }
+                const { data: { user }, error } = await supabase.auth.getUser();
                 
-                const result = await window.dataModule.getAllCustomers();
+                if (error) throw error;
                 
-                if (result.success) {
-                    html += '<p class="success">✅ Customers loaded successfully!</p>';
-                    html += '<p>Found ' + result.data.length + ' customers for your shop</p>';
+                if (user) {
+                    authUser = user;
+                    document.getElementById('authUser').innerHTML = 
+                        '<span class="success">✓ Authenticated</span>\n' +
+                        JSON.stringify({
+                            id: user.id,
+                            email: user.email,
+                            created_at: user.created_at
+                        }, null, 2);
                     
-                    if (result.data.length > 0) {
-                        html += '<table style="width:100%; border-collapse: collapse; margin-top: 10px;">';
-                        html += '<tr><th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">ID</th>';
-                        html += '<th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">Name</th>';
-                        html += '<th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">Shop ID</th></tr>';
-                        
-                        result.data.forEach(customer => {
-                            html += '<tr>';
-                            html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.id + '</td>';
-                            html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.name + '</td>';
-                            html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.shop_id + '</td>';
-                            html += '</tr>';
-                        });
-                        html += '</table>';
-                    }
+                    // Get app user
+                    await loadAppUser(user.id);
                 } else {
-                    html += '<p class="error">❌ Failed to load customers: ' + result.error + '</p>';
+                    document.getElementById('authUser').innerHTML = '<span class="error">✗ Not logged in</span>';
                 }
-            } catch (err) {
-                html += '<p class="error">❌ Error: ' + err.message + '</p>';
+            } catch (error) {
+                document.getElementById('authUser').innerHTML = '<span class="error">✗ Error: ' + error.message + '</span>';
             }
-            html += '</div>';
 
-            // Test 4: Check database directly (without filter)
-            html += '<div class="test-result">';
-            html += '<h3>Test 4: Raw Database Query (All Customers)</h3>';
+            // Load suppliers
+            await loadSuppliers();
+        }
+
+        async function loadAppUser(authUserId) {
             try {
-                const { data, error } = await window.DukaPOS.supabaseClient
-                    .from('customers')
-                    .select('id, name, shop_id')
-                    .order('id', { ascending: true });
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('auth_user_id', authUserId)
+                    .single();
 
                 if (error) throw error;
 
-                html += '<p class="warning">⚠️ This shows ALL customers from ALL shops (no filter)</p>';
-                html += '<p>Total customers in database: ' + data.length + '</p>';
-                
-                html += '<table style="width:100%; border-collapse: collapse; margin-top: 10px;">';
-                html += '<tr><th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">ID</th>';
-                html += '<th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">Name</th>';
-                html += '<th style="text-align:left; border-bottom:1px solid #21262d; padding:8px;">Shop ID</th></tr>';
-                
-                data.forEach(customer => {
-                    html += '<tr>';
-                    html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.id + '</td>';
-                    html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.name + '</td>';
-                    html += '<td style="padding:8px; border-bottom:1px solid #21262d;">' + customer.shop_id + '</td>';
-                    html += '</tr>';
-                });
-                html += '</table>';
-            } catch (err) {
-                html += '<p class="error">❌ Error: ' + err.message + '</p>';
+                if (data) {
+                    appUser = data;
+                    document.getElementById('appUser').innerHTML = 
+                        '<span class="success">✓ Found in users table</span>\n' +
+                        JSON.stringify({
+                            id: data.id,
+                            username: data.username,
+                            email: data.email,
+                            role: data.role,
+                            auth_user_id: data.auth_user_id
+                        }, null, 2);
+                } else {
+                    document.getElementById('appUser').innerHTML = '<span class="error">✗ Not found in users table</span>';
+                }
+            } catch (error) {
+                document.getElementById('appUser').innerHTML = '<span class="error">✗ Error: ' + error.message + '</span>';
             }
-            html += '</div>';
-
-            results.innerHTML = html;
         }
 
-        // Auto-run on page load
-        window.addEventListener('DOMContentLoaded', async () => {
-            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for modules to load
-            runTests();
-        });
+        async function loadSuppliers() {
+            try {
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('id, username, email, role, is_active')
+                    .eq('role', 'supplier')
+                    .eq('is_active', true);
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    document.getElementById('suppliers').innerHTML = 
+                        '<span class="success">✓ Found ' + data.length + ' supplier(s)</span>\n' +
+                        JSON.stringify(data, null, 2);
+                } else {
+                    document.getElementById('suppliers').innerHTML = 
+                        '<span class="error">⚠ No suppliers found</span>\n' +
+                        'Create users with role="supplier" in the admin panel';
+                }
+            } catch (error) {
+                document.getElementById('suppliers').innerHTML = '<span class="error">✗ Error: ' + error.message + '</span>';
+            }
+        }
+
+        async function testSupplyRequest() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = 'Testing supply request creation...\n';
+
+            try {
+                if (!appUser) {
+                    results.innerHTML += '<span class="error">✗ No app user found. Cannot create request.</span>';
+                    return;
+                }
+
+                const testData = {
+                    item_name: 'Test Item - ' + Date.now(),
+                    quantity: 5,
+                    unit: 'pieces',
+                    priority: 'medium',
+                    status: 'pending',
+                    notes: 'Debug test request',
+                    requested_by: appUser.id
+                };
+
+                results.innerHTML += 'Data to insert:\n' + JSON.stringify(testData, null, 2) + '\n\n';
+
+                const { data, error } = await supabase
+                    .from('supply_requests')
+                    .insert([testData])
+                    .select();
+
+                if (error) throw error;
+
+                results.innerHTML += '<span class="success">✓ SUCCESS!</span>\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                results.innerHTML += '<span class="error">✗ ERROR: ' + error.message + '</span>\n' + JSON.stringify(error, null, 2);
+            }
+        }
+
+        async function testPurchaseOrder() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = 'Testing purchase order creation...\n';
+
+            try {
+                if (!appUser) {
+                    results.innerHTML += '<span class="error">✗ No app user found. Cannot create order.</span>';
+                    return;
+                }
+
+                // First, get a supplier
+                const { data: suppliers, error: suppError } = await supabase
+                    .from('users')
+                    .select('id, username')
+                    .eq('role', 'supplier')
+                    .eq('is_active', true)
+                    .limit(1);
+
+                if (suppError) throw suppError;
+
+                if (!suppliers || suppliers.length === 0) {
+                    results.innerHTML += '<span class="error">✗ No suppliers found. Create a user with role="supplier" first.</span>';
+                    return;
+                }
+
+                const supplier = suppliers[0];
+                results.innerHTML += 'Using supplier: ' + supplier.username + ' (ID: ' + supplier.id + ')\n\n';
+
+                const testData = {
+                    supplier_id: supplier.id,
+                    order_number: 'TEST-' + Date.now(),
+                    order_date: new Date().toISOString().split('T')[0],
+                    expected_delivery_date: new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0],
+                    status: 'pending',
+                    total_amount: 1000,
+                    notes: 'Debug test order',
+                    created_by: appUser.id
+                };
+
+                results.innerHTML += 'Data to insert:\n' + JSON.stringify(testData, null, 2) + '\n\n';
+
+                const { data, error } = await supabase
+                    .from('supplier_purchase_orders')
+                    .insert([testData])
+                    .select();
+
+                if (error) throw error;
+
+                results.innerHTML += '<span class="success">✓ SUCCESS!</span>\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                results.innerHTML += '<span class="error">✗ ERROR: ' + error.message + '</span>\n' + JSON.stringify(error, null, 2);
+            }
+        }
+
+        init();
     </script>
 </body>
 </html>
