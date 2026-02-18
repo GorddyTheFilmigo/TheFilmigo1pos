@@ -220,6 +220,29 @@
             .messages-popup { width: 90vw; right: 5vw; top: 60px; }
             .dashboard-tabs { border-bottom: none; }
         }
+
+        /* ── PWA Install Button ── */
+        .pwa-install-btn {
+            display: none; /* shown by pwa-registration.js when prompt is ready */
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(245,158,11,0.35);
+            transition: all 0.2s;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        .pwa-install-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(245,158,11,0.5);
+        }
     </style>
 </head>
 <body style="visibility:hidden;">
