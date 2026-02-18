@@ -28,7 +28,7 @@
         }
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
         .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
-        .supplier-welcome { margin-bottom: 40px; text-align: center; }
+        .supplier-welcome { margin-bottom: 32px; text-align: center; }
         .supplier-welcome h1 { margin: 0 0 8px 0; font-size: 2.4rem; }
         .supplier-welcome p { color: var(--text-muted); font-size: 1.2rem; }
         section { margin-bottom: 60px; }
@@ -135,15 +135,14 @@
                         <th>Item Name</th>
                         <th>Quantity / Unit</th>
                         <th>Priority</th>
-                        <th>Required By</th>
-                        <th>Requested By</th>
                         <th>Est. Cost</th>
+                        <th>Requested By</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="requestsTableBody">
-                    <tr><td colspan="9" class="loading">Loading incoming requests…</td></tr>
+                    <tr><td colspan="8" class="loading">Loading incoming requests…</td></tr>
                 </tbody>
             </table>
         </div>
@@ -260,7 +259,7 @@
         } catch (err) {
             console.error('Init failed:', err);
             document.getElementById('requestsTableBody').innerHTML = 
-                `<tr><td colspan="9" class="error-message">Error: ${err.message}</td></tr>`;
+                `<tr><td colspan="8" class="error-message">Error: ${err.message}</td></tr>`;
         }
     });
 
@@ -278,11 +277,11 @@
                     status,
                     estimated_cost,
                     requested_by,
-                    requested_at,
+                    created_at,
                     requested_by_user:requested_by ( full_name )
                 `)
                 .eq('supplier_id', currentUser.id)
-                .order('requested_at', { ascending: false });
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
 
@@ -290,7 +289,7 @@
             renderSupplyRequests();
         } catch (err) {
             document.getElementById('requestsTableBody').innerHTML = 
-                `<tr><td colspan="9" class="error-message">Failed to load requests: ${err.message}</td></tr>`;
+                `<tr><td colspan="8" class="error-message">Failed to load requests: ${err.message}</td></tr>`;
         }
     }
 
@@ -308,7 +307,7 @@
         });
 
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-row">No matching requests</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-row">No matching requests</td></tr>';
             return;
         }
 
@@ -318,9 +317,8 @@
                 <td>${r.item_name || '—'}</td>
                 <td>${r.quantity || '—'} ${r.unit || ''}</td>
                 <td><span class="status-badge status-${r.priority||'medium'}">${r.priority||'medium'}</span></td>
-                <td>${r.required_by_date ? new Date(r.required_by_date).toLocaleDateString('en-KE') : '—'}</td>
-                <td>${r.requested_by_user?.full_name || '—'}</td>
                 <td>${r.estimated_cost ? 'KES ' + Number(r.estimated_cost).toLocaleString() : '—'}</td>
+                <td>${r.requested_by_user?.full_name || '—'}</td>
                 <td><span class="status-badge status-${r.status}">${r.status}</span></td>
                 <td>
                     ${r.status === 'pending' ? `
@@ -377,10 +375,9 @@
             <strong>Item:</strong> ${req.item_name || '—'}<br>
             <strong>Quantity / Unit:</strong> ${req.quantity || '—'} ${req.unit || ''}<br>
             <strong>Priority:</strong> ${req.priority || '—'}<br>
-            <strong>Required by:</strong> ${req.required_by_date ? new Date(req.required_by_date).toLocaleDateString('en-KE') : '—'}<br>
-            <strong>From:</strong> ${req.requested_by_user?.full_name || '—'}<br>
             <strong>Est. Cost:</strong> ${req.estimated_cost ? 'KES ' + Number(req.estimated_cost).toLocaleString() : '—'}<br>
-            <strong>Notes:</strong> ${req.notes || '—'}
+            <strong>Notes:</strong> ${req.notes || '—'}<br>
+            <strong>Requested:</strong> ${new Date(req.created_at).toLocaleString('en-KE')}
         `;
 
         document.getElementById('agreedQty').value = req.quantity || 1;
@@ -431,8 +428,8 @@
 
             if (reqErr) throw reqErr;
 
-            // Create purchase order
-            const orderNumber = 'PO-S-' + Date.now().toString().slice(-6);
+            // Create purchase order (adjust table/columns as needed)
+            const orderNumber = 'PO-' + Date.now().toString().slice(-6);
             const { data: orderData, error: orderErr } = await db
                 .from('supplier_purchase_orders')
                 .insert([{
@@ -454,7 +451,7 @@
                 .from('supplier_purchase_order_items')
                 .insert([{
                     purchase_order_id: orderData.id,
-                    product_name: currentProcessingRequest.item_name || 'Supply Request Item',
+                    product_name: currentProcessingRequest.item_name || 'Supply Request',
                     quantity: qty,
                     unit_price: price,
                     total: total
