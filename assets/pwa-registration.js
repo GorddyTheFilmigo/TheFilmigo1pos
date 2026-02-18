@@ -28,8 +28,27 @@ window.addEventListener('appinstalled', () => {
 // ── Called when user clicks the install button ──
 window.triggerPWAInstall = async function () {
     if (!window._pwaInstallPrompt) {
-        // Already installed or browser doesn't support
-        alert('App is already installed or your browser will show the install option in the address bar menu (⋮).');
+        // Show a helpful guide for manual installation
+        const isChrome = /Chrome/.test(navigator.userAgent) && !/Edg/.test(navigator.userAgent);
+        const isEdge   = /Edg/.test(navigator.userAgent);
+        const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+        const isMobile = /Android|iPhone|iPad/.test(navigator.userAgent);
+
+        let instructions = '';
+        if (isMobile && isSafari) {
+            instructions = 'Tap the Share button (□↑) at the bottom, then tap "Add to Home Screen".';
+        } else if (isMobile) {
+            instructions = 'Tap the browser menu (⋮) at the top right, then tap "Add to Home screen" or "Install app".';
+        } else if (isEdge) {
+            instructions = 'Click the (⋮) menu in the top right → "Apps" → "Install this site as an app".';
+        } else if (isChrome) {
+            instructions = 'Click the install icon (⬇) in the address bar on the right, or go to (⋮) menu → "Install G&H Solutions".';
+        } else {
+            instructions = 'Use your browser menu to find "Install" or "Add to Home Screen".';
+        }
+        alert('📲 Install G&H Solutions
+
+' + instructions);
         return;
     }
     // Show the native install dialog
