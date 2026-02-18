@@ -29,17 +29,11 @@
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
         .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
         .supplier-welcome { margin-bottom: 32px; text-align: center; }
-        .supplier-welcome h1 { margin: 0 0 8px 0; font-size: 2.4rem; }
-        .supplier-welcome p { color: var(--text-muted); font-size: 1.2rem; }
+        .supplier-welcome h1 { margin: 0 0 8px 0; font-size: 2.2rem; }
+        .supplier-welcome p { color: var(--text-muted); font-size: 1.1rem; }
         section { margin-bottom: 60px; }
-        .section-title { 
-            font-size: 1.6rem; margin-bottom: 16px; padding-bottom: 8px; 
-            border-bottom: 2px solid var(--accent-orange); display: inline-block;
-        }
-        .table-container {
-            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
-            padding: 24px; overflow-x: auto;
-        }
+        .section-title { font-size: 1.6rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent-orange); display: inline-block; }
+        .table-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
         .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
         .table { width: 100%; border-collapse: collapse; min-width: 900px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -65,22 +59,13 @@
         .form-textarea { min-height: 80px; resize: vertical; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000;
-            display: none; align-items: center; justify-content: center;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; display: none; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
-        .modal-box {
-            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
-            width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 24px;
-        }
+        .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 24px; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-close { background: none; border: none; font-size: 2rem; color: var(--text-muted); cursor: pointer; }
         .modal-close:hover { color: var(--text); }
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .table-header { flex-direction: column; align-items: stretch; }
-        }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .table-header { flex-direction: column; align-items: stretch; } }
     </style>
 </head>
 <body>
@@ -206,9 +191,9 @@
             </div>
             <div style="margin-top:24px; text-align:right;">
                 <button type="button" class="btn btn-secondary" onclick="closeProcessModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Confirm & Process</button>
+                <button type="submit" class="btn btn-primary">Confirm & Process Order</button>
             </div>
-            <div id="processMessage"></div>
+            <div id="processMessage" style="margin-top:16px;"></div>
         </form>
     </div>
 </div>
@@ -255,7 +240,8 @@
                 renderSupplyRequests(e.target.value, document.getElementById('statusFilter').value);
             });
 
-            document.getElementById('processForm').addEventListener('submit', processOrder);
+            document.getElementById('processForm')?.addEventListener('submit', processOrder);
+            console.log('Supplier portal ready');
         } catch (err) {
             console.error('Init failed:', err);
             document.getElementById('requestsTableBody').innerHTML = 
@@ -268,17 +254,8 @@
             const { data, error } = await db
                 .from('supply_requests')
                 .select(`
-                    id,
-                    request_number,
-                    item_name,
-                    quantity,
-                    unit,
-                    priority,
-                    status,
-                    estimated_cost,
-                    requested_by,
-                    created_at,
-                    requested_by_user:requested_by ( full_name )
+                    id, request_number, item_name, quantity, unit, priority, status, estimated_cost,
+                    requested_by, created_at, requested_by_user:requested_by ( full_name )
                 `)
                 .eq('supplier_id', currentUser.id)
                 .order('created_at', { ascending: false });
@@ -289,22 +266,22 @@
             renderSupplyRequests();
         } catch (err) {
             document.getElementById('requestsTableBody').innerHTML = 
-                `<tr><td colspan="8" class="error-message">Failed to load requests: ${err.message}</td></tr>`;
+                `<tr><td colspan="8" class="error-message">Failed to load: ${err.message}</td></tr>`;
         }
     }
 
     function renderSupplyRequests(search = '', status = '') {
         const tbody = document.getElementById('requestsTableBody');
-        let filtered = supplyRequests.filter(r => {
-            if (status && r.status !== status) return false;
-            if (search.trim()) {
-                const term = search.toLowerCase();
-                return (r.item_name||'').toLowerCase().includes(term) ||
-                       (r.notes||'').toLowerCase().includes(term) ||
-                       (r.request_number||'').toLowerCase().includes(term);
-            }
-            return true;
-        });
+        let filtered = supplyRequests;
+
+        if (status) filtered = filtered.filter(r => r.status === status);
+        if (search.trim()) {
+            const term = search.toLowerCase();
+            filtered = filtered.filter(r => 
+                (r.item_name || '').toLowerCase().includes(term) ||
+                (r.request_number || '').toLowerCase().includes(term)
+            );
+        }
 
         if (filtered.length === 0) {
             tbody.innerHTML = '<tr><td colspan="8" class="empty-row">No matching requests</td></tr>';
@@ -364,7 +341,8 @@
         `).join('');
     }
 
-    function openProcessModal(requestId) {
+    window.openProcessModal = function(requestId) {
+        console.log('Process button clicked for request ID:', requestId);
         const req = supplyRequests.find(r => r.id === requestId);
         if (!req) return alert('Request not found');
 
@@ -376,7 +354,6 @@
             <strong>Quantity / Unit:</strong> ${req.quantity || '—'} ${req.unit || ''}<br>
             <strong>Priority:</strong> ${req.priority || '—'}<br>
             <strong>Est. Cost:</strong> ${req.estimated_cost ? 'KES ' + Number(req.estimated_cost).toLocaleString() : '—'}<br>
-            <strong>Notes:</strong> ${req.notes || '—'}<br>
             <strong>Requested:</strong> ${new Date(req.created_at).toLocaleString('en-KE')}
         `;
 
@@ -388,31 +365,45 @@
 
         document.getElementById('processMessage').innerHTML = '';
         document.getElementById('processModal').classList.add('open');
-    }
+    };
 
-    function closeProcessModal() {
+    window.closeProcessModal = function() {
         document.getElementById('processModal').classList.remove('open');
         currentProcessingRequest = null;
-    }
+    };
 
     async function processOrder(e) {
         e.preventDefault();
-        if (!currentProcessingRequest) return;
+        if (!currentProcessingRequest) return alert('No request selected');
 
-        const qty = parseInt(document.getElementById('agreedQty').value) || 0;
-        const price = parseFloat(document.getElementById('unitPrice').value) || 0;
-        const delivery = document.getElementById('deliveryDate').value;
+        const qtyInput = document.getElementById('agreedQty').value.trim();
+        const priceInput = document.getElementById('unitPrice').value.trim();
+        const delivery = document.getElementById('deliveryDate').value.trim();
         const notes = document.getElementById('supplierNotes').value.trim();
 
-        if (qty < 1 || price <= 0 || !delivery) {
-            document.getElementById('processMessage').innerHTML = '<div class="error-msg">Please fill quantity, price and delivery date</div>';
+        const qty = parseInt(qtyInput, 10);
+        const price = parseFloat(priceInput);
+
+        if (isNaN(qty) || qty < 1) {
+            document.getElementById('processMessage').innerHTML = '<div class="error-msg">Invalid quantity (must be positive number)</div>';
+            return;
+        }
+        if (isNaN(price) || price <= 0) {
+            document.getElementById('processMessage').innerHTML = '<div class="error-msg">Invalid unit price (must be positive number)</div>';
+            return;
+        }
+        if (!delivery || !/^\d{4}-\d{2}-\d{2}$/.test(delivery)) {
+            document.getElementById('processMessage').innerHTML = '<div class="error-msg">Use YYYY-MM-DD for delivery date</div>';
             return;
         }
 
         const total = qty * price;
 
+        console.log('Submitting update to supply_requests ID:', currentProcessingRequest.id);
+        console.log('User ID:', currentUser.id, 'Type:', typeof currentUser.id);
+
         try {
-            // Update request
+            // Update supply_requests - NO extra supplier_id filter (RLS should handle it)
             const { error: reqErr } = await db
                 .from('supply_requests')
                 .update({ 
@@ -423,12 +414,16 @@
                     supplier_responded_at: new Date().toISOString(),
                     supplier_responded_by: currentUser.id
                 })
-                .eq('id', currentProcessingRequest.id)
-                .eq('supplier_id', currentUser.id);
+                .eq('id', currentProcessingRequest.id);
 
-            if (reqErr) throw reqErr;
+            if (reqErr) {
+                console.error('Supabase update error:', reqErr);
+                throw reqErr;
+            }
 
-            // Create purchase order (adjust table/columns as needed)
+            console.log('Request updated successfully');
+
+            // Create purchase order
             const orderNumber = 'PO-' + Date.now().toString().slice(-6);
             const { data: orderData, error: orderErr } = await db
                 .from('supplier_purchase_orders')
@@ -463,8 +458,11 @@
             await Promise.all([loadSupplyRequests(), loadProcessedOrders()]);
             showMessage('Order processed successfully!', 'success');
         } catch (err) {
+            console.error('Full process error:', err);
+            const msg = err.message || 'Unknown error';
+            const details = err.details || err.hint || err.code || '';
             document.getElementById('processMessage').innerHTML = 
-                `<div class="error-msg">Processing failed: ${err.message}</div>`;
+                `<div class="error-msg">Failed: ${msg}${details ? ' (' + details + ')' : ''}</div>`;
         }
     }
 
@@ -473,13 +471,8 @@
         msg.className = type === 'success' ? 'success-msg' : 'error-msg';
         msg.textContent = text;
         document.querySelector('.supplier-welcome').after(msg);
-        setTimeout(() => msg.remove(), 7000);
+        setTimeout(() => msg.remove(), 5000);
     }
-
-    window.supplierPortal = {
-        openProcessModal,
-        closeProcessModal
-    };
 })();
 </script>
 <script src="assets/pwa-registration.js"></script>
