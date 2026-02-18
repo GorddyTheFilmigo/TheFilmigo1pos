@@ -19,8 +19,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
-    <script src="assets/page-access-guard.js"></script>
-    <script src="assets/nav-visibility-controller.js"></script>
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -245,6 +243,9 @@
             cursor: pointer; font-size: 0.85rem; white-space: nowrap;
         }
         .notif-reply-send:hover { background: #2ea043; }
+
+        /* Hide all nav tabs instantly except the active one — prevents flash */
+        .nav-tabs .nav-tab:not(.active) { display: none !important; }
 
         @media (max-width: 768px) {
             .table-header { flex-direction: column; align-items: stretch; }
