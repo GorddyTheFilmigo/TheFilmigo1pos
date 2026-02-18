@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G&H Solutions - My Supply Requests</title>
+    <title>G&H Solutions - Supplier Portal</title>
     <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="G&H Solutions">
+    <meta name="apple-mobile-web-app-title" content="G&H Supplier">
     <meta name="description" content="Supplier Portal - View and process supply requests">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="assets/offline-styles.css">
@@ -17,109 +17,68 @@
     <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
-    <script src="assets/page-access-guard.js"></script>
-    <script src="assets/nav-visibility-controller.js"></script>
     <style>
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #1a2030;
-            --border: #21262d;
-            --text: #e6edf3;
-            --text-muted: #8b949e;
-            --accent-orange: #f59e0b;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --danger: #f85149;
+            --bg-primary: #0d1117; --bg-secondary: #161b22; --bg-tertiary: #1a2030;
+            --border: #21262d; --text: #e6edf3; --text-muted: #8b949e;
+            --accent-orange: #f59e0b; --accent-blue: #58a6ff;
+            --accent-green: #3fb950; --danger: #f85149;
         }
-        body {
-            font-family: 'Archivo', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-        .supplier-welcome {
-            margin-bottom: 32px;
-        }
-        .supplier-welcome h1 {
-            margin: 0 0 8px 0;
-            font-size: 2.2rem;
-        }
-        .supplier-welcome p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
+        body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+        .supplier-welcome { margin-bottom: 40px; text-align: center; }
+        .supplier-welcome h1 { margin: 0 0 8px 0; font-size: 2.4rem; }
+        .supplier-welcome p { color: var(--text-muted); font-size: 1.2rem; }
+        section { margin-bottom: 60px; }
+        .section-title { 
+            font-size: 1.6rem; margin-bottom: 16px; padding-bottom: 8px; 
+            border-bottom: 2px solid var(--accent-orange); display: inline-block;
         }
         .table-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            overflow-x: auto;
-            margin-bottom: 40px;
+            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+            padding: 24px; overflow-x: auto;
         }
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            background: var(--bg-tertiary);
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-        tr:hover {
-            background: rgba(88, 166, 255, 0.08);
-        }
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .status-pending   { background: rgba(245,158,11,.2); color: var(--accent-orange); }
-        .status-approved  { background: rgba(63,185,80,.2);  color: var(--accent-green); }
-        .status-rejected  { background: rgba(248,81,73,.2);  color: var(--danger); }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
+        .table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-tertiary); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; }
+        tr:hover { background: rgba(88, 166, 255, 0.08); }
+        .status-badge { padding: 4px 12px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; }
+        .status-pending { background: rgba(245,158,11,.2); color: var(--accent-orange); }
+        .status-approved { background: rgba(63,185,80,.2); color: var(--accent-green); }
+        .status-rejected { background: rgba(248,81,73,.2); color: var(--danger); }
+        .btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: all 0.2s; }
         .btn:hover { transform: translateY(-1px); }
-        .btn-primary   { background: var(--accent-orange); color: white; }
-        .btn-danger    { background: var(--danger); color: white; }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-small { padding: 6px 12px; font-size: 12px; margin-right: 6px; }
         .loading, .empty-row { text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 1.1rem; }
         .error-message { text-align: center; padding: 48px 0; color: var(--danger); font-size: 1.1rem; }
-        .success-msg { color: var(--accent-green); font-weight: 600; margin: 12px 0; }
-        .error-msg   { color: var(--danger); font-weight: 600; margin: 12px 0; }
+        .success-msg { background: rgba(63,185,80,.2); color: var(--accent-green); padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; }
+        .error-msg { background: rgba(248,81,73,.2); color: var(--danger); padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; }
+        .form-input, .form-select, .form-textarea {
+            padding: 8px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-size: 14px; width: 100%; box-sizing: border-box;
+        }
+        .form-textarea { min-height: 80px; resize: vertical; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+            width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 24px;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; font-size: 2rem; color: var(--text-muted); cursor: pointer; }
+        .modal-close:hover { color: var(--text); }
         @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
             .table-header { flex-direction: column; align-items: stretch; }
         }
     </style>
@@ -128,16 +87,9 @@
 
 <nav class="nav">
     <div class="nav-container">
-        <div class="logo">G&H Solutions</div>
+        <div class="logo">🏭 Supplier Portal</div>
         <div class="nav-tabs">
-            <a href="dashboard.html" class="nav-tab admin-only" style="display:none;">Dashboard</a>
-            <a href="pos.html" class="nav-tab" style="display:none;">Point of Sale</a>
-            <a href="products.html" class="nav-tab" style="display:none;">Products</a>
-            <a href="inventory.html" class="nav-tab admin-only" style="display:none;">Inventory</a>
-            <a href="customers.html" class="nav-tab" style="display:none;">Customers</a>
-            <a href="suppliers.html" class="nav-tab active" class="nav-tab suppliers only">My Requests</a>
-            <a href="supply-requests.html" class="nav-tab" style="display:none;">Supply Requests</a>
-            <a href="admin.html" class="nav-tab admin-only" style="display:none;">👥 Users</a>
+            <a href="supplier-portal.html" class="nav-tab active">📦 My Supply Requests</a>
         </div>
         <div class="user-badge">
             <div class="user-avatar">👤</div>
@@ -146,135 +98,156 @@
                 <div id="currentDate" style="font-size:.8rem;color:var(--text-muted);"></div>
             </div>
         </div>
-        <button
-            onclick="authModule.logout()"
+        <button onclick="authModule.logout()"
             style="padding:10px 18px;background-color:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,.3);transition:all .2s ease;margin-left:12px;"
             onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
-            onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'"
-        >Logout</button>
+            onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
     </div>
 </nav>
 
 <div class="container">
 
     <div class="supplier-welcome">
-        <h1 id="supplierGreeting">Welcome</h1>
-        <p>View and respond to supply requests sent to you by shops.</p>
+        <h1 id="supplierGreeting">Welcome, Supplier</h1>
+        <p>Manage incoming supply requests and process orders.</p>
     </div>
 
-    <!-- Incoming Supply Requests -->
-    <div class="table-container">
-        <div class="table-header">
-            <h2 style="margin:0;">Incoming Supply Requests</h2>
-            <div style="display:flex; gap:12px; align-items:center;">
-                <select id="statusFilter" class="form-select" style="width:150px;padding:8px;">
-                    <option value="">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                </select>
-                <input type="text" id="requestSearch" class="form-input" placeholder="Search item or notes..." style="width:240px;">
+    <!-- 1. Incoming Supply Requests -->
+    <section>
+        <h2 class="section-title">1. Incoming Supply Requests</h2>
+        <div class="table-container">
+            <div class="table-header">
+                <h3 style="margin:0;">Pending Requests</h3>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <select id="statusFilter" class="form-select" style="width:150px;">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <input type="text" id="requestSearch" class="form-input" placeholder="Search..." style="width:240px;">
+                </div>
             </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Request #</th>
+                        <th>Item Name</th>
+                        <th>Quantity / Unit</th>
+                        <th>Priority</th>
+                        <th>Required By</th>
+                        <th>Requested By</th>
+                        <th>Est. Cost</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="requestsTableBody">
+                    <tr><td colspan="9" class="loading">Loading incoming requests…</td></tr>
+                </tbody>
+            </table>
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Request #</th>
-                    <th>Item Name</th>
-                    <th>Priority</th>
-                    <th>Qty / Unit</th>
-                    <th>Requested By</th>
-                    <th>Est. Cost</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="requestsTableBody">
-                <tr><td colspan="8" class="loading">Loading your supply requests…</td></tr>
-            </tbody>
-        </table>
-    </div>
+    </section>
 
-    <!-- Processed Orders History -->
-    <div class="table-container" style="margin-top: 40px;">
-        <h2 style="margin:0 0 20px 0;">Processed Orders (History)</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Order #</th>
-                    <th>Date</th>
-                    <th>Delivery Date</th>
-                    <th>Amount (KES)</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="ordersTableBody">
-                <tr><td colspan="5" class="loading">Loading order history…</td></tr>
-            </tbody>
-        </table>
-    </div>
+    <!-- 2. Order Processing -->
+    <section id="processingSection">
+        <h2 class="section-title">2. Order Processing</h2>
+        <p style="color:var(--text-muted);">Click "Process" on any pending request above to open the order processing form.</p>
+    </section>
 
+    <!-- 3. Processed Orders (History) -->
+    <section>
+        <h2 class="section-title">3. ✅ Processed Orders (History)</h2>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Processed Date</th>
+                        <th>Agreed Delivery</th>
+                        <th>Total Amount (KES)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="processedOrdersBody">
+                    <tr><td colspan="5" class="loading">Loading processed orders…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+<!-- Order Processing Modal -->
+<div class="modal-overlay" id="processModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2>Process Supply Request</h2>
+            <button class="modal-close" onclick="closeProcessModal()">×</button>
+        </div>
+        <div id="modalRequestDetails" style="margin-bottom:24px; padding:16px; background:rgba(88,166,255,0.1); border-radius:8px;"></div>
+        <form id="processForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Agreed Quantity *</label>
+                    <input type="number" id="agreedQty" class="form-input" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Unit Price (KES) *</label>
+                    <input type="number" id="unitPrice" class="form-input" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Agreed Delivery Date *</label>
+                    <input type="date" id="deliveryDate" class="form-input" required>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Supplier Notes / Terms</label>
+                    <textarea id="supplierNotes" class="form-textarea" placeholder="Delivery instructions, conditions, payment terms..."></textarea>
+                </div>
+            </div>
+            <div style="margin-top:24px; text-align:right;">
+                <button type="button" class="btn btn-secondary" onclick="closeProcessModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Confirm & Process</button>
+            </div>
+            <div id="processMessage"></div>
+        </form>
+    </div>
 </div>
 
 <script src="assets/script.js"></script>
 <script src="assets/auth.js"></script>
-<script src="assets/data-module.js"></script>
 <script>
 (function () {
     let supplyRequests = [];
-    let orders = [];
+    let processedOrders = [];
     let currentUser = null;
-    let supabaseClient = null;
+    let db = null;
+    let currentProcessingRequest = null;
 
     window.addEventListener('DOMContentLoaded', async () => {
         try {
-            console.log('Supplier portal starting...');
-
-            // Safe Supabase client creation
-            if (!window.DukaPOS?.supabaseClient) {
-                console.log('Creating standalone Supabase client...');
-                window.DukaPOS.supabaseClient = window.supabase.createClient(
-                    'https://zylhlftiqvrcogxaqgof.supabase.co',
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5bGhsZnRpcXZyY29neGFxZ29mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk3NjQyMzAsImV4cCI6MjA4NTM0MDIzMH0.AVcH8iGuK8--BRR133KvXgMecoNl-_bv2rFYgBuuk9s'
-                );
-            }
-
-            supabaseClient = window.DukaPOS.supabaseClient;
-
-            if (!supabaseClient) {
-                throw new Error('Failed to get Supabase client');
-            }
-
-            console.log('Supabase client ready');
-
+            await window.DukaPOS.initializeSupabase();
             const isAuthenticated = await authModule.requireAuth();
             if (!isAuthenticated) return;
 
             currentUser = authModule.getCurrentUser();
-            if (!currentUser?.id) {
-                throw new Error('No authenticated user found');
+            if (currentUser.role !== 'supplier') {
+                alert('Access Denied: Suppliers only');
+                window.location.href = 'dashboard.html';
+                return;
             }
 
-            console.log('Logged in as:', currentUser.full_name || currentUser.email);
+            db = window.DukaPOS.supabaseClient;
+            if (!db) throw new Error('Database connection failed');
 
-            // Set UI
             const supplierName = currentUser.full_name || currentUser.email?.split('@')[0] || 'Supplier';
             document.getElementById('currentUserName').textContent = supplierName;
             document.getElementById('supplierGreeting').textContent = `Welcome, ${supplierName}`;
-
             document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-KE', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
             });
 
-            // Restrict nav
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.style.display = 'none');
-            const myTab = document.querySelector('a[href="suppliers.html"]');
-            if (myTab) myTab.style.display = 'flex';
-
-            await Promise.all([
-                loadSupplyRequests(),
-                loadProcessedOrders()
-            ]);
+            await Promise.all([loadSupplyRequests(), loadProcessedOrders()]);
 
             document.getElementById('statusFilter')?.addEventListener('change', e => {
                 renderSupplyRequests(document.getElementById('requestSearch').value, e.target.value);
@@ -283,28 +256,21 @@
                 renderSupplyRequests(e.target.value, document.getElementById('statusFilter').value);
             });
 
-            console.log('Supplier portal loaded');
+            document.getElementById('processForm').addEventListener('submit', processOrder);
         } catch (err) {
             console.error('Init failed:', err);
-            const msg = `Failed to start: ${err.message}`;
-            document.getElementById('requestsTableBody').innerHTML = `<tr><td colspan="8" class="error-message">${msg}</td></tr>`;
-            document.getElementById('ordersTableBody').innerHTML = `<tr><td colspan="5" class="error-message">${msg}</td></tr>`;
+            document.getElementById('requestsTableBody').innerHTML = 
+                `<tr><td colspan="9" class="error-message">Error: ${err.message}</td></tr>`;
         }
     });
 
     async function loadSupplyRequests() {
-        if (!supabaseClient) {
-            document.getElementById('requestsTableBody').innerHTML = 
-                '<tr><td colspan="8" class="error-message">No database connection</td></tr>';
-            return;
-        }
-
         try {
-            console.log('Fetching requests for supplier ID:', currentUser.id);
-            const { data, error } = await supabaseClient
+            const { data, error } = await db
                 .from('supply_requests')
                 .select(`
                     id,
+                    request_number,
                     item_name,
                     quantity,
                     unit,
@@ -312,165 +278,211 @@
                     status,
                     estimated_cost,
                     requested_by,
-                    requested_by_user:requested_by ( full_name ),
-                    created_at,
-                    approved_at,
-                    notes
+                    requested_at,
+                    requested_by_user:requested_by ( full_name )
                 `)
                 .eq('supplier_id', currentUser.id)
-                .order('created_at', { ascending: false });
+                .order('requested_at', { ascending: false });
 
             if (error) throw error;
 
             supplyRequests = data || [];
-            console.log(`Loaded ${supplyRequests.length} requests`);
             renderSupplyRequests();
         } catch (err) {
-            console.error('Load requests failed:', err);
             document.getElementById('requestsTableBody').innerHTML = 
-                `<tr><td colspan="8" class="error-message">${err.message}</td></tr>`;
+                `<tr><td colspan="9" class="error-message">Failed to load requests: ${err.message}</td></tr>`;
         }
     }
 
-    function renderSupplyRequests(filter = '', statusFilter = '') {
+    function renderSupplyRequests(search = '', status = '') {
         const tbody = document.getElementById('requestsTableBody');
-        let filtered = [...supplyRequests];
-
-        if (statusFilter) filtered = filtered.filter(r => r.status === statusFilter);
-        if (filter.trim()) {
-            const term = filter.toLowerCase().trim();
-            filtered = filtered.filter(r =>
-                (r.item_name || '').toLowerCase().includes(term) ||
-                (r.notes || '').toLowerCase().includes(term)
-            );
-        }
+        let filtered = supplyRequests.filter(r => {
+            if (status && r.status !== status) return false;
+            if (search.trim()) {
+                const term = search.toLowerCase();
+                return (r.item_name||'').toLowerCase().includes(term) ||
+                       (r.notes||'').toLowerCase().includes(term) ||
+                       (r.request_number||'').toLowerCase().includes(term);
+            }
+            return true;
+        });
 
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="empty-row">No matching supply requests found</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="empty-row">No matching requests</td></tr>';
             return;
         }
 
         tbody.innerHTML = filtered.map(r => `
             <tr>
-                <td>${r.id}</td>
+                <td>${r.request_number || r.id}</td>
                 <td>${r.item_name || '—'}</td>
-                <td><span class="status-badge status-${r.priority || 'medium'}">${r.priority || 'medium'}</span></td>
                 <td>${r.quantity || '—'} ${r.unit || ''}</td>
+                <td><span class="status-badge status-${r.priority||'medium'}">${r.priority||'medium'}</span></td>
+                <td>${r.required_by_date ? new Date(r.required_by_date).toLocaleDateString('en-KE') : '—'}</td>
                 <td>${r.requested_by_user?.full_name || '—'}</td>
                 <td>${r.estimated_cost ? 'KES ' + Number(r.estimated_cost).toLocaleString() : '—'}</td>
-                <td><span class="status-badge status-${r.status}">${r.status || 'pending'}</span></td>
+                <td><span class="status-badge status-${r.status}">${r.status}</span></td>
                 <td>
                     ${r.status === 'pending' ? `
-                        <button class="btn btn-primary" onclick="supplierPortal.acceptRequest(${r.id})">Accept</button>
-                        <button class="btn btn-danger"   onclick="supplierPortal.rejectRequest(${r.id})">Reject</button>
-                    ` : (r.approved_at ? 'Approved' : 'Processed')}
+                        <button class="btn btn-primary btn-small" onclick="openProcessModal(${r.id})">Process</button>
+                    ` : (r.status === 'approved' ? '✅ Processed' : '❌ Rejected')}
                 </td>
             </tr>
         `).join('');
     }
 
     async function loadProcessedOrders() {
-        if (!supabaseClient) return;
-
         try {
-            const { data, error } = await supabaseClient
+            const { data, error } = await db
                 .from('supplier_purchase_orders')
                 .select('id, order_number, order_date, expected_delivery_date, total_amount, status')
                 .eq('supplier_id', currentUser.id)
-                .order('order_date', { ascending: false })
-                .limit(20);
+                .order('order_date', { ascending: false });
 
             if (error) throw error;
 
-            orders = data || [];
-            renderOrders();
+            processedOrders = data || [];
+            renderProcessedOrders();
         } catch (err) {
-            console.warn('Order history failed:', err.message);
-            document.getElementById('ordersTableBody').innerHTML =
-                '<tr><td colspan="5" class="empty-row">Order history not available</td></tr>';
+            document.getElementById('processedOrdersBody').innerHTML = 
+                `<tr><td colspan="5" class="error-message">History unavailable: ${err.message}</td></tr>`;
         }
     }
 
-    function renderOrders() {
-        const tbody = document.getElementById('ordersTableBody');
-        if (orders.length === 0) {
+    function renderProcessedOrders() {
+        const tbody = document.getElementById('processedOrdersBody');
+        if (processedOrders.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="empty-row">No processed orders yet</td></tr>';
             return;
         }
-        tbody.innerHTML = orders.map(o => `
+        tbody.innerHTML = processedOrders.map(o => `
             <tr>
                 <td>${o.order_number || o.id}</td>
-                <td>${fmtDate(o.order_date)}</td>
-                <td>${fmtDate(o.expected_delivery_date)}</td>
-                <td><strong>KES ${Number(o.total_amount || 0).toLocaleString()}</strong></td>
+                <td>${new Date(o.order_date).toLocaleDateString('en-KE')}</td>
+                <td>${o.expected_delivery_date ? new Date(o.expected_delivery_date).toLocaleDateString('en-KE') : '—'}</td>
+                <td><strong>KES ${Number(o.total_amount||0).toLocaleString()}</strong></td>
                 <td><span class="status-badge status-${o.status}">${o.status}</span></td>
             </tr>
         `).join('');
     }
 
-    async function acceptRequest(id) {
-        if (!confirm('Accept this supply request?')) return;
+    function openProcessModal(requestId) {
+        const req = supplyRequests.find(r => r.id === requestId);
+        if (!req) return alert('Request not found');
+
+        currentProcessingRequest = req;
+
+        document.getElementById('modalRequestDetails').innerHTML = `
+            <strong>Request #${req.request_number || req.id}</strong><br>
+            <strong>Item:</strong> ${req.item_name || '—'}<br>
+            <strong>Quantity / Unit:</strong> ${req.quantity || '—'} ${req.unit || ''}<br>
+            <strong>Priority:</strong> ${req.priority || '—'}<br>
+            <strong>Required by:</strong> ${req.required_by_date ? new Date(req.required_by_date).toLocaleDateString('en-KE') : '—'}<br>
+            <strong>From:</strong> ${req.requested_by_user?.full_name || '—'}<br>
+            <strong>Est. Cost:</strong> ${req.estimated_cost ? 'KES ' + Number(req.estimated_cost).toLocaleString() : '—'}<br>
+            <strong>Notes:</strong> ${req.notes || '—'}
+        `;
+
+        document.getElementById('agreedQty').value = req.quantity || 1;
+        document.getElementById('unitPrice').value = '';
+        const d = new Date(); d.setDate(d.getDate() + 7);
+        document.getElementById('deliveryDate').value = d.toISOString().split('T')[0];
+        document.getElementById('supplierNotes').value = '';
+
+        document.getElementById('processMessage').innerHTML = '';
+        document.getElementById('processModal').classList.add('open');
+    }
+
+    function closeProcessModal() {
+        document.getElementById('processModal').classList.remove('open');
+        currentProcessingRequest = null;
+    }
+
+    async function processOrder(e) {
+        e.preventDefault();
+        if (!currentProcessingRequest) return;
+
+        const qty = parseInt(document.getElementById('agreedQty').value) || 0;
+        const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+        const delivery = document.getElementById('deliveryDate').value;
+        const notes = document.getElementById('supplierNotes').value.trim();
+
+        if (qty < 1 || price <= 0 || !delivery) {
+            document.getElementById('processMessage').innerHTML = '<div class="error-msg">Please fill quantity, price and delivery date</div>';
+            return;
+        }
+
+        const total = qty * price;
+
         try {
-            const { error } = await supabaseClient
+            // Update request
+            const { error: reqErr } = await db
                 .from('supply_requests')
-                .update({
+                .update({ 
                     status: 'approved',
-                    approved_at: new Date().toISOString()
+                    approved_at: new Date().toISOString(),
+                    approved_by: currentUser.id,
+                    supplier_response: notes || null,
+                    supplier_responded_at: new Date().toISOString(),
+                    supplier_responded_by: currentUser.id
                 })
-                .eq('id', id)
+                .eq('id', currentProcessingRequest.id)
                 .eq('supplier_id', currentUser.id);
 
-            if (error) throw error;
-            await loadSupplyRequests();
-            showMessage('Request accepted', 'success');
+            if (reqErr) throw reqErr;
+
+            // Create purchase order
+            const orderNumber = 'PO-S-' + Date.now().toString().slice(-6);
+            const { data: orderData, error: orderErr } = await db
+                .from('supplier_purchase_orders')
+                .insert([{
+                    supplier_id: currentUser.id,
+                    order_number: orderNumber,
+                    order_date: new Date().toISOString().split('T')[0],
+                    expected_delivery_date: delivery,
+                    total_amount: total,
+                    status: 'pending',
+                    notes: notes || null
+                }])
+                .select()
+                .single();
+
+            if (orderErr) throw orderErr;
+
+            // Create order item
+            const { error: itemErr } = await db
+                .from('supplier_purchase_order_items')
+                .insert([{
+                    purchase_order_id: orderData.id,
+                    product_name: currentProcessingRequest.item_name || 'Supply Request Item',
+                    quantity: qty,
+                    unit_price: price,
+                    total: total
+                }]);
+
+            if (itemErr) throw itemErr;
+
+            closeProcessModal();
+            await Promise.all([loadSupplyRequests(), loadProcessedOrders()]);
+            showMessage('Order processed successfully!', 'success');
         } catch (err) {
-            showMessage('Accept failed: ' + err.message, 'error');
+            document.getElementById('processMessage').innerHTML = 
+                `<div class="error-msg">Processing failed: ${err.message}</div>`;
         }
-    }
-     const userRole = "buyer"; // get this dynamically from backend
-
-  if (userRole !== "supplier") {
-    document.querySelector(".suppliers-only").style.display = "none";
-  }
-
-    async function rejectRequest(id) {
-        const reason = prompt('Reason for rejection (optional):')?.trim();
-        try {
-            const { error } = await supabaseClient
-                .from('supply_requests')
-                .update({
-                    status: 'rejected',
-                    approved_at: null
-                })
-                .eq('id', id)
-                .eq('supplier_id', currentUser.id);
-
-            if (error) throw error;
-            await loadSupplyRequests();
-            showMessage('Request rejected', 'success');
-        } catch (err) {
-            showMessage('Reject failed: ' + err.message, 'error');
-        }
-    }
-
-    function fmtDate(d) {
-        if (!d) return '—';
-        return new Date(d).toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
     }
 
     function showMessage(text, type = 'success') {
         const msg = document.createElement('div');
         msg.className = type === 'success' ? 'success-msg' : 'error-msg';
         msg.textContent = text;
-        document.querySelector('.container').prepend(msg);
-        setTimeout(() => msg.remove(), 6000);
+        document.querySelector('.supplier-welcome').after(msg);
+        setTimeout(() => msg.remove(), 7000);
     }
 
     window.supplierPortal = {
-        acceptRequest,
-        rejectRequest
+        openProcessModal,
+        closeProcessModal
     };
-
 })();
 </script>
 <script src="assets/pwa-registration.js"></script>
