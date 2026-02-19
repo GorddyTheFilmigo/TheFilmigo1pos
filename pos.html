@@ -363,10 +363,10 @@
                 <p>Available points for <strong id="redeemCustomerName">—</strong>:</p>
                 <div class="redeem-available" id="redeemAvailablePoints">0 pts</div>
             </div>
-            <div class="redeem-conversion">💡 Conversion rate: <strong>10 points = KES 1 discount</strong></div>
+            <div class="redeem-conversion">💡 Conversion rate: <strong>50 points = KES 1 discount</strong></div>
             <div class="form-group">
                 <label>Points to redeem</label>
-                <input type="number" id="redeemPointsInput" min="10" step="10" placeholder="e.g. 100">
+                <input type="number" id="redeemPointsInput" min="50" step="50" placeholder="e.g. 100">
                 <small style="color:var(--text-muted);margin-top:6px;display:block;" id="redeemEquivalent">= KES 0.00 discount</small>
             </div>
             <div class="modal-actions">
@@ -678,9 +678,9 @@
             const input = document.getElementById('redeemPointsInput');
             const pts = parseInt(input.value) || 0;
             const available = selectedCustomer?.loyalty_points || 0;
-            if (pts < 10) { alert('Minimum redemption is 10 points.'); return; }
+            if (pts < 50) { alert('Minimum redemption is 50 points.'); return; }
             if (pts > available) { alert(`You only have ${available} points available.`); return; }
-            if (pts % 10 !== 0) { alert('Points must be in multiples of 10.'); return; }
+            if (pts % 50 !== 0) { alert('Points must be in multiples of 50.'); return; }
             redeemedPoints = pts;
             closeRedeemModal();
             renderRedeemBadge();

@@ -1,0 +1,45 @@
+<!-- subscribe.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subscribe to G&H Solutions</title>
+  <style>
+    body { font-family: 'Archivo', sans-serif; background:#0d1117; color:#e6edf3; text-align:center; padding:40px; }
+    .plans { display:flex; gap:30px; justify-content:center; flex-wrap:wrap; }
+    .plan { background:#161b22; border:1px solid #21262d; border-radius:12px; padding:32px; width:320px; }
+    .plan.recommended { border-color:#f59e0b; box-shadow:0 0 20px rgba(245,158,11,0.3); }
+    .btn { background:#f59e0b; color:black; padding:14px 28px; border:none; border-radius:8px; font-size:18px; cursor:pointer; margin-top:20px; }
+    .btn:hover { background:#e0b04a; }
+  </style>
+</head>
+<body>
+  <h1>Choose Your Plan</h1>
+  <p>Subscribe to unlock admin access</p>
+
+  <div class="plans">
+    <div class="plan">
+      <h2>Starter</h2>
+      <p style="font-size:2.2rem;margin:16px 0;">KES 1,500</p>
+      <p>per month</p>
+      <button class="btn" onclick="startSubscription('starter_plan_id')">Subscribe Monthly</button>
+    </div>
+
+    <div class="plan recommended">
+      <h2>Pro</h2>
+      <p style="font-size:2.2rem;margin:16px 0;">KES 14,400</p>
+      <p>per year • save 20%</p>
+      <button class="btn" onclick="startSubscription('pro_yearly_plan_id')">Subscribe Yearly</button>
+    </div>
+  </div>
+
+  <script>
+    function startSubscription(planId) {
+      // Redirect to Flutterwave hosted payment page
+      // Or use inline popup if preferred
+      window.location.href = `https://checkout.flutterwave.com/v3/hosted/pay?plan=${planId}`;
+      // Alternative: use Flutterwave JS SDK for inline
+    }
+  </script>
+</body>
+</html>
