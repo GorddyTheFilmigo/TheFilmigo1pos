@@ -406,13 +406,21 @@
         try {
             const shopId = getCurrentShopId();
 
-            // Fetch authenticated user ID with retries
-            let authUserId;
+            // Try Supabase auth first, then fall back to authModule user ID
+            let authUserId = null;
             try {
                 authUserId = await getCurrentAuthUserId();
+                console.log('[createExpense] Got Supabase auth user ID:', authUserId);
             } catch (authErr) {
-                console.error('Auth user ID fetch failed in createExpense:', authErr);
-                throw authErr;
+                console.warn('[createExpense] Supabase auth unavailable, trying authModule fallback:', authErr.message);
+                const localUser = authModule.getCurrentUser();
+                if (localUser && localUser.id) {
+                    authUserId = localUser.id;
+                    console.log('[createExpense] Using authModule user ID as fallback:', authUserId);
+                } else {
+                    console.warn('[createExpense] No user ID available, setting user_id to null');
+                    // user_id will be null — only works if your DB column allows nulls
+                }
             }
 
             const dataToInsert = {
@@ -421,7 +429,7 @@
                 description: expenseData.description,
                 date: expenseData.date,
                 shop_id: shopId,
-                user_id: authUserId,
+                user_id: authUserId,  // null if no auth available
                 created_at: new Date().toISOString()
             };
 
@@ -433,7 +441,22 @@
                 .select()
                 .single();
 
-            if (error) throw error;
+            if (error) {
+                // If FK constraint fails on user_id, retry with null
+                if (error.message && error.message.includes('foreign key') && authUserId !== null) {
+                    console.warn('[createExpense] FK constraint on user_id failed. Retrying with user_id = null...');
+                    const retryData = { ...dataToInsert, user_id: null };
+                    const { data: retryResult, error: retryError } = await window.DukaPOS.supabaseClient
+                        .from('expenses')
+                        .insert([retryData])
+                        .select()
+                        .single();
+                    if (retryError) throw retryError;
+                    console.log('✅ Expense created (user_id nulled):', retryResult);
+                    return { success: true, data: retryResult };
+                }
+                throw error;
+            }
 
             console.log('✅ Expense created:', data);
             return { success: true, data };

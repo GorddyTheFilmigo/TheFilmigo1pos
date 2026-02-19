@@ -316,10 +316,20 @@
         </div>
 
         <div class="dashboard-tabs">
-            <button class="dashboard-tab active" onclick="switchDashboardTab('analytics', this)">📈 Analytics</button>
-            <button class="dashboard-tab" onclick="switchDashboardTab('suppliers', this)">🏭 Supplier Orders</button>
-            <button class="dashboard-tab" onclick="switchDashboardTab('messaging', this)">💬 Staff Messaging</button>
-        </div>
+    <button class="dashboard-tab active" onclick="switchDashboardTab('analytics', this)">
+        📈 Analytics
+    </button>
+
+    <!-- Modified Supplier Orders Button -->
+    <button class="dashboard-tab" onclick="window.location.href='supply-requests.html'">
+        🏭 Supplier Orders
+    </button>
+
+    <button class="dashboard-tab" onclick="switchDashboardTab('messaging', this)">
+        💬 Staff Messaging
+    </button>
+</div>
+
 
         <!-- Analytics Tab -->
         <div id="analyticsTab" class="tab-content active">

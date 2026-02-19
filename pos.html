@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f59e0b">
     <title>G&H Solutions</title>
-    <!-- PWA META TAGS -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,7 +13,6 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
-    <!-- Offline Mode Styles -->
     <link rel="stylesheet" href="assets/offline-styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -33,561 +31,158 @@
             --accent-blue: #58a6ff;
             --accent-green: #3fb950;
             --danger: #f85149;
+            --accent-purple: #a371f7;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Archivo', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text);
-        }
-        /* Message Notification Styles */
-        .message-notification-bell {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.5rem;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-        .message-notification-bell:hover {
-            background: rgba(88, 166, 255, 0.1);
-        }
-        .message-badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: #f85149;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            box-shadow: 0 0 0 2px var(--bg-primary);
-            min-width: 20px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-        }
-        .messages-popup {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            width: 400px;
-            max-height: 500px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-        }
-        .messages-popup.active {
-            display: flex;
-        }
-        .messages-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .messages-header h3 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-        .close-popup {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-        }
-        .close-popup:hover {
-            background: rgba(248, 81, 73, 0.2);
-            color: var(--danger);
-        }
-        .messages-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            max-height: 400px;
-        }
-        .message-item {
-            background: rgba(88, 166, 255, 0.1);
-            border: 1px solid rgba(88, 166, 255, 0.3);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        .message-item.unread {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: rgba(245, 158, 11, 0.4);
-        }
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 8px;
-        }
-        .message-sender {
-            font-weight: 700;
-            color: var(--accent-orange);
-            font-size: 0.95rem;
-        }
-        .message-time {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .message-text {
-            color: var(--text);
-            line-height: 1.5;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
-        .message-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .message-expiry {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-        .mark-read-btn {
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .mark-read-btn:hover {
-            background: #2ea043;
-        }
-        .reply-btn {
-            background: var(--accent-blue);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .reply-btn:hover {
-            background: #1f6feb;
-        }
-        .empty-messages {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .empty-messages-icon {
-            font-size: 3rem;
-            margin-bottom: 12px;
-        }
-        @media (max-width: 768px) {
-            .messages-popup {
-                width: calc(100vw - 40px);
-                right: 20px;
-                max-height: 70vh;
-            }
-        }
+        body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); }
+
+        /* Message Notification */
+        .message-notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
+        .message-notification-bell:hover { background: rgba(88, 166, 255, 0.1); }
+        .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 20px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .messages-popup { position: fixed; top: 70px; right: 20px; width: 400px; max-height: 500px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; }
+        .messages-popup.active { display: flex; }
+        .messages-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .messages-header h3 { margin: 0; font-size: 1.1rem; }
+        .close-popup { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+        .close-popup:hover { background: rgba(248,81,73,0.2); color: var(--danger); }
+        .messages-list { flex: 1; overflow-y: auto; padding: 12px; max-height: 400px; }
+        .message-item { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+        .message-item.unread { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); }
+        .message-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
+        .message-sender { font-weight: 700; color: var(--accent-orange); font-size: 0.95rem; }
+        .message-time { font-size: 0.8rem; color: var(--text-muted); }
+        .message-text { color: var(--text); line-height: 1.5; margin-bottom: 8px; font-size: 0.95rem; }
+        .message-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .message-expiry { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
+        .mark-read-btn { background: var(--accent-green); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+        .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+        .empty-messages { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+        .empty-messages-icon { font-size: 3rem; margin-bottom: 12px; }
+
         /* Tab Navigation */
-        .pos-tabs {
-            display: flex;
-            gap: 10px;
-            padding: 15px 20px;
-            background: var(--bg-secondary);
-            border-bottom: 2px solid var(--border);
-        }
-        .pos-tab-btn {
-            padding: 12px 24px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
+        .pos-tabs { display: flex; gap: 10px; padding: 15px 20px; background: var(--bg-secondary); border-bottom: 2px solid var(--border); }
+        .pos-tab-btn { padding: 12px 24px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.2s; }
         .pos-tab-btn:hover { border-color: var(--accent-orange); }
-        .pos-tab-btn.active {
-            background: var(--accent-orange);
-            color: white;
-            border-color: var(--accent-orange);
-        }
+        .pos-tab-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        /* POS Section */
-        .pos-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 20px;
-            padding: 20px;
-            height: calc(100vh - 160px);
-        }
-        .products-section, .cart-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-        }
+
+        /* POS Layout */
+        .pos-container { display: grid; grid-template-columns: 1fr 420px; gap: 20px; padding: 20px; height: calc(100vh - 160px); }
+        .products-section, .cart-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
         .products-section { overflow-y: auto; }
-        .cart-section {
-            display: flex;
-            flex-direction: column;
-        }
-        .search-bar {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        .categories {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            overflow-x: auto;
-        }
-        .category-btn {
-            padding: 10px 20px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            cursor: pointer;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .category-btn.active {
-            background: var(--accent-orange);
-            color: white;
-        }
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-        }
-        .product-card {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-orange);
-        }
-        .product-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 10px;
-            font-size: 3rem;
-            line-height: 60px;
-        }
+        .cart-section { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
+
+        /* Customer Selector */
+        .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+        .customer-selector-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .customer-select-row { display: flex; gap: 8px; align-items: center; }
+        .customer-search-wrap { position: relative; flex: 1; }
+        .customer-search-input { width: 100%; padding: 9px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; font-family: 'Archivo', sans-serif; }
+        .customer-search-input:focus { outline: none; border-color: var(--accent-orange); }
+        .customer-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--accent-orange); border-radius: 8px; max-height: 180px; overflow-y: auto; z-index: 100; margin-top: 4px; display: none; }
+        .customer-dropdown.open { display: block; }
+        .customer-option { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .customer-option:hover { background: rgba(245,158,11,0.1); }
+        .customer-option:last-child { border-bottom: none; }
+        .customer-opt-name { font-weight: 600; }
+        .customer-opt-pts { font-size: 0.8rem; color: var(--accent-purple); margin-top: 2px; }
+        .clear-customer-btn { background: var(--danger); color: white; border: none; border-radius: 8px; padding: 9px 12px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap; }
+        .selected-customer-card { background: rgba(163,113,247,0.1); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 10px 14px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .selected-customer-info .cust-name { font-weight: 700; color: var(--accent-purple); font-size: 0.95rem; }
+        .selected-customer-info .cust-pts { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+        .redeem-btn { background: var(--accent-purple); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+        .redeem-btn:hover { background: #8b5cf6; }
+        .redeem-badge { background: rgba(163,113,247,0.2); border: 1px solid rgba(163,113,247,0.5); border-radius: 6px; padding: 6px 10px; margin-top: 8px; font-size: 0.82rem; color: var(--accent-purple); display: flex; justify-content: space-between; align-items: center; }
+        .remove-redeem { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; font-weight: 700; }
+
+        /* Products */
+        .search-bar { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; margin-bottom: 20px; }
+        .categories { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .category-btn { padding: 10px 20px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .category-btn.active { background: var(--accent-orange); color: white; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .product-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--accent-orange); }
+        .product-icon { width: 60px; height: 60px; margin: 0 auto 10px; font-size: 3rem; line-height: 60px; }
         .product-name { font-weight: 600; margin-bottom: 5px; }
-        .product-price {
-            color: var(--accent-orange);
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-        .product-stock {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-        .cart-header { margin-bottom: 20px; }
-        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 20px; }
-        .cart-item {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .product-price { color: var(--accent-orange); font-weight: 700; font-size: 1.2rem; }
+        .product-stock { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+
+        /* Cart */
+        .cart-header { margin-bottom: 12px; }
+        .cart-items { overflow-y: visible; margin-bottom: 12px; }
+        .cart-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .cart-item-info { flex: 1; }
         .cart-item-name { font-weight: 600; margin-bottom: 5px; }
         .cart-item-price { color: var(--text-muted); font-size: 0.9rem; }
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .qty-btn {
-            width: 30px;
-            height: 30px;
-            border: 1px solid var(--border);
-            background: var(--bg-tertiary);
-            color: var(--text);
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 700;
-        }
-        .qty-value {
-            min-width: 30px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .remove-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .cart-summary {
-            border-top: 2px solid var(--border);
-            padding-top: 15px;
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .summary-total {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--accent-orange);
-        }
-        .payment-methods {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .payment-btn {
-            padding: 12px;
-            border: 2px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .payment-btn.active {
-            border-color: var(--accent-green);
-            background: rgba(63, 185, 80, 0.1);
-        }
-        .checkout-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .checkout-btn:disabled {
-            background: var(--text-muted);
-            cursor: not-allowed;
-        }
-        .empty-cart {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        /* Expenses Section */
-        .expenses-container {
-            padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .expenses-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .add-expense-btn {
-            padding: 12px 24px;
-            background: var(--accent-green);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .expenses-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .stat-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--danger);
-        }
-        .expenses-list {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .expense-item {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .expense-info h4 {
-            margin-bottom: 5px;
-            font-size: 16px;
-        }
-        .expense-meta {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        .expense-amount {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--danger);
-        }
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
+        .cart-item-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 5px; cursor: pointer; font-weight: 700; }
+        .qty-value { min-width: 30px; text-align: center; font-weight: 600; }
+        .remove-btn { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+
+        /* Cart Summary */
+        .cart-summary { border-top: 2px solid var(--border); padding-top: 12px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .summary-row.discount { color: var(--accent-purple); }
+        .summary-total { font-size: 1.4rem; font-weight: 900; color: var(--accent-orange); }
+        .loyalty-earn-note { font-size: 0.8rem; color: var(--accent-green); margin-bottom: 8px; text-align: center; background: rgba(63,185,80,0.1); border-radius: 6px; padding: 6px; }
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .payment-btn { padding: 10px; border: 2px solid var(--border); background: var(--bg-primary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .payment-btn.active { border-color: var(--accent-green); background: rgba(63,185,80,0.1); }
+        .checkout-btn { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .checkout-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+        .empty-cart { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+
+        /* Expenses */
+        .expenses-container { padding: 20px; max-width: 1400px; margin: 0 auto; }
+        .expenses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .add-expense-btn { padding: 12px 24px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; }
+        .expenses-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .stat-label { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
+        .stat-value { font-size: 2rem; font-weight: 900; color: var(--danger); }
+        .expenses-list { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .expense-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .expense-info h4 { margin-bottom: 5px; font-size: 16px; }
+        .expense-meta { font-size: 13px; color: var(--text-muted); }
+        .expense-amount { font-size: 1.3rem; font-weight: 700; color: var(--danger); }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal.show { display: flex; }
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 2px solid var(--accent-green);
-            border-radius: 12px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .modal-header {
-            margin-bottom: 25px;
-        }
-        .modal-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 16px;
-            font-family: 'Archivo', sans-serif;
-        }
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .modal-btn-primary {
-            background: var(--accent-green);
-            color: white;
-        }
-        .modal-btn-secondary {
-            background: var(--danger);
-            color: white;
-        }
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        .modal-content { background: var(--bg-secondary); border: 2px solid var(--accent-green); border-radius: 12px; padding: 40px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { margin-bottom: 25px; }
+        .modal-header h2 { font-size: 1.8rem; margin-bottom: 5px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; font-family: 'Archivo', sans-serif; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
+        .modal-btn-primary { background: var(--accent-green); color: white; }
+        .modal-btn-secondary { background: var(--danger); color: white; }
+        .modal-icon { font-size: 4rem; margin-bottom: 20px; text-align: center; }
+
+        /* Success modal loyalty section */
+        .loyalty-earned { background: rgba(163,113,247,0.15); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 14px; margin: 16px 0; }
+        .loyalty-earned-title { color: var(--accent-purple); font-weight: 700; margin-bottom: 4px; }
+        .loyalty-earned-pts { font-size: 1.8rem; font-weight: 900; color: var(--accent-purple); }
+        .loyalty-total { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* Redeem Modal */
+        .redeem-modal-content { border-color: var(--accent-purple); }
+        .redeem-info { background: var(--bg-primary); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .redeem-info p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px; }
+        .redeem-available { font-size: 1.6rem; font-weight: 900; color: var(--accent-purple); }
+        .redeem-conversion { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; }
+
         @media (max-width: 900px) {
-            .pos-container {
-                grid-template-columns: 1fr;
-                height: auto;
-            }
-            .expenses-stats {
-                grid-template-columns: 1fr;
-            }
+            .pos-container { grid-template-columns: 1fr; height: auto; }
+            .expenses-stats { grid-template-columns: 1fr; }
+            .messages-popup { width: calc(100vw - 40px); right: 20px; max-height: 70vh; }
         }
     </style>
 </head>
@@ -606,36 +201,17 @@
             <div class="nav-right">
                 <div class="user-badge">
                     <div class="user-avatar">👤</div>
-                    <div>
-                        <div id="currentUserName">User</div>
-                    </div>
+                    <div><div id="currentUserName">User</div></div>
                 </div>
                 <div class="message-notification-bell" onclick="toggleMessagesPopup()" id="messageBell">
                     🔔
                     <span class="message-badge" id="messageBadge" style="display: none;">0</span>
                 </div>
-                <button
-                    onclick="authModule.logout()"
-                    style="
-                      padding: 10px 18px;
-                      background-color: #ef4444;
-                      color: #ffffff;
-                      border: none;
-                      border-radius: 8px;
-                      font-size: 14px;
-                      font-weight: 600;
-                      cursor: pointer;
-                      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-                      transition: all 0.2s ease;
-                    "
-                    onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
-                    onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
-                >
-                    Logout
-                </button>
+                <button onclick="authModule.logout()" style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'" onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
             </div>
         </div>
     </nav>
+
     <!-- Messages Popup -->
     <div class="messages-popup" id="messagesPopup">
         <div class="messages-header">
@@ -643,104 +219,102 @@
             <button class="close-popup" onclick="toggleMessagesPopup()">×</button>
         </div>
         <div class="messages-list" id="messagesList">
-            <div class="empty-messages">
-                <div class="empty-messages-icon">📭</div>
-                <p>Loading messages...</p>
-            </div>
+            <div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading messages...</p></div>
         </div>
     </div>
-    <!-- POS/Expenses Tab Navigation -->
+
+    <!-- Tab Navigation -->
     <div class="pos-tabs">
         <button class="pos-tab-btn active" onclick="switchTab('sales')">💰 Sales</button>
         <button class="pos-tab-btn" onclick="switchTab('expenses')">💸 Expenses</button>
     </div>
-    <!-- Sales Tab Content -->
+
+    <!-- Sales Tab -->
     <div id="salesTab" class="tab-content active">
         <div class="pos-container">
+            <!-- Products Panel -->
             <div class="products-section">
                 <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Search products...">
                 <div class="categories" id="categoriesContainer"></div>
                 <div class="products-grid" id="productsGrid">
-                    <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                        Loading products...
-                    </div>
+                    <div style="text-align:center;padding:40px;color:var(--text-muted);">Loading products...</div>
                 </div>
             </div>
+
+            <!-- Cart Panel -->
             <div class="cart-section">
                 <div class="cart-header">
-                    <h2>Shopping Cart</h2>
+                    <h2>🛒 Shopping Cart</h2>
                 </div>
-                <div class="cart-items" id="cartItems">
-                    <div class="empty-cart">
-                        <div style="font-size:3rem; margin-bottom:10px;">🛒</div>
-                        <p>Cart is empty</p>
+
+                <!-- Customer Selector -->
+                <div class="customer-selector">
+                    <div class="customer-selector-label">👤 Customer (optional — earns loyalty points)</div>
+                    <div class="customer-select-row">
+                        <div class="customer-search-wrap">
+                            <input type="text" class="customer-search-input" id="customerSearchInput" placeholder="Search customer by name or phone..." autocomplete="off">
+                            <div class="customer-dropdown" id="customerDropdown"></div>
+                        </div>
+                        <button class="clear-customer-btn" onclick="clearSelectedCustomer()">✕ Clear</button>
                     </div>
+                    <div id="selectedCustomerCard" style="display:none;"></div>
+                    <div id="redeemBadge" style="display:none;"></div>
                 </div>
+
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>
+                </div>
+
                 <div class="cart-summary">
-                    <div class="summary-row">
-                        <span>Items:</span>
-                        <span id="itemCount">0</span>
+                    <div class="summary-row"><span>Items:</span><span id="itemCount">0</span></div>
+                    <div class="summary-row"><span>Subtotal:</span><span id="subtotalAmount">KES 0.00</span></div>
+                    <div class="summary-row discount" id="discountRow" style="display:none;">
+                        <span>🎁 Loyalty Discount:</span>
+                        <span id="discountAmount">- KES 0.00</span>
                     </div>
                     <div class="summary-row">
                         <strong>Total:</strong>
                         <strong class="summary-total" id="totalAmount">KES 0.00</strong>
                     </div>
-                    <div class="payment-methods" style="margin-top:15px;">
+                    <div class="loyalty-earn-note" id="loyaltyEarnNote" style="display:none;"></div>
+                    <div class="payment-methods" style="margin-top:10px;">
                         <button class="payment-btn active" data-method="Cash">💵 Cash</button>
                         <button class="payment-btn" data-method="M-Pesa">📱 M-Pesa</button>
                         <button class="payment-btn" data-method="Card">💳 Card</button>
                         <button class="payment-btn" data-method="Credit">📋 Credit</button>
                     </div>
-                    <button class="checkout-btn" id="checkoutBtn" disabled>
-                        Complete Sale
-                    </button>
+                    <button class="checkout-btn" id="checkoutBtn" disabled>Complete Sale</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Expenses Tab Content -->
+
+    <!-- Expenses Tab -->
     <div id="expensesTab" class="tab-content">
         <div class="expenses-container">
             <div class="expenses-header">
                 <h1>💸 Expenses Tracking</h1>
-                <button class="add-expense-btn" onclick="openAddExpenseModal()">
-                    ➕ Add Expense
-                </button>
+                <button class="add-expense-btn" onclick="openAddExpenseModal()">➕ Add Expense</button>
             </div>
             <div class="expenses-stats">
-                <div class="stat-card">
-                    <div class="stat-label">📅 Today's Expenses</div>
-                    <div class="stat-value" id="todayExpenses">KES 0.00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">📆 This Week</div>
-                    <div class="stat-value" id="weekExpenses">KES 0.00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">📊 This Month</div>
-                    <div class="stat-value" id="monthExpenses">KES 0.00</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">📈 This Year</div>
-                    <div class="stat-value" id="yearExpenses">KES 0.00</div>
-                </div>
+                <div class="stat-card"><div class="stat-label">📅 Today's Expenses</div><div class="stat-value" id="todayExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📆 This Week</div><div class="stat-value" id="weekExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📊 This Month</div><div class="stat-value" id="monthExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📈 This Year</div><div class="stat-value" id="yearExpenses">KES 0.00</div></div>
             </div>
             <div class="expenses-list">
-                <h3 style="margin-bottom: 20px;">Recent Expenses</h3>
-                <div id="expensesList">
-                    <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                        Loading expenses...
-                    </div>
-                </div>
+                <h3 style="margin-bottom:20px;">Recent Expenses</h3>
+                <div id="expensesList"><div style="text-align:center;padding:40px;color:var(--text-muted);">Loading expenses...</div></div>
             </div>
         </div>
     </div>
+
     <!-- Add Expense Modal -->
     <div class="modal" id="addExpenseModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Add New Expense</h2>
-                <p style="color: var(--text-muted);">Record a business expense</p>
+                <p style="color:var(--text-muted);">Record a business expense</p>
             </div>
             <form id="expenseForm">
                 <div class="form-group">
@@ -777,14 +351,40 @@
             </form>
         </div>
     </div>
+
+    <!-- Redeem Points Modal -->
+    <div class="modal" id="redeemModal">
+        <div class="modal-content redeem-modal-content" style="border-color:var(--accent-purple);">
+            <div class="modal-header">
+                <h2>🎁 Redeem Loyalty Points</h2>
+                <p style="color:var(--text-muted);">Apply a discount using loyalty points</p>
+            </div>
+            <div class="redeem-info">
+                <p>Available points for <strong id="redeemCustomerName">—</strong>:</p>
+                <div class="redeem-available" id="redeemAvailablePoints">0 pts</div>
+            </div>
+            <div class="redeem-conversion">💡 Conversion rate: <strong>10 points = KES 1 discount</strong></div>
+            <div class="form-group">
+                <label>Points to redeem</label>
+                <input type="number" id="redeemPointsInput" min="10" step="10" placeholder="e.g. 100">
+                <small style="color:var(--text-muted);margin-top:6px;display:block;" id="redeemEquivalent">= KES 0.00 discount</small>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" style="background:var(--accent-purple);" onclick="applyRedemption()">Apply Discount</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeRedeemModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Modal -->
     <div class="modal" id="successModal">
-        <div class="modal-content" style="text-align: center;">
+        <div class="modal-content" style="text-align:center;">
             <div class="modal-icon">✅</div>
             <h2 style="margin-bottom:10px;">Sale Complete!</h2>
-            <p style="color:var(--text-muted); margin-bottom:20px;">Transaction processed successfully</p>
-            <div style="font-size:2rem; font-weight:900; color:var(--accent-green);" id="saleTotal">KES 0.00</div>
-            <button class="modal-btn modal-btn-primary" onclick="closeSuccessModal()" style="margin-top: 20px; width: 100%;">New Sale</button>
+            <p style="color:var(--text-muted);margin-bottom:10px;">Transaction processed successfully</p>
+            <div style="font-size:2rem;font-weight:900;color:var(--accent-green);" id="saleTotal">KES 0.00</div>
+            <div id="loyaltyEarnedSection" style="display:none;"></div>
+            <button class="modal-btn modal-btn-primary" onclick="closeSuccessModal()" style="margin-top:20px;width:100%;">New Sale</button>
         </div>
     </div>
 
@@ -794,154 +394,92 @@
     <script src="assets/data-module.js"></script>
     <script src="assets/messaging-module.js"></script>
     <script>
-    // Message notification functions (full code included)
+    // ─────────────────────────────────────────────
+    // LOYALTY CONFIG
+    // ─────────────────────────────────────────────
+    const POINTS_PER_KES = 1;        // 1 point per KES spent
+    const POINTS_TO_KES = 10;        // 10 points = KES 1 discount
+
+    // ─────────────────────────────────────────────
+    // MESSAGING
+    // ─────────────────────────────────────────────
     let messagesCheckInterval = null;
     function toggleMessagesPopup() {
         const popup = document.getElementById('messagesPopup');
-        const isActive = popup.classList.contains('active');
-        if (isActive) {
-            popup.classList.remove('active');
-        } else {
-            popup.classList.add('active');
-            loadUserMessages();
-        }
+        if (popup.classList.contains('active')) { popup.classList.remove('active'); }
+        else { popup.classList.add('active'); loadUserMessages(); }
     }
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function(e) {
         const popup = document.getElementById('messagesPopup');
         const bell = document.getElementById('messageBell');
         if (popup && bell && popup.classList.contains('active')) {
-            if (!popup.contains(event.target) && !bell.contains(event.target)) {
-                popup.classList.remove('active');
-            }
+            if (!popup.contains(e.target) && !bell.contains(e.target)) popup.classList.remove('active');
         }
     });
     async function loadUserMessages() {
         try {
             const result = await window.messagingModule.getAllMessages(20);
-            const messagesList = document.getElementById('messagesList');
+            const list = document.getElementById('messagesList');
             if (!result.success || result.data.length === 0) {
-                messagesList.innerHTML = `
-                    <div class="empty-messages">
-                        <div class="empty-messages-icon">📭</div>
-                        <p>No messages</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No messages</p></div>`;
                 return;
             }
-            messagesList.innerHTML = result.data.map(msg => {
+            list.innerHTML = result.data.map(msg => {
                 const sentAt = new Date(msg.created_at);
                 const expiresAt = new Date(msg.expires_at);
-                const now = new Date();
-                const hoursLeft = Math.round((expiresAt - now) / (1000 * 60 * 60));
-                const timeAgo = getTimeAgo(sentAt);
+                const hoursLeft = Math.round((expiresAt - new Date()) / 3600000);
                 const senderId = msg.sender?.id || 'unknown';
-                return `
-                    <div class="message-item ${msg.is_read ? '' : 'unread'}">
-                        <div class="message-header">
-                            <div class="message-sender">
-                                👤 ${msg.sender?.full_name || 'Administrator'}
-                            </div>
-                            <div class="message-time">${timeAgo}</div>
-                        </div>
-                        <div class="message-text">${escapeHtml(msg.message_text)}</div>
-                        <div class="message-footer">
-                            <div class="message-expiry">
-                                ${hoursLeft > 0 ? `Expires in ${hoursLeft}h` : 'Expired'}
-                            </div>
-                            <div>
-                                ${!msg.is_read ? `
-                                    <button class="mark-read-btn" onclick="markMessageRead(${msg.id})">
-                                        ✓ Mark as Read
-                                    </button>
-                                ` : ''}
-                                <button class="reply-btn" onclick="replyToMessage(${senderId})">
-                                    ↩ Reply
-                                </button>
-                            </div>
+                return `<div class="message-item ${msg.is_read ? '' : 'unread'}">
+                    <div class="message-header"><div class="message-sender">👤 ${msg.sender?.full_name || 'Administrator'}</div><div class="message-time">${getTimeAgo(sentAt)}</div></div>
+                    <div class="message-text">${escapeHtml(msg.message_text)}</div>
+                    <div class="message-footer">
+                        <div class="message-expiry">${hoursLeft > 0 ? `Expires in ${hoursLeft}h` : 'Expired'}</div>
+                        <div>
+                            ${!msg.is_read ? `<button class="mark-read-btn" onclick="markMessageRead(${msg.id})">✓ Mark as Read</button>` : ''}
+                            <button class="reply-btn" onclick="replyToMessage(${senderId})">↩ Reply</button>
                         </div>
                     </div>
-                `;
+                </div>`;
             }).join('');
-        } catch (err) {
-            console.error('Load messages error:', err);
-            document.getElementById('messagesList').innerHTML = `
-                <div class="empty-messages">
-                    <div class="empty-messages-icon">⚠️</div>
-                    <p>Error loading messages</p>
-                </div>
-            `;
-        }
+        } catch (err) { document.getElementById('messagesList').innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">⚠️</div><p>Error loading messages</p></div>`; }
     }
     async function replyToMessage(senderId) {
-        if (!senderId || senderId === 'unknown') {
-            alert("Cannot reply — sender information missing.");
-            return;
-        }
+        if (!senderId || senderId === 'unknown') { alert("Cannot reply — sender info missing."); return; }
         const replyText = prompt("Enter your reply:");
-        if (!replyText || replyText.trim() === "") return;
-        try {
-            const result = await window.messagingModule.sendMessage(senderId, replyText.trim());
-            if (result.success) {
-                alert("Reply sent successfully!");
-                loadUserMessages();
-                updateUnreadCount();
-            } else {
-                alert("Failed to send reply: " + (result.error || "Unknown error"));
-            }
-        } catch (err) {
-            console.error("Error sending reply:", err);
-            alert("Error sending reply. Check console for details.");
-        }
+        if (!replyText?.trim()) return;
+        const result = await window.messagingModule.sendMessage(senderId, replyText.trim());
+        if (result.success) { alert("Reply sent!"); loadUserMessages(); updateUnreadCount(); }
+        else alert("Failed to send reply: " + (result.error || "Unknown error"));
     }
     async function markMessageRead(messageId) {
-        try {
-            const result = await window.messagingModule.markAsRead(messageId);
-            if (result.success) {
-                loadUserMessages();
-                updateUnreadCount();
-            } else {
-                console.error('Failed to mark as read:', result.error);
-            }
-        } catch (err) {
-            console.error('Mark as read error:', err);
-        }
+        const result = await window.messagingModule.markAsRead(messageId);
+        if (result.success) { loadUserMessages(); updateUnreadCount(); }
     }
     async function updateUnreadCount() {
         try {
             const result = await window.messagingModule.getUnreadCount();
             const badge = document.getElementById('messageBadge');
-            if (result.success) {
-                const count = result.count || 0;
-                badge.textContent = count > 99 ? '99+' : count;
-                badge.style.display = count > 0 ? 'flex' : 'none';
-            } else {
-                badge.style.display = 'none';
-            }
-        } catch (err) {
-            console.error('Update unread count error:', err);
-            document.getElementById('messageBadge').style.display = 'none';
-        }
+            const count = result.success ? (result.count || 0) : 0;
+            badge.textContent = count > 99 ? '99+' : count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        } catch { document.getElementById('messageBadge').style.display = 'none'; }
     }
     function getTimeAgo(date) {
-        const seconds = Math.floor((new Date() - date) / 1000);
-        if (seconds < 60) return 'Just now';
-        if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-        if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-        if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-        return date.toLocaleDateString();
+        const s = Math.floor((new Date() - date) / 1000);
+        if (s < 60) return 'Just now';
+        if (s < 3600) return `${Math.floor(s/60)}m ago`;
+        if (s < 86400) return `${Math.floor(s/3600)}h ago`;
+        return `${Math.floor(s/86400)}d ago`;
     }
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+    function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
     function initializeMessageNotifications() {
         updateUnreadCount();
         messagesCheckInterval = setInterval(updateUnreadCount, 30000);
-        console.log('✅ Message notifications initialized');
     }
 
-    // Tab switching
+    // ─────────────────────────────────────────────
+    // TAB SWITCHING
+    // ─────────────────────────────────────────────
     function switchTab(tab) {
         document.querySelectorAll('.pos-tab-btn').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -955,188 +493,65 @@
         }
     }
 
-    // Expenses functions
-    function openAddExpenseModal() {
-        document.getElementById('expenseDate').valueAsDate = new Date();
-        document.getElementById('addExpenseModal').classList.add('show');
-        document.getElementById('saveExpenseBtn').disabled = false;
-        document.getElementById('saveExpenseBtn').textContent = 'Save Expense';
-    }
-
-    function closeAddExpenseModal() {
-        document.getElementById('addExpenseModal').classList.remove('show');
-        document.getElementById('expenseForm').reset();
-    }
-
+    // ─────────────────────────────────────────────
+    // EXPENSES
+    // ─────────────────────────────────────────────
+    function openAddExpenseModal() { document.getElementById('expenseDate').valueAsDate = new Date(); document.getElementById('addExpenseModal').classList.add('show'); document.getElementById('saveExpenseBtn').disabled = false; document.getElementById('saveExpenseBtn').textContent = 'Save Expense'; }
+    function closeAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('show'); document.getElementById('expenseForm').reset(); }
     async function loadExpenses() {
         try {
             const result = await window.dataModule.getAllExpenses();
             if (!result.success) throw new Error(result.error);
-            const expenses = result.data || [];
-            renderExpenses(expenses);
-            calculateExpenseStats(expenses);
-        } catch (error) {
-            console.error('Failed to load expenses:', error);
-            document.getElementById('expensesList').innerHTML =
-                '<div style="text-align:center; padding:40px; color:var(--danger);">Failed to load expenses</div>';
-        }
+            renderExpenses(result.data || []);
+            calculateExpenseStats(result.data || []);
+        } catch (e) { document.getElementById('expensesList').innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load expenses</div>'; }
     }
-
     function renderExpenses(expenses) {
-        const container = document.getElementById('expensesList');
-        if (expenses.length === 0) {
-            container.innerHTML = `
-                <div style="text-align:center; padding:40px; color:var(--text-muted);">
-                    <div style="font-size:3rem; margin-bottom:10px;">📊</div>
-                    <p>No expenses recorded yet</p>
-                </div>
-            `;
-            return;
-        }
-        container.innerHTML = expenses.map(expense => {
-            const date = new Date(expense.date);
-            const formattedDate = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            return `
-                <div class="expense-item">
-                    <div class="expense-info">
-                        <h4>${expense.category}</h4>
-                        <div class="expense-meta">
-                            ${expense.description} • ${formattedDate}
-                        </div>
-                    </div>
-                    <div class="expense-amount">KES ${parseFloat(expense.amount).toFixed(2)}</div>
-                </div>
-            `;
-        }).join('');
+        const c = document.getElementById('expensesList');
+        if (!expenses.length) { c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:10px;">📊</div><p>No expenses recorded yet</p></div>`; return; }
+        c.innerHTML = expenses.map(e => `<div class="expense-item"><div class="expense-info"><h4>${e.category}</h4><div class="expense-meta">${e.description} • ${new Date(e.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div></div><div class="expense-amount">KES ${parseFloat(e.amount).toFixed(2)}</div></div>`).join('');
     }
-
     function calculateExpenseStats(expenses) {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const weekStart = new Date(today);
-        weekStart.setDate(today.getDate() - today.getDay());
+        const weekStart = new Date(today); weekStart.setDate(today.getDate() - today.getDay());
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
         const yearStart = new Date(now.getFullYear(), 0, 1);
-        let todayTotal = 0, weekTotal = 0, monthTotal = 0, yearTotal = 0;
-        expenses.forEach(expense => {
-            const expenseDate = new Date(expense.date);
-            const amount = parseFloat(expense.amount);
-            if (expenseDate >= today) todayTotal += amount;
-            if (expenseDate >= weekStart) weekTotal += amount;
-            if (expenseDate >= monthStart) monthTotal += amount;
-            if (expenseDate >= yearStart) yearTotal += amount;
-        });
-        document.getElementById('todayExpenses').textContent = `KES ${todayTotal.toFixed(2)}`;
-        document.getElementById('weekExpenses').textContent = `KES ${weekTotal.toFixed(2)}`;
-        document.getElementById('monthExpenses').textContent = `KES ${monthTotal.toFixed(2)}`;
-        document.getElementById('yearExpenses').textContent = `KES ${yearTotal.toFixed(2)}`;
+        let t=0,w=0,m=0,y=0;
+        expenses.forEach(e => { const d = new Date(e.date); const a = parseFloat(e.amount); if(d>=today)t+=a; if(d>=weekStart)w+=a; if(d>=monthStart)m+=a; if(d>=yearStart)y+=a; });
+        document.getElementById('todayExpenses').textContent = `KES ${t.toFixed(2)}`;
+        document.getElementById('weekExpenses').textContent = `KES ${w.toFixed(2)}`;
+        document.getElementById('monthExpenses').textContent = `KES ${m.toFixed(2)}`;
+        document.getElementById('yearExpenses').textContent = `KES ${y.toFixed(2)}`;
     }
-
-    // FIXED Expense submit handler with maximum reliability
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const saveBtn = document.getElementById('saveExpenseBtn');
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Waiting for auth...';
-
-        let currentUser = null;
-        const maxWaitMs = 15000; // 15 seconds total
-        const pollInterval = 150; // check every 150 ms
-        const start = Date.now();
-
-        console.log('[Expense Auth Check] Starting robust authentication recovery...');
-
-        while (Date.now() - start < maxWaitMs) {
-            // Priority 1: authModule
-            currentUser = authModule.getCurrentUser();
-            if (currentUser && currentUser.id) {
-                console.log('[Expense Auth Check] SUCCESS - authModule returned valid user ID:', currentUser.id);
-                break;
-            }
-
-            // Priority 2: Direct localStorage read (most reliable in your setup)
-            const userJson = localStorage.getItem('duka_user');
-            if (userJson) {
-                try {
-                    const parsed = JSON.parse(userJson);
-                    if (parsed && parsed.id) {
-                        console.log('[Expense Auth Check] SUCCESS - localStorage direct parse found user ID:', parsed.id);
-                        currentUser = parsed;
-                        break;
-                    }
-                } catch (parseErr) {
-                    console.warn('[Expense Auth Check] localStorage JSON parse failed:', parseErr.message);
-                }
-            }
-
-            // Priority 3: Supabase session
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user && user.id) {
-                    console.log('[Expense Auth Check] SUCCESS - Supabase auth.getUser() recovered ID:', user.id);
-                    currentUser = {
-                        id: user.id,
-                        full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-                        role: user.user_metadata?.role || 'unknown'
-                    };
-                    break;
-                }
-            } catch (supaErr) {
-                console.warn('[Expense Auth Check] Supabase session check failed:', supaErr.message);
-            }
-
-            // Show retry feedback
-            if ((Date.now() - start) > 3000) {
-                saveBtn.textContent = 'Retrying auth...';
-            }
-
-            await new Promise(r => setTimeout(r, pollInterval));
-        }
-
-        if (!currentUser || !currentUser.id) {
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Save Expense';
-            alert('Could not detect your logged-in account after waiting.\n\nPlease:\n1. Refresh the page (Ctrl + F5 or Cmd + R)\n2. Log out completely\n3. Log back in\n\nIf the problem persists, check console for "[Expense Auth Check]" messages.');
-            console.error('[Expense Auth Check] FINAL FAILURE: No valid user ID after 15s wait');
-            return;
-        }
-
-        console.log('[Expense Auth Check] Authentication fully confirmed - user ID:', currentUser.id);
-
-        saveBtn.textContent = 'Saving expense...';
-
-        const expenseData = {
-            category: document.getElementById('expenseCategory').value,
-            amount: parseFloat(document.getElementById('expenseAmount').value),
-            description: document.getElementById('expenseDescription').value,
-            date: document.getElementById('expenseDate').value
-        };
-
+        const btn = document.getElementById('saveExpenseBtn');
+        btn.disabled = true; btn.textContent = 'Saving...';
+        let user = authModule.getCurrentUser();
+        if (!user) { const j = localStorage.getItem('duka_user'); if(j) try { user = JSON.parse(j); } catch{} }
+        if (!user?.id) { btn.disabled=false; btn.textContent='Save Expense'; alert('Session expired. Please log in again.'); return; }
         try {
-            const result = await window.dataModule.createExpense(expenseData);
+            const result = await window.dataModule.createExpense({ category: document.getElementById('expenseCategory').value, amount: parseFloat(document.getElementById('expenseAmount').value), description: document.getElementById('expenseDescription').value, date: document.getElementById('expenseDate').value });
             if (!result.success) throw new Error(result.error || 'Unknown error');
-
             closeAddExpenseModal();
             await loadExpenses();
             alert('✅ Expense added successfully!');
-        } catch (error) {
-            console.error('Failed to add expense:', error);
-            alert('❌ Failed to add expense: ' + (error.message || 'Unknown error'));
-        } finally {
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Save Expense';
-        }
+        } catch (err) { alert('❌ Failed to add expense: ' + err.message); }
+        finally { btn.disabled=false; btn.textContent='Save Expense'; }
     });
 
-    // Full POS functions (unchanged from your original)
+    // ─────────────────────────────────────────────
+    // POS CORE
+    // ─────────────────────────────────────────────
     (function() {
         let cart = [];
         let products = [];
+        let allCustomers = [];
+        let selectedCustomer = null;
+        let redeemedPoints = 0;
         let selectedPayment = 'Cash';
+
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
@@ -1144,18 +559,15 @@
                 if (!isAuthenticated) return;
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                if (window.setupNavigationForRole) {
-                    window.setupNavigationForRole();
-                }
-                await loadProducts();
+                if (window.setupNavigationForRole) window.setupNavigationForRole();
+                await Promise.all([loadProducts(), loadCustomers()]);
                 setupEventListeners();
                 setTimeout(initializeMessageNotifications, 1000);
                 console.log('✅ POS initialized');
-            } catch (err) {
-                console.error('POS init failed:', err);
-                alert('Failed to initialize POS: ' + err.message);
-            }
+            } catch (err) { console.error('POS init failed:', err); alert('Failed to initialize POS: ' + err.message); }
         });
+
+        // ── PRODUCTS ──
         async function loadProducts() {
             try {
                 const result = await window.dataModule.getAllProducts();
@@ -1163,221 +575,265 @@
                 products = result.data || [];
                 renderProducts(products);
                 renderCategoryButtons();
-                console.log('✅ Loaded products:', products.length);
-            } catch (error) {
-                console.error('Failed to load products:', error);
-                document.getElementById('productsGrid').innerHTML =
-                    '<div style="text-align:center; padding:40px; color:var(--danger);">Failed to load products</div>';
+            } catch (err) {
+                document.getElementById('productsGrid').innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load products</div>';
             }
         }
         function renderCategoryButtons() {
             const container = document.getElementById('categoriesContainer');
             container.innerHTML = '';
             const allBtn = document.createElement('button');
-            allBtn.className = 'category-btn active';
-            allBtn.dataset.category = 'All';
-            allBtn.textContent = 'All';
+            allBtn.className = 'category-btn active'; allBtn.dataset.category = 'All'; allBtn.textContent = 'All';
             container.appendChild(allBtn);
-            const uniqueCategories = [...new Set(
-                products.map(p => p.category).filter(c => c && c.trim() !== '')
-            )].sort();
-            uniqueCategories.forEach(cat => {
+            [...new Set(products.map(p => p.category).filter(c => c?.trim()))].sort().forEach(cat => {
                 const btn = document.createElement('button');
-                btn.className = 'category-btn';
-                btn.dataset.category = cat;
-                btn.textContent = cat;
+                btn.className = 'category-btn'; btn.dataset.category = cat; btn.textContent = cat;
                 container.appendChild(btn);
             });
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    const category = btn.dataset.category;
-                    const filtered = category === 'All'
-                        ? products
-                        : products.filter(p => p.category === category);
-                    renderProducts(filtered);
+                    const cat = btn.dataset.category;
+                    renderProducts(cat === 'All' ? products : products.filter(p => p.category === cat));
                 });
             });
         }
-        function renderProducts(productsToRender) {
+        function renderProducts(list) {
             const grid = document.getElementById('productsGrid');
-            if (productsToRender.length === 0) {
-                grid.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted);">No products found</div>';
-                return;
-            }
-            grid.innerHTML = productsToRender.map(product => `
-                <div class="product-card" onclick="addToCart(${product.id})">
-                    <div class="product-icon">${product.icon || '📦'}</div>
-                    <div class="product-name">${product.name}</div>
-                    <div class="product-price">KES ${product.price.toFixed(2)}</div>
-                    <div class="product-stock">Stock: ${product.stock}</div>
-                </div>
-            `).join('');
+            if (!list.length) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">No products found</div>'; return; }
+            grid.innerHTML = list.map(p => `<div class="product-card" onclick="addToCart(${p.id})"><div class="product-icon">${p.icon || '📦'}</div><div class="product-name">${p.name}</div><div class="product-price">KES ${p.price.toFixed(2)}</div><div class="product-stock">Stock: ${p.stock}</div></div>`).join('');
         }
+
+        // ── CUSTOMERS ──
+        async function loadCustomers() {
+            try {
+                const result = await window.dataModule.getAllCustomers();
+                if (!result.success) throw new Error(result.error);
+                allCustomers = result.data || [];
+                setupCustomerSearch();
+            } catch (err) { console.warn('Could not load customers:', err.message); }
+        }
+        function setupCustomerSearch() {
+            const input = document.getElementById('customerSearchInput');
+            const dropdown = document.getElementById('customerDropdown');
+            input.addEventListener('input', () => {
+                const q = input.value.trim().toLowerCase();
+                if (!q) { dropdown.classList.remove('open'); return; }
+                const matches = allCustomers.filter(c => c.name?.toLowerCase().includes(q) || c.phone?.includes(q)).slice(0, 8);
+                if (!matches.length) { dropdown.innerHTML = '<div class="customer-option" style="color:var(--text-muted);">No customers found</div>'; dropdown.classList.add('open'); return; }
+                dropdown.innerHTML = matches.map(c => `<div class="customer-option" onclick="selectCustomer(${c.id})"><div class="customer-opt-name">👤 ${c.name}</div><div class="customer-opt-pts">${c.phone || ''} • ${c.loyalty_points || 0} pts</div></div>`).join('');
+                dropdown.classList.add('open');
+            });
+            document.addEventListener('click', e => { if (!e.target.closest('.customer-search-wrap')) dropdown.classList.remove('open'); });
+        }
+        window.selectCustomer = function(id) {
+            selectedCustomer = allCustomers.find(c => c.id === id);
+            redeemedPoints = 0;
+            document.getElementById('customerSearchInput').value = selectedCustomer.name;
+            document.getElementById('customerDropdown').classList.remove('open');
+            renderSelectedCustomer();
+            updateCartSummary();
+        };
+        window.clearSelectedCustomer = function() {
+            selectedCustomer = null; redeemedPoints = 0;
+            document.getElementById('customerSearchInput').value = '';
+            document.getElementById('selectedCustomerCard').style.display = 'none';
+            document.getElementById('redeemBadge').style.display = 'none';
+            updateCartSummary();
+        };
+        function renderSelectedCustomer() {
+            if (!selectedCustomer) return;
+            const card = document.getElementById('selectedCustomerCard');
+            const pts = selectedCustomer.loyalty_points || 0;
+            card.style.display = 'flex';
+            card.innerHTML = `<div class="selected-customer-info"><div class="cust-name">👤 ${selectedCustomer.name}</div><div class="cust-pts">⭐ ${pts} loyalty points available</div></div>${pts >= 10 ? `<button class="redeem-btn" onclick="openRedeemModal()">🎁 Redeem</button>` : ''}`;
+            renderRedeemBadge();
+        }
+        function renderRedeemBadge() {
+            const badge = document.getElementById('redeemBadge');
+            if (redeemedPoints > 0) {
+                badge.style.display = 'flex';
+                badge.innerHTML = `<span>🎁 Redeeming ${redeemedPoints} pts = KES ${(redeemedPoints / POINTS_TO_KES).toFixed(2)} off</span><button class="remove-redeem" onclick="removeRedemption()">✕</button>`;
+            } else { badge.style.display = 'none'; }
+        }
+
+        // ── REDEEM MODAL ──
+        window.openRedeemModal = function() {
+            if (!selectedCustomer) return;
+            document.getElementById('redeemCustomerName').textContent = selectedCustomer.name;
+            document.getElementById('redeemAvailablePoints').textContent = `${selectedCustomer.loyalty_points || 0} pts`;
+            const input = document.getElementById('redeemPointsInput');
+            input.value = '';
+            input.max = selectedCustomer.loyalty_points || 0;
+            document.getElementById('redeemEquivalent').textContent = '= KES 0.00 discount';
+            input.oninput = () => {
+                const v = parseInt(input.value) || 0;
+                document.getElementById('redeemEquivalent').textContent = `= KES ${(v / POINTS_TO_KES).toFixed(2)} discount`;
+            };
+            document.getElementById('redeemModal').classList.add('show');
+        };
+        window.closeRedeemModal = function() { document.getElementById('redeemModal').classList.remove('show'); };
+        window.applyRedemption = function() {
+            const input = document.getElementById('redeemPointsInput');
+            const pts = parseInt(input.value) || 0;
+            const available = selectedCustomer?.loyalty_points || 0;
+            if (pts < 10) { alert('Minimum redemption is 10 points.'); return; }
+            if (pts > available) { alert(`You only have ${available} points available.`); return; }
+            if (pts % 10 !== 0) { alert('Points must be in multiples of 10.'); return; }
+            redeemedPoints = pts;
+            closeRedeemModal();
+            renderRedeemBadge();
+            updateCartSummary();
+        };
+        window.removeRedemption = function() { redeemedPoints = 0; renderRedeemBadge(); updateCartSummary(); };
+
+        // ── CART ──
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
-            if (product.stock <= 0) {
-                alert('Product out of stock!');
-                return;
-            }
-            const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                if (existingItem.quantity >= product.stock) {
-                    alert('Cannot add more than available stock!');
-                    return;
-                }
-                existingItem.quantity++;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    quantity: 1,
-                    maxStock: product.stock
-                });
-            }
+            if (product.stock <= 0) { alert('Product out of stock!'); return; }
+            const existing = cart.find(i => i.id === productId);
+            if (existing) { if (existing.quantity >= product.stock) { alert('Cannot add more than available stock!'); return; } existing.quantity++; }
+            else { cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, maxStock: product.stock }); }
             renderCart();
         };
         function renderCart() {
-            const cartContainer = document.getElementById('cartItems');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-            if (cart.length === 0) {
-                cartContainer.innerHTML = `
-                    <div class="empty-cart">
-                        <div style="font-size:3rem; margin-bottom:10px;">🛒</div>
-                        <p>Cart is empty</p>
-                    </div>
-                `;
-                checkoutBtn.disabled = true;
-                updateSummary();
-                return;
-            }
-            cartContainer.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">KES ${item.price.toFixed(2)} each</div>
-                    </div>
-                    <div class="cart-item-controls">
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <span class="qty-value">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
-                    </div>
-                </div>
-            `).join('');
-            checkoutBtn.disabled = false;
-            updateSummary();
+            const container = document.getElementById('cartItems');
+            const btn = document.getElementById('checkoutBtn');
+            if (!cart.length) { container.innerHTML = `<div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>`; btn.disabled = true; updateCartSummary(); return; }
+            container.innerHTML = cart.map(item => `<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">KES ${item.price.toFixed(2)} each</div></div><div class="cart-item-controls"><button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button><span class="qty-value">${item.quantity}</span><button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button><button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button></div></div>`).join('');
+            btn.disabled = false;
+            updateCartSummary();
         }
         window.updateQuantity = function(productId, change) {
             const item = cart.find(i => i.id === productId);
             if (!item) return;
             const newQty = item.quantity + change;
-            if (newQty <= 0) {
-                removeFromCart(productId);
-                return;
-            }
-            if (newQty > item.maxStock) {
-                alert('Cannot exceed available stock!');
-                return;
-            }
+            if (newQty <= 0) { removeFromCart(productId); return; }
+            if (newQty > item.maxStock) { alert('Cannot exceed available stock!'); return; }
             item.quantity = newQty;
             renderCart();
         };
-        window.removeFromCart = function(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            renderCart();
-        };
-        function updateSummary() {
-            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        window.removeFromCart = function(productId) { cart = cart.filter(i => i.id !== productId); renderCart(); };
+        function updateCartSummary() {
+            const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const discount = redeemedPoints / POINTS_TO_KES;
+            const total = Math.max(0, subtotal - discount);
+            const pointsEarned = Math.floor(total * POINTS_PER_KES);
             document.getElementById('itemCount').textContent = itemCount;
+            document.getElementById('subtotalAmount').textContent = `KES ${subtotal.toFixed(2)}`;
+            const discountRow = document.getElementById('discountRow');
+            if (discount > 0) { discountRow.style.display = 'flex'; document.getElementById('discountAmount').textContent = `- KES ${discount.toFixed(2)}`; }
+            else { discountRow.style.display = 'none'; }
             document.getElementById('totalAmount').textContent = `KES ${total.toFixed(2)}`;
+            const earnNote = document.getElementById('loyaltyEarnNote');
+            if (selectedCustomer && itemCount > 0) { earnNote.style.display = 'block'; earnNote.textContent = `⭐ ${selectedCustomer.name} will earn ${pointsEarned} loyalty point${pointsEarned !== 1 ? 's' : ''} on this purchase`; }
+            else { earnNote.style.display = 'none'; }
         }
+
+        // ── EVENTS ──
         function setupEventListeners() {
-            document.getElementById('searchInput').addEventListener('input', (e) => {
-                const search = e.target.value.toLowerCase();
-                const filtered = products.filter(p =>
-                    p.name.toLowerCase().includes(search) ||
-                    (p.category && p.category.toLowerCase().includes(search))
-                );
-                renderProducts(filtered);
+            document.getElementById('searchInput').addEventListener('input', e => {
+                const q = e.target.value.toLowerCase();
+                renderProducts(products.filter(p => p.name.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q)));
             });
             document.querySelectorAll('.payment-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    selectedPayment = btn.dataset.method;
-                });
+                btn.addEventListener('click', () => { document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedPayment = btn.dataset.method; });
             });
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
         }
+
+        // ── CHECKOUT ──
         async function checkout() {
-            if (cart.length === 0) return;
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            await processCheckout(cart, total, selectedPayment);
+            if (!cart.length) return;
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const discount = redeemedPoints / POINTS_TO_KES;
+            const total = Math.max(0, subtotal - discount);
+            await processCheckout(cart, subtotal, total, selectedPayment);
         }
-        async function processCheckout(cartItems, total, paymentMethod) {
+
+        async function processCheckout(cartItems, subtotal, total, paymentMethod) {
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-                const itemsSold = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                const saleItems = cartItems.map(item => ({
-                    product_id: item.id,
-                    quantity: item.quantity,
-                    unit_price: item.price
-                }));
-                const saleResult = await window.dataModule.createSale({
+                const itemsSold = cartItems.reduce((s, i) => s + i.quantity, 0);
+                const saleItems = cartItems.map(i => ({ product_id: i.id, quantity: i.quantity, unit_price: i.price }));
+
+                // Build sale record
+                const saleRecord = {
                     user_id: currentUser.id,
                     total_amount: total,
                     items_sold: itemsSold,
-                    payment_method: paymentMethod
-                }, saleItems);
+                    payment_method: paymentMethod,
+                    customer_id: selectedCustomer?.id || null,
+                    discount_amount: subtotal - total,
+                    points_redeemed: redeemedPoints
+                };
+
+                const saleResult = await window.dataModule.createSale(saleRecord, saleItems);
                 if (!saleResult.success) throw new Error(saleResult.error);
-                let stockUpdateFailed = false;
-                let failedProducts = [];
+
+                // Update stock
+                let stockFailed = [];
                 for (const item of cartItems) {
-                    const updateResult = await window.dataModule.updateInventory(
-                        item.id,
-                        item.quantity,
-                        'subtract'
-                    );
-                    if (!updateResult.success) {
-                        console.warn(`Stock update failed for product ${item.id} (${item.name}): ${updateResult.error}`);
-                        stockUpdateFailed = true;
-                        failedProducts.push(item.name);
+                    const r = await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
+                    if (!r.success) stockFailed.push(item.name);
+                }
+                if (stockFailed.length) alert('Sale complete, but stock update failed for: ' + stockFailed.join(', '));
+
+                // ── LOYALTY POINTS ──
+                let pointsEarned = 0;
+                let newTotalPoints = 0;
+                if (selectedCustomer) {
+                    pointsEarned = Math.floor(total * POINTS_PER_KES);
+                    const currentPts = selectedCustomer.loyalty_points || 0;
+                    const pointsAfterRedeem = Math.max(0, currentPts - redeemedPoints);
+                    newTotalPoints = pointsAfterRedeem + pointsEarned;
+
+                    const loyaltyResult = await window.dataModule.updateCustomer(selectedCustomer.id, { loyalty_points: newTotalPoints });
+                    if (!loyaltyResult.success) console.warn('Loyalty points update failed:', loyaltyResult.error);
+                    else {
+                        // Update local allCustomers cache
+                        const idx = allCustomers.findIndex(c => c.id === selectedCustomer.id);
+                        if (idx !== -1) allCustomers[idx].loyalty_points = newTotalPoints;
+                        console.log(`✅ Loyalty: -${redeemedPoints} redeemed, +${pointsEarned} earned → total ${newTotalPoints}`);
                     }
                 }
-                if (stockUpdateFailed) {
-                    alert(
-                        'Sale completed successfully, but stock could not be updated for:\n' +
-                        failedProducts.join(', ') +
-                        '\n\nPlease check inventory manually or contact support.'
-                    );
-                }
+
+                // Show success
                 document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
+                const loyaltySection = document.getElementById('loyaltyEarnedSection');
+                if (selectedCustomer && (pointsEarned > 0 || redeemedPoints > 0)) {
+                    loyaltySection.style.display = 'block';
+                    loyaltySection.innerHTML = `<div class="loyalty-earned">
+                        <div class="loyalty-earned-title">⭐ Loyalty Points for ${selectedCustomer.name}</div>
+                        ${redeemedPoints > 0 ? `<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px;">🎁 Redeemed: ${redeemedPoints} pts (KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off)</div>` : ''}
+                        <div class="loyalty-earned-pts">+${pointsEarned} pts earned</div>
+                        <div class="loyalty-total">Total balance: ${newTotalPoints} pts</div>
+                    </div>`;
+                } else { loyaltySection.style.display = 'none'; }
+
                 document.getElementById('successModal').classList.add('show');
+
+                // Reset
                 cart = [];
+                selectedCustomer = null;
+                redeemedPoints = 0;
+                document.getElementById('customerSearchInput').value = '';
+                document.getElementById('selectedCustomerCard').style.display = 'none';
+                document.getElementById('redeemBadge').style.display = 'none';
                 renderCart();
                 await loadProducts();
-                return { success: true, sale: saleResult.data };
-            } catch (error) {
-                console.error('Checkout error:', error);
-                alert('Checkout failed: ' + error.message);
-                return { success: false, error: error.message };
-            }
+
+            } catch (err) { console.error('Checkout error:', err); alert('Checkout failed: ' + err.message); }
         }
-        window.closeSuccessModal = function() {
-            document.getElementById('successModal').classList.remove('show');
-        };
+
+        window.closeSuccessModal = function() { document.getElementById('successModal').classList.remove('show'); };
     })();
-    window.addEventListener('beforeunload', () => {
-        if (messagesCheckInterval) {
-            clearInterval(messagesCheckInterval);
-        }
-    });
+
+    window.addEventListener('beforeunload', () => { if (messagesCheckInterval) clearInterval(messagesCheckInterval); });
     </script>
 </body>
 </html>
