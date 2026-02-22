@@ -1,12 +1,13 @@
 // ═══════════════════════════════════════════════════════════════════
 // G&H Solutions POS — Service Worker
+// v1.0.2 — Network-first for HTML/JS so Vercel deploys take effect immediately
 // ═══════════════════════════════════════════════════════════════════
 
-const APP_VERSION  = 'gh-pos-v1.0.1';   // ← bump this to force cache refresh
-const SHELL_CACHE  = `${APP_VERSION}-shell`;
-const IMAGE_CACHE  = `${APP_VERSION}-images`;
+const APP_VERSION = 'gh-pos-v1.0.2';  // ← bumped to bust old stale cache
+const SHELL_CACHE = `${APP_VERSION}-shell`;
+const IMAGE_CACHE = `${APP_VERSION}-images`;
 
-// ── App shell: only include files that ACTUALLY EXIST on the server ─
+// ── App shell files to pre-cache ────────────────────────────────────
 const SHELL_FILES = [
   '/',
   '/pos.html',
@@ -15,10 +16,11 @@ const SHELL_FILES = [
   '/inventory.html',
   '/customers.html',
   '/admin.html',
+  '/suppliers.html',
+  '/supply-requests.html',
   '/manifest.json',
   '/offline.html',
 
-  // Assets
   '/assets/script.js',
   '/assets/auth.js',
   '/assets/nav-styles.css',
@@ -28,16 +30,15 @@ const SHELL_FILES = [
   '/assets/subscription-module.js',
   '/assets/page-access-guard.js',
   '/assets/nav-visibility-controller.js',
-  '/assets/nav-role-manager.js',
   '/assets/sales-analytics.js',
   '/assets/supplier-orders-module.js',
+  '/assets/offline-manager.js',
 
-  // ✅ Only icons confirmed to exist — add more here once uploaded
   '/assets/icons/icon-192x192.png',
   '/assets/icons/icon-512x512.png',
 ];
 
-// ── Hosts that should NEVER be cached ───────────────────────────────
+// ── Never cache these hosts ──────────────────────────────────────────
 const NETWORK_ONLY_HOSTS = [
   'supabase.co',
   'supabase.in',
@@ -45,7 +46,24 @@ const NETWORK_ONLY_HOSTS = [
   'sandbox.intasend.com',
   'payment.intasend.com',
   'cdn.jsdelivr.net',
+  'fonts.googleapis.com',
+  'fonts.gstatic.com',
 ];
+
+// ── Network-first files — always fetch fresh from server ─────────────
+// HTML and JS must be network-first so Vercel deployments take effect
+// immediately. The old cache-first strategy was serving stale auth.js
+// after deploys — that was the root cause of the reload loop on Vercel.
+function isNetworkFirst(url) {
+  try {
+    const { pathname } = new URL(url);
+    return (
+      pathname.endsWith('.html') ||
+      pathname.endsWith('.js')   ||
+      pathname === '/'
+    );
+  } catch { return false; }
+}
 
 function isNetworkOnly(url) {
   try {
@@ -61,8 +79,7 @@ function isImage(url) {
 }
 
 // ════════════════════════════════════════════════════════════════════
-// INSTALL — pre-cache the app shell
-// FIX: Use Promise.allSettled so one missing file doesn't crash everything
+// INSTALL — pre-cache app shell
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('install', event => {
   console.log(`[SW] Installing ${APP_VERSION}`);
@@ -71,18 +88,18 @@ self.addEventListener('install', event => {
       Promise.allSettled(
         SHELL_FILES.map(url =>
           cache.add(new Request(url, { cache: 'reload' }))
-               .catch(err => console.warn(`[SW] Skipped caching ${url}: ${err.message}`))
+               .catch(err => console.warn(`[SW] Skipped: ${url} — ${err.message}`))
         )
       )
     ).then(() => {
-      console.log(`[SW] Install complete — skipping waiting`);
+      console.log(`[SW] Install complete`);
       return self.skipWaiting();
     })
   );
 });
 
 // ════════════════════════════════════════════════════════════════════
-// ACTIVATE — delete old caches
+// ACTIVATE — delete ALL old caches
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('activate', event => {
   console.log(`[SW] Activating ${APP_VERSION}`);
@@ -91,14 +108,17 @@ self.addEventListener('activate', event => {
       Promise.all(
         keys
           .filter(k => k !== SHELL_CACHE && k !== IMAGE_CACHE)
-          .map(k  => { console.log('[SW] Deleting old cache:', k); return caches.delete(k); })
+          .map(k => {
+            console.log('[SW] Deleting old cache:', k);
+            return caches.delete(k);
+          })
       )
     ).then(() => self.clients.claim())
   );
 });
 
 // ════════════════════════════════════════════════════════════════════
-// FETCH — route requests by strategy
+// FETCH — smart routing by file type
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('fetch', event => {
   const { request } = event;
@@ -106,13 +126,38 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   if (request.url.startsWith('chrome-extension://')) return;
 
-  // ── Network only (Supabase, IntaSend, CDNs) ──────────────────────
+  // ── 1. Network only (Supabase, payments, CDNs, fonts) ────────────
   if (isNetworkOnly(request.url)) {
     event.respondWith(fetch(request));
     return;
   }
 
-  // ── Images: cache-first, store in image cache ─────────────────────
+  // ── 2. HTML + JS = Network-first ─────────────────────────────────
+  // Always try the network first so fresh Vercel deployments are used.
+  // If offline, fall back to cache.
+  if (isNetworkFirst(request.url)) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(SHELL_CACHE).then(c => c.put(request, clone));
+          }
+          return response;
+        })
+        .catch(async () => {
+          const cached = await caches.match(request);
+          if (cached) return cached;
+          if (request.url.endsWith('.html') || new URL(request.url).pathname === '/') {
+            return caches.match('/offline.html') || offlineFallback();
+          }
+          return new Response('', { status: 503 });
+        })
+    );
+    return;
+  }
+
+  // ── 3. Images = Cache-first ───────────────────────────────────────
   if (isImage(request.url)) {
     event.respondWith(
       caches.open(IMAGE_CACHE).then(async cache => {
@@ -130,19 +175,10 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // ── App shell: cache-first, network-fallback, offline page ────────
+  // ── 4. Everything else (CSS etc) = Cache-first, network fallback ──
   event.respondWith(
     caches.match(request).then(async cached => {
-      if (cached) {
-        // Revalidate in background (stale-while-revalidate)
-        fetch(request).then(response => {
-          if (response.ok) {
-            caches.open(SHELL_CACHE).then(c => c.put(request, response));
-          }
-        }).catch(() => {});
-        return cached;
-      }
-
+      if (cached) return cached;
       try {
         const response = await fetch(request);
         if (response.ok) {
@@ -151,24 +187,26 @@ self.addEventListener('fetch', event => {
         }
         return response;
       } catch {
-        const offlinePage = await caches.match('/offline.html');
-        if (offlinePage) return offlinePage;
-        return new Response(
-          '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Offline</title></head>' +
-          '<body style="font-family:sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;">' +
-          '<div><div style="font-size:4rem;">📵</div><h2>You\'re offline</h2>' +
-          '<p style="color:#8b949e;">G&H Solutions POS needs a connection to load this page.<br>Please check your internet and try again.</p>' +
-          '<button onclick="location.reload()" style="margin-top:20px;padding:12px 28px;background:#f59e0b;color:#000;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">Retry</button>' +
-          '</div></body></html>',
-          { status: 200, headers: { 'Content-Type': 'text/html' } }
-        );
+        return offlineFallback();
       }
     })
   );
 });
 
+function offlineFallback() {
+  return new Response(
+    '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Offline</title></head>' +
+    '<body style="font-family:sans-serif;background:#0d1117;color:#e6edf3;display:flex;align-items:center;justify-content:center;height:100vh;text-align:center;">' +
+    '<div><div style="font-size:4rem;">📵</div><h2>You\'re offline</h2>' +
+    '<p style="color:#8b949e;">G&H Solutions POS needs a connection to load.<br>Please check your internet and try again.</p>' +
+    '<button onclick="location.reload()" style="margin-top:20px;padding:12px 28px;background:#f59e0b;color:#000;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">Retry</button>' +
+    '</div></body></html>',
+    { status: 200, headers: { 'Content-Type': 'text/html' } }
+  );
+}
+
 // ════════════════════════════════════════════════════════════════════
-// MESSAGE — allow pages to trigger cache refresh
+// MESSAGE — manual cache control from pages
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('message', event => {
   if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
