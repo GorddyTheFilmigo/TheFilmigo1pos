@@ -1,28 +1,37 @@
 // ═══════════════════════════════════════════════════════════════════
-// G&H Solutions POS — PWA Registration
+// G&H Solutions POS — PWA Registration (Combined & Fixed Version)
 // File: assets/pwa-register.js
 //
-// Usage: Add ONE script tag to every HTML page, just before </body>:
-// <script src="assets/pwa-register.js"></script>
-//
-// This handles:
+// This single file now includes:
+// • Protocol check for local development (file://)
 // • Service worker registration
-// • Install prompt (custom "Add to Home Screen" banner)
-// • Update detection with user notification
-// • iOS install instructions (Safari doesn't support install prompt)
+// • Install prompt banner (Android/Chrome/Edge)
+// • iOS manual install instructions
+// • Update detection + toast + skipWaiting
+// • Prevents infinite reload loop with { once: true }
+// • Standalone mode detection
 // ═══════════════════════════════════════════════════════════════════
 (function () {
     'use strict';
 
-    // ── 1. REGISTER SERVICE WORKER ──────────────────────────────────
+    // ── Skip on local file:// protocol (prevents errors during dev)
+    if (window.location.protocol === 'file:') {
+        console.log('⚠️ PWA: Service Worker not supported on file:// protocol');
+        console.log('💡 To enable offline mode, run on a web server (http:// or https://)');
+        console.log('📌 Tip: Use VS Code Live Server extension for local development');
+        return;
+    }
+
+    // ── Check if service workers are supported
     if (!('serviceWorker' in navigator)) {
-        console.log('[PWA] Service workers not supported');
+        console.log('[PWA] Service workers not supported in this browser');
         return;
     }
 
     let _swRegistration = null;
     let _installPrompt = null; // saved beforeinstallprompt event
 
+    // ── 1. REGISTER SERVICE WORKER ──────────────────────────────────
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
         .then(reg => {
             _swRegistration = reg;
@@ -39,14 +48,17 @@
                 });
             });
         })
-        .catch(err => console.warn('[PWA] Service worker registration failed:', err));
+        .catch(err => {
+            console.warn('[PWA] Service worker registration failed:', err);
+            console.log('💡 This is normal if not running on a web server (https://)');
+        });
 
     // When the SW controller changes (after skipWaiting), reload — but only once
     navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
-    }, { once: true });   // ← THIS PREVENTS THE INFINITE RELOAD LOOP
+    }, { once: true });  // ← Prevents infinite reload loop
 
-    // ── 2. CAPTURE INSTALL PROMPT ───────────────────────────────────
+    // ── 2. CAPTURE INSTALL PROMPT (Android/Chrome/Edge) ──────────────
     window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault(); // stop the default mini-infobar
         _installPrompt = e;
@@ -54,7 +66,7 @@
         showInstallBanner();
     });
 
-    // ── 3. DETECT WHEN ALREADY INSTALLED ────────────────────────────
+    // ── 3. DETECT WHEN APP IS INSTALLED ─────────────────────────────
     window.addEventListener('appinstalled', () => {
         console.log('[PWA] App installed!');
         _installPrompt = null;
@@ -62,7 +74,7 @@
         removeIosBanner();
     });
 
-    // If already running as standalone PWA, nothing to show
+    // If already running as standalone PWA, skip banners
     if (window.matchMedia('(display-mode: standalone)').matches ||
         window.navigator.standalone === true) {
         console.log('[PWA] Running in standalone mode');
@@ -74,7 +86,6 @@
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
     if (isIos && isSafari && !localStorage.getItem('gh_ios_banner_dismissed')) {
-        // Small delay so the page fully loads first
         setTimeout(showIosBanner, 2500);
     }
 
@@ -86,7 +97,6 @@
 
         const banner = document.createElement('div');
         banner.id = 'gh-install-banner';
-
         Object.assign(banner.style, {
             position: 'fixed',
             bottom: '20px',
@@ -139,7 +149,6 @@
 
         document.getElementById('gh-ib-dismiss-btn').addEventListener('click', () => {
             removeInstallBanner();
-            // Remember dismissal for 7 days
             localStorage.setItem('gh_install_dismissed_until', Date.now() + 7 * 86400000);
         });
     }
@@ -156,7 +165,6 @@
 
         const banner = document.createElement('div');
         banner.id = 'gh-ios-banner';
-
         Object.assign(banner.style, {
             position: 'fixed',
             bottom: '0',
@@ -209,7 +217,6 @@
 
         const toast = document.createElement('div');
         toast.id = 'gh-update-toast';
-
         Object.assign(toast.style, {
             position: 'fixed',
             top: '76px',
@@ -249,14 +256,14 @@
             toast.remove();
         });
 
-        // Auto-dismiss after 30s
         setTimeout(() => toast.remove(), 30000);
     }
 
-    // ── Expose a global for manual cache clear (useful in dev) ──────
+    // ── Expose global helpers (useful for debugging) ────────────────
     window.GH_PWA = {
         clearCache: () => navigator.serviceWorker.controller?.postMessage({ type: 'CLEAR_CACHE' }),
         checkUpdate: () => _swRegistration?.update(),
     };
 
+    console.log('🔧 PWA: Registration script loaded');
 })();
