@@ -777,7 +777,10 @@
                 setInterval(updateBellBadge, 30000);
 
                 waitFor(() => window.messagingModule, () => { loadUsersForMessaging(); loadSentMessages(); });
-                waitFor(() => window.supplierOrdersModule, () => loadSupplierOrders());
+
+            // ✅ FIX: Auth is fully done here — shop context is guaranteed ready
+             // waitFor only checks if the module exists, not if auth/shop is ready
+                setTimeout(() => loadSupplierOrders(), 500);
 
                 console.log('✅ Dashboard initialized');
             } catch (err) {
@@ -1008,4 +1011,4 @@
     }
     </script>
 </body>
-</html>
+</html>s
