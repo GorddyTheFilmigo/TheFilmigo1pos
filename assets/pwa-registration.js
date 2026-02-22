@@ -3,15 +3,14 @@
 // File: assets/pwa-register.js
 //
 // Usage: Add ONE script tag to every HTML page, just before </body>:
-//   <script src="assets/pwa-register.js"></script>
+// <script src="assets/pwa-register.js"></script>
 //
 // This handles:
-//   • Service worker registration
-//   • Install prompt (custom "Add to Home Screen" banner)
-//   • Update detection with user notification
-//   • iOS install instructions (Safari doesn't support install prompt)
+// • Service worker registration
+// • Install prompt (custom "Add to Home Screen" banner)
+// • Update detection with user notification
+// • iOS install instructions (Safari doesn't support install prompt)
 // ═══════════════════════════════════════════════════════════════════
-
 (function () {
     'use strict';
 
@@ -22,7 +21,7 @@
     }
 
     let _swRegistration = null;
-    let _installPrompt  = null;  // saved beforeinstallprompt event
+    let _installPrompt = null; // saved beforeinstallprompt event
 
     navigator.serviceWorker.register('/sw.js', { scope: '/' })
         .then(reg => {
@@ -42,15 +41,14 @@
         })
         .catch(err => console.warn('[PWA] Service worker registration failed:', err));
 
-    // When the SW controller changes (after skipWaiting), reload
-    let _refreshing = false;
+    // When the SW controller changes (after skipWaiting), reload — but only once
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!_refreshing) { _refreshing = true; window.location.reload(); }
-    });
+        window.location.reload();
+    }, { once: true });   // ← THIS PREVENTS THE INFINITE RELOAD LOOP
 
     // ── 2. CAPTURE INSTALL PROMPT ───────────────────────────────────
     window.addEventListener('beforeinstallprompt', e => {
-        e.preventDefault();         // stop the default mini-infobar
+        e.preventDefault(); // stop the default mini-infobar
         _installPrompt = e;
         console.log('[PWA] Install prompt captured');
         showInstallBanner();
@@ -74,6 +72,7 @@
     // ── 4. iOS SAFARI: manual instructions banner ───────────────────
     const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     if (isIos && isSafari && !localStorage.getItem('gh_ios_banner_dismissed')) {
         // Small delay so the page fully loads first
         setTimeout(showIosBanner, 2500);
@@ -87,24 +86,25 @@
 
         const banner = document.createElement('div');
         banner.id = 'gh-install-banner';
+
         Object.assign(banner.style, {
-            position:     'fixed',
-            bottom:       '20px',
-            left:         '50%',
-            transform:    'translateX(-50%)',
-            zIndex:       '99999',
-            background:   '#161b22',
-            border:       '1px solid #f59e0b',
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: '99999',
+            background: '#161b22',
+            border: '1px solid #f59e0b',
             borderRadius: '12px',
-            padding:      '16px 20px',
-            display:      'flex',
-            alignItems:   'center',
-            gap:          '14px',
-            boxShadow:    '0 8px 32px rgba(0,0,0,0.6)',
-            maxWidth:     '420px',
-            width:        'calc(100% - 40px)',
-            fontFamily:   'Archivo, sans-serif',
-            animation:    'ghSlideUp 0.4s ease',
+            padding: '16px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+            maxWidth: '420px',
+            width: 'calc(100% - 40px)',
+            fontFamily: 'Archivo, sans-serif',
+            animation: 'ghSlideUp 0.4s ease',
         });
 
         banner.innerHTML = `
@@ -156,18 +156,19 @@
 
         const banner = document.createElement('div');
         banner.id = 'gh-ios-banner';
+
         Object.assign(banner.style, {
-            position:     'fixed',
-            bottom:       '0',
-            left:         '0',
-            right:        '0',
-            zIndex:       '99999',
-            background:   '#161b22',
-            borderTop:    '1px solid #f59e0b',
-            padding:      '16px 20px 20px',
-            fontFamily:   'Archivo, sans-serif',
-            textAlign:    'center',
-            boxShadow:    '0 -4px 24px rgba(0,0,0,0.5)',
+            position: 'fixed',
+            bottom: '0',
+            left: '0',
+            right: '0',
+            zIndex: '99999',
+            background: '#161b22',
+            borderTop: '1px solid #f59e0b',
+            padding: '16px 20px 20px',
+            fontFamily: 'Archivo, sans-serif',
+            textAlign: 'center',
+            boxShadow: '0 -4px 24px rgba(0,0,0,0.5)',
         });
 
         banner.innerHTML = `
@@ -176,9 +177,9 @@
                 <button id="gh-ios-close" style="background:none;border:none;color:#8b949e;font-size:1.4rem;cursor:pointer;padding:0 4px;">×</button>
             </div>
             <div style="color:#8b949e;font-size:0.85rem;line-height:1.7;">
-                To install: tap the <strong style="color:#58a6ff;">Share button</strong> 
+                To install: tap the <strong style="color:#58a6ff;">Share button</strong>
                 <span style="font-size:1.1em;">⬆</span> at the bottom of Safari,<br>
-                then tap <strong style="color:#f59e0b;">"Add to Home Screen"</strong> 
+                then tap <strong style="color:#f59e0b;">"Add to Home Screen"</strong>
                 <span style="font-size:1.1em;">➕</span>
             </div>
             <div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:16px;font-size:1.6rem;">
@@ -208,22 +209,23 @@
 
         const toast = document.createElement('div');
         toast.id = 'gh-update-toast';
+
         Object.assign(toast.style, {
-            position:     'fixed',
-            top:          '76px',
-            right:        '20px',
-            zIndex:       '99999',
-            background:   '#161b22',
-            border:       '1px solid #3fb950',
+            position: 'fixed',
+            top: '76px',
+            right: '20px',
+            zIndex: '99999',
+            background: '#161b22',
+            border: '1px solid #3fb950',
             borderRadius: '10px',
-            padding:      '14px 18px',
-            display:      'flex',
-            alignItems:   'center',
-            gap:          '12px',
-            boxShadow:    '0 6px 24px rgba(0,0,0,0.5)',
-            fontFamily:   'Archivo, sans-serif',
-            maxWidth:     '320px',
-            animation:    'ghSlideDown 0.3s ease',
+            padding: '14px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.5)',
+            fontFamily: 'Archivo, sans-serif',
+            maxWidth: '320px',
+            animation: 'ghSlideDown 0.3s ease',
         });
 
         toast.innerHTML = `
