@@ -90,12 +90,12 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-state-icon { font-size: 4rem; margin-bottom: 20px; }
         .info-box { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px; }
-        /* ── Notification Bell ── */
+        /* Notification Bell */
         .message-notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
         .message-notification-bell:hover { background: rgba(88, 166, 255, 0.1); }
         .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 20px; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-        /* ── Messages Popup ── */
+        /* Messages Popup */
         .messages-popup { position: fixed; top: 70px; right: 20px; width: 480px; max-height: 80vh; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; overflow: hidden; }
         .messages-popup.active { display: flex; }
         .messages-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary); }
@@ -103,25 +103,13 @@
         .close-popup { background: none; border: none; color: var(--text-muted); font-size: 1.6rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
         .close-popup:hover { color: var(--danger); background: rgba(248,81,73,0.1); }
         .messages-list { flex: 1; overflow-y: auto; padding: 16px; }
-        /* ── Message items ── */
         .message-item { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; }
         .message-item.sent { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.3); }
         .message-item.read { opacity: 0.6; background: rgba(139,148,158,0.08); border-color: rgba(139,148,158,0.2); }
-        /* ── REJECTION card ── */
-        .message-item.rejection {
-            background: rgba(248,81,73,0.08);
-            border: 1px solid rgba(248,81,73,0.35);
-            border-left: 4px solid var(--danger);
-            transition: opacity 0.3s;
-        }
-        .message-item.rejection.read {
-            opacity: 0.45;
-            border-left-color: var(--text-muted);
-            background: rgba(139,148,158,0.06);
-        }
+        .message-item.rejection { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.35); border-left: 4px solid var(--danger); transition: opacity 0.3s; }
+        .message-item.rejection.read { opacity: 0.45; border-left-color: var(--text-muted); background: rgba(139,148,158,0.06); }
         .rejection-label { display: inline-flex; align-items: center; gap: 4px; background: var(--danger); color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
         .rejection-reason { background: rgba(248,81,73,0.1); border-left: 3px solid var(--danger); padding: 7px 12px; border-radius: 0 6px 6px 0; font-size: 0.88rem; color: #fca5a5; margin: 8px 0; font-style: italic; line-height: 1.5; }
-        /* ── Rejection action buttons ── */
         .rejection-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
         .rej-btn { padding: 6px 14px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; font-family: 'Archivo', sans-serif; }
         .rej-btn-reorder { background: rgba(245,158,11,0.18); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.45); }
@@ -140,7 +128,7 @@
         .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-top: 8px; margin-left: 8px; }
         .empty-messages { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-messages-icon { font-size: 3.5rem; margin-bottom: 12px; }
-        /* ── Popup tabs ── */
+        /* Popup tabs */
         .popup-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
         .popup-tab { flex: 1; padding: 10px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
         .popup-tab:hover { color: var(--text); }
@@ -165,7 +153,7 @@
         .supplier-order-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .order-id { font-size: 1.2rem; font-weight: 700; color: var(--accent-orange); }
-        /* ── Contact Supplier Modal ── */
+        /* Contact Supplier Modal */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 10000; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
         .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; padding: 32px; width: 90%; max-width: 480px; }
@@ -216,7 +204,8 @@
             </div>
         </div>
     </nav>
-    <!-- ══ MESSAGES POPUP ══ -->
+
+    <!-- Messages Popup -->
     <div class="messages-popup" id="messagesPopup">
         <div class="messages-header">
             <h3>🔔 Notifications</h3>
@@ -238,7 +227,8 @@
             </div>
         </div>
     </div>
-    <!-- ══ CONTACT SUPPLIER MODAL ══ -->
+
+    <!-- Contact Supplier Modal -->
     <div class="modal-overlay" id="contactSupplierModal">
         <div class="modal-box">
             <h3>💬 Contact Supplier</h3>
@@ -253,21 +243,25 @@
             </div>
         </div>
     </div>
+
     <div class="container">
         <div class="page-header">
             <h1>📊 Dashboard Overview</h1>
             <p>Real-time sales, performance insights, and supplier communications</p>
         </div>
+
         <div class="dashboard-tabs">
             <button class="dashboard-tab active" onclick="switchDashboardTab('analytics', this)">📈 Analytics</button>
             <button class="dashboard-tab" onclick="window.location.href='supply-requests.html'">🏭 Supplier Orders</button>
             <button class="dashboard-tab" onclick="switchDashboardTab('messaging', this)">💬 Staff Messaging</button>
         </div>
+
         <!-- Analytics Tab -->
         <div id="analyticsTab" class="tab-content active">
             <div class="info-box" id="infoBox" style="display:none;">
                 <strong>ℹ️ Quick Tip:</strong> <span id="infoText"></span>
             </div>
+
             <div class="date-range">
                 <input type="date" id="startDate" class="date-input">
                 <input type="date" id="endDate" class="date-input">
@@ -276,6 +270,7 @@
                 <button class="btn btn-secondary" onclick="setDateRange('week')">This Week</button>
                 <button class="btn btn-secondary" onclick="setDateRange('month')">This Month</button>
             </div>
+
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-title">Total Revenue</div><div class="stat-value" id="totalRevenue">KES 0.00</div></div>
                 <div class="stat-card"><div class="stat-title">Net Profit</div><div class="stat-value" id="totalProfit">KES 0.00</div><div class="stat-subtitle" id="profitBreakdown">Profit - Expenses</div></div>
@@ -283,39 +278,68 @@
                 <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionCount">0</div></div>
                 <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
             </div>
+
+            <!-- Sales by Cashier -->
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Sales by Cashier</h2></div>
                 <canvas id="cashierChart" style="max-height:400px;"></canvas>
-                <div id="cashierChartEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">📊</div><h3>No Sales Data Available</h3><p>No sales for the selected date range.</p></div>
-                <div id="topCashier" class="top-cashier" style="display:none;"><strong>Top Performer:</strong> <span id="topPerformerName"></span> - KES <span id="topPerformerProfit"></span></div>
+                <div id="cashierChartEmpty" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>No Sales Data Available</h3>
+                    <p>No sales for the selected date range.</p>
+                </div>
+                <div id="topCashier" class="top-cashier" style="display:none;">
+                    <strong>Top Performer:</strong> <span id="topPerformerName"></span> - KES <span id="topPerformerProfit"></span>
+                </div>
             </div>
+
+            <!-- Top Selling Products -->
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Top Selling Products</h2></div>
                 <canvas id="topProductsChart" style="max-height:400px;"></canvas>
-                <div id="productsChartEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">📦</div><h3>No Product Sales Data</h3></div>
-            </div>
-            <!-- NEW: Expenses by User -->
-            <div class="chart-container">
-                <div class="chart-header"><h2 class="chart-title">Expenses by User</h2></div>
-                <canvas id="expensesByUserChart" style="max-height:400px;"></canvas>
-                <div id="expensesChartEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">💸</div><h3>No Expense Data</h3><p>No expenses recorded in this period.</p></div>
-                <div class="table-container" style="margin-top:24px;">
-                    <table class="table">
-                        <thead><tr><th>User</th><th>Total Expenses (KES)</th></tr></thead>
-                        <tbody id="expensesByUserTable"><tr><td colspan="2" class="loading">Loading expenses by user...</td></tr></tbody>
-                    </table>
+                <div id="productsChartEmpty" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">📦</div>
+                    <h3>No Product Sales Data</h3>
                 </div>
             </div>
+
+            <!-- Expenses by Cashier – now identical structure to Sales by Cashier -->
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Expenses by Cashier</h2></div>
+                <canvas id="expensesByCashierChart" style="max-height:400px;"></canvas>
+                <div id="expensesChartEmpty" class="empty-state" style="display:none;">
+                    <div class="empty-state-icon">💸</div>
+                    <h3>No Expense Data Available</h3>
+                    <p>No expenses recorded in this period.</p>
+                </div>
+                <div id="topSpender" class="top-cashier" style="display:none;">
+                    <strong>Top Spender:</strong> <span id="topSpenderName"></span> - KES <span id="topSpenderAmount"></span>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
             <div style="margin-top:40px;">
                 <h2>Recent Transactions</h2>
                 <div class="table-container">
                     <table class="table">
-                        <thead><tr><th>Date</th><th>Cashier</th><th>Total (KES)</th><th>Profit (KES)</th><th>Items</th><th>Payment</th></tr></thead>
-                        <tbody id="recentTransactions"><tr><td colspan="6" class="loading">Loading transactions...</td></tr></tbody>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Cashier</th>
+                                <th>Total (KES)</th>
+                                <th>Profit (KES)</th>
+                                <th>Items</th>
+                                <th>Payment</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTransactions">
+                            <tr><td colspan="6" class="loading">Loading transactions...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
+
         <!-- Supplier Orders Tab -->
         <div id="suppliersTab" class="tab-content">
             <div class="chart-container">
@@ -337,6 +361,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Staff Messaging Tab -->
         <div id="messagingTab" class="tab-content">
             <div class="chart-container">
@@ -366,6 +391,7 @@
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
@@ -373,618 +399,658 @@
     <script src="assets/sales-analytics.js"></script>
     <script src="assets/messaging-module.js"></script>
     <script src="assets/supplier-orders-module.js"></script>
+
     <script>
-    // ════════════════════════════════════════════════════════════════
-    // SUPABASE CLIENT
-    // ════════════════════════════════════════════════════════════════
-    let _db = null;
-    function getDB() {
-        if (_db) return _db;
-        _db = window.DukaPOS?.supabaseClient || null;
-        return _db;
-    }
-    // ════════════════════════════════════════════════════════════════
-    // POPUP TAB SWITCHING
-    // ════════════════════════════════════════════════════════════════
-    function switchPopupTab(tab) {
-        document.getElementById('tabRejections').classList.toggle('active', tab === 'rejections');
-        document.getElementById('tabStaff').classList.toggle('active', tab === 'staff');
-        document.getElementById('sectionRejections').classList.toggle('active', tab === 'rejections');
-        document.getElementById('sectionStaff').classList.toggle('active', tab === 'staff');
-    }
-    // ════════════════════════════════════════════════════════════════
-    // NAVIGATION
-    // ════════════════════════════════════════════════════════════════
-    function setNavigationVisibility(userRole) {
-        const role = userRole.toLowerCase().trim();
-        ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-            .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-        if (['admin','administrator','manager'].includes(role)) {
+        // ════════════════════════════════════════════════════════════════
+        // SUPABASE CLIENT
+        // ════════════════════════════════════════════════════════════════
+        let _db = null;
+        function getDB() {
+            if (_db) return _db;
+            _db = window.DukaPOS?.supabaseClient || null;
+            return _db;
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // POPUP TAB SWITCHING
+        // ════════════════════════════════════════════════════════════════
+        function switchPopupTab(tab) {
+            document.getElementById('tabRejections').classList.toggle('active', tab === 'rejections');
+            document.getElementById('tabStaff').classList.toggle('active', tab === 'staff');
+            document.getElementById('sectionRejections').classList.toggle('active', tab === 'rejections');
+            document.getElementById('sectionStaff').classList.toggle('active', tab === 'staff');
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // NAVIGATION VISIBILITY
+        // ════════════════════════════════════════════════════════════════
+        function setNavigationVisibility(userRole) {
+            const role = userRole.toLowerCase().trim();
             ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-                .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
-        } else if (role === 'cashier') {
-            ['posLink','productsLink','customersLink'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
-        } else {
-            const el = document.getElementById('posLink'); if (el) el.style.display = 'flex';
-        }
-    }
-    // ════════════════════════════════════════════════════════════════
-    // DASHBOARD TAB SWITCHING
-    // ════════════════════════════════════════════════════════════════
-    function switchDashboardTab(tabName, el) {
-        document.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        if (el) el.classList.add('active');
-        document.getElementById(tabName + 'Tab').classList.add('active');
-        if (tabName === 'suppliers') loadSupplierOrders();
-    }
-    // ════════════════════════════════════════════════════════════════
-    // ★ REJECTION PERSISTENCE
-    // ════════════════════════════════════════════════════════════════
-    let _rejectionStoreKey = 'dismissedRejections_default';
-    let _dismissedIds = new Set();
-    function _initRejectionStore(userId) {
-        _rejectionStoreKey = `dismissedRejections_${userId}`;
-        try {
-            const raw = localStorage.getItem(_rejectionStoreKey);
-            _dismissedIds = new Set(raw ? JSON.parse(raw) : []);
-        } catch {
-            _dismissedIds = new Set();
-        }
-    }
-    function _persistDismissed() {
-        try {
-            localStorage.setItem(_rejectionStoreKey, JSON.stringify([..._dismissedIds]));
-        } catch (e) { console.warn('Could not persist dismissed rejections:', e); }
-    }
-    function _isDismissed(id) {
-        return _dismissedIds.has(String(id));
-    }
-    function _markDismissed(id) {
-        _dismissedIds.add(String(id));
-        _persistDismissed();
-    }
-    // ════════════════════════════════════════════════════════════════
-    // LOAD REJECTIONS FROM DB
-    // ════════════════════════════════════════════════════════════════
-    async function loadRejectionNotifications() {
-        const db = getDB();
-        if (!db) return { rejections: [], unseen: 0 };
-        try {
-            const { data, error } = await db
-                .from('supply_requests')
-                .select(`
-                    id, item_name, quantity, unit,
-                    supplier_response, created_at, approved_at,
-                    supplier_id,
-                    supplier:supplier_id ( id, full_name, email )
-                `)
-                .eq('status', 'rejected')
-                .order('approved_at', { ascending: false })
-                .limit(40);
-            if (error) throw error;
-            const rejections = data || [];
-            const unseen = rejections.filter(r => !_isDismissed(r.id)).length;
-            return { rejections, unseen };
-        } catch (err) {
-            console.error('Rejection load error:', err);
-            return { rejections: [], unseen: 0 };
-        }
-    }
-    // ════════════════════════════════════════════════════════════════
-    // RENDER REJECTION CARDS
-    // ════════════════════════════════════════════════════════════════
-    function renderRejectionSection(rejections) {
-        const section = document.getElementById('sectionRejections');
-        if (!rejections.length) {
-            section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">✅</div><p>No supplier rejections</p></div>';
-            return;
-        }
-        section.innerHTML = rejections.map(r => {
-            const dismissed = _isDismissed(r.id);
-            const supplierName = r.supplier?.full_name || r.supplier?.email || 'Supplier';
-            const supplierId = r.supplier?.id || r.supplier_id || null;
-            const rejectedAt = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
-            const itemName = r.item_name || 'Unknown item';
-            const qty = `${r.quantity || '—'} ${r.unit || ''}`.trim();
-            const actionsHtml = dismissed
-                ? `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
-                : `<div class="rejection-actions">
-                    <button class="rej-btn rej-btn-reorder" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder</button>
-                    ${supplierId ? `<button class="rej-btn rej-btn-contact" onclick="openContactModal(${supplierId}, '${encodeURIComponent(supplierName)}', '${encodeURIComponent(itemName)}')">💬 Contact Supplier</button>` : ''}
-                    <button class="rej-btn rej-btn-dismiss" onclick="dismissRejection(${r.id}, this)">Dismiss</button>
-                   </div>`;
-            return `
-                <div class="message-item rejection ${dismissed ? 'read' : ''}" id="rejection-${r.id}">
-                    <span class="rejection-label">❌ Request Rejected</span>
-                    <div class="message-header">
-                        <span class="message-sender">🏭 ${supplierName}</span>
-                        <span class="message-time">${rejectedAt}</span>
-                    </div>
-                    <div class="message-text">
-                        <strong>${itemName}</strong>&nbsp;·&nbsp;Qty: ${qty}
-                    </div>
-                    ${r.supplier_response ? `<div class="rejection-reason">"${r.supplier_response}"</div>` : ''}
-                    ${actionsHtml}
-                </div>
-            `;
-        }).join('');
-    }
-    // ════════════════════════════════════════════════════════════════
-    // REJECTION ACTIONS
-    // ════════════════════════════════════════════════════════════════
-    function dismissRejection(id, btn) {
-        _markDismissed(id);
-        const card = document.getElementById(`rejection-${id}`);
-        if (card) {
-            card.classList.add('read');
-            const actions = card.querySelector('.rejection-actions');
-            if (actions) {
-                const itemNameEl = card.querySelector('.message-text strong');
-                const itemName = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
-                actions.outerHTML = `<div class="rej-dismissed-label">✔ Dismissed &nbsp;—&nbsp;
-                    <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${itemName}', '')">🔄 Reorder anyway</button>
-                </div>`;
-            }
-        }
-        updateBellBadge();
-    }
-    function reorderRejected(encodedItem, encodedQty) {
-        const item = decodeURIComponent(encodedItem);
-        const qty = decodeURIComponent(encodedQty);
-        const url = `supply-requests.html?prefill_item=${encodeURIComponent(item)}&prefill_qty=${encodeURIComponent(qty)}`;
-        window.location.href = url;
-    }
-    // ════════════════════════════════════════════════════════════════
-    // CONTACT SUPPLIER MODAL
-    // ════════════════════════════════════════════════════════════════
-    let _contactSupplierId = null;
-    function openContactModal(supplierId, encodedName, encodedItem) {
-        _contactSupplierId = supplierId;
-        document.getElementById('contactSupplierName').textContent = decodeURIComponent(encodedName);
-        document.getElementById('contactItemName').textContent = decodeURIComponent(encodedItem);
-        document.getElementById('contactSupplierMessage').value = '';
-        document.getElementById('contactSupplierModal').classList.add('show');
-    }
-    function closeContactModal() {
-        document.getElementById('contactSupplierModal').classList.remove('show');
-        _contactSupplierId = null;
-    }
-    async function sendContactMessage() {
-        if (!_contactSupplierId) return;
-        const text = document.getElementById('contactSupplierMessage').value.trim();
-        if (!text) { alert('Please enter a message.'); return; }
-        const btn = document.getElementById('contactSendBtn');
-        btn.disabled = true; btn.textContent = '⏳ Sending…';
-        try {
-            let result = { success: false, error: 'messagingModule not available' };
-            if (window.messagingModule) {
-                result = await window.messagingModule.sendMessage(parseInt(_contactSupplierId), text);
-            }
-            if (result.success) {
-                closeContactModal();
-                alert('✅ Message sent to supplier!');
+                .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+            if (['admin','administrator','manager'].includes(role)) {
+                ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
+                    .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
+            } else if (role === 'cashier') {
+                ['posLink','productsLink','customersLink'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
             } else {
-                alert('Failed to send message: ' + (result.error || 'Unknown error'));
+                const el = document.getElementById('posLink'); if (el) el.style.display = 'flex';
             }
-        } catch (err) {
-            alert('Error: ' + err.message);
-        } finally {
-            btn.disabled = false; btn.textContent = '📤 Send Message';
         }
-    }
-    document.getElementById('contactSupplierModal').addEventListener('click', function(e) {
-        if (e.target === this) closeContactModal();
-    });
-    // ════════════════════════════════════════════════════════════════
-    // BELL BADGE
-    // ════════════════════════════════════════════════════════════════
-    async function updateBellBadge() {
-        const { unseen: rejUnseen } = await loadRejectionNotifications();
-        let staffUnseen = 0;
-        try {
-            if (window.messagingModule) {
-                const r = await window.messagingModule.getUnreadCount();
-                if (r.success) staffUnseen = r.count || 0;
+
+        // ════════════════════════════════════════════════════════════════
+        // DASHBOARD TAB SWITCHING
+        // ════════════════════════════════════════════════════════════════
+        function switchDashboardTab(tabName, el) {
+            document.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (el) el.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            if (tabName === 'suppliers') loadSupplierOrders();
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // REJECTION PERSISTENCE
+        // ════════════════════════════════════════════════════════════════
+        let _rejectionStoreKey = 'dismissedRejections_default';
+        let _dismissedIds = new Set();
+        function _initRejectionStore(userId) {
+            _rejectionStoreKey = `dismissedRejections_${userId}`;
+            try {
+                const raw = localStorage.getItem(_rejectionStoreKey);
+                _dismissedIds = new Set(raw ? JSON.parse(raw) : []);
+            } catch {
+                _dismissedIds = new Set();
             }
-        } catch (_) {}
-        const total = rejUnseen + staffUnseen;
-        const badge = document.getElementById('messageBadge');
-        badge.textContent = total > 99 ? '99+' : total;
-        badge.style.display = total > 0 ? 'flex' : 'none';
-        const rBadge = document.getElementById('rejectionTabBadge');
-        if (rejUnseen > 0) { rBadge.textContent = rejUnseen; rBadge.style.display = 'inline'; }
-        else rBadge.style.display = 'none';
-    }
-    // ════════════════════════════════════════════════════════════════
-    // POPUP TOGGLE
-    // ════════════════════════════════════════════════════════════════
-    async function toggleMessagesPopup() {
-        const popup = document.getElementById('messagesPopup');
-        if (popup.classList.contains('active')) {
-            popup.classList.remove('active');
-            return;
         }
-        popup.classList.add('active');
-        document.getElementById('sectionRejections').innerHTML =
-            '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-        document.getElementById('sectionStaff').innerHTML =
-            '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-        const { rejections } = await loadRejectionNotifications();
-        renderRejectionSection(rejections);
-        await loadStaffMessagesIntoPopup();
-    }
-    document.addEventListener('click', function(e) {
-        const popup = document.getElementById('messagesPopup');
-        const bell = document.getElementById('messageBell');
-        if (popup?.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target)) {
-            popup.classList.remove('active');
+        function _persistDismissed() {
+            try {
+                localStorage.setItem(_rejectionStoreKey, JSON.stringify([..._dismissedIds]));
+            } catch (e) { console.warn('Could not persist dismissed rejections:', e); }
         }
-    });
-    // ════════════════════════════════════════════════════════════════
-    // STAFF MESSAGES IN POPUP
-    // ════════════════════════════════════════════════════════════════
-    async function loadStaffMessagesIntoPopup() {
-        const section = document.getElementById('sectionStaff');
-        try {
-            let messages = [];
-            const sentResult = await window.messagingModule?.getSentMessages(20);
-            if (sentResult?.success && sentResult.data)
-                messages = messages.concat(sentResult.data.map(m => ({ ...m, type: 'sent' })));
-            const allResult = await window.messagingModule?.getAllMessages(30);
-            if (allResult?.success && allResult.data) {
-                const currentUser = authModule.getCurrentUser();
-                messages = messages.concat(
-                    allResult.data.filter(m => m.recipient_id === currentUser.id).map(m => ({ ...m, type: 'received' }))
-                );
+        function _isDismissed(id) {
+            return _dismissedIds.has(String(id));
+        }
+        function _markDismissed(id) {
+            _dismissedIds.add(String(id));
+            _persistDismissed();
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // LOAD & RENDER REJECTIONS
+        // ════════════════════════════════════════════════════════════════
+        async function loadRejectionNotifications() {
+            const db = getDB();
+            if (!db) return { rejections: [], unseen: 0 };
+            try {
+                const { data, error } = await db
+                    .from('supply_requests')
+                    .select(`
+                        id, item_name, quantity, unit,
+                        supplier_response, created_at, approved_at,
+                        supplier_id,
+                        supplier:supplier_id ( id, full_name, email )
+                    `)
+                    .eq('status', 'rejected')
+                    .order('approved_at', { ascending: false })
+                    .limit(40);
+                if (error) throw error;
+                const rejections = data || [];
+                const unseen = rejections.filter(r => !_isDismissed(r.id)).length;
+                return { rejections, unseen };
+            } catch (err) {
+                console.error('Rejection load error:', err);
+                return { rejections: [], unseen: 0 };
             }
-            messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            if (!messages.length) {
-                section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No staff messages yet</p></div>';
+        }
+
+        function renderRejectionSection(rejections) {
+            const section = document.getElementById('sectionRejections');
+            if (!rejections.length) {
+                section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">✅</div><p>No supplier rejections</p></div>';
                 return;
             }
-            section.innerHTML = messages.map(msg => `
-                <div class="message-item ${msg.type} ${msg.is_read ? 'read' : ''}">
-                    <div class="message-header">
-                        <span class="message-sender">${msg.type === 'sent' ? 'To ' + (msg.recipient?.full_name || 'Staff') : 'From ' + (msg.sender?.full_name || 'Staff')}</span>
-                        <span class="message-time">${new Date(msg.created_at).toLocaleString()}</span>
+            section.innerHTML = rejections.map(r => {
+                const dismissed = _isDismissed(r.id);
+                const supplierName = r.supplier?.full_name || r.supplier?.email || 'Supplier';
+                const supplierId = r.supplier?.id || r.supplier_id || null;
+                const rejectedAt = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
+                const itemName = r.item_name || 'Unknown item';
+                const qty = `${r.quantity || '—'} ${r.unit || ''}`.trim();
+                const actionsHtml = dismissed
+                    ? `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
+                    : `<div class="rejection-actions">
+                        <button class="rej-btn rej-btn-reorder" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder</button>
+                        ${supplierId ? `<button class="rej-btn rej-btn-contact" onclick="openContactModal(${supplierId}, '${encodeURIComponent(supplierName)}', '${encodeURIComponent(itemName)}')">💬 Contact Supplier</button>` : ''}
+                        <button class="rej-btn rej-btn-dismiss" onclick="dismissRejection(${r.id}, this)">Dismiss</button>
+                       </div>`;
+                return `
+                    <div class="message-item rejection ${dismissed ? 'read' : ''}" id="rejection-${r.id}">
+                        <span class="rejection-label">❌ Request Rejected</span>
+                        <div class="message-header">
+                            <span class="message-sender">🏭 ${supplierName}</span>
+                            <span class="message-time">${rejectedAt}</span>
+                        </div>
+                        <div class="message-text">
+                            <strong>${itemName}</strong> · Qty: ${qty}
+                        </div>
+                        ${r.supplier_response ? `<div class="rejection-reason">"${r.supplier_response}"</div>` : ''}
+                        ${actionsHtml}
                     </div>
-                    <div class="message-text">${msg.message_text || '(empty)'}</div>
-                    <div style="margin-top:6px;font-size:0.8rem;color:var(--text-muted);">
-                        ${msg.is_read ? '✅ Read' : '⏳ Unread'}
-                        ${msg.expires_at ? ' · Expires in ' + Math.max(0, Math.round((new Date(msg.expires_at) - new Date()) / 3600000)) + 'h' : ''}
-                    </div>
-                    ${!msg.is_read && msg.type === 'received' ? `<button class="mark-read-btn" onclick="markMessageAsRead(${msg.id}, event)">Mark as Read</button>` : ''}
-                </div>
-            `).join('');
-        } catch (err) {
-            section.innerHTML = `<div class="empty-messages"><p>Error: ${err.message}</p></div>`;
+                `;
+            }).join('');
         }
-    }
-    async function markMessageAsRead(messageId, event) {
-        const btn = event.target;
-        const item = btn.closest('.message-item');
-        try {
-            const result = await window.messagingModule.markAsRead(messageId);
-            if (result.success) { btn.remove(); if (item) item.classList.add('read'); updateBellBadge(); }
-        } catch (err) { console.error('Mark read error:', err); }
-    }
-    // ════════════════════════════════════════════════════════════════
-    // DASHBOARD ANALYTICS
-    // ════════════════════════════════════════════════════════════════
-    (function() {
-        let revenueChart, topProductsChart, expensesByUserChart;
-        function waitFor(getter, cb, interval = 300, max = 40) {
-            let n = 0;
-            const t = setInterval(() => {
-                if (getter()) { clearInterval(t); cb(); }
-                else if (++n >= max) clearInterval(t);
-            }, interval);
-        }
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await window.DukaPOS.initializeSupabase();
-                _db = window.DukaPOS.supabaseClient;
-                const isAuthenticated = await authModule.requireAuth();
-                if (!isAuthenticated) return;
-                const currentUser = authModule.getCurrentUser();
-                if (!currentUser) return;
-                const userRole = (currentUser.role || '').trim().toLowerCase();
-                const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
-                if (!isAdmin) {
-                    window.location.replace(userRole === 'supplier' ? 'suppliers.html' : 'pos.html');
-                    return;
+
+        function dismissRejection(id, btn) {
+            _markDismissed(id);
+            const card = document.getElementById(`rejection-${id}`);
+            if (card) {
+                card.classList.add('read');
+                const actions = card.querySelector('.rejection-actions');
+                if (actions) {
+                    const itemNameEl = card.querySelector('.message-text strong');
+                    const itemName = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
+                    actions.outerHTML = `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${itemName}', '')">🔄 Reorder anyway</button></div>`;
                 }
-                _initRejectionStore(currentUser.id);
-                document.body.style.visibility = 'visible';
-                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                setNavigationVisibility(userRole);
-                setDateRange('month');
-                await loadDashboard();
-                updateBellBadge();
-                setInterval(updateBellBadge, 30000);
-                waitFor(() => window.messagingModule, () => { loadUsersForMessaging(); loadSentMessages(); });
-                setTimeout(() => loadSupplierOrders(), 500);
-                console.log('✅ Dashboard initialized');
+            }
+            updateBellBadge();
+        }
+
+        function reorderRejected(encodedItem, encodedQty) {
+            const item = decodeURIComponent(encodedItem);
+            const qty = decodeURIComponent(encodedQty);
+            const url = `supply-requests.html?prefill_item=${encodeURIComponent(item)}&prefill_qty=${encodeURIComponent(qty)}`;
+            window.location.href = url;
+        }
+
+        // Contact Supplier Modal
+        let _contactSupplierId = null;
+        function openContactModal(supplierId, encodedName, encodedItem) {
+            _contactSupplierId = supplierId;
+            document.getElementById('contactSupplierName').textContent = decodeURIComponent(encodedName);
+            document.getElementById('contactItemName').textContent = decodeURIComponent(encodedItem);
+            document.getElementById('contactSupplierMessage').value = '';
+            document.getElementById('contactSupplierModal').classList.add('show');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactSupplierModal').classList.remove('show');
+            _contactSupplierId = null;
+        }
+
+        async function sendContactMessage() {
+            if (!_contactSupplierId) return;
+            const text = document.getElementById('contactSupplierMessage').value.trim();
+            if (!text) { alert('Please enter a message.'); return; }
+            const btn = document.getElementById('contactSendBtn');
+            btn.disabled = true; btn.textContent = '⏳ Sending…';
+            try {
+                let result = { success: false, error: 'messagingModule not available' };
+                if (window.messagingModule) {
+                    result = await window.messagingModule.sendMessage(parseInt(_contactSupplierId), text);
+                }
+                if (result.success) {
+                    closeContactModal();
+                    alert('✅ Message sent to supplier!');
+                } else {
+                    alert('Failed to send message: ' + (result.error || 'Unknown error'));
+                }
             } catch (err) {
-                console.error('Dashboard init failed:', err);
-                document.getElementById('recentTransactions').innerHTML =
-                    `<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false; btn.textContent = '📤 Send Message';
+            }
+        }
+
+        document.getElementById('contactSupplierModal').addEventListener('click', function(e) {
+            if (e.target === this) closeContactModal();
+        });
+
+        // Bell Badge
+        async function updateBellBadge() {
+            const { unseen: rejUnseen } = await loadRejectionNotifications();
+            let staffUnseen = 0;
+            try {
+                if (window.messagingModule) {
+                    const r = await window.messagingModule.getUnreadCount();
+                    if (r.success) staffUnseen = r.count || 0;
+                }
+            } catch (_) {}
+            const total = rejUnseen + staffUnseen;
+            const badge = document.getElementById('messageBadge');
+            badge.textContent = total > 99 ? '99+' : total;
+            badge.style.display = total > 0 ? 'flex' : 'none';
+            const rBadge = document.getElementById('rejectionTabBadge');
+            if (rejUnseen > 0) { rBadge.textContent = rejUnseen; rBadge.style.display = 'inline'; }
+            else rBadge.style.display = 'none';
+        }
+
+        // Popup Toggle
+        async function toggleMessagesPopup() {
+            const popup = document.getElementById('messagesPopup');
+            if (popup.classList.contains('active')) {
+                popup.classList.remove('active');
+                return;
+            }
+            popup.classList.add('active');
+            document.getElementById('sectionRejections').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
+            document.getElementById('sectionStaff').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
+            const { rejections } = await loadRejectionNotifications();
+            renderRejectionSection(rejections);
+            await loadStaffMessagesIntoPopup();
+        }
+
+        document.addEventListener('click', function(e) {
+            const popup = document.getElementById('messagesPopup');
+            const bell = document.getElementById('messageBell');
+            if (popup?.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target)) {
+                popup.classList.remove('active');
             }
         });
-        window.setDateRange = function(range) {
-            const today = new Date();
-            let start = new Date(today);
-            if (range === 'today') start = today;
-            else if (range === 'week') start.setDate(today.getDate() - 7);
-            else start.setDate(today.getDate() - 30);
-            document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value = today.toISOString().split('T')[0];
-            loadDashboard();
-        };
-        async function loadDashboard() {
-            const start = document.getElementById('startDate').value;
-            const end = document.getElementById('endDate').value;
-            if (!start || !end) { alert('Please select both start and end dates'); return; }
-            try {
-                const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
-                if (!result.success) throw new Error(result.error || 'Failed to load sales data');
-                const sales = result.sales || [];
-                const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
-                const expenses = expensesResult.success ? (expensesResult.data || []) : [];
-                const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
 
-                // ── NEW: Group expenses by user ──
-                const expensesByUser = expenses.reduce((acc, exp) => {
-                    const userName = exp.users?.full_name || exp.created_by?.full_name || 'Unknown User';
-                    acc[userName] = (acc[userName] || 0) + parseFloat(exp.amount || 0);
+        // Staff Messages in Popup
+        async function loadStaffMessagesIntoPopup() {
+            const section = document.getElementById('sectionStaff');
+            try {
+                let messages = [];
+                const sentResult = await window.messagingModule?.getSentMessages(20);
+                if (sentResult?.success && sentResult.data)
+                    messages = messages.concat(sentResult.data.map(m => ({ ...m, type: 'sent' })));
+                const allResult = await window.messagingModule?.getAllMessages(30);
+                if (allResult?.success && allResult.data) {
+                    const currentUser = authModule.getCurrentUser();
+                    messages = messages.concat(
+                        allResult.data.filter(m => m.recipient_id === currentUser.id).map(m => ({ ...m, type: 'received' }))
+                    );
+                }
+                messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                if (!messages.length) {
+                    section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No staff messages yet</p></div>';
+                    return;
+                }
+                section.innerHTML = messages.map(msg => `
+                    <div class="message-item ${msg.type} ${msg.is_read ? 'read' : ''}">
+                        <div class="message-header">
+                            <span class="message-sender">${msg.type === 'sent' ? 'To ' + (msg.recipient?.full_name || 'Staff') : 'From ' + (msg.sender?.full_name || 'Staff')}</span>
+                            <span class="message-time">${new Date(msg.created_at).toLocaleString()}</span>
+                        </div>
+                        <div class="message-text">${msg.message_text || '(empty)'}</div>
+                        <div style="margin-top:6px;font-size:0.8rem;color:var(--text-muted);">
+                            ${msg.is_read ? '✅ Read' : '⏳ Unread'}
+                            ${msg.expires_at ? ' · Expires in ' + Math.max(0, Math.round((new Date(msg.expires_at) - new Date()) / 3600000)) + 'h' : ''}
+                        </div>
+                        ${!msg.is_read && msg.type === 'received' ? `<button class="mark-read-btn" onclick="markMessageAsRead(${msg.id}, event)">Mark as Read</button>` : ''}
+                    </div>
+                `).join('');
+            } catch (err) {
+                section.innerHTML = `<div class="empty-messages"><p>Error: ${err.message}</p></div>`;
+            }
+        }
+
+        async function markMessageAsRead(messageId, event) {
+            const btn = event.target;
+            const item = btn.closest('.message-item');
+            try {
+                const result = await window.messagingModule.markAsRead(messageId);
+                if (result.success) { 
+                    btn.remove(); 
+                    if (item) item.classList.add('read'); 
+                    updateBellBadge(); 
+                }
+            } catch (err) {
+                console.error('Mark read error:', err);
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════════
+        // DASHBOARD ANALYTICS LOGIC
+        // ════════════════════════════════════════════════════════════════
+        (function() {
+            let revenueChart, topProductsChart, expensesByCashierChart;
+
+            function waitFor(getter, cb, interval = 300, max = 40) {
+                let n = 0;
+                const t = setInterval(() => {
+                    if (getter()) { clearInterval(t); cb(); }
+                    else if (++n >= max) clearInterval(t);
+                }, interval);
+            }
+
+            window.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    await window.DukaPOS.initializeSupabase();
+                    _db = window.DukaPOS.supabaseClient;
+                    const isAuthenticated = await authModule.requireAuth();
+                    if (!isAuthenticated) return;
+                    const currentUser = authModule.getCurrentUser();
+                    if (!currentUser) return;
+                    const userRole = (currentUser.role || '').trim().toLowerCase();
+                    const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
+                    if (!isAdmin) {
+                        window.location.replace(userRole === 'supplier' ? 'suppliers.html' : 'pos.html');
+                        return;
+                    }
+                    _initRejectionStore(currentUser.id);
+                    document.body.style.visibility = 'visible';
+                    document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+                    setNavigationVisibility(userRole);
+                    setDateRange('month');
+                    await loadDashboard();
+                    updateBellBadge();
+                    setInterval(updateBellBadge, 30000);
+                    waitFor(() => window.messagingModule, () => { loadUsersForMessaging(); loadSentMessages(); });
+                    setTimeout(() => loadSupplierOrders(), 500);
+                    console.log('✅ Dashboard initialized');
+                } catch (err) {
+                    console.error('Dashboard init failed:', err);
+                    document.getElementById('recentTransactions').innerHTML =
+                        `<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
+                }
+            });
+
+            window.setDateRange = function(range) {
+                const today = new Date();
+                let start = new Date(today);
+                if (range === 'today') start = today;
+                else if (range === 'week') start.setDate(today.getDate() - 7);
+                else start.setDate(today.getDate() - 30);
+                document.getElementById('startDate').value = start.toISOString().split('T')[0];
+                document.getElementById('endDate').value = today.toISOString().split('T')[0];
+                loadDashboard();
+            };
+
+            async function loadDashboard() {
+                const start = document.getElementById('startDate').value;
+                const end = document.getElementById('endDate').value;
+                if (!start || !end) { alert('Please select both start and end dates'); return; }
+                try {
+                    const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
+                    if (!result.success) throw new Error(result.error || 'Failed to load sales data');
+                    const sales = result.sales || [];
+                    const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
+                    const expenses = expensesResult.success ? (expensesResult.data || []) : [];
+                    const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
+
+                    const expensesByCashier = expenses.reduce((acc, exp) => {
+                        const name = exp.cashier?.full_name || exp.users?.full_name || exp.created_by?.full_name || 'Unknown Cashier';
+                        acc[name] = (acc[name] || 0) + parseFloat(exp.amount || 0);
+                        return acc;
+                    }, {});
+
+                    document.getElementById('infoBox').style.display = (sales.length === 0 && expenses.length === 0) ? 'block' : 'none';
+                    if (sales.length === 0 && expenses.length === 0)
+                        document.getElementById('infoText').textContent = 'No sales or expenses found in this period.';
+
+                    const grossProfit = sales.reduce((s, x) => s + (x.total_profit || 0), 0);
+                    const netProfit = grossProfit - totalExpenses;
+
+                    document.getElementById('totalRevenue').textContent = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
+                    document.getElementById('totalProfit').textContent = `KES ${netProfit.toFixed(2)}`;
+                    document.getElementById('totalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+                    document.getElementById('transactionCount').textContent = sales.length;
+                    document.getElementById('itemsSold').textContent = sales.reduce((s,x) => s+(x.items_sold||0), 0);
+                    document.getElementById('profitBreakdown').textContent = `Gross: KES ${grossProfit.toFixed(2)} - Expenses: KES ${totalExpenses.toFixed(2)}`;
+
+                    if (sales.length > 0) {
+                        const top = sales.reduce((m,s) => (s.total_profit||0)>(m.total_profit||0)?s:m, sales[0]);
+                        document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
+                        document.getElementById('topPerformerProfit').textContent = (top.total_profit||0).toFixed(2);
+                        document.getElementById('topCashier').style.display = 'block';
+                    } else {
+                        document.getElementById('topCashier').style.display = 'none';
+                    }
+
+                    renderCashierChart(sales);
+                    renderExpensesByCashierChart(expensesByCashier);
+                    renderTopProductsChart(sales);
+                    renderRecentTransactions(sales.slice(0, 10));
+                } catch (err) {
+                    console.error('Dashboard load failed:', err);
+                    document.getElementById('recentTransactions').innerHTML = `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
+                }
+            }
+
+            function renderCashierChart(sales) {
+                const canvas = document.getElementById('cashierChart');
+                const empty = document.getElementById('cashierChartEmpty');
+                if (!sales.length) { 
+                    canvas.style.display = 'none'; 
+                    empty.style.display = 'block'; 
+                    if (revenueChart) revenueChart.destroy(); 
+                    return; 
+                }
+                canvas.style.display = 'block'; 
+                empty.style.display = 'none';
+                if (revenueChart) revenueChart.destroy();
+                const byCashier = sales.reduce((acc, s) => {
+                    const name = s.users?.full_name || 'Unknown';
+                    if (!acc[name]) acc[name] = { revenue: 0, profit: 0 };
+                    acc[name].revenue += s.total_amount || 0;
+                    acc[name].profit += s.total_profit || 0;
                     return acc;
                 }, {});
-
-                document.getElementById('infoBox').style.display = (sales.length === 0 && expenses.length === 0) ? 'block' : 'none';
-                if (sales.length === 0 && expenses.length === 0)
-                    document.getElementById('infoText').textContent = 'No sales or expenses found in this period.';
-                const grossProfit = sales.reduce((s, x) => s + (x.total_profit || 0), 0);
-                const netProfit = grossProfit - totalExpenses;
-                document.getElementById('totalRevenue').textContent = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
-                document.getElementById('totalProfit').textContent = `KES ${netProfit.toFixed(2)}`;
-                document.getElementById('totalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
-                document.getElementById('transactionCount').textContent = sales.length;
-                document.getElementById('itemsSold').textContent = sales.reduce((s,x) => s+(x.items_sold||0), 0);
-                document.getElementById('profitBreakdown').textContent = `Gross: KES ${grossProfit.toFixed(2)} - Expenses: KES ${totalExpenses.toFixed(2)}`;
-                if (sales.length > 0) {
-                    const top = sales.reduce((m,s) => (s.total_profit||0)>(m.total_profit||0)?s:m, sales[0]);
-                    document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
-                    document.getElementById('topPerformerProfit').textContent = (top.total_profit||0).toFixed(2);
-                    document.getElementById('topCashier').style.display = 'block';
-                } else {
-                    document.getElementById('topCashier').style.display = 'none';
-                }
-                renderCashierChart(sales);
-                renderTopProductsChart(sales);
-                renderRecentTransactions(sales.slice(0, 10));
-
-                // ── NEW: Render expenses by user chart & table ──
-                renderExpensesByUserChart(expensesByUser);
-                renderExpensesByUserTable(expensesByUser);
-            } catch (err) {
-                console.error('Dashboard load failed:', err);
-                document.getElementById('recentTransactions').innerHTML = `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
-            }
-        }
-        function renderCashierChart(sales) {
-            const canvas = document.getElementById('cashierChart');
-            const empty = document.getElementById('cashierChartEmpty');
-            if (!sales.length) { canvas.style.display = 'none'; empty.style.display = 'block'; if (revenueChart) revenueChart.destroy(); return; }
-            canvas.style.display = 'block'; empty.style.display = 'none';
-            if (revenueChart) revenueChart.destroy();
-            const byCashier = sales.reduce((acc, s) => {
-                const name = s.users?.full_name || 'Unknown';
-                if (!acc[name]) acc[name] = { revenue: 0, profit: 0 };
-                acc[name].revenue += s.total_amount || 0;
-                acc[name].profit += s.total_profit || 0;
-                return acc;
-            }, {});
-            const labels = Object.keys(byCashier);
-            revenueChart = new Chart(canvas.getContext('2d'), {
-                type: 'bar',
-                data: { labels, datasets: [
-                    { label: 'Revenue (KES)', data: labels.map(k => byCashier[k].revenue), backgroundColor: 'rgba(63,185,80,0.65)' },
-                    { label: 'Profit (KES)', data: labels.map(k => byCashier[k].profit), backgroundColor: 'rgba(245,158,11,0.65)' }
-                ]},
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-            });
-        }
-        function renderTopProductsChart(sales) {
-            const canvas = document.getElementById('topProductsChart');
-            const empty = document.getElementById('productsChartEmpty');
-            const totals = sales.reduce((acc, sale) => {
-                (sale.sale_items || []).forEach(item => {
-                    const name = item.products?.name || `Item #${item.product_id}`;
-                    acc[name] = (acc[name] || 0) + (item.subtotal || item.unit_price * item.quantity || 0);
+                const labels = Object.keys(byCashier);
+                revenueChart = new Chart(canvas.getContext('2d'), {
+                    type: 'bar',
+                    data: { 
+                        labels, 
+                        datasets: [
+                            { label: 'Revenue (KES)', data: labels.map(k => byCashier[k].revenue), backgroundColor: 'rgba(63,185,80,0.65)' },
+                            { label: 'Profit (KES)', data: labels.map(k => byCashier[k].profit), backgroundColor: 'rgba(245,158,11,0.65)' }
+                        ]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
                 });
-                return acc;
-            }, {});
-            const top5 = Object.entries(totals).sort(([,a],[,b]) => b - a).slice(0, 5);
-            if (!top5.length) { canvas.style.display = 'none'; empty.style.display = 'block'; if (topProductsChart) topProductsChart.destroy(); return; }
-            canvas.style.display = 'block'; empty.style.display = 'none';
-            if (topProductsChart) topProductsChart.destroy();
-            topProductsChart = new Chart(canvas.getContext('2d'), {
-                type: 'doughnut',
-                data: { labels: top5.map(([n]) => n), datasets: [{ data: top5.map(([,v]) => v), backgroundColor: ['#3fb950','#f59e0b','#58a6ff','#f85149','#a78bfa'] }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
-            });
-        }
-        function renderRecentTransactions(transactions) {
-            const tbody = document.getElementById('recentTransactions');
-            if (!transactions.length) { tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Recent Transactions</h3></td></tr>`; return; }
-            tbody.innerHTML = transactions.map(tx => `
-                <tr>
-                    <td>${new Date(tx.created_at).toLocaleString()}</td>
-                    <td>${tx.users?.full_name || '—'}</td>
-                    <td>KES ${(tx.total_amount||0).toFixed(2)}</td>
-                    <td>KES ${(tx.total_profit||0).toFixed(2)}</td>
-                    <td>${tx.items_sold || '—'}</td>
-                    <td>${tx.payment_method || '—'}</td>
-                </tr>
-            `).join('');
-        }
-        // ── NEW: Render Expenses by User Chart ──
-        function renderExpensesByUserChart(expensesByUser) {
-            const canvas = document.getElementById('expensesByUserChart');
-            const empty = document.getElementById('expensesChartEmpty');
-            const users = Object.keys(expensesByUser);
-            const values = users.map(u => expensesByUser[u]);
-            if (!users.length || values.every(v => v === 0)) {
-                canvas.style.display = 'none';
-                empty.style.display = 'block';
-                if (expensesByUserChart) expensesByUserChart.destroy();
-                return;
             }
-            canvas.style.display = 'block';
-            empty.style.display = 'none';
-            if (expensesByUserChart) expensesByUserChart.destroy();
-            expensesByUserChart = new Chart(canvas.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: users,
-                    datasets: [{
-                        label: 'Expenses (KES)',
-                        data: values,
-                        backgroundColor: 'rgba(248,81,73,0.65)',
-                        borderColor: 'rgba(248,81,73,0.9)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { y: { beginAtZero: true } },
-                    plugins: { legend: { display: false } }
+
+            function renderExpensesByCashierChart(expensesByCashier) {
+                const canvas = document.getElementById('expensesByCashierChart');
+                const empty = document.getElementById('expensesChartEmpty');
+                const topSpenderDiv = document.getElementById('topSpender');
+                if (!Object.keys(expensesByCashier).length || Object.values(expensesByCashier).every(v => v === 0)) {
+                    canvas.style.display = 'none';
+                    empty.style.display = 'block';
+                    topSpenderDiv.style.display = 'none';
+                    if (expensesByCashierChart) expensesByCashierChart.destroy();
+                    return;
                 }
-            });
-        }
-        // ── NEW: Render Expenses by User Table ──
-        function renderExpensesByUserTable(expensesByUser) {
-            const tbody = document.getElementById('expensesByUserTable');
-            const entries = Object.entries(expensesByUser)
-                .sort(([,a], [,b]) => b - a)
-                .filter(([,amount]) => amount > 0);
-            if (!entries.length) {
-                tbody.innerHTML = `<tr><td colspan="2" class="empty-state"><p>No expenses by users in this period</p></td></tr>`;
-                return;
+                canvas.style.display = 'block';
+                empty.style.display = 'none';
+                if (expensesByCashierChart) expensesByCashierChart.destroy();
+                const labels = Object.keys(expensesByCashier);
+                const values = labels.map(k => expensesByCashier[k]);
+                expensesByCashierChart = new Chart(canvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Expenses (KES)',
+                            data: values,
+                            backgroundColor: 'rgba(248,81,73,0.65)',
+                            borderColor: 'rgba(248,81,73,0.9)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+                // Top Spender highlight
+                if (values.length > 0) {
+                    const maxIndex = values.indexOf(Math.max(...values));
+                    const topName = labels[maxIndex];
+                    const topAmount = values[maxIndex].toFixed(2);
+                    document.getElementById('topSpenderName').textContent = topName;
+                    document.getElementById('topSpenderAmount').textContent = topAmount;
+                    topSpenderDiv.style.display = 'block';
+                } else {
+                    topSpenderDiv.style.display = 'none';
+                }
             }
-            tbody.innerHTML = entries.map(([user, amount]) => `
-                <tr>
-                    <td>${user}</td>
-                    <td style="color:var(--danger);font-weight:600;">KES ${amount.toFixed(2)}</td>
-                </tr>
-            `).join('');
-        }
-        window.loadDashboard = loadDashboard;
-    })();
-    // ════════════════════════════════════════════════════════════════
-    // SUPPLIER ORDERS
-    // ════════════════════════════════════════════════════════════════
-    async function loadSupplierOrders() {
-        if (!window.supplierOrdersModule) return;
-        try {
-            const result = await window.supplierOrdersModule.getAllOrders();
-            if (!result.success || !result.data) {
-                document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Failed to load orders</h3><p>${result.error || 'Unknown error'}</p></div>`;
-                return;
+
+            function renderTopProductsChart(sales) {
+                const canvas = document.getElementById('topProductsChart');
+                const empty = document.getElementById('productsChartEmpty');
+                const totals = sales.reduce((acc, sale) => {
+                    (sale.sale_items || []).forEach(item => {
+                        const name = item.products?.name || `Item #${item.product_id}`;
+                        acc[name] = (acc[name] || 0) + (item.subtotal || item.unit_price * item.quantity || 0);
+                    });
+                    return acc;
+                }, {});
+                const top5 = Object.entries(totals).sort(([,a],[,b]) => b - a).slice(0, 5);
+                if (!top5.length) { 
+                    canvas.style.display = 'none'; 
+                    empty.style.display = 'block'; 
+                    if (topProductsChart) topProductsChart.destroy(); 
+                    return; 
+                }
+                canvas.style.display = 'block'; 
+                empty.style.display = 'none';
+                if (topProductsChart) topProductsChart.destroy();
+                topProductsChart = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { 
+                        labels: top5.map(([n]) => n), 
+                        datasets: [{ data: top5.map(([,v]) => v), backgroundColor: ['#3fb950','#f59e0b','#58a6ff','#f85149','#a78bfa'] }] 
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+                });
             }
-            const orders = result.data;
-            document.getElementById('pendingOrdersCount').textContent = orders.filter(o => o.status === 'pending').length;
-            document.getElementById('processingOrdersCount').textContent = orders.filter(o => ['processing','shipped'].includes(o.status)).length;
-            document.getElementById('deliveredOrdersCount').textContent = orders.filter(o => o.status === 'delivered').length;
-            document.getElementById('totalOrdersValue').textContent = `KES ${orders.reduce((s,o) => s+(o.total_amount||0),0).toLocaleString()}`;
-            if (!orders.length) { document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`; return; }
-            document.getElementById('supplierOrdersList').innerHTML = orders.map(order => `
-                <div class="supplier-order-card">
-                    <div class="order-card-header">
-                        <div><div class="order-id">#${order.id}</div><div style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">${order.suppliers?.name || 'Unknown Supplier'}</div></div>
-                        <span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>
-                    </div>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:16px;">
-                        <div><div style="font-size:0.85rem;color:var(--text-muted);">Order Date</div><div style="font-weight:600;">${new Date(order.created_at).toLocaleDateString()}</div></div>
-                        <div><div style="font-size:0.85rem;color:var(--text-muted);">Expected Delivery</div><div style="font-weight:600;">${order.expected_delivery ? new Date(order.expected_delivery).toLocaleDateString() : '—'}</div></div>
-                        <div><div style="font-size:0.85rem;color:var(--text-muted);">Total Amount</div><div style="font-weight:600;color:var(--accent-green);">KES ${(order.total_amount||0).toLocaleString()}</div></div>
-                        <div><div style="font-size:0.85rem;color:var(--text-muted);">Items</div><div style="font-weight:600;">${order.supplier_order_items?.length || 0} items</div></div>
-                    </div>
-                    <div style="display:flex;gap:12px;">
-                        <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
-                        <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message Supplier</button>
-                    </div>
-                </div>
-            `).join('');
-        } catch (err) {
-            document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${err.message}</p></div>`;
-        }
-    }
-    window.createNewSupplierOrder = () => alert('Create New Supplier Order — Coming soon');
-    window.viewOrderDetails = (id) => alert(`View details for order #${id}`);
-    window.messageSupplier = (id) => alert(`Message supplier #${id}`);
-    // ════════════════════════════════════════════════════════════════
-    // STAFF MESSAGING TAB
-    // ════════════════════════════════════════════════════════════════
-    async function loadUsersForMessaging() {
-        try {
-            const result = await window.messagingModule.getUsersForMessaging();
-            if (!result.success) return;
-            const select = document.getElementById('messageRecipient');
-            select.innerHTML = '<option value="">-- Select a user --</option>';
-            result.data.forEach(user => {
-                const opt = document.createElement('option');
-                opt.value = user.id;
-                opt.textContent = `${user.full_name} (${user.role})`;
-                select.appendChild(opt);
-            });
-        } catch (err) { console.error('Load users error:', err); }
-    }
-    async function sendMessageToUser() {
-        const recipientId = document.getElementById('messageRecipient').value;
-        const messageText = document.getElementById('messageText').value.trim();
-        if (!recipientId || !messageText) return alert('Select recipient and enter message');
-        const btn = document.getElementById('sendMessageBtn');
-        btn.disabled = true; btn.textContent = 'Sending…';
-        try {
-            const result = await window.messagingModule.sendMessage(parseInt(recipientId), messageText);
-            if (result.success) {
-                alert('✅ Message sent!');
-                document.getElementById('messageRecipient').value = '';
-                document.getElementById('messageText').value = '';
-                loadSentMessages();
-            } else { alert('Failed: ' + result.error); }
-        } catch (err) { alert('Error: ' + err.message); }
-        finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
-    }
-    async function loadSentMessages() {
-        const tbody = document.getElementById('sentMessagesTable');
-        try {
-            const result = await window.messagingModule.getSentMessages(20);
-            if (!result.success || !result.data?.length) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><p>No sent messages yet</p></td></tr>`;
-                return;
+
+            function renderRecentTransactions(transactions) {
+                const tbody = document.getElementById('recentTransactions');
+                if (!transactions.length) { 
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Recent Transactions</h3></td></tr>`; 
+                    return; 
+                }
+                tbody.innerHTML = transactions.map(tx => `
+                    <tr>
+                        <td>${new Date(tx.created_at).toLocaleString()}</td>
+                        <td>${tx.users?.full_name || '—'}</td>
+                        <td>KES ${(tx.total_amount||0).toFixed(2)}</td>
+                        <td>KES ${(tx.total_profit||0).toFixed(2)}</td>
+                        <td>${tx.items_sold || '—'}</td>
+                        <td>${tx.payment_method || '—'}</td>
+                    </tr>
+                `).join('');
             }
-            tbody.innerHTML = result.data.map(msg => {
-                const hoursLeft = Math.round((new Date(msg.expires_at) - new Date()) / 3600000);
-                return `<tr>
-                    <td>${msg.recipient?.full_name || 'Unknown'}</td>
-                    <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${msg.message_text || '(empty)'}</td>
-                    <td>${new Date(msg.created_at).toLocaleString()}</td>
-                    <td><span style="color:${msg.is_read ? '#3fb950':'#f59e0b'}">${msg.is_read ? '✅ Read':'⏳ Unread'}</span></td>
-                    <td>${hoursLeft > 0 ? hoursLeft+'h' : 'Expired'}</td>
-                </tr>`;
-            }).join('');
-        } catch (err) { console.error('Load sent error:', err); }
-    }
+
+            window.loadDashboard = loadDashboard;
+        })();
+
+        // Supplier Orders
+        async function loadSupplierOrders() {
+            if (!window.supplierOrdersModule) return;
+            try {
+                const result = await window.supplierOrdersModule.getAllOrders();
+                if (!result.success || !result.data) {
+                    document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Failed to load orders</h3><p>${result.error || 'Unknown error'}</p></div>`;
+                    return;
+                }
+                const orders = result.data;
+                document.getElementById('pendingOrdersCount').textContent = orders.filter(o => o.status === 'pending').length;
+                document.getElementById('processingOrdersCount').textContent = orders.filter(o => ['processing','shipped'].includes(o.status)).length;
+                document.getElementById('deliveredOrdersCount').textContent = orders.filter(o => o.status === 'delivered').length;
+                document.getElementById('totalOrdersValue').textContent = `KES ${orders.reduce((s,o) => s+(o.total_amount||0),0).toLocaleString()}`;
+                if (!orders.length) { 
+                    document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`; 
+                    return; 
+                }
+                document.getElementById('supplierOrdersList').innerHTML = orders.map(order => `
+                    <div class="supplier-order-card">
+                        <div class="order-card-header">
+                            <div>
+                                <div class="order-id">#${order.id}</div>
+                                <div style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">${order.suppliers?.name || 'Unknown Supplier'}</div>
+                            </div>
+                            <span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:16px;">
+                            <div><div style="font-size:0.85rem;color:var(--text-muted);">Order Date</div><div style="font-weight:600;">${new Date(order.created_at).toLocaleDateString()}</div></div>
+                            <div><div style="font-size:0.85rem;color:var(--text-muted);">Expected Delivery</div><div style="font-weight:600;">${order.expected_delivery ? new Date(order.expected_delivery).toLocaleDateString() : '—'}</div></div>
+                            <div><div style="font-size:0.85rem;color:var(--text-muted);">Total Amount</div><div style="font-weight:600;color:var(--accent-green);">KES ${(order.total_amount||0).toLocaleString()}</div></div>
+                            <div><div style="font-size:0.85rem;color:var(--text-muted);">Items</div><div style="font-weight:600;">${order.supplier_order_items?.length || 0} items</div></div>
+                        </div>
+                        <div style="display:flex;gap:12px;">
+                            <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
+                            <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message Supplier</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${err.message}</p></div>`;
+            }
+        }
+
+        window.createNewSupplierOrder = () => alert('Create New Supplier Order — Coming soon');
+        window.viewOrderDetails = (id) => alert(`View details for order #${id}`);
+        window.messageSupplier = (id) => alert(`Message supplier #${id}`);
+
+        // Staff Messaging Tab
+        async function loadUsersForMessaging() {
+            try {
+                const result = await window.messagingModule.getUsersForMessaging();
+                if (!result.success) return;
+                const select = document.getElementById('messageRecipient');
+                select.innerHTML = '<option value="">-- Select a user --</option>';
+                result.data.forEach(user => {
+                    const opt = document.createElement('option');
+                    opt.value = user.id;
+                    opt.textContent = `${user.full_name} (${user.role})`;
+                    select.appendChild(opt);
+                });
+            } catch (err) { console.error('Load users error:', err); }
+        }
+
+        async function sendMessageToUser() {
+            const recipientId = document.getElementById('messageRecipient').value;
+            const messageText = document.getElementById('messageText').value.trim();
+            if (!recipientId || !messageText) return alert('Select recipient and enter message');
+            const btn = document.getElementById('sendMessageBtn');
+            btn.disabled = true; btn.textContent = 'Sending…';
+            try {
+                const result = await window.messagingModule.sendMessage(parseInt(recipientId), messageText);
+                if (result.success) {
+                    alert('✅ Message sent!');
+                    document.getElementById('messageRecipient').value = '';
+                    document.getElementById('messageText').value = '';
+                    loadSentMessages();
+                } else { alert('Failed: ' + result.error); }
+            } catch (err) { alert('Error: ' + err.message); }
+            finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
+        }
+
+        async function loadSentMessages() {
+            const tbody = document.getElementById('sentMessagesTable');
+            try {
+                const result = await window.messagingModule.getSentMessages(20);
+                if (!result.success || !result.data?.length) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><p>No sent messages yet</p></td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = result.data.map(msg => {
+                    const hoursLeft = Math.round((new Date(msg.expires_at) - new Date()) / 3600000);
+                    return `<tr>
+                        <td>${msg.recipient?.full_name || 'Unknown'}</td>
+                        <td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${msg.message_text || '(empty)'}</td>
+                        <td>${new Date(msg.created_at).toLocaleString()}</td>
+                        <td><span style="color:${msg.is_read ? '#3fb950':'#f59e0b'}">${msg.is_read ? '✅ Read':'⏳ Unread'}</span></td>
+                        <td>${hoursLeft > 0 ? hoursLeft+'h' : 'Expired'}</td>
+                    </tr>`;
+                }).join('');
+            } catch (err) { console.error('Load sent error:', err); }
+        }
     </script>
+
     <footer style="text-align: center; padding: 15px; background-color: black;">
-  <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
-</footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+        <p>&copy; <span id="year"></span><b style="color:gold;"> G&H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

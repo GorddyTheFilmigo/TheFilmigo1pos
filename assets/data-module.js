@@ -435,19 +435,37 @@
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses')
                 .select(`
-                    id, amount, description, date, created_at, shop_id, user_id,
-                    user:user_id (id, full_name)          // ← JOIN to get user name
+                    id,
+                    category,
+                    amount,
+                    description,
+                    date,
+                    created_at,
+                    shop_id,
+                    user_id,
+                    cashier:user_id (id, full_name)          // ← FIXED: correct alias for user join
                 `)
                 .eq('shop_id', shopId)
                 .gte('date', startDate)
                 .lte('date', endDate)
                 .order('date', { ascending: false });
 
-            if (error) throw error;
+            if (error) {
+                console.error('Expenses query failed:', error.message, error.details, error.hint);
+                throw error;
+            }
 
-            console.log(`✅ Loaded ${data.length} expenses with user info for range ${startDate} to ${endDate}`);
+            console.log(`✅ Loaded ${data.length} expenses for range ${startDate} to ${endDate}`);
             if (data.length > 0) {
-                console.log('Sample expense with user data:', data[0]);  // Debug: see if user appears
+                console.log('First expense record (debug):', data[0]);
+                console.log('Does cashier/user data exist?', data[0].cashier ? 'YES' : 'NO - join failed');
+                if (data[0].cashier) {
+                    console.log('Cashier name from join:', data[0].cashier.full_name);
+                } else if (data[0].user_id) {
+                    console.log('Raw user_id (no join success):', data[0].user_id);
+                }
+            } else {
+                console.log('No expenses found in this date range');
             }
 
             return { success: true, data: data || [] };
