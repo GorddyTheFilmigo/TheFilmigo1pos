@@ -5,7 +5,6 @@
  */
 (function() {
     'use strict';
-
     // Get current user's shop_id from authModule
     function getCurrentShopId() {
         const currentUser = authModule.getCurrentUser();
@@ -14,7 +13,6 @@
         }
         return currentUser.shop_id;
     }
-
     // Get current authenticated user's UUID from Supabase with retries
     async function getCurrentAuthUserId(maxRetries = 3, delayMs = 1000) {
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -26,35 +24,29 @@
                     console.log(`Auth user ID fetched (attempt ${attempt}):`, user.id);
                     return user.id;
                 }
-
                 // Fallback: getSession()
                 const { data: sessionData } = await window.DukaPOS.supabaseClient.auth.getSession();
                 if (sessionData?.session?.user?.id) {
                     console.log(`Auth user ID from session fallback (attempt ${attempt}):`, sessionData.session.user.id);
                     return sessionData.session.user.id;
                 }
-
                 // Legacy fallback
                 const session = window.DukaPOS.supabaseClient.auth.session();
                 if (session?.user?.id) {
                     console.log(`Auth user ID from legacy session (attempt ${attempt}):`, session.user.id);
                     return session.user.id;
                 }
-
                 console.warn(`Auth user not ready yet (attempt ${attempt}/${maxRetries})`);
             } catch (err) {
                 console.warn(`Auth fetch attempt ${attempt} failed:`, err.message);
             }
-
             if (attempt < maxRetries) {
                 await new Promise(resolve => setTimeout(resolve, delayMs));
             }
         }
-
         console.error('Failed to get authenticated user ID after retries');
         throw new Error('Could not get authenticated user ID - please log out and log in again');
     }
-
     // ============================================================================
     // CUSTOMERS
     // ============================================================================
@@ -74,7 +66,6 @@
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function createCustomer(customerData) {
         try {
             const shopId = getCurrentShopId();
@@ -92,7 +83,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function updateCustomer(customerId, updates) {
         try {
             const shopId = getCurrentShopId();
@@ -118,7 +108,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function deleteCustomer(customerId) {
         try {
             const shopId = getCurrentShopId();
@@ -135,7 +124,6 @@
             return { success: false, error: err.message };
         }
     }
-
     // ============================================================================
     // PRODUCTS
     // ============================================================================
@@ -155,7 +143,6 @@
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function createProduct(productData) {
         try {
             const shopId = getCurrentShopId();
@@ -173,7 +160,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function updateProduct(productId, updates) {
         try {
             const shopId = getCurrentShopId();
@@ -192,7 +178,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function deleteProduct(productId) {
         try {
             const shopId = getCurrentShopId();
@@ -209,7 +194,6 @@
             return { success: false, error: err.message };
         }
     }
-
     // ============================================================================
     // SUPPLIERS
     // ============================================================================
@@ -229,7 +213,6 @@
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function createSupplier(supplierData) {
         try {
             const shopId = getCurrentShopId();
@@ -247,7 +230,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function updateSupplier(supplierId, updates) {
         try {
             const shopId = getCurrentShopId();
@@ -266,7 +248,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function deleteSupplier(supplierId) {
         try {
             const shopId = getCurrentShopId();
@@ -283,7 +264,6 @@
             return { success: false, error: err.message };
         }
     }
-
     // ============================================================================
     // SALES / TRANSACTIONS
     // ============================================================================
@@ -303,7 +283,6 @@
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function createSale(saleData, items) {
         try {
             const shopId = getCurrentShopId();
@@ -320,7 +299,6 @@
                 .select()
                 .single();
             if (saleError) throw saleError;
-
             const itemsToInsert = items.map(item => ({
                 ...item,
                 sale_id: sale.id,
@@ -331,7 +309,6 @@
                 .from('sale_items')
                 .insert(itemsToInsert);
             if (itemsError) throw itemsError;
-
             console.log('✅ Sale created:', sale);
             return { success: true, data: sale };
         } catch (err) {
@@ -339,7 +316,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function updateInventory(productId, quantityChange, operation = 'subtract') {
         try {
             const shopId = getCurrentShopId();
@@ -351,7 +327,6 @@
                 .single();
             if (fetchError) throw new Error(`Fetch error: ${fetchError.message}`);
             if (!product) throw new Error('Product not found or does not belong to your shop');
-
             const currentStock = Number(product.stock) || 0;
             let newStock;
             if (operation === 'subtract') {
@@ -361,19 +336,16 @@
             } else {
                 throw new Error('Invalid operation: must be "subtract" or "add"');
             }
-
             if (newStock === currentStock) {
                 console.warn(`No stock change needed for product ${productId}`);
                 return { success: true, newStock };
             }
-
             const { error: updateError } = await window.DukaPOS.supabaseClient
                 .from('products')
                 .update({ stock: newStock })
                 .eq('id', productId)
                 .eq('shop_id', shopId);
             if (updateError) throw new Error(`Update error: ${updateError.message}`);
-
             console.log(`✅ Stock updated: Product ${productId} → ${newStock} units (was ${currentStock})`);
             return { success: true, newStock };
         } catch (err) {
@@ -381,7 +353,6 @@
             return { success: false, error: err.message };
         }
     }
-
     // ============================================================================
     // EXPENSES TRACKING
     // ============================================================================
@@ -401,11 +372,9 @@
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function createExpense(expenseData) {
         try {
             const shopId = getCurrentShopId();
-
             // Try Supabase auth first, then fall back to authModule user ID
             let authUserId = null;
             try {
@@ -422,25 +391,21 @@
                     // user_id will be null — only works if your DB column allows nulls
                 }
             }
-
             const dataToInsert = {
                 category: expenseData.category,
                 amount: expenseData.amount,
                 description: expenseData.description,
                 date: expenseData.date,
                 shop_id: shopId,
-                user_id: authUserId,  // null if no auth available
+                user_id: authUserId, // null if no auth available
                 created_at: new Date().toISOString()
             };
-
             console.log('Creating expense with data:', dataToInsert);
-
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses')
                 .insert([dataToInsert])
                 .select()
                 .single();
-
             if (error) {
                 // If FK constraint fails on user_id, retry with null
                 if (error.message && error.message.includes('foreign key') && authUserId !== null) {
@@ -457,7 +422,6 @@
                 }
                 throw error;
             }
-
             console.log('✅ Expense created:', data);
             return { success: true, data };
         } catch (err) {
@@ -465,26 +429,33 @@
             return { success: false, error: err.message };
         }
     }
-
     async function getExpensesByDateRange(startDate, endDate) {
         try {
             const shopId = getCurrentShopId();
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses')
-                .select('*')
+                .select(`
+                    id, amount, description, date, created_at, shop_id, user_id,
+                    user:user_id (id, full_name)          // ← JOIN to get user name
+                `)
                 .eq('shop_id', shopId)
                 .gte('date', startDate)
                 .lte('date', endDate)
                 .order('date', { ascending: false });
+
             if (error) throw error;
-            console.log(`✅ Loaded ${data.length} expenses for range ${startDate} to ${endDate}`);
+
+            console.log(`✅ Loaded ${data.length} expenses with user info for range ${startDate} to ${endDate}`);
+            if (data.length > 0) {
+                console.log('Sample expense with user data:', data[0]);  // Debug: see if user appears
+            }
+
             return { success: true, data: data || [] };
         } catch (err) {
             console.error('getExpensesByDateRange failed:', err);
             return { success: false, error: err.message, data: [] };
         }
     }
-
     async function updateExpense(expenseId, updates) {
         try {
             const shopId = getCurrentShopId();
@@ -503,7 +474,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function deleteExpense(expenseId) {
         try {
             const shopId = getCurrentShopId();
@@ -520,7 +490,6 @@
             return { success: false, error: err.message };
         }
     }
-
     async function getExpenseStats() {
         try {
             const now = new Date();
@@ -530,14 +499,11 @@
             const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
             const yearStart = new Date(now.getFullYear(), 0, 1);
             const formatDate = (date) => date.toISOString().split('T')[0];
-
             const todayResult = await getExpensesByDateRange(formatDate(today), formatDate(now));
             const weekResult = await getExpensesByDateRange(formatDate(weekStart), formatDate(now));
             const monthResult = await getExpensesByDateRange(formatDate(monthStart), formatDate(now));
             const yearResult = await getExpensesByDateRange(formatDate(yearStart), formatDate(now));
-
             const calculateTotal = (expenses) => expenses.reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
-
             return {
                 success: true,
                 data: {
@@ -552,7 +518,6 @@
             return { success: false, error: err.message };
         }
     }
-
     // ============================================================================
     // Export to global scope
     // ============================================================================
@@ -580,6 +545,5 @@
         getExpenseStats,
         getCurrentShopId
     };
-
     console.log('✅ Data Module loaded (multi-tenant filtering enabled with expenses tracking)');
 })();
