@@ -13,14 +13,33 @@
         return window.DukaPOS?.supabaseClient || window.supabase || null;
     }
 
-    // ── Wait for shop context to be available (max ~5 seconds) ─────────
-    function waitForShopContext(maxWaitMs = 5000) {
+    // ── Wait for shop context to be available (max ~8 seconds) ─────────
+    // FIX: App stores shop via authModule.getCurrentShop(), not DukaPOS.currentShop
+    function waitForShopContext(maxWaitMs = 8000) {
         return new Promise((resolve, reject) => {
             const start = Date.now();
             const check = () => {
-                const shop = window.DukaPOS?.currentShop;
-                if (shop) return resolve(shop);
-                if (Date.now() - start > maxWaitMs) return reject(new Error('Shop context not available'));
+                // ✅ authModule.getCurrentShop() is the correct source in this app
+                const shop = window.authModule?.getCurrentShop()
+                          || window.DukaPOS?.currentShop
+                          || null;
+
+                if (shop?.id) return resolve(shop);
+
+                if (Date.now() - start > maxWaitMs) {
+                    // Last resort — check localStorage
+                    try {
+                        const keys = ['currentShop', 'gh_shop', 'pos_shop', 'duka_shop', 'shop'];
+                        for (const key of keys) {
+                            const raw = localStorage.getItem(key);
+                            if (raw) {
+                                const parsed = JSON.parse(raw);
+                                if (parsed?.id) return resolve(parsed);
+                            }
+                        }
+                    } catch(e) {}
+                    return reject(new Error('Shop context not available'));
+                }
                 setTimeout(check, 200);
             };
             check();
