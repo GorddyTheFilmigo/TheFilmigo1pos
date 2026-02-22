@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline — G&H Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0d1117; --text: #e6edf3; --muted: #8b949e; --orange: #f59e0b; --green: #3fb950; --border: #21262d; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Archivo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+        .icon { font-size: 5rem; margin-bottom: 24px; filter: grayscale(0.3); }
+        h1 { font-size: 2rem; font-weight: 900; margin-bottom: 12px; }
+        p { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 380px; margin-bottom: 32px; }
+        .card { background: #161b22; border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; max-width: 420px; width: 100%; }
+        .status-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .status-row:last-child { border-bottom: none; }
+        .status-label { color: var(--muted); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #f85149; display: inline-block; margin-right: 6px; animation: blink 1.5s infinite; }
+        .status-dot.ok { background: var(--green); animation: none; }
+        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+        .btn { margin-top: 28px; width: 100%; padding: 14px; background: var(--orange); color: #000; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: 'Archivo', sans-serif; transition: background 0.2s; }
+        .btn:hover { background: #d97706; }
+        .logo { font-size: 1.1rem; font-weight: 900; color: var(--orange); margin-bottom: 32px; letter-spacing: 0.02em; }
+    </style>
+</head>
+<body>
+    <div class="logo">G&H Solutions</div>
+    <div class="icon">📵</div>
+    <h1>You're Offline</h1>
+    <p>The POS system needs an internet connection to sync data with the server. Your device is currently offline.</p>
+
+    <div class="card">
+        <div class="status-row">
+            <span class="status-label">Internet connection</span>
+            <span><span class="status-dot" id="netDot"></span><span id="netStatus">Checking…</span></span>
+        </div>
+        <div class="status-row">
+            <span class="status-label">Last page visited</span>
+            <span style="color:var(--text);font-size:0.85rem;" id="lastPage">—</span>
+        </div>
+        <div class="status-row">
+            <span class="status-label">Cached data available</span>
+            <span id="cacheStatus" style="font-size:0.85rem;color:var(--muted);">Checking…</span>
+        </div>
+        <button class="btn" onclick="retry()">🔄 Retry Connection</button>
+    </div>
+
+    <script>
+        // Show last-visited page
+        const ref = document.referrer;
+        if (ref) {
+            const parts = ref.split('/');
+            document.getElementById('lastPage').textContent = parts[parts.length - 1] || 'Home';
+        }
+
+        // Check cache
+        if ('caches' in window) {
+            caches.keys().then(keys => {
+                const el = document.getElementById('cacheStatus');
+                if (keys.length > 0) {
+                    el.textContent = '✅ Yes — some pages cached';
+                    el.style.color = 'var(--green)';
+                } else {
+                    el.textContent = 'None available';
+                }
+            });
+        } else {
+            document.getElementById('cacheStatus').textContent = 'Not supported';
+        }
+
+        // Network status
+        function updateNetStatus() {
+            const dot    = document.getElementById('netDot');
+            const label  = document.getElementById('netStatus');
+            const online = navigator.onLine;
+            dot.className   = 'status-dot' + (online ? ' ok' : '');
+            label.textContent = online ? 'Connected' : 'No connection';
+            label.style.color = online ? 'var(--green)' : '#f85149';
+        }
+        updateNetStatus();
+        window.addEventListener('online',  updateNetStatus);
+        window.addEventListener('offline', updateNetStatus);
+
+        // Auto-retry when connection comes back
+        window.addEventListener('online', () => {
+            setTimeout(() => {
+                const back = document.referrer || '/pos.html';
+                window.location.href = back;
+            }, 1200);
+        });
+
+        function retry() {
+            const back = document.referrer || '/pos.html';
+            window.location.href = back;
+        }
+    </script>
+</body>
+</html>
