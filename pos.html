@@ -8,6 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
@@ -18,19 +19,39 @@
     <link rel="stylesheet" href="assets/nav-styles.css">
     <script src="assets/page-access-guard.js"></script>
     <script src="assets/nav-visibility-controller.js"></script>
+
+    <!-- ══ IntaSend Inline Payment SDK ══ -->
+    <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.5/build/intasend-inline.js"></script>
+    <head>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+
+<h2 style="font-family: 'Great Vibes', cursive;">
+  G&H Solutions by Gordon Onyango
+</h2>
+
     <style>
         :root {
-            --bg-primary: #0d1117; --bg-secondary: #161b22; --bg-tertiary: #1a2030;
-            --border: #21262d; --text: #e6edf3; --text-muted: #8b949e;
-            --accent-orange: #f59e0b; --accent-blue: #58a6ff; --accent-green: #3fb950;
-            --danger: #f85149; --accent-purple: #a371f7;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1a2030;
+            --border: #21262d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent-orange: #f59e0b;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --danger: #f85149;
+            --accent-purple: #a371f7;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); }
+
+        /* Message Notification */
         .message-notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
-        .message-notification-bell:hover { background: rgba(88,166,255,0.1); }
+        .message-notification-bell:hover { background: rgba(88, 166, 255, 0.1); }
         .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.08);} }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         .messages-popup { position: fixed; top: 70px; right: 20px; width: 400px; max-height: 500px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; }
         .messages-popup.active { display: flex; }
         .messages-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -50,16 +71,22 @@
         .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
         .empty-messages { text-align: center; padding: 40px 20px; color: var(--text-muted); }
         .empty-messages-icon { font-size: 3rem; margin-bottom: 12px; }
+
+        /* Tab Navigation */
         .pos-tabs { display: flex; gap: 10px; padding: 15px 20px; background: var(--bg-secondary); border-bottom: 2px solid var(--border); }
         .pos-tab-btn { padding: 12px 24px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.2s; }
         .pos-tab-btn:hover { border-color: var(--accent-orange); }
         .pos-tab-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        /* POS Layout */
         .pos-container { display: grid; grid-template-columns: 1fr 420px; gap: 20px; padding: 20px; height: calc(100vh - 160px); }
         .products-section, .cart-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
         .products-section { overflow-y: auto; }
         .cart-section { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
+
+        /* Customer Selector */
         .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
         .customer-selector-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
         .customer-select-row { display: flex; gap: 8px; align-items: center; }
@@ -78,8 +105,11 @@
         .selected-customer-info .cust-name { font-weight: 700; color: var(--accent-purple); font-size: 0.95rem; }
         .selected-customer-info .cust-pts { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
         .redeem-btn { background: var(--accent-purple); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+        .redeem-btn:hover { background: #8b5cf6; }
         .redeem-badge { background: rgba(163,113,247,0.2); border: 1px solid rgba(163,113,247,0.5); border-radius: 6px; padding: 6px 10px; margin-top: 8px; font-size: 0.82rem; color: var(--accent-purple); display: flex; justify-content: space-between; align-items: center; }
         .remove-redeem { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; font-weight: 700; }
+
+        /* Products */
         .search-bar { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; margin-bottom: 20px; }
         .categories { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
         .category-btn { padding: 10px 20px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; white-space: nowrap; }
@@ -91,6 +121,8 @@
         .product-name { font-weight: 600; margin-bottom: 5px; }
         .product-price { color: var(--accent-orange); font-weight: 700; font-size: 1.2rem; }
         .product-stock { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+
+        /* Cart */
         .cart-header { margin-bottom: 12px; }
         .cart-items { overflow-y: visible; margin-bottom: 12px; }
         .cart-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
@@ -101,6 +133,8 @@
         .qty-btn { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 5px; cursor: pointer; font-weight: 700; }
         .qty-value { min-width: 30px; text-align: center; font-weight: 600; }
         .remove-btn { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+
+        /* Cart Summary */
         .cart-summary { border-top: 2px solid var(--border); padding-top: 12px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
         .summary-row.discount { color: var(--accent-purple); }
@@ -112,10 +146,12 @@
         .checkout-btn { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
         .checkout-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
         .empty-cart { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+
+        /* Expenses */
         .expenses-container { padding: 20px; max-width: 1400px; margin: 0 auto; }
         .expenses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .add-expense-btn { padding: 12px 24px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; }
-        .expenses-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 20px; margin-bottom: 30px; }
+        .expenses-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
         .stat-label { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
         .stat-value { font-size: 2rem; font-weight: 900; color: var(--danger); }
@@ -124,6 +160,8 @@
         .expense-info h4 { margin-bottom: 5px; font-size: 16px; }
         .expense-meta { font-size: 13px; color: var(--text-muted); }
         .expense-amount { font-size: 1.3rem; font-weight: 700; color: var(--danger); }
+
+        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal.show { display: flex; }
         .modal-content { background: var(--bg-secondary); border: 2px solid var(--accent-green); border-radius: 12px; padding: 40px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
@@ -134,68 +172,74 @@
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; font-family: 'Archivo', sans-serif; }
         .form-group textarea { min-height: 100px; resize: vertical; }
         .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
-        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; font-family: 'Archivo', sans-serif; }
+        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
         .modal-btn-primary { background: var(--accent-green); color: white; }
         .modal-btn-secondary { background: var(--danger); color: white; }
         .modal-icon { font-size: 4rem; margin-bottom: 20px; text-align: center; }
+
+        /* Success modal loyalty section */
         .loyalty-earned { background: rgba(163,113,247,0.15); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 14px; margin: 16px 0; }
         .loyalty-earned-title { color: var(--accent-purple); font-weight: 700; margin-bottom: 4px; }
         .loyalty-earned-pts { font-size: 1.8rem; font-weight: 900; color: var(--accent-purple); }
         .loyalty-total { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* Redeem Modal */
         .redeem-modal-content { border-color: var(--accent-purple); }
         .redeem-info { background: var(--bg-primary); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
         .redeem-info p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px; }
         .redeem-available { font-size: 1.6rem; font-weight: 900; color: var(--accent-purple); }
         .redeem-conversion { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; }
-        @media (max-width:900px){.pos-container{grid-template-columns:1fr;height:auto;}.expenses-stats{grid-template-columns:1fr;}.messages-popup{width:calc(100vw - 40px);right:20px;max-height:70vh;}}
-        /* SUBSCRIPTION */
-        .sub-banner{display:none;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;font-size:0.88rem;font-weight:600;z-index:900;}
-        .sub-banner.warning{display:flex;background:rgba(245,158,11,0.18);border-bottom:1px solid rgba(245,158,11,0.5);color:var(--accent-orange);}
-        .sub-banner.grace{display:flex;background:rgba(248,81,73,0.15);border-bottom:1px solid rgba(248,81,73,0.5);color:var(--danger);}
-        .sub-banner-renew{background:var(--accent-orange);color:#000;border:none;border-radius:6px;padding:5px 14px;font-size:0.82rem;font-weight:700;cursor:pointer;}
-        .sub-expired-overlay{display:none;position:fixed;inset:0;z-index:8000;background:rgba(13,17,23,0.97);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;}
-        .sub-expired-overlay.show{display:flex;}
-        .sub-expired-icon{font-size:5rem;margin-bottom:20px;}
-        .sub-expired-title{font-size:2rem;font-weight:900;color:var(--danger);margin-bottom:10px;}
-        .sub-expired-msg{color:var(--text-muted);font-size:1rem;max-width:480px;line-height:1.7;margin-bottom:30px;}
-        .sub-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-        .sub-plan-option{border:2px solid var(--border);border-radius:10px;padding:14px 10px;cursor:pointer;transition:all 0.2s;background:var(--bg-primary);text-align:center;}
-        .sub-plan-option:hover{border-color:var(--accent-orange);}
-        .sub-plan-option.selected{border-color:var(--accent-orange);background:rgba(245,158,11,0.1);}
-        .sub-plan-name{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
-        .sub-plan-price{color:var(--accent-orange);font-weight:900;font-size:1.2rem;}
-        .sub-plan-period{font-size:0.75rem;color:var(--text-muted);}
-        .sub-renew-btn{width:100%;padding:14px;background:var(--accent-green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:'Archivo',sans-serif;}
-        .sub-logout-link{background:none;border:none;color:var(--text-muted);font-size:0.85rem;cursor:pointer;text-decoration:underline;}
-        .nav-locked .nav-tab:not(.nav-tab-active-page){pointer-events:none;opacity:0.35;cursor:not-allowed;}
-        .pos-locked{position:relative;pointer-events:none;}
-        /* STK PUSH UI */
-        .stk-phone-row{display:flex;gap:8px;align-items:stretch;margin-bottom:10px;}
-        .stk-phone-prefix{background:var(--bg-tertiary);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-weight:700;color:var(--accent-green);font-size:1rem;display:flex;align-items:center;white-space:nowrap;}
-        .stk-phone-input{flex:1;padding:12px;background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:1.05rem;font-family:'Archivo',sans-serif;letter-spacing:1px;}
-        .stk-phone-input:focus{outline:none;border-color:var(--accent-green);}
-        .stk-push-btn{width:100%;padding:15px;background:var(--accent-green);color:white;border:none;border-radius:10px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;transition:background 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-        .stk-push-btn:hover:not(:disabled){background:#2ea043;}
-        .stk-push-btn:disabled{background:var(--text-muted);cursor:not-allowed;}
-        .stk-status{display:none;border-radius:10px;padding:16px;margin-top:14px;text-align:center;}
-        .stk-status.waiting{display:block;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);}
-        .stk-status.success{display:block;background:rgba(63,185,80,0.12);border:1px solid rgba(63,185,80,0.35);}
-        .stk-status.error{display:block;background:rgba(248,81,73,0.12);border:1px solid rgba(248,81,73,0.35);}
-        .stk-status-icon{font-size:2.2rem;margin-bottom:8px;}
-        .stk-status-title{font-weight:700;font-size:1rem;margin-bottom:4px;}
-        .stk-status-sub{font-size:0.82rem;color:var(--text-muted);line-height:1.5;}
-        .stk-spinner{display:inline-block;width:28px;height:28px;border:3px solid rgba(245,158,11,0.3);border-top-color:var(--accent-orange);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:10px;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-        .pay-tab-row{display:flex;gap:8px;margin-bottom:14px;}
-        .pay-tab-btn{flex:1;padding:10px;border-radius:8px;font-weight:700;cursor:pointer;font-size:0.88rem;transition:all 0.2s;font-family:'Archivo',sans-serif;border:2px solid var(--border);background:var(--bg-primary);color:var(--text-muted);}
-        .pay-tab-btn.tab-active-mpesa{border-color:var(--accent-green);background:rgba(63,185,80,0.1);color:var(--accent-green);}
-        .pay-tab-btn.tab-active-manual{border-color:var(--accent-orange);background:rgba(245,158,11,0.1);color:var(--accent-orange);}
+
+        @media (max-width: 900px) {
+            .pos-container { grid-template-columns: 1fr; height: auto; }
+            .expenses-stats { grid-template-columns: 1fr; }
+            .messages-popup { width: calc(100vw - 40px); right: 20px; max-height: 70vh; }
+        }
+
+        /* ── SUBSCRIPTION STYLES ─────────────────────────────── */
+        .sub-banner { display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; z-index: 900; }
+        .sub-banner.warning { display: flex; background: rgba(245,158,11,0.18); border-bottom: 1px solid rgba(245,158,11,0.5); color: var(--accent-orange); }
+        .sub-banner.grace { display: flex; background: rgba(248,81,73,0.15); border-bottom: 1px solid rgba(248,81,73,0.5); color: var(--danger); }
+        .sub-banner-renew { background: var(--accent-orange); color: #000; border: none; border-radius: 6px; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+
+        .sub-expired-overlay { display: none; position: fixed; inset: 0; z-index: 8000; background: rgba(13,17,23,0.97); flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
+        .sub-expired-overlay.show { display: flex; }
+        .sub-expired-icon { font-size: 5rem; margin-bottom: 20px; }
+        .sub-expired-title { font-size: 2rem; font-weight: 900; color: var(--danger); margin-bottom: 10px; }
+        .sub-expired-msg { color: var(--text-muted); font-size: 1rem; max-width: 480px; line-height: 1.7; margin-bottom: 30px; }
+        .sub-expired-card { background: var(--bg-secondary); border: 2px solid var(--danger); border-radius: 16px; padding: 32px 40px; max-width: 500px; width: 100%; }
+        .sub-plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .sub-plan-option { border: 2px solid var(--border); border-radius: 10px; padding: 14px 10px; cursor: pointer; transition: all 0.2s; background: var(--bg-primary); text-align: center; }
+        .sub-plan-option:hover { border-color: var(--accent-orange); }
+        .sub-plan-option.selected { border-color: var(--accent-orange); background: rgba(245,158,11,0.1); }
+        .sub-plan-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+        .sub-plan-price { color: var(--accent-orange); font-weight: 900; font-size: 1.2rem; }
+        .sub-plan-period { font-size: 0.75rem; color: var(--text-muted); }
+        .sub-renew-btn { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-bottom: 10px; }
+        .sub-renew-btn:hover { background: #2ea043; }
+        .sub-logout-link { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; text-decoration: underline; margin-top: 6px; }
+
+        .nav-locked .nav-tab:not(.nav-tab-active-page) { pointer-events: none; opacity: 0.35; cursor: not-allowed; }
+        .pos-locked { position: relative; }
+        .pos-locked::after { content: ''; position: absolute; inset: 0; background: rgba(13,17,23,0.0); pointer-events: all; z-index: 500; cursor: not-allowed; }
+
+        /* ── INTASEND PAYMENT TAB STYLES ── */
+        .pay-tab-btn { flex: 1; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: all 0.2s; font-family: 'Archivo', sans-serif; }
+        .pay-tab-btn.active-online { border: 2px solid var(--accent-green); background: rgba(63,185,80,0.12); color: var(--accent-green); }
+        .pay-tab-btn.inactive { border: 2px solid var(--border); background: var(--bg-primary); color: var(--text-muted); }
+        .pay-tab-btn.active-manual { border: 2px solid var(--accent-orange); background: rgba(245,158,11,0.12); color: var(--accent-orange); }
+        .intasend-info-box { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; padding: 14px; margin-bottom: 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+        .intasend-status-bar { display: none; margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-align: center; }
+        .intasend-status-bar.processing { display: block; background: rgba(88,166,255,0.15); border: 1px solid rgba(88,166,255,0.4); color: var(--accent-blue); }
+        .intasend-status-bar.success { display: block; background: rgba(63,185,80,0.15); border: 1px solid rgba(63,185,80,0.4); color: var(--accent-green); }
+        .intasend-status-bar.error { display: block; background: rgba(248,81,73,0.15); border: 1px solid rgba(248,81,73,0.4); color: var(--danger); }
+        .intasend-status-bar.info { display: block; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: var(--accent-orange); }
     </style>
 </head>
 <body>
     <nav class="nav">
         <div class="nav-container">
-            <div class="logo">G&amp;H Solutions</div>
+            <div class="logo">G&H Solutions</div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab active">Point of Sale</a>
@@ -206,108 +250,163 @@
             </div>
             <div class="nav-right">
                 <div class="user-badge">
-                    <div class="user-avatar">&#128100;</div>
+                    <div class="user-avatar">👤</div>
                     <div><div id="currentUserName">User</div></div>
                 </div>
+                <!-- Subscription Status Badge -->
                 <div id="subNavBadge" onclick="openSubscriptionModal()" title="Subscription Status"
                     style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;font-size:0.8rem;font-weight:700;border:2px solid var(--border);background:var(--bg-primary);transition:all 0.2s;">
-                    <span id="subNavIcon">&#11088;</span>
+                    <span id="subNavIcon">⭐</span>
                     <span id="subNavLabel">Subscription</span>
                 </div>
                 <div class="message-notification-bell" onclick="toggleMessagesPopup()" id="messageBell">
-                    &#128276;
-                    <span class="message-badge" id="messageBadge" style="display:none;">0</span>
+                    🔔
+                    <span class="message-badge" id="messageBadge" style="display: none;">0</span>
                 </div>
                 <button onclick="authModule.logout()"
-                    style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease;"
-                    onmouseover="this.style.backgroundColor='#dc2626'" onmouseout="this.style.backgroundColor='#ef4444'">Logout</button>
+                    style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;"
+                    onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
+                    onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
             </div>
         </div>
     </nav>
 
+    <!-- Subscription Warning Banner -->
     <div class="sub-banner" id="subBanner">
-        <span id="subBannerMsg">&#9888;&#65039; Your subscription is expiring soon.</span>
-        <button class="sub-banner-renew" onclick="openSubscriptionModal()">&#128260; Renew Now</button>
+        <span id="subBannerMsg">⚠️ Your subscription is expiring soon.</span>
+        <button class="sub-banner-renew" onclick="openSubscriptionModal()">🔄 Renew Now</button>
     </div>
 
+    <!-- Subscription Expired Full-Page Overlay -->
     <div class="sub-expired-overlay" id="subExpiredOverlay">
-        <div class="sub-expired-icon">&#128274;</div>
+        <div class="sub-expired-icon">🔒</div>
         <div class="sub-expired-title">Subscription Expired</div>
         <div class="sub-expired-msg">Your subscription has expired. All system features are locked.<br>Please subscribe below to continue using G&amp;H Solutions POS.</div>
-        <button class="sub-renew-btn" style="max-width:300px;margin-bottom:16px;" onclick="openSubscriptionModal()">&#11088; Subscribe / Renew Now</button>
+        <button class="sub-renew-btn" style="max-width:300px;margin-bottom:16px;" onclick="openSubscriptionModal()">⭐ Subscribe / Renew Now</button>
         <button class="sub-logout-link" onclick="authModule.logout()">Logout instead</button>
     </div>
 
-    <!-- SUBSCRIPTION MODAL -->
+    <!-- ══════════════════════════════════════════════════════════════
+         SUBSCRIPTION MODAL — with IntaSend + Manual payment tabs
+         ══════════════════════════════════════════════════════════════ -->
     <div class="modal" id="subscriptionModal" style="z-index:9000;">
-        <div class="modal-content" style="border-color:var(--accent-orange);max-width:560px;">
-            <div id="subModalStatus" style="background:var(--bg-primary);border-radius:10px;padding:16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <div class="modal-content" style="border-color:var(--accent-orange);max-width:580px;">
+
+            <!-- Current Status Header -->
+            <div id="subModalStatus" style="background:var(--bg-primary);border-radius:10px;padding:16px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
                 <div>
                     <div style="font-size:0.78rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Current Subscription</div>
                     <div id="subModalStatusText" style="font-weight:700;font-size:1rem;">Checking...</div>
                 </div>
                 <div id="subModalDaysLeft" style="text-align:right;"></div>
             </div>
+
             <h3 style="margin-bottom:6px;font-size:1.05rem;color:var(--text-muted);">Choose a Plan</h3>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;">M-Pesa STK push sent directly to your phone. No popups, no redirects.</p>
-            <div class="sub-plan-grid">
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">Pay securely via M-Pesa or Card. Subscription activates instantly on payment.</p>
+
+            <!-- Plan Grid -->
+            <div class="sub-plan-grid" style="margin-bottom:16px;">
                 <div class="sub-plan-option selected" data-plan="Monthly" data-days="30" data-price="2000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">&#128197; Monthly</div><div class="sub-plan-price">KES 2,000</div><div class="sub-plan-period">30 days</div>
+                    <div class="sub-plan-name">📅 Monthly</div>
+                    <div class="sub-plan-price">KES 2,000</div>
+                    <div class="sub-plan-period">30 days</div>
                 </div>
                 <div class="sub-plan-option" data-plan="Quarterly" data-days="90" data-price="5500" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">&#128198; Quarterly</div><div class="sub-plan-price">KES 5,500</div><div class="sub-plan-period">90 days</div>
+                    <div class="sub-plan-name">📆 Quarterly</div>
+                    <div class="sub-plan-price">KES 5,500</div>
+                    <div class="sub-plan-period">90 days</div>
                 </div>
                 <div class="sub-plan-option" data-plan="Semi-Annual" data-days="180" data-price="10000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">&#128467;&#65039; Semi-Annual</div><div class="sub-plan-price">KES 10,000</div><div class="sub-plan-period">180 days</div>
+                    <div class="sub-plan-name">🗓️ Semi-Annual</div>
+                    <div class="sub-plan-price">KES 10,000</div>
+                    <div class="sub-plan-period">180 days</div>
                 </div>
                 <div class="sub-plan-option" data-plan="Annual" data-days="365" data-price="18000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">&#11088; Annual</div><div class="sub-plan-price">KES 18,000</div><div class="sub-plan-period">365 days</div>
+                    <div class="sub-plan-name">⭐ Annual</div>
+                    <div class="sub-plan-price">KES 18,000</div>
+                    <div class="sub-plan-period">365 days</div>
                 </div>
             </div>
-            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:0.88rem;">
-                <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-muted);">Plan:</span><strong id="subSummaryPlan" style="color:var(--accent-orange);">Monthly &#8212; KES 2,000</strong></div>
-                <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:var(--text-muted);">Access until:</span><strong id="subSummaryExpiry" style="color:var(--accent-green);">&#8212;</strong></div>
-            </div>
-            <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">&#128179; Payment Method</div>
-            <div class="pay-tab-row">
-                <button id="pmTabMpesa" class="pay-tab-btn tab-active-mpesa" onclick="switchPayTab('mpesa')">&#128242; M-Pesa STK Push</button>
-                <button id="pmTabManual" class="pay-tab-btn" onclick="switchPayTab('manual')">&#128181; Cash / Manual</button>
-            </div>
-            <!-- M-PESA PANEL -->
-            <div id="pmPanelMpesa">
-                <div style="background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.2);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:0.82rem;color:var(--text-muted);line-height:1.6;">
-                    &#128242; Enter your Safaricom number. We send a prompt to your phone &#8212; just enter your M-Pesa PIN. Subscription activates automatically once payment is confirmed.
+
+            <!-- Summary row -->
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:0.88rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:var(--text-muted);">Selected plan:</span>
+                    <strong id="subSummaryPlan" style="color:var(--accent-orange);">Monthly — KES 2,000</strong>
                 </div>
-                <div style="font-size:0.85rem;font-weight:600;margin-bottom:8px;">M-Pesa Phone Number</div>
-                <div class="stk-phone-row">
-                    <div class="stk-phone-prefix">&#127472;&#127466; +254</div>
-                    <input type="tel" id="stkPhoneInput" class="stk-phone-input" placeholder="7XXXXXXXX" maxlength="9" inputmode="numeric">
-                </div>
-                <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:14px;">Enter the 9 digits after +254, e.g. 712345678</div>
-                <button id="stkPushBtn" class="stk-push-btn" onclick="initiateStkPush()">
-                    <span>&#128242;</span><span id="stkPushBtnLabel">Send STK Push &#8212; KES 2,000</span>
-                </button>
-                <div id="stkStatus" class="stk-status">
-                    <div id="stkStatusIcon" class="stk-status-icon"></div>
-                    <div id="stkStatusTitle" class="stk-status-title"></div>
-                    <div id="stkStatusSub" class="stk-status-sub"></div>
-                    <button id="stkRetryBtn" onclick="resetStkPanel()" style="display:none;margin-top:12px;padding:8px 20px;background:var(--accent-orange);color:white;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;">Try Again</button>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                    <span style="color:var(--text-muted);">Access until:</span>
+                    <strong id="subSummaryExpiry" style="color:var(--accent-green);">—</strong>
                 </div>
             </div>
-            <!-- MANUAL PANEL -->
-            <div id="pmPanelManual" style="display:none;">
-                <div style="background:var(--bg-primary);border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
-                    Pay via M-Pesa Paybill or cash, then enter the transaction code to activate manually.
+
+            <!-- Payment Method Tabs -->
+            <div style="margin-bottom:4px;">
+                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">💳 Payment Method</div>
+                <div style="display:flex;gap:8px;margin-bottom:14px;">
+                    <button id="pmTabOnline" class="pay-tab-btn active-online" onclick="switchPaymentTab('online')">
+                        📱 M-Pesa / Card
+                    </button>
+                    <button id="pmTabManual" class="pay-tab-btn inactive" onclick="switchPaymentTab('manual')">
+                        💵 Cash / Manual
+                    </button>
                 </div>
-                <div class="form-group" style="margin-bottom:14px;">
-                    <label style="font-size:0.85rem;">Transaction Code <span style="color:var(--text-muted);font-weight:400;">(required)</span></label>
-                    <input type="text" id="subTransactionCode" placeholder="e.g. QJK3X7ABCD" style="text-transform:uppercase;letter-spacing:1px;">
+
+                <!-- ── ONLINE PAYMENT PANEL (IntaSend) ── -->
+                <div id="pmPanelOnline">
+                    <div class="intasend-info-box">
+                        🔒 Payments are processed securely by <strong style="color:var(--text);">IntaSend</strong>.<br>
+                        <strong>M-Pesa:</strong> you'll receive an STK push on your phone.<br>
+                        <strong>Card:</strong> enter your card details in the secure popup.
+                    </div>
+
+                    <!--
+                        Hidden button managed by the IntaSend SDK.
+                        Its data-* attributes are synced dynamically before every payment.
+                        Required — do NOT remove.
+                    -->
+                    <button id="intasendTriggerBtn"
+                        class="intaSendPayButton"
+                        data-amount="2000"
+                        data-currency="KES"
+                        data-api_ref=""
+                        data-email=""
+                        data-first_name=""
+                        data-last_name=""
+                        style="display:none;">Pay via IntaSend</button>
+
+                    <!-- Visible Pay button -->
+                    <button id="subPayOnlineBtn" onclick="initiateIntaSendPayment()"
+                        style="width:100%;padding:14px;background:var(--accent-green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;transition:background 0.2s;">
+                        ✅ Pay KES 2,000 via M-Pesa / Card
+                    </button>
+
+                    <!-- Payment status feedback -->
+                    <div id="intasendStatus" class="intasend-status-bar"></div>
                 </div>
-                <button id="subActivateManualBtn" onclick="activateSubscriptionManual()"
-                    style="width:100%;padding:14px;background:var(--accent-orange);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;">
-                    &#9989; Activate Manually
-                </button>
+
+                <!-- ── MANUAL / CASH PAYMENT PANEL ── -->
+                <div id="pmPanelManual" style="display:none;">
+                    <div style="background:var(--bg-primary);border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
+                        Payment reference: <strong id="subPayRef" style="color:var(--accent-orange);letter-spacing:1px;">—</strong><br>
+                        Pay via M-Pesa Paybill / Cash then enter the transaction code below to activate.
+                    </div>
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label style="font-size:0.85rem;">
+                            M-Pesa / Payment Transaction Code
+                            <span style="color:var(--text-muted);font-weight:400;">(required)</span>
+                        </label>
+                        <input type="text" id="subTransactionCode" placeholder="e.g. QJK3X7ABCD"
+                            style="text-transform:uppercase;letter-spacing:1px;">
+                    </div>
+                    <button id="subActivateManualBtn" onclick="activateSubscriptionManual()"
+                        style="width:100%;padding:14px;background:var(--accent-orange);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;">
+                        ✅ Activate Manually
+                    </button>
+                </div>
             </div>
+
+            <!-- Cancel -->
             <button onclick="closeSubscriptionModal()"
                 style="width:100%;padding:10px;background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;cursor:pointer;font-size:0.9rem;margin-top:14px;font-family:'Archivo',sans-serif;">
                 Cancel
@@ -317,52 +416,75 @@
 
     <!-- Messages Popup -->
     <div class="messages-popup" id="messagesPopup">
-        <div class="messages-header"><h3>&#128232; Messages</h3><button class="close-popup" onclick="toggleMessagesPopup()">&#215;</button></div>
+        <div class="messages-header">
+            <h3>📨 Messages</h3>
+            <button class="close-popup" onclick="toggleMessagesPopup()">×</button>
+        </div>
         <div class="messages-list" id="messagesList">
-            <div class="empty-messages"><div class="empty-messages-icon">&#128333;</div><p>Loading messages...</p></div>
+            <div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading messages...</p></div>
         </div>
     </div>
 
+    <!-- Tab Navigation -->
     <div class="pos-tabs">
-        <button class="pos-tab-btn active" onclick="switchTab('sales')">&#128176; Sales</button>
-        <button class="pos-tab-btn" onclick="switchTab('expenses')">&#128184; Expenses</button>
+        <button class="pos-tab-btn active" onclick="switchTab('sales')">💰 Sales</button>
+        <button class="pos-tab-btn" onclick="switchTab('expenses')">💸 Expenses</button>
     </div>
 
+    <!-- Sales Tab -->
     <div id="salesTab" class="tab-content active">
         <div class="pos-container">
+            <!-- Products Panel -->
             <div class="products-section">
-                <input type="text" class="search-bar" id="searchInput" placeholder="&#128269; Search products...">
+                <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Search products...">
                 <div class="categories" id="categoriesContainer"></div>
-                <div class="products-grid" id="productsGrid"><div style="text-align:center;padding:40px;color:var(--text-muted);">Loading products...</div></div>
+                <div class="products-grid" id="productsGrid">
+                    <div style="text-align:center;padding:40px;color:var(--text-muted);">Loading products...</div>
+                </div>
             </div>
+
+            <!-- Cart Panel -->
             <div class="cart-section">
-                <div class="cart-header"><h2>&#128722; Shopping Cart</h2></div>
+                <div class="cart-header">
+                    <h2>🛒 Shopping Cart</h2>
+                </div>
+
+                <!-- Customer Selector -->
                 <div class="customer-selector">
-                    <div class="customer-selector-label">&#128100; Customer (optional &#8212; earns loyalty points)</div>
+                    <div class="customer-selector-label">👤 Customer (optional — earns loyalty points)</div>
                     <div class="customer-select-row">
                         <div class="customer-search-wrap">
-                            <input type="text" class="customer-search-input" id="customerSearchInput" placeholder="Search customer by name or phone..." autocomplete="off">
+                            <input type="text" class="customer-search-input" id="customerSearchInput"
+                                placeholder="Search customer by name or phone..." autocomplete="off">
                             <div class="customer-dropdown" id="customerDropdown"></div>
                         </div>
-                        <button class="clear-customer-btn" onclick="clearSelectedCustomer()">&#10005; Clear</button>
+                        <button class="clear-customer-btn" onclick="clearSelectedCustomer()">✕ Clear</button>
                     </div>
                     <div id="selectedCustomerCard" style="display:none;"></div>
                     <div id="redeemBadge" style="display:none;"></div>
                 </div>
+
                 <div class="cart-items" id="cartItems">
-                    <div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">&#128722;</div><p>Cart is empty</p></div>
+                    <div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>
                 </div>
+
                 <div class="cart-summary">
                     <div class="summary-row"><span>Items:</span><span id="itemCount">0</span></div>
                     <div class="summary-row"><span>Subtotal:</span><span id="subtotalAmount">KES 0.00</span></div>
-                    <div class="summary-row discount" id="discountRow" style="display:none;"><span>&#127873; Loyalty Discount:</span><span id="discountAmount">- KES 0.00</span></div>
-                    <div class="summary-row"><strong>Total:</strong><strong class="summary-total" id="totalAmount">KES 0.00</strong></div>
+                    <div class="summary-row discount" id="discountRow" style="display:none;">
+                        <span>🎁 Loyalty Discount:</span>
+                        <span id="discountAmount">- KES 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <strong>Total:</strong>
+                        <strong class="summary-total" id="totalAmount">KES 0.00</strong>
+                    </div>
                     <div class="loyalty-earn-note" id="loyaltyEarnNote" style="display:none;"></div>
                     <div class="payment-methods" style="margin-top:10px;">
-                        <button class="payment-btn active" data-method="Cash">&#128181; Cash</button>
-                        <button class="payment-btn" data-method="M-Pesa">&#128242; M-Pesa</button>
-                        <button class="payment-btn" data-method="Card">&#128179; Card</button>
-                        <button class="payment-btn" data-method="Credit">&#128203; Credit</button>
+                        <button class="payment-btn active" data-method="Cash">💵 Cash</button>
+                        <button class="payment-btn" data-method="M-Pesa">📱 M-Pesa</button>
+                        <button class="payment-btn" data-method="Card">💳 Card</button>
+                        <button class="payment-btn" data-method="Credit">📋 Credit</button>
                     </div>
                     <button class="checkout-btn" id="checkoutBtn" disabled>Complete Sale</button>
                 </div>
@@ -370,17 +492,18 @@
         </div>
     </div>
 
+    <!-- Expenses Tab -->
     <div id="expensesTab" class="tab-content">
         <div class="expenses-container">
             <div class="expenses-header">
-                <h1>&#128184; Expenses Tracking</h1>
-                <button class="add-expense-btn" onclick="openAddExpenseModal()">&#10133; Add Expense</button>
+                <h1>💸 Expenses Tracking</h1>
+                <button class="add-expense-btn" onclick="openAddExpenseModal()">➕ Add Expense</button>
             </div>
             <div class="expenses-stats">
-                <div class="stat-card"><div class="stat-label">&#128197; Today's Expenses</div><div class="stat-value" id="todayExpenses">KES 0.00</div></div>
-                <div class="stat-card"><div class="stat-label">&#128198; This Week</div><div class="stat-value" id="weekExpenses">KES 0.00</div></div>
-                <div class="stat-card"><div class="stat-label">&#128202; This Month</div><div class="stat-value" id="monthExpenses">KES 0.00</div></div>
-                <div class="stat-card"><div class="stat-label">&#128200; This Year</div><div class="stat-value" id="yearExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📅 Today's Expenses</div><div class="stat-value" id="todayExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📆 This Week</div><div class="stat-value" id="weekExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📊 This Month</div><div class="stat-value" id="monthExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📈 This Year</div><div class="stat-value" id="yearExpenses">KES 0.00</div></div>
             </div>
             <div class="expenses-list">
                 <h3 style="margin-bottom:20px;">Recent Expenses</h3>
@@ -389,15 +512,41 @@
         </div>
     </div>
 
+    <!-- Add Expense Modal -->
     <div class="modal" id="addExpenseModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>Add New Expense</h2><p style="color:var(--text-muted);">Record a business expense</p></div>
+            <div class="modal-header">
+                <h2>Add New Expense</h2>
+                <p style="color:var(--text-muted);">Record a business expense</p>
+            </div>
             <form id="expenseForm">
-                <div class="form-group"><label for="expenseCategory">Category *</label>
-                    <select id="expenseCategory" required><option value="">Select category</option><option>Rent</option><option>Utilities</option><option>Salaries</option><option>Supplies</option><option>Marketing</option><option>Transport</option><option>Maintenance</option><option>Insurance</option><option>Other</option></select></div>
-                <div class="form-group"><label for="expenseAmount">Amount (KES) *</label><input type="number" id="expenseAmount" step="0.01" min="0" required></div>
-                <div class="form-group"><label for="expenseDescription">Description *</label><textarea id="expenseDescription" required placeholder="What was this expense for?"></textarea></div>
-                <div class="form-group"><label for="expenseDate">Date *</label><input type="date" id="expenseDate" required></div>
+                <div class="form-group">
+                    <label for="expenseCategory">Category *</label>
+                    <select id="expenseCategory" required>
+                        <option value="">Select category</option>
+                        <option value="Rent">Rent</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Salaries">Salaries</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="expenseAmount">Amount (KES) *</label>
+                    <input type="number" id="expenseAmount" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDescription">Description *</label>
+                    <textarea id="expenseDescription" required placeholder="What was this expense for?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="expenseDate">Date *</label>
+                    <input type="date" id="expenseDate" required>
+                </div>
                 <div class="modal-actions">
                     <button type="submit" class="modal-btn modal-btn-primary" id="saveExpenseBtn">Save Expense</button>
                     <button type="button" class="modal-btn modal-btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
@@ -406,11 +555,18 @@
         </div>
     </div>
 
+    <!-- Redeem Points Modal -->
     <div class="modal" id="redeemModal">
         <div class="modal-content redeem-modal-content" style="border-color:var(--accent-purple);">
-            <div class="modal-header"><h2>&#127873; Redeem Loyalty Points</h2><p style="color:var(--text-muted);">Apply a discount using loyalty points</p></div>
-            <div class="redeem-info"><p>Available points for <strong id="redeemCustomerName">&#8212;</strong>:</p><div class="redeem-available" id="redeemAvailablePoints">0 pts</div></div>
-            <div class="redeem-conversion">&#128161; Conversion rate: <strong>100 points = KES 1 discount</strong></div>
+            <div class="modal-header">
+                <h2>🎁 Redeem Loyalty Points</h2>
+                <p style="color:var(--text-muted);">Apply a discount using loyalty points</p>
+            </div>
+            <div class="redeem-info">
+                <p>Available points for <strong id="redeemCustomerName">—</strong>:</p>
+                <div class="redeem-available" id="redeemAvailablePoints">0 pts</div>
+            </div>
+            <div class="redeem-conversion">💡 Conversion rate: <strong>100 points = KES 1 discount</strong></div>
             <div class="form-group">
                 <label>Points to redeem</label>
                 <input type="number" id="redeemPointsInput" min="100" step="100" placeholder="e.g. 100">
@@ -423,9 +579,10 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
     <div class="modal" id="successModal">
         <div class="modal-content" style="text-align:center;">
-            <div class="modal-icon">&#9989;</div>
+            <div class="modal-icon">✅</div>
             <h2 style="margin-bottom:10px;">Sale Complete!</h2>
             <p style="color:var(--text-muted);margin-bottom:10px;">Transaction processed successfully</p>
             <div style="font-size:2rem;font-weight:900;color:var(--accent-green);" id="saleTotal">KES 0.00</div>
@@ -441,294 +598,1009 @@
     <script src="assets/messaging-module.js"></script>
     <script src="assets/subscription-module.js"></script>
 
+    <!-- ── SUBSCRIPTION DATA PATCH ─────────────────────────────────────── -->
     <script>
-    // SUBSCRIPTION DATA PATCH
-    (function(){
-        document.addEventListener('DOMContentLoaded',function(){
-            if(!window.dataModule){console.warn('dataModule not found');return;}
-            function getDb(){return window.DukaPOS?.supabaseClient||window._supabaseClient||window.supabaseClient||null;}
-            window.dataModule.upsertSubscription=async function(full,minimal){
-                try{
-                    const db=getDb();if(!db)throw new Error('No Supabase client');
-                    const shopId=window.authModule?.getCurrentShop()?.id;if(!shopId)throw new Error('No shop context');
-                    const{data:ex}=await db.from('subscriptions').select('id').eq('shop_id',shopId).order('id',{ascending:false}).limit(1).maybeSingle();
-                    let r=ex?.id?await db.from('subscriptions').update(full).eq('id',ex.id).eq('shop_id',shopId):await db.from('subscriptions').insert([full]);
-                    if(r.error?.message?.includes('column')||r.error?.message?.includes('schema')){r=ex?.id?await db.from('subscriptions').update(minimal).eq('id',ex.id).eq('shop_id',shopId):await db.from('subscriptions').insert([minimal]);}
-                    if(r.error)return{success:false,error:r.error.message};
-                    return{success:true};
-                }catch(e){return{success:false,error:e.message};}
+    (function patchDataModuleWithSubscription() {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!window.dataModule) { console.warn('dataModule not found — subscription patch skipped'); return; }
+
+            function getDb() {
+                return window.DukaPOS?.supabaseClient
+                    || window._supabaseClient
+                    || window.supabaseClient
+                    || window.DukaPOS?.client
+                    || window.DukaPOS?.supabase
+                    || null;
+            }
+
+            window.dataModule.upsertSubscription = async function(fullPayload, minimalPayload) {
+                try {
+                    const db = getDb();
+                    if (!db) throw new Error('Supabase client not found');
+                    const shop = window.authModule?.getCurrentShop();
+                    const shopId = shop?.id;
+                    if (!shopId) throw new Error('Cannot determine shop — please log in again.');
+
+                    const { data: existing } = await db
+                        .from('subscriptions').select('id')
+                        .eq('shop_id', shopId)
+                        .order('id', { ascending: false }).limit(1).maybeSingle();
+
+                    let result;
+                    if (existing?.id) {
+                        result = await db.from('subscriptions').update(fullPayload).eq('id', existing.id).eq('shop_id', shopId);
+                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema')) {
+                            result = await db.from('subscriptions').update(minimalPayload).eq('id', existing.id).eq('shop_id', shopId);
+                        }
+                    } else {
+                        result = await db.from('subscriptions').insert([fullPayload]);
+                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema')) {
+                            result = await db.from('subscriptions').insert([minimalPayload]);
+                        }
+                    }
+                    if (result.error) return { success: false, error: result.error.message };
+                    return { success: true };
+                } catch (e) {
+                    return { success: false, error: e.message };
+                }
             };
-            window.dataModule.getSubscription=async function(){
-                try{
-                    const db=getDb();if(!db)return{success:false,error:'No client'};
-                    const shopId=window.authModule?.getCurrentShop()?.id;if(!shopId)return{success:false,error:'No shop'};
-                    const{data,error}=await db.from('subscriptions').select('*').eq('shop_id',shopId).order('expires_at',{ascending:false}).limit(1).maybeSingle();
-                    return error?{success:false,error:error.message}:{success:true,data};
-                }catch(e){return{success:false,error:e.message};}
+
+            window.dataModule.getSubscription = async function() {
+                try {
+                    const db = getDb();
+                    if (!db) return { success: false, error: 'No Supabase client' };
+                    const shop = window.authModule?.getCurrentShop();
+                    const shopId = shop?.id;
+                    if (!shopId) return { success: false, error: 'No shop context' };
+                    const { data, error } = await db
+                        .from('subscriptions').select('*')
+                        .eq('shop_id', shopId)
+                        .order('expires_at', { ascending: false }).limit(1).maybeSingle();
+                    if (error) return { success: false, error: error.message };
+                    return { success: true, data };
+                } catch (e) {
+                    return { success: false, error: e.message };
+                }
             };
-            console.log('dataModule patched');
+
+            console.log('✅ dataModule patched with subscription methods');
         });
     })();
     </script>
 
+    <!-- ══════════════════════════════════════════════════════════════════
+         SUBSCRIPTION UI CONTROLLER  —  IntaSend + Supabase
+         ══════════════════════════════════════════════════════════════════ -->
     <script>
-    // ============================================================
-    // CONFIG — replace both values before deploying
-    // ============================================================
-    // After: supabase functions deploy intasend-stk-push
-    // URL format: https://<ref>.supabase.co/functions/v1/intasend-stk-push
-    const STK_EDGE_FN_URL  = 'https://YOUR_PROJECT_REF.supabase.co/functions/v1/intasend-stk-push';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // ─────────────────────────────────────────────────────────────────────
+    // INTASEND CONFIG
+    //
+    // Get your key at: https://payment.intasend.com → Settings → API Keys
+    // Sandbox testing: https://sandbox.intasend.com  (no account needed)
+    // Set INTASEND_LIVE_MODE = true before going live.
+    // ─────────────────────────────────────────────────────────────────────
+    const INTASEND_PUBLIC_KEY = 'YOUR_INTASEND_PUBLISHABLE_KEY'; // ← REPLACE
+    const INTASEND_LIVE_MODE  = false;                            // ← true for production
 
-    // STATE
-    let _selectedPlan={plan:'Monthly',days:30,price:2000};
-    let _stkInvoiceId=null,_stkPollTimer=null,_stkPollCount=0;
-    const STK_MAX_POLLS=30; // 30 x 4s = 2 min
+    // ── STATE ──────────────────────────────────────────────────────────
+    let _selectedPlan = { plan: 'Monthly', days: 30, price: 2000 };
+    let _intaSendInst = null;
 
-    function selectPlan(el){
-        document.querySelectorAll('.sub-plan-option').forEach(o=>o.classList.remove('selected'));
+    // ── PLAN SELECTOR ──────────────────────────────────────────────────
+    function selectPlan(el) {
+        document.querySelectorAll('.sub-plan-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
-        _selectedPlan={plan:el.dataset.plan,days:parseInt(el.dataset.days),price:parseInt(el.dataset.price)};
+        _selectedPlan = {
+            plan:  el.dataset.plan,
+            days:  parseInt(el.dataset.days),
+            price: parseInt(el.dataset.price)
+        };
         _updateSubSummary();
     }
-    function _updateSubSummary(){
-        const ex=new Date();ex.setDate(ex.getDate()+_selectedPlan.days);
-        document.getElementById('subSummaryPlan').textContent=_selectedPlan.plan+' — KES '+_selectedPlan.price.toLocaleString();
-        document.getElementById('subSummaryExpiry').textContent=ex.toLocaleDateString('en-KE',{year:'numeric',month:'long',day:'numeric'});
-        const lb=document.getElementById('stkPushBtnLabel');
-        if(lb)lb.textContent='Send STK Push — KES '+_selectedPlan.price.toLocaleString();
+
+    function _updateSubSummary() {
+        const expiry = new Date();
+        expiry.setDate(expiry.getDate() + _selectedPlan.days);
+
+        document.getElementById('subSummaryPlan').textContent =
+            `${_selectedPlan.plan} — KES ${_selectedPlan.price.toLocaleString()}`;
+        document.getElementById('subSummaryExpiry').textContent =
+            expiry.toLocaleDateString('en-KE', { year:'numeric', month:'long', day:'numeric' });
+
+        // Update visible pay-button label
+        const payBtn = document.getElementById('subPayOnlineBtn');
+        if (payBtn) payBtn.textContent = `✅ Pay KES ${_selectedPlan.price.toLocaleString()} via M-Pesa / Card`;
+
+        // Build unique payment reference
+        const user = window.authModule?.getCurrentUser();
+        const ref  = `GHS-${(user?.full_name || 'USER').replace(/\s+/g,'').toUpperCase().slice(0,6)}-${_selectedPlan.plan.toUpperCase().slice(0,3)}-${Date.now().toString(36).toUpperCase()}`;
+
+        // Manual tab reference label
+        const refEl = document.getElementById('subPayRef');
+        if (refEl) refEl.textContent = ref;
+
+        // Sync all fields onto the hidden IntaSend button
+        const triggerBtn = document.getElementById('intasendTriggerBtn');
+        if (triggerBtn) {
+            triggerBtn.setAttribute('data-amount',  _selectedPlan.price);
+            triggerBtn.setAttribute('data-currency', 'KES');
+            triggerBtn.setAttribute('data-api_ref', ref);
+            if (user?.email) triggerBtn.setAttribute('data-email', user.email);
+            if (user?.full_name) {
+                const parts = user.full_name.trim().split(' ');
+                triggerBtn.setAttribute('data-first_name', parts[0] || '');
+                triggerBtn.setAttribute('data-last_name',  parts.slice(1).join(' ') || '');
+            }
+        }
     }
 
-    function switchPayTab(tab){
-        document.getElementById('pmPanelMpesa').style.display=tab==='mpesa'?'block':'none';
-        document.getElementById('pmPanelManual').style.display=tab==='manual'?'block':'none';
-        document.getElementById('pmTabMpesa').className='pay-tab-btn'+(tab==='mpesa'?' tab-active-mpesa':'');
-        document.getElementById('pmTabManual').className='pay-tab-btn'+(tab==='manual'?' tab-active-manual':'');
+    // ── PAYMENT TAB SWITCHER ───────────────────────────────────────────
+    function switchPaymentTab(tab) {
+        const onlinePanel = document.getElementById('pmPanelOnline');
+        const manualPanel = document.getElementById('pmPanelManual');
+        const onlineTab   = document.getElementById('pmTabOnline');
+        const manualTab   = document.getElementById('pmTabManual');
+
+        if (tab === 'online') {
+            onlinePanel.style.display = 'block';
+            manualPanel.style.display = 'none';
+            onlineTab.className = 'pay-tab-btn active-online';
+            manualTab.className = 'pay-tab-btn inactive';
+        } else {
+            onlinePanel.style.display = 'none';
+            manualPanel.style.display = 'block';
+            manualTab.className = 'pay-tab-btn active-manual';
+            onlineTab.className = 'pay-tab-btn inactive';
+        }
     }
 
-    function openSubscriptionModal(){
-        const status=window.subscriptionModule?.getStatus();
-        const se=document.getElementById('subModalStatusText'),de=document.getElementById('subModalDaysLeft'),bx=document.getElementById('subModalStatus');
-        if(!status||status.missing){se.textContent='No active subscription';se.style.color='var(--danger)';de.innerHTML='';bx.style.borderLeft='4px solid var(--danger)';}
-        else if(status.expired){se.textContent='Expired';se.style.color='var(--danger)';de.innerHTML='<div style="font-size:0.75rem;color:var(--text-muted);">Expired on</div><div style="font-weight:700;color:var(--danger);">'+status.expiresAt.toLocaleDateString('en-KE',{month:'short',day:'numeric',year:'numeric'})+'</div>';bx.style.borderLeft='4px solid var(--danger)';}
-        else if(status.grace){se.textContent='Grace Period';se.style.color='var(--accent-orange)';de.innerHTML='<div style="font-size:0.75rem;color:var(--text-muted);">Renew immediately</div>';bx.style.borderLeft='4px solid var(--accent-orange)';}
-        else if(status.active){se.textContent='Active — '+(status.plan||'Plan');se.style.color='var(--accent-green)';const dl=status.daysLeft;de.innerHTML='<div style="font-size:0.75rem;color:var(--text-muted);">Days remaining</div><div style="font-size:1.6rem;font-weight:900;color:'+(dl<=7?'var(--danger)':'var(--accent-green)')+';">'+dl+'</div>';bx.style.borderLeft='4px solid var(--accent-green)';}
-        document.querySelectorAll('.sub-plan-option').forEach(o=>o.classList.remove('selected'));
+    // ── OPEN / CLOSE MODAL ─────────────────────────────────────────────
+    function openSubscriptionModal() {
+        const status    = window.subscriptionModule?.getStatus();
+        const statusEl  = document.getElementById('subModalStatusText');
+        const daysEl    = document.getElementById('subModalDaysLeft');
+        const statusBox = document.getElementById('subModalStatus');
+
+        if (!status || status.missing) {
+            statusEl.textContent = '❌ No active subscription';
+            statusEl.style.color = 'var(--danger)';
+            daysEl.innerHTML = '';
+            statusBox.style.borderLeft = '4px solid var(--danger)';
+        } else if (status.expired) {
+            statusEl.textContent = '🔒 Expired';
+            statusEl.style.color = 'var(--danger)';
+            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Expired on</div>
+                <div style="font-weight:700;color:var(--danger);">${status.expiresAt.toLocaleDateString('en-KE',{month:'short',day:'numeric',year:'numeric'})}</div>`;
+            statusBox.style.borderLeft = '4px solid var(--danger)';
+        } else if (status.grace) {
+            statusEl.textContent = '⚠️ Grace Period';
+            statusEl.style.color = 'var(--accent-orange)';
+            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Renew immediately</div>`;
+            statusBox.style.borderLeft = '4px solid var(--accent-orange)';
+        } else if (status.active) {
+            statusEl.textContent = `✅ Active — ${status.plan || 'Plan'}`;
+            statusEl.style.color = 'var(--accent-green)';
+            const dl = status.daysLeft;
+            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Days remaining</div>
+                <div style="font-size:1.6rem;font-weight:900;color:${dl <= 7 ? 'var(--danger)' : 'var(--accent-green)'};">${dl}</div>`;
+            statusBox.style.borderLeft = '4px solid var(--accent-green)';
+        }
+
+        // Reset to defaults
+        document.querySelectorAll('.sub-plan-option').forEach(o => o.classList.remove('selected'));
         document.querySelector('.sub-plan-option[data-plan="Monthly"]').classList.add('selected');
-        _selectedPlan={plan:'Monthly',days:30,price:2000};
-        _updateSubSummary();resetStkPanel();switchPayTab('mpesa');
-        const tx=document.getElementById('subTransactionCode');if(tx)tx.value='';
+        _selectedPlan = { plan: 'Monthly', days: 30, price: 2000 };
+        const txEl = document.getElementById('subTransactionCode');
+        if (txEl) txEl.value = '';
+        _setIntaSendStatus('');   // hide status bar
+        switchPaymentTab('online');
+        _updateSubSummary();
+        _initIntaSend();          // (re)init SDK listeners
+
         document.getElementById('subscriptionModal').classList.add('show');
     }
-    function closeSubscriptionModal(){_stopStkPolling();document.getElementById('subscriptionModal').classList.remove('show');}
 
-    async function initiateStkPush(){
-        const raw=(document.getElementById('stkPhoneInput')?.value||'').trim().replace(/\D/g,'');
-        if(raw.length!==9||!['7','1'].includes(raw[0])){_setStkStatus('error','&#10060;','Invalid phone number','Enter 9 digits after +254, e.g. 712345678');return;}
-        const phone='254'+raw,shop=window.authModule?.getCurrentShop(),shopId=shop?.id,user=window.authModule?.getCurrentUser();
-        if(!shopId){_setStkStatus('error','&#10060;','Session error','Cannot determine shop. Please log out and back in.');return;}
-        const btn=document.getElementById('stkPushBtn');btn.disabled=true;
-        _setStkStatus('waiting','<div class="stk-spinner"></div>','Sending STK Push…','Calling payment API — please wait.');
-        const ref='GHS-'+shopId.slice(0,6).toUpperCase()+'-'+_selectedPlan.plan.toUpperCase().slice(0,3)+'-'+Date.now().toString(36).toUpperCase();
-        try{
-            const resp=await fetch(STK_EDGE_FN_URL+'?action=initiate',{
-                method:'POST',
-                headers:{'Content-Type':'application/json','Authorization':'Bearer '+SUPABASE_ANON_KEY},
-                body:JSON.stringify({phone_number:phone,amount:_selectedPlan.price,plan:_selectedPlan.plan,days:_selectedPlan.days,shop_id:shopId,api_ref:ref,user_email:user?.email||'',user_name:user?.full_name||''})
+    function closeSubscriptionModal() {
+        document.getElementById('subscriptionModal').classList.remove('show');
+    }
+
+    // ── INTASEND SDK INIT ──────────────────────────────────────────────
+    function _initIntaSend() {
+        if (!window.IntaSend) {
+            console.warn('IntaSend SDK not yet available.');
+            return;
+        }
+        // Remove old listeners before re-attaching to avoid duplicates
+        if (_intaSendInst) {
+            try {
+                _intaSendInst.off('COMPLETE');
+                _intaSendInst.off('FAILED');
+                _intaSendInst.off('IN-PROGRESS');
+            } catch (_) {}
+        }
+
+        _intaSendInst = new window.IntaSend({
+            publicAPIKey: INTASEND_PUBLIC_KEY,
+            live:         INTASEND_LIVE_MODE
+        })
+        .on('COMPLETE', async (response) => {
+            console.log('✅ IntaSend COMPLETE:', response);
+            _setIntaSendStatus('processing', '⏳ Payment confirmed! Activating your subscription…');
+            await _activateSubscriptionInSupabase({
+                method:           'IntaSend',
+                transaction_code: response?.invoice_id
+                               || response?.tracking_id
+                               || response?.id
+                               || 'INTASEND-AUTO'
             });
-            const data=await resp.json();
-            if(!resp.ok||!data.success)throw new Error(data.error||'STK Push failed');
-            _stkInvoiceId=data.invoice_id;
-            _setStkStatus('waiting','<div class="stk-spinner"></div>','Check your phone &#128242;','An M-Pesa prompt was sent to <strong>+254'+raw+'</strong>.<br>Enter your PIN to pay. This window updates automatically.');
-            _startStkPolling(shopId);
-        }catch(err){
-            console.error('STK error:',err);
-            _setStkStatus('error','&#10060;','Failed to send STK Push',err.message,true);
-            btn.disabled=false;
+        })
+        .on('FAILED', (response) => {
+            console.error('❌ IntaSend FAILED:', response);
+            _setIntaSendStatus('error', `❌ Payment failed: ${response?.failed_reason || 'Unknown error'}. Please try again.`);
+            _resetPayBtn();
+        })
+        .on('IN-PROGRESS', () => {
+            _setIntaSendStatus('info', '📱 Waiting — check your phone for the M-Pesa STK push…');
+        });
+    }
+
+    // ── TRIGGER INTASEND PAYMENT ───────────────────────────────────────
+    function initiateIntaSendPayment() {
+        if (!window.IntaSend) {
+            alert('Payment SDK is still loading. Please wait a moment and try again.');
+            return;
+        }
+
+        const btn = document.getElementById('subPayOnlineBtn');
+        btn.disabled    = true;
+        btn.textContent = '⏳ Opening payment…';
+        _setIntaSendStatus('');
+
+        // Sync latest data onto the hidden button, then re-init fresh listeners
+        _updateSubSummary();
+        _initIntaSend();
+
+        const triggerBtn = document.getElementById('intasendTriggerBtn');
+        if (triggerBtn) {
+            triggerBtn.click();
+        } else {
+            _resetPayBtn();
+            alert('Payment button not found. Please refresh the page and try again.');
+            return;
+        }
+
+        // Safety re-enable after 10 s (if user closes popup without paying)
+        setTimeout(_resetPayBtn, 10000);
+    }
+
+    function _resetPayBtn() {
+        const btn = document.getElementById('subPayOnlineBtn');
+        if (btn) {
+            btn.disabled    = false;
+            btn.textContent = `✅ Pay KES ${_selectedPlan.price.toLocaleString()} via M-Pesa / Card`;
         }
     }
 
-    function _startStkPolling(shopId){_stkPollCount=0;_stopStkPolling();_stkPollTimer=setInterval(()=>_pollStkStatus(shopId),4000);}
-    function _stopStkPolling(){if(_stkPollTimer){clearInterval(_stkPollTimer);_stkPollTimer=null;}}
-    async function _pollStkStatus(shopId){
-        if(!_stkInvoiceId){_stopStkPolling();return;}
-        if(++_stkPollCount>STK_MAX_POLLS){
-            _stopStkPolling();
-            _setStkStatus('error','&#8987;','Payment timed out','No response in 2 minutes. If you paid, use the Manual tab to enter your transaction code.',true);
-            document.getElementById('stkPushBtn').disabled=false;return;
-        }
-        try{
-            const r=await fetch(STK_EDGE_FN_URL+'?action=status&invoice_id='+encodeURIComponent(_stkInvoiceId)+'&shop_id='+encodeURIComponent(shopId),{headers:{'Authorization':'Bearer '+SUPABASE_ANON_KEY}});
-            const d=await r.json();if(!d.success)return;
-            if(d.status==='COMPLETE'){
-                _stopStkPolling();
-                _setStkStatus('success','&#127881;','Payment successful!','Your subscription is now active. Reloading…');
-                setTimeout(()=>{closeSubscriptionModal();document.getElementById('subExpiredOverlay')?.classList.remove('show');window.location.reload();},2000);
-            }else if(d.status==='FAILED'){
-                _stopStkPolling();
-                _setStkStatus('error','&#10060;','Payment failed','Reason: '+(d.reason||'Unknown')+'. Please try again or use the Manual tab.',true);
-                document.getElementById('stkPushBtn').disabled=false;
+    // ── STATUS BAR ────────────────────────────────────────────────────
+    function _setIntaSendStatus(type, message) {
+        const el = document.getElementById('intasendStatus');
+        if (!el) return;
+        if (!type) { el.className = 'intasend-status-bar'; el.textContent = ''; return; }
+        el.className   = `intasend-status-bar ${type}`;
+        el.textContent = message;
+    }
+
+    // ── WRITE TO SUPABASE ──────────────────────────────────────────────
+    // Shared by both IntaSend COMPLETE callback and manual cash activation.
+    async function _activateSubscriptionInSupabase({ method = 'IntaSend', transaction_code = '' } = {}) {
+        try {
+            const now       = new Date();
+            const expiresAt = new Date();
+            expiresAt.setDate(expiresAt.getDate() + _selectedPlan.days);
+
+            const shop   = window.authModule?.getCurrentShop();
+            const shopId = shop?.id;
+            if (!shopId) throw new Error('Cannot determine shop. Please log out and log back in.');
+
+            const minimalPayload = {
+                shop_id:    shopId,
+                plan:       _selectedPlan.plan,
+                status:     'active',
+                expires_at: expiresAt.toISOString()
+            };
+            const fullPayload = {
+                ...minimalPayload,
+                started_at:       now.toISOString(),
+                updated_at:       now.toISOString(),
+                payment_method:   method,
+                transaction_code: transaction_code || null
+            };
+
+            if (window.dataModule?.upsertSubscription) {
+                const r = await window.dataModule.upsertSubscription(fullPayload, minimalPayload);
+                if (!r.success) throw new Error(r.error);
+            } else {
+                // Direct Supabase fallback
+                const db = _getDb();
+                if (!db) throw new Error('Supabase client not available.');
+
+                const { data: existing } = await db
+                    .from('subscriptions').select('id')
+                    .eq('shop_id', shopId)
+                    .order('id', { ascending: false }).limit(1).maybeSingle();
+
+                let r = existing?.id
+                    ? await db.from('subscriptions').update(fullPayload).eq('id', existing.id).eq('shop_id', shopId)
+                    : await db.from('subscriptions').insert([fullPayload]);
+
+                if (r.error?.message?.includes('column') || r.error?.message?.includes('schema')) {
+                    console.warn('Full payload failed, retrying minimal:', r.error.message);
+                    r = existing?.id
+                        ? await db.from('subscriptions').update(minimalPayload).eq('id', existing.id).eq('shop_id', shopId)
+                        : await db.from('subscriptions').insert([minimalPayload]);
+                }
+                if (r.error) throw new Error(r.error.message);
             }
-        }catch(e){console.warn('Poll error:',e.message);}
-    }
 
-    function _setStkStatus(type,icon,title,sub,showRetry=false){
-        const b=document.getElementById('stkStatus');b.className='stk-status '+type;
-        document.getElementById('stkStatusIcon').innerHTML=icon;
-        document.getElementById('stkStatusTitle').textContent=title;
-        document.getElementById('stkStatusSub').innerHTML=sub;
-        const rb=document.getElementById('stkRetryBtn');if(rb)rb.style.display=showRetry?'inline-block':'none';
-    }
-    function resetStkPanel(){
-        _stopStkPolling();_stkInvoiceId=null;_stkPollCount=0;
-        const b=document.getElementById('stkStatus');if(b)b.className='stk-status';
-        const i=document.getElementById('stkPhoneInput');if(i)i.value='';
-        const btn=document.getElementById('stkPushBtn');if(btn)btn.disabled=false;
-    }
+            _setIntaSendStatus('success', '🎉 Subscription activated! Reloading the system…');
+            setTimeout(() => {
+                closeSubscriptionModal();
+                document.getElementById('subExpiredOverlay')?.classList.remove('show');
+                window.location.reload();
+            }, 1800);
 
-    async function activateSubscriptionManual(){
-        const tx=(document.getElementById('subTransactionCode')?.value||'').trim().toUpperCase();
-        if(!tx){alert('Please enter the transaction code.');return;}
-        const btn=document.getElementById('subActivateManualBtn');btn.disabled=true;btn.textContent='Activating…';
-        try{
-            const shopId=window.authModule?.getCurrentShop()?.id;if(!shopId)throw new Error('Cannot determine shop.');
-            const now=new Date(),exp=new Date();exp.setDate(exp.getDate()+_selectedPlan.days);
-            const minimal={shop_id:shopId,plan:_selectedPlan.plan,status:'active',expires_at:exp.toISOString()};
-            const full={...minimal,started_at:now.toISOString(),updated_at:now.toISOString(),payment_method:'Manual',transaction_code:tx};
-            const r=await window.dataModule.upsertSubscription(full,minimal);if(!r.success)throw new Error(r.error);
-            alert('Subscription activated!');closeSubscriptionModal();
-            document.getElementById('subExpiredOverlay')?.classList.remove('show');window.location.reload();
-        }catch(err){alert('Activation failed: '+err.message);}
-        finally{btn.disabled=false;btn.textContent='Activate Manually';}
-    }
-
-    function updateSubNavBadge(status){
-        const badge=document.getElementById('subNavBadge'),icon=document.getElementById('subNavIcon'),label=document.getElementById('subNavLabel');if(!badge)return;
-        if(!status||status.missing||status.expired){badge.style.borderColor='var(--danger)';badge.style.color='var(--danger)';icon.textContent='&#128274;';label.textContent='Expired';}
-        else if(status.grace){badge.style.borderColor='var(--danger)';badge.style.color='var(--danger)';icon.textContent='&#9888;&#65039;';label.textContent='Grace Period';}
-        else if(status.active&&status.daysLeft<=7){badge.style.borderColor='var(--accent-orange)';badge.style.color='var(--accent-orange)';icon.textContent='&#9888;&#65039;';label.textContent=status.daysLeft+'d left';}
-        else if(status.active){badge.style.borderColor='var(--accent-green)';badge.style.color='var(--accent-green)';icon.textContent='&#9989;';label.textContent=status.daysLeft+'d left';}
-    }
-    async function applySubscriptionUI(){
-        const status=await window.subscriptionModule.checkSubscription();updateSubNavBadge(status);
-        if(status.expired||status.missing){
-            document.getElementById('subExpiredOverlay').classList.add('show');document.querySelector('.nav')?.classList.add('nav-locked');
-            document.querySelectorAll('.pos-tab-btn').forEach(b=>{b.disabled=true;b.style.opacity='0.4';b.style.cursor='not-allowed';});
-            document.getElementById('salesTab')?.classList.add('pos-locked');document.getElementById('expensesTab')?.classList.add('pos-locked');return false;
+        } catch (err) {
+            console.error('❌ Supabase activation error:', err);
+            _setIntaSendStatus('error', `❌ Activation failed: ${err.message}`);
+            _resetPayBtn();
+            alert(`❌ Subscription activation failed:\n${err.message}`);
         }
-        if(status.grace){const b=document.getElementById('subBanner');b.classList.add('grace');document.getElementById('subBannerMsg').textContent='Grace period — subscription expired. Renew immediately!';b.style.display='flex';}
-        else if(status.active&&status.daysLeft<=7){const b=document.getElementById('subBanner');b.classList.add('warning');document.getElementById('subBannerMsg').textContent='Subscription expires in '+status.daysLeft+' day'+(status.daysLeft!==1?'s':'')+'. Renew now.';b.style.display='flex';}
+    }
+
+    // ── MANUAL ACTIVATION (cash) ───────────────────────────────────────
+    async function activateSubscriptionManual() {
+        const txCode = (document.getElementById('subTransactionCode')?.value || '').trim().toUpperCase();
+        if (!txCode) {
+            alert('Please enter the M-Pesa / payment transaction code to activate manually.');
+            return;
+        }
+        const btn = document.getElementById('subActivateManualBtn');
+        btn.disabled    = true;
+        btn.textContent = '⏳ Activating…';
+        try {
+            await _activateSubscriptionInSupabase({ method: 'Manual', transaction_code: txCode });
+        } finally {
+            btn.disabled    = false;
+            btn.textContent = '✅ Activate Manually';
+        }
+    }
+
+    // ── SUPABASE CLIENT RESOLVER ───────────────────────────────────────
+    function _getDb() {
+        return window.DukaPOS?.supabaseClient
+            || window._supabaseClient
+            || window.supabaseClient
+            || window.DukaPOS?.client
+            || window.DukaPOS?.supabase
+            || null;
+    }
+
+    // ── NAV BADGE ──────────────────────────────────────────────────────
+    function updateSubNavBadge(status) {
+        const badge = document.getElementById('subNavBadge');
+        const icon  = document.getElementById('subNavIcon');
+        const label = document.getElementById('subNavLabel');
+        if (!badge) return;
+
+        if (!status || status.missing || status.expired) {
+            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)';
+            icon.textContent = '🔒'; label.textContent = 'Expired';
+        } else if (status.grace) {
+            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)';
+            icon.textContent = '⚠️'; label.textContent = 'Grace Period';
+        } else if (status.active && status.daysLeft <= 7) {
+            badge.style.borderColor = 'var(--accent-orange)'; badge.style.color = 'var(--accent-orange)';
+            icon.textContent = '⚠️'; label.textContent = `${status.daysLeft}d left`;
+        } else if (status.active) {
+            badge.style.borderColor = 'var(--accent-green)'; badge.style.color = 'var(--accent-green)';
+            icon.textContent = '✅'; label.textContent = `${status.daysLeft}d left`;
+        }
+    }
+
+    // ── APPLY SUBSCRIPTION UI (called on page init) ────────────────────
+    async function applySubscriptionUI() {
+        const status = await window.subscriptionModule.checkSubscription();
+        updateSubNavBadge(status);
+
+        if (status.expired || status.missing) {
+            document.getElementById('subExpiredOverlay').classList.add('show');
+            document.querySelector('.nav')?.classList.add('nav-locked');
+            document.querySelectorAll('.pos-tab-btn').forEach(btn => {
+                btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
+            });
+            document.getElementById('salesTab')?.classList.add('pos-locked');
+            document.getElementById('expensesTab')?.classList.add('pos-locked');
+            console.warn('🔒 Subscription expired — system locked');
+            return false;
+        }
+
+        if (status.grace) {
+            const banner = document.getElementById('subBanner');
+            banner.classList.add('grace');
+            document.getElementById('subBannerMsg').textContent =
+                '🚨 Grace period active — subscription expired. Renew immediately to keep access!';
+            banner.style.display = 'flex';
+        } else if (status.active && status.daysLeft <= 7) {
+            const banner = document.getElementById('subBanner');
+            banner.classList.add('warning');
+            document.getElementById('subBannerMsg').textContent =
+                `⚠️ Subscription expires in ${status.daysLeft} day${status.daysLeft !== 1 ? 's' : ''}. Renew to avoid interruption.`;
+            banner.style.display = 'flex';
+        }
+
         return true;
     }
     </script>
 
+    <!-- ── LOYALTY CONFIG + MESSAGING + TABS + EXPENSES + POS CORE ─── -->
     <script>
-    const POINTS_PER_KES=1,POINTS_TO_KES=100;
-    let messagesCheckInterval=null;
-    function toggleMessagesPopup(){const p=document.getElementById('messagesPopup');p.classList.contains('active')?p.classList.remove('active'):(p.classList.add('active'),loadUserMessages());}
-    document.addEventListener('click',function(e){const p=document.getElementById('messagesPopup'),b=document.getElementById('messageBell');if(p&&b&&p.classList.contains('active')&&!p.contains(e.target)&&!b.contains(e.target))p.classList.remove('active');});
-    async function loadUserMessages(){
-        try{const r=await window.messagingModule.getAllMessages(20),l=document.getElementById('messagesList');
-        if(!r.success||!r.data.length){l.innerHTML='<div class="empty-messages"><div class="empty-messages-icon">&#128333;</div><p>No messages</p></div>';return;}
-        l.innerHTML=r.data.map(m=>{const s=new Date(m.created_at),x=new Date(m.expires_at),h=Math.round((x-new Date())/3600000),sid=m.sender?.id||'unknown';
-        return '<div class="message-item '+(m.is_read?'':'unread')+'"><div class="message-header"><div class="message-sender">&#128100; '+(m.sender?.full_name||'Administrator')+'</div><div class="message-time">'+getTimeAgo(s)+'</div></div><div class="message-text">'+escapeHtml(m.message_text)+'</div><div class="message-footer"><div class="message-expiry">'+(h>0?'Expires in '+h+'h':'Expired')+'</div><div>'+(!m.is_read?'<button class="mark-read-btn" onclick="markMessageRead('+m.id+')">&#10003; Read</button>':'')+'<button class="reply-btn" onclick="replyToMessage('+sid+')">&#8617; Reply</button></div></div></div>';
-        }).join('');}catch(e){document.getElementById('messagesList').innerHTML='<div class="empty-messages"><div class="empty-messages-icon">&#9888;&#65039;</div><p>Error loading</p></div>';}
-    }
-    async function replyToMessage(sid){if(!sid||sid==='unknown'){alert('Cannot reply — sender info missing.');return;}const t=prompt('Enter your reply:');if(!t?.trim())return;const r=await window.messagingModule.sendMessage(sid,t.trim());r.success?(alert('Reply sent!'),loadUserMessages(),updateUnreadCount()):alert('Failed: '+(r.error||'Unknown'));}
-    async function markMessageRead(id){const r=await window.messagingModule.markAsRead(id);r.success&&(loadUserMessages(),updateUnreadCount());}
-    async function updateUnreadCount(){try{const r=await window.messagingModule.getUnreadCount(),b=document.getElementById('messageBadge'),c=r.success?(r.count||0):0;b.textContent=c>99?'99+':c;b.style.display=c>0?'flex':'none';}catch{document.getElementById('messageBadge').style.display='none';}}
-    function getTimeAgo(d){const s=Math.floor((new Date()-d)/1000);return s<60?'Just now':s<3600?Math.floor(s/60)+'m ago':s<86400?Math.floor(s/3600)+'h ago':Math.floor(s/86400)+'d ago';}
-    function escapeHtml(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
-    function initializeMessageNotifications(){updateUnreadCount();messagesCheckInterval=setInterval(updateUnreadCount,30000);}
+    const POINTS_PER_KES = 1;
+    const POINTS_TO_KES  = 100;
 
-    function switchTab(tab){
-        document.querySelectorAll('.pos-tab-btn').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-        if(tab==='sales'){document.querySelector('[onclick*="sales"]').classList.add('active');document.getElementById('salesTab').classList.add('active');}
-        else{document.querySelector('[onclick*="expenses"]').classList.add('active');document.getElementById('expensesTab').classList.add('active');loadExpenses();}
+    // ─────────────────────────────────────────────
+    // MESSAGING
+    // ─────────────────────────────────────────────
+    let messagesCheckInterval = null;
+
+    function toggleMessagesPopup() {
+        const popup = document.getElementById('messagesPopup');
+        if (popup.classList.contains('active')) { popup.classList.remove('active'); }
+        else { popup.classList.add('active'); loadUserMessages(); }
     }
-    function openAddExpenseModal(){document.getElementById('expenseDate').valueAsDate=new Date();document.getElementById('addExpenseModal').classList.add('show');document.getElementById('saveExpenseBtn').disabled=false;document.getElementById('saveExpenseBtn').textContent='Save Expense';}
-    function closeAddExpenseModal(){document.getElementById('addExpenseModal').classList.remove('show');document.getElementById('expenseForm').reset();}
-    async function loadExpenses(){
-        try{const r=await window.dataModule.getAllExpenses();if(!r.success)throw new Error(r.error);renderExpenses(r.data||[]);calculateExpenseStats(r.data||[]);}
-        catch(e){document.getElementById('expensesList').innerHTML='<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load expenses</div>';}
+    document.addEventListener('click', function(e) {
+        const popup = document.getElementById('messagesPopup');
+        const bell  = document.getElementById('messageBell');
+        if (popup && bell && popup.classList.contains('active')) {
+            if (!popup.contains(e.target) && !bell.contains(e.target)) popup.classList.remove('active');
+        }
+    });
+    async function loadUserMessages() {
+        try {
+            const result = await window.messagingModule.getAllMessages(20);
+            const list   = document.getElementById('messagesList');
+            if (!result.success || result.data.length === 0) {
+                list.innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No messages</p></div>`;
+                return;
+            }
+            list.innerHTML = result.data.map(msg => {
+                const sentAt    = new Date(msg.created_at);
+                const expiresAt = new Date(msg.expires_at);
+                const hoursLeft = Math.round((expiresAt - new Date()) / 3600000);
+                const senderId  = msg.sender?.id || 'unknown';
+                return `<div class="message-item ${msg.is_read ? '' : 'unread'}">
+                    <div class="message-header"><div class="message-sender">👤 ${msg.sender?.full_name || 'Administrator'}</div><div class="message-time">${getTimeAgo(sentAt)}</div></div>
+                    <div class="message-text">${escapeHtml(msg.message_text)}</div>
+                    <div class="message-footer">
+                        <div class="message-expiry">${hoursLeft > 0 ? `Expires in ${hoursLeft}h` : 'Expired'}</div>
+                        <div>
+                            ${!msg.is_read ? `<button class="mark-read-btn" onclick="markMessageRead(${msg.id})">✓ Mark as Read</button>` : ''}
+                            <button class="reply-btn" onclick="replyToMessage(${senderId})">↩ Reply</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        } catch (err) {
+            document.getElementById('messagesList').innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">⚠️</div><p>Error loading messages</p></div>`;
+        }
     }
-    function renderExpenses(expenses){
-        const c=document.getElementById('expensesList');
-        if(!expenses.length){c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:10px;">&#128202;</div><p>No expenses recorded yet</p></div>';return;}
-        c.innerHTML=expenses.map(e=>'<div class="expense-item"><div class="expense-info"><h4>'+e.category+'</h4><div class="expense-meta">'+e.description+' &bull; '+new Date(e.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})+'</div></div><div class="expense-amount">KES '+parseFloat(e.amount).toFixed(2)+'</div></div>').join('');
+    async function replyToMessage(senderId) {
+        if (!senderId || senderId === 'unknown') { alert("Cannot reply — sender info missing."); return; }
+        const replyText = prompt("Enter your reply:");
+        if (!replyText?.trim()) return;
+        const result = await window.messagingModule.sendMessage(senderId, replyText.trim());
+        if (result.success) { alert("Reply sent!"); loadUserMessages(); updateUnreadCount(); }
+        else alert("Failed to send reply: " + (result.error || "Unknown error"));
     }
-    function calculateExpenseStats(expenses){
-        const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),ws=new Date(today);ws.setDate(today.getDate()-today.getDay());
-        const ms=new Date(now.getFullYear(),now.getMonth(),1),ys=new Date(now.getFullYear(),0,1);let t=0,w=0,m=0,y=0;
-        expenses.forEach(e=>{const d=new Date(e.date),a=parseFloat(e.amount);if(d>=today)t+=a;if(d>=ws)w+=a;if(d>=ms)m+=a;if(d>=ys)y+=a;});
-        document.getElementById('todayExpenses').textContent='KES '+t.toFixed(2);document.getElementById('weekExpenses').textContent='KES '+w.toFixed(2);document.getElementById('monthExpenses').textContent='KES '+m.toFixed(2);document.getElementById('yearExpenses').textContent='KES '+y.toFixed(2);
+    async function markMessageRead(messageId) {
+        const result = await window.messagingModule.markAsRead(messageId);
+        if (result.success) { loadUserMessages(); updateUnreadCount(); }
     }
-    document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
-        e.preventDefault();const btn=document.getElementById('saveExpenseBtn');btn.disabled=true;btn.textContent='Saving...';
-        let user=authModule.getCurrentUser();if(!user){const j=localStorage.getItem('duka_user');if(j)try{user=JSON.parse(j);}catch{}}
-        if(!user?.id){btn.disabled=false;btn.textContent='Save Expense';alert('Session expired.');return;}
-        try{const r=await window.dataModule.createExpense({category:document.getElementById('expenseCategory').value,amount:parseFloat(document.getElementById('expenseAmount').value),description:document.getElementById('expenseDescription').value,date:document.getElementById('expenseDate').value});if(!r.success)throw new Error(r.error||'Unknown');closeAddExpenseModal();await loadExpenses();alert('Expense added!');}
-        catch(err){alert('Failed: '+err.message);}finally{btn.disabled=false;btn.textContent='Save Expense';}
+    async function updateUnreadCount() {
+        try {
+            const result = await window.messagingModule.getUnreadCount();
+            const badge  = document.getElementById('messageBadge');
+            const count  = result.success ? (result.count || 0) : 0;
+            badge.textContent  = count > 99 ? '99+' : count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        } catch { document.getElementById('messageBadge').style.display = 'none'; }
+    }
+    function getTimeAgo(date) {
+        const s = Math.floor((new Date() - date) / 1000);
+        if (s < 60) return 'Just now';
+        if (s < 3600) return `${Math.floor(s/60)}m ago`;
+        if (s < 86400) return `${Math.floor(s/3600)}h ago`;
+        return `${Math.floor(s/86400)}d ago`;
+    }
+    function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+    function initializeMessageNotifications() {
+        updateUnreadCount();
+        messagesCheckInterval = setInterval(updateUnreadCount, 30000);
+    }
+
+    // ─────────────────────────────────────────────
+    // TAB SWITCHING
+    // ─────────────────────────────────────────────
+    function switchTab(tab) {
+        document.querySelectorAll('.pos-tab-btn').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        if (tab === 'sales') {
+            document.querySelector('[onclick*="sales"]').classList.add('active');
+            document.getElementById('salesTab').classList.add('active');
+        } else {
+            document.querySelector('[onclick*="expenses"]').classList.add('active');
+            document.getElementById('expensesTab').classList.add('active');
+            loadExpenses();
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // EXPENSES
+    // ─────────────────────────────────────────────
+    function openAddExpenseModal() {
+        document.getElementById('expenseDate').valueAsDate = new Date();
+        document.getElementById('addExpenseModal').classList.add('show');
+        document.getElementById('saveExpenseBtn').disabled = false;
+        document.getElementById('saveExpenseBtn').textContent = 'Save Expense';
+    }
+    function closeAddExpenseModal() {
+        document.getElementById('addExpenseModal').classList.remove('show');
+        document.getElementById('expenseForm').reset();
+    }
+    async function loadExpenses() {
+        try {
+            const result = await window.dataModule.getAllExpenses();
+            if (!result.success) throw new Error(result.error);
+            renderExpenses(result.data || []);
+            calculateExpenseStats(result.data || []);
+        } catch (e) {
+            document.getElementById('expensesList').innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load expenses</div>';
+        }
+    }
+    function renderExpenses(expenses) {
+        const c = document.getElementById('expensesList');
+        if (!expenses.length) {
+            c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:10px;">📊</div><p>No expenses recorded yet</p></div>`;
+            return;
+        }
+        c.innerHTML = expenses.map(e =>
+            `<div class="expense-item">
+                <div class="expense-info">
+                    <h4>${e.category}</h4>
+                    <div class="expense-meta">${e.description} • ${new Date(e.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div>
+                </div>
+                <div class="expense-amount">KES ${parseFloat(e.amount).toFixed(2)}</div>
+            </div>`
+        ).join('');
+    }
+    function calculateExpenseStats(expenses) {
+        const now       = new Date();
+        const today     = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const weekStart = new Date(today); weekStart.setDate(today.getDate() - today.getDay());
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const yearStart  = new Date(now.getFullYear(), 0, 1);
+        let t=0, w=0, m=0, y=0;
+        expenses.forEach(e => {
+            const d = new Date(e.date); const a = parseFloat(e.amount);
+            if (d >= today) t += a;
+            if (d >= weekStart) w += a;
+            if (d >= monthStart) m += a;
+            if (d >= yearStart) y += a;
+        });
+        document.getElementById('todayExpenses').textContent = `KES ${t.toFixed(2)}`;
+        document.getElementById('weekExpenses').textContent  = `KES ${w.toFixed(2)}`;
+        document.getElementById('monthExpenses').textContent = `KES ${m.toFixed(2)}`;
+        document.getElementById('yearExpenses').textContent  = `KES ${y.toFixed(2)}`;
+    }
+    document.getElementById('expenseForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('saveExpenseBtn');
+        btn.disabled = true; btn.textContent = 'Saving...';
+        let user = authModule.getCurrentUser();
+        if (!user) { const j = localStorage.getItem('duka_user'); if(j) try { user = JSON.parse(j); } catch{} }
+        if (!user?.id) { btn.disabled=false; btn.textContent='Save Expense'; alert('Session expired. Please log in again.'); return; }
+        try {
+            const result = await window.dataModule.createExpense({
+                category:    document.getElementById('expenseCategory').value,
+                amount:      parseFloat(document.getElementById('expenseAmount').value),
+                description: document.getElementById('expenseDescription').value,
+                date:        document.getElementById('expenseDate').value
+            });
+            if (!result.success) throw new Error(result.error || 'Unknown error');
+            closeAddExpenseModal();
+            await loadExpenses();
+            alert('✅ Expense added successfully!');
+        } catch (err) { alert('❌ Failed to add expense: ' + err.message); }
+        finally { btn.disabled=false; btn.textContent='Save Expense'; }
     });
 
-    (function(){
-        let cart=[],products=[],allCustomers=[],selectedCustomer=null,redeemedPoints=0,selectedPayment='Cash';
-        window.addEventListener('DOMContentLoaded',async()=>{
-            try{
-                await window.DukaPOS.initializeSupabase();const ok=await authModule.requireAuth();if(!ok)return;
-                const user=authModule.getCurrentUser();document.getElementById('currentUserName').textContent=user.full_name||'User';
-                if(window.setupNavigationForRole)window.setupNavigationForRole();
-                const can=await applySubscriptionUI();if(!can){setTimeout(initializeMessageNotifications,1000);return;}
-                await Promise.all([loadProducts(),loadCustomers()]);setupEventListeners();setTimeout(initializeMessageNotifications,1000);console.log('POS initialized');
-            }catch(err){console.error('POS init failed:',err);alert('Failed to initialize: '+err.message);}
+    // ─────────────────────────────────────────────
+    // POS CORE
+    // ─────────────────────────────────────────────
+    (function() {
+        let cart             = [];
+        let products         = [];
+        let allCustomers     = [];
+        let selectedCustomer = null;
+        let redeemedPoints   = 0;
+        let selectedPayment  = 'Cash';
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await window.DukaPOS.initializeSupabase();
+                const isAuthenticated = await authModule.requireAuth();
+                if (!isAuthenticated) return;
+                const currentUser = authModule.getCurrentUser();
+                document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
+                if (window.setupNavigationForRole) window.setupNavigationForRole();
+
+                // ── SUBSCRIPTION CHECK ──
+                const canProceed = await applySubscriptionUI();
+                if (!canProceed) {
+                    setTimeout(initializeMessageNotifications, 1000);
+                    return;
+                }
+
+                await Promise.all([loadProducts(), loadCustomers()]);
+                setupEventListeners();
+                setTimeout(initializeMessageNotifications, 1000);
+                console.log('✅ POS initialized');
+            } catch (err) {
+                console.error('POS init failed:', err);
+                alert('Failed to initialize POS: ' + err.message);
+            }
         });
-        async function loadProducts(){try{const r=await window.dataModule.getAllProducts();if(!r.success)throw new Error(r.error);products=r.data||[];renderProducts(products);renderCategoryButtons();}catch(err){document.getElementById('productsGrid').innerHTML='<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load products</div>';}}
-        function renderCategoryButtons(){
-            const c=document.getElementById('categoriesContainer');c.innerHTML='';
-            const ab=document.createElement('button');ab.className='category-btn active';ab.dataset.category='All';ab.textContent='All';c.appendChild(ab);
-            [...new Set(products.map(p=>p.category).filter(x=>x?.trim()))].sort().forEach(cat=>{const b=document.createElement('button');b.className='category-btn';b.dataset.category=cat;b.textContent=cat;c.appendChild(b);});
-            document.querySelectorAll('.category-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.category-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderProducts(b.dataset.category==='All'?products:products.filter(p=>p.category===b.dataset.category));});});
+
+        // ── PRODUCTS ──────────────────────────────────────────────────
+        async function loadProducts() {
+            try {
+                const result = await window.dataModule.getAllProducts();
+                if (!result.success) throw new Error(result.error);
+                products = result.data || [];
+                renderProducts(products);
+                renderCategoryButtons();
+            } catch (err) {
+                document.getElementById('productsGrid').innerHTML =
+                    '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load products</div>';
+            }
         }
-        function renderProducts(list){const g=document.getElementById('productsGrid');if(!list.length){g.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No products found</div>';return;}g.innerHTML=list.map(p=>'<div class="product-card" onclick="addToCart('+p.id+')"><div class="product-icon">'+(p.icon||'&#128230;')+'</div><div class="product-name">'+p.name+'</div><div class="product-price">KES '+p.price.toFixed(2)+'</div><div class="product-stock">Stock: '+p.stock+'</div></div>').join('');}
-        async function loadCustomers(){try{const r=await window.dataModule.getAllCustomers();if(!r.success)throw new Error(r.error);allCustomers=r.data||[];setupCustomerSearch();}catch(err){console.warn('Could not load customers:',err.message);}}
-        function setupCustomerSearch(){
-            const inp=document.getElementById('customerSearchInput'),dd=document.getElementById('customerDropdown');
-            inp.addEventListener('input',()=>{const q=inp.value.trim().toLowerCase();if(!q){dd.classList.remove('open');return;}const m=allCustomers.filter(c=>c.name?.toLowerCase().includes(q)||c.phone?.includes(q)).slice(0,8);if(!m.length){dd.innerHTML='<div class="customer-option" style="color:var(--text-muted);">No customers found</div>';dd.classList.add('open');return;}dd.innerHTML=m.map(c=>'<div class="customer-option" onclick="selectCustomer('+c.id+')"><div class="customer-opt-name">&#128100; '+c.name+'</div><div class="customer-opt-pts">'+(c.phone||'')+' &bull; '+(c.loyalty_points||0)+' pts</div></div>').join('');dd.classList.add('open');});
-            document.addEventListener('click',e=>{if(!e.target.closest('.customer-search-wrap'))dd.classList.remove('open');});
+        function renderCategoryButtons() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+            const allBtn = document.createElement('button');
+            allBtn.className = 'category-btn active'; allBtn.dataset.category = 'All'; allBtn.textContent = 'All';
+            container.appendChild(allBtn);
+            [...new Set(products.map(p => p.category).filter(c => c?.trim()))].sort().forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn'; btn.dataset.category = cat; btn.textContent = cat;
+                container.appendChild(btn);
+            });
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const cat = btn.dataset.category;
+                    renderProducts(cat === 'All' ? products : products.filter(p => p.category === cat));
+                });
+            });
         }
-        window.selectCustomer=function(id){selectedCustomer=allCustomers.find(c=>c.id===id);redeemedPoints=0;document.getElementById('customerSearchInput').value=selectedCustomer.name;document.getElementById('customerDropdown').classList.remove('open');renderSelectedCustomer();updateCartSummary();};
-        window.clearSelectedCustomer=function(){selectedCustomer=null;redeemedPoints=0;document.getElementById('customerSearchInput').value='';document.getElementById('selectedCustomerCard').style.display='none';document.getElementById('redeemBadge').style.display='none';updateCartSummary();};
-        function renderSelectedCustomer(){if(!selectedCustomer)return;const c=document.getElementById('selectedCustomerCard'),pts=selectedCustomer.loyalty_points||0;c.style.display='flex';c.innerHTML='<div class="selected-customer-info"><div class="cust-name">&#128100; '+selectedCustomer.name+'</div><div class="cust-pts">&#11088; '+pts+' loyalty points available</div></div>'+(pts>=100?'<button class="redeem-btn" onclick="openRedeemModal()">&#127873; Redeem</button>':'');renderRedeemBadge();}
-        function renderRedeemBadge(){const b=document.getElementById('redeemBadge');if(redeemedPoints>0){b.style.display='flex';b.innerHTML='<span>&#127873; Redeeming '+redeemedPoints+' pts = KES '+(redeemedPoints/POINTS_TO_KES).toFixed(2)+' off</span><button class="remove-redeem" onclick="removeRedemption()">&#10005;</button>';}else b.style.display='none';}
-        window.openRedeemModal=function(){if(!selectedCustomer)return;document.getElementById('redeemCustomerName').textContent=selectedCustomer.name;document.getElementById('redeemAvailablePoints').textContent=(selectedCustomer.loyalty_points||0)+' pts';const inp=document.getElementById('redeemPointsInput');inp.value='';inp.max=selectedCustomer.loyalty_points||0;document.getElementById('redeemEquivalent').textContent='= KES 0.00 discount';inp.oninput=()=>{const v=parseInt(inp.value)||0;document.getElementById('redeemEquivalent').textContent='= KES '+(v/POINTS_TO_KES).toFixed(2)+' discount';};document.getElementById('redeemModal').classList.add('show');};
-        window.closeRedeemModal=function(){document.getElementById('redeemModal').classList.remove('show');};
-        window.applyRedemption=function(){const inp=document.getElementById('redeemPointsInput'),pts=parseInt(inp.value)||0,av=selectedCustomer?.loyalty_points||0;if(pts<100){alert('Minimum 100 points.');return;}if(pts>av){alert('Only '+av+' pts available.');return;}if(pts%100!==0){alert('Must be multiples of 100.');return;}redeemedPoints=pts;closeRedeemModal();renderRedeemBadge();updateCartSummary();};
-        window.removeRedemption=function(){redeemedPoints=0;renderRedeemBadge();updateCartSummary();};
-        window.addToCart=function(pid){const p=products.find(x=>x.id===pid);if(!p)return;if(p.stock<=0){alert('Out of stock!');return;}const ex=cart.find(i=>i.id===pid);if(ex){if(ex.quantity>=p.stock){alert('Cannot exceed stock!');return;}ex.quantity++;}else cart.push({id:p.id,name:p.name,price:p.price,quantity:1,maxStock:p.stock});renderCart();};
-        function renderCart(){const c=document.getElementById('cartItems'),btn=document.getElementById('checkoutBtn');if(!cart.length){c.innerHTML='<div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">&#128722;</div><p>Cart is empty</p></div>';btn.disabled=true;updateCartSummary();return;}c.innerHTML=cart.map(i=>'<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">'+i.name+'</div><div class="cart-item-price">KES '+i.price.toFixed(2)+' each</div></div><div class="cart-item-controls"><button class="qty-btn" onclick="updateQuantity('+i.id+',-1)">-</button><span class="qty-value">'+i.quantity+'</span><button class="qty-btn" onclick="updateQuantity('+i.id+',1)">+</button><button class="remove-btn" onclick="removeFromCart('+i.id+')">&#10005;</button></div></div>').join('');btn.disabled=false;updateCartSummary();}
-        window.updateQuantity=function(pid,ch){const i=cart.find(x=>x.id===pid);if(!i)return;const n=i.quantity+ch;if(n<=0){removeFromCart(pid);return;}if(n>i.maxStock){alert('Cannot exceed stock!');return;}i.quantity=n;renderCart();};
-        window.removeFromCart=function(pid){cart=cart.filter(i=>i.id!==pid);renderCart();};
-        function updateCartSummary(){const ic=cart.reduce((s,i)=>s+i.quantity,0),sub=cart.reduce((s,i)=>s+i.price*i.quantity,0),disc=redeemedPoints/POINTS_TO_KES,tot=Math.max(0,sub-disc),pe=Math.floor(tot*POINTS_PER_KES);document.getElementById('itemCount').textContent=ic;document.getElementById('subtotalAmount').textContent='KES '+sub.toFixed(2);const dr=document.getElementById('discountRow');if(disc>0){dr.style.display='flex';document.getElementById('discountAmount').textContent='- KES '+disc.toFixed(2);}else dr.style.display='none';document.getElementById('totalAmount').textContent='KES '+tot.toFixed(2);const en=document.getElementById('loyaltyEarnNote');if(selectedCustomer&&ic>0){en.style.display='block';en.textContent='&#11088; '+selectedCustomer.name+' will earn '+pe+' loyalty point'+(pe!==1?'s':'')+' on this purchase';}else en.style.display='none';}
-        function setupEventListeners(){document.getElementById('searchInput').addEventListener('input',e=>{const q=e.target.value.toLowerCase();renderProducts(products.filter(p=>p.name.toLowerCase().includes(q)||p.category?.toLowerCase().includes(q)));});document.querySelectorAll('.payment-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.payment-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');selectedPayment=b.dataset.method;});});document.getElementById('checkoutBtn').addEventListener('click',checkout);}
-        async function checkout(){if(!cart.length)return;if(!window.subscriptionModule.isAccessAllowed()){openSubscriptionModal();return;}const sub=cart.reduce((s,i)=>s+i.price*i.quantity,0),disc=redeemedPoints/POINTS_TO_KES,tot=Math.max(0,sub-disc);await processCheckout(cart,sub,tot,selectedPayment);}
-        async function processCheckout(cartItems,subtotal,total,paymentMethod){
-            try{
-                const user=authModule.getCurrentUser();if(!user)throw new Error('Not authenticated');
-                const is=cartItems.reduce((s,i)=>s+i.quantity,0),si=cartItems.map(i=>({product_id:i.id,quantity:i.quantity,unit_price:i.price}));
-                const res=await window.dataModule.createSale({user_id:user.id,total_amount:total,items_sold:is,payment_method:paymentMethod,customer_id:selectedCustomer?.id||null,discount_amount:subtotal-total,points_redeemed:redeemedPoints},si);if(!res.success)throw new Error(res.error);
-                let sf=[];for(const i of cartItems){const r=await window.dataModule.updateInventory(i.id,i.quantity,'subtract');if(!r.success)sf.push(i.name);}if(sf.length)alert('Sale complete, stock update failed for: '+sf.join(', '));
-                let pe=0,ntp=0;
-                if(selectedCustomer){pe=Math.floor(total*POINTS_PER_KES);ntp=Math.max(0,(selectedCustomer.loyalty_points||0)-redeemedPoints)+pe;const lr=await window.dataModule.updateCustomer(selectedCustomer.id,{loyalty_points:ntp});if(!lr.success)console.warn('Loyalty update failed:',lr.error);else{const idx=allCustomers.findIndex(c=>c.id===selectedCustomer.id);if(idx!==-1)allCustomers[idx].loyalty_points=ntp;}}
-                document.getElementById('saleTotal').textContent='KES '+total.toFixed(2);
-                const ls=document.getElementById('loyaltyEarnedSection');
-                if(selectedCustomer&&(pe>0||redeemedPoints>0)){ls.style.display='block';ls.innerHTML='<div class="loyalty-earned"><div class="loyalty-earned-title">&#11088; Loyalty Points for '+selectedCustomer.name+'</div>'+(redeemedPoints>0?'<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px;">&#127873; Redeemed: '+redeemedPoints+' pts (KES '+(redeemedPoints/POINTS_TO_KES).toFixed(2)+' off)</div>':'')+'<div class="loyalty-earned-pts">+'+pe+' pts earned</div><div class="loyalty-total">Total: '+ntp+' pts</div></div>';}else ls.style.display='none';
+        function renderProducts(list) {
+            const grid = document.getElementById('productsGrid');
+            if (!list.length) { grid.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted);">No products found</div>'; return; }
+            grid.innerHTML = list.map(p =>
+                `<div class="product-card" onclick="addToCart(${p.id})">
+                    <div class="product-icon">${p.icon || '📦'}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-price">KES ${p.price.toFixed(2)}</div>
+                    <div class="product-stock">Stock: ${p.stock}</div>
+                </div>`
+            ).join('');
+        }
+
+        // ── CUSTOMERS ─────────────────────────────────────────────────
+        async function loadCustomers() {
+            try {
+                const result = await window.dataModule.getAllCustomers();
+                if (!result.success) throw new Error(result.error);
+                allCustomers = result.data || [];
+                setupCustomerSearch();
+            } catch (err) { console.warn('Could not load customers:', err.message); }
+        }
+        function setupCustomerSearch() {
+            const input    = document.getElementById('customerSearchInput');
+            const dropdown = document.getElementById('customerDropdown');
+            input.addEventListener('input', () => {
+                const q = input.value.trim().toLowerCase();
+                if (!q) { dropdown.classList.remove('open'); return; }
+                const matches = allCustomers.filter(c =>
+                    c.name?.toLowerCase().includes(q) || c.phone?.includes(q)
+                ).slice(0, 8);
+                if (!matches.length) {
+                    dropdown.innerHTML = '<div class="customer-option" style="color:var(--text-muted);">No customers found</div>';
+                    dropdown.classList.add('open'); return;
+                }
+                dropdown.innerHTML = matches.map(c =>
+                    `<div class="customer-option" onclick="selectCustomer(${c.id})">
+                        <div class="customer-opt-name">👤 ${c.name}</div>
+                        <div class="customer-opt-pts">${c.phone || ''} • ${c.loyalty_points || 0} pts</div>
+                    </div>`
+                ).join('');
+                dropdown.classList.add('open');
+            });
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.customer-search-wrap')) dropdown.classList.remove('open');
+            });
+        }
+        window.selectCustomer = function(id) {
+            selectedCustomer = allCustomers.find(c => c.id === id);
+            redeemedPoints   = 0;
+            document.getElementById('customerSearchInput').value = selectedCustomer.name;
+            document.getElementById('customerDropdown').classList.remove('open');
+            renderSelectedCustomer();
+            updateCartSummary();
+        };
+        window.clearSelectedCustomer = function() {
+            selectedCustomer = null; redeemedPoints = 0;
+            document.getElementById('customerSearchInput').value = '';
+            document.getElementById('selectedCustomerCard').style.display = 'none';
+            document.getElementById('redeemBadge').style.display = 'none';
+            updateCartSummary();
+        };
+        function renderSelectedCustomer() {
+            if (!selectedCustomer) return;
+            const card = document.getElementById('selectedCustomerCard');
+            const pts  = selectedCustomer.loyalty_points || 0;
+            card.style.display = 'flex';
+            card.innerHTML = `
+                <div class="selected-customer-info">
+                    <div class="cust-name">👤 ${selectedCustomer.name}</div>
+                    <div class="cust-pts">⭐ ${pts} loyalty points available</div>
+                </div>
+                ${pts >= 100 ? `<button class="redeem-btn" onclick="openRedeemModal()">🎁 Redeem</button>` : ''}`;
+            renderRedeemBadge();
+        }
+        function renderRedeemBadge() {
+            const badge = document.getElementById('redeemBadge');
+            if (redeemedPoints > 0) {
+                badge.style.display = 'flex';
+                badge.innerHTML = `<span>🎁 Redeeming ${redeemedPoints} pts = KES ${(redeemedPoints / POINTS_TO_KES).toFixed(2)} off</span>
+                    <button class="remove-redeem" onclick="removeRedemption()">✕</button>`;
+            } else { badge.style.display = 'none'; }
+        }
+
+        // ── REDEEM MODAL ──────────────────────────────────────────────
+        window.openRedeemModal = function() {
+            if (!selectedCustomer) return;
+            document.getElementById('redeemCustomerName').textContent = selectedCustomer.name;
+            document.getElementById('redeemAvailablePoints').textContent = `${selectedCustomer.loyalty_points || 0} pts`;
+            const input = document.getElementById('redeemPointsInput');
+            input.value = '';
+            input.max   = selectedCustomer.loyalty_points || 0;
+            document.getElementById('redeemEquivalent').textContent = '= KES 0.00 discount';
+            input.oninput = () => {
+                const v = parseInt(input.value) || 0;
+                document.getElementById('redeemEquivalent').textContent = `= KES ${(v / POINTS_TO_KES).toFixed(2)} discount`;
+            };
+            document.getElementById('redeemModal').classList.add('show');
+        };
+        window.closeRedeemModal = function() { document.getElementById('redeemModal').classList.remove('show'); };
+        window.applyRedemption = function() {
+            const input     = document.getElementById('redeemPointsInput');
+            const pts       = parseInt(input.value) || 0;
+            const available = selectedCustomer?.loyalty_points || 0;
+            if (pts < 100)           { alert('Minimum redemption is 100 points.'); return; }
+            if (pts > available)     { alert(`You only have ${available} points available.`); return; }
+            if (pts % 100 !== 0)     { alert('Points must be in multiples of 100.'); return; }
+            redeemedPoints = pts;
+            closeRedeemModal();
+            renderRedeemBadge();
+            updateCartSummary();
+        };
+        window.removeRedemption = function() { redeemedPoints = 0; renderRedeemBadge(); updateCartSummary(); };
+
+        // ── CART ──────────────────────────────────────────────────────
+        window.addToCart = function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            if (product.stock <= 0) { alert('Product out of stock!'); return; }
+            const existing = cart.find(i => i.id === productId);
+            if (existing) {
+                if (existing.quantity >= product.stock) { alert('Cannot add more than available stock!'); return; }
+                existing.quantity++;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, maxStock: product.stock });
+            }
+            renderCart();
+        };
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const btn       = document.getElementById('checkoutBtn');
+            if (!cart.length) {
+                container.innerHTML = `<div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>`;
+                btn.disabled = true;
+                updateCartSummary();
+                return;
+            }
+            container.innerHTML = cart.map(item =>
+                `<div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">KES ${item.price.toFixed(2)} each</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span class="qty-value">${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+                    </div>
+                </div>`
+            ).join('');
+            btn.disabled = false;
+            updateCartSummary();
+        }
+        window.updateQuantity = function(productId, change) {
+            const item   = cart.find(i => i.id === productId);
+            if (!item) return;
+            const newQty = item.quantity + change;
+            if (newQty <= 0) { removeFromCart(productId); return; }
+            if (newQty > item.maxStock) { alert('Cannot exceed available stock!'); return; }
+            item.quantity = newQty;
+            renderCart();
+        };
+        window.removeFromCart = function(productId) { cart = cart.filter(i => i.id !== productId); renderCart(); };
+        function updateCartSummary() {
+            const itemCount  = cart.reduce((s, i) => s + i.quantity, 0);
+            const subtotal   = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const discount   = redeemedPoints / POINTS_TO_KES;
+            const total      = Math.max(0, subtotal - discount);
+            const pointsEarned = Math.floor(total * POINTS_PER_KES);
+
+            document.getElementById('itemCount').textContent      = itemCount;
+            document.getElementById('subtotalAmount').textContent = `KES ${subtotal.toFixed(2)}`;
+
+            const discountRow = document.getElementById('discountRow');
+            if (discount > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('discountAmount').textContent = `- KES ${discount.toFixed(2)}`;
+            } else { discountRow.style.display = 'none'; }
+
+            document.getElementById('totalAmount').textContent = `KES ${total.toFixed(2)}`;
+
+            const earnNote = document.getElementById('loyaltyEarnNote');
+            if (selectedCustomer && itemCount > 0) {
+                earnNote.style.display = 'block';
+                earnNote.textContent   = `⭐ ${selectedCustomer.name} will earn ${pointsEarned} loyalty point${pointsEarned !== 1 ? 's' : ''} on this purchase`;
+            } else { earnNote.style.display = 'none'; }
+        }
+
+        // ── EVENTS ────────────────────────────────────────────────────
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', e => {
+                const q = e.target.value.toLowerCase();
+                renderProducts(products.filter(p =>
+                    p.name.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q)
+                ));
+            });
+            document.querySelectorAll('.payment-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedPayment = btn.dataset.method;
+                });
+            });
+            document.getElementById('checkoutBtn').addEventListener('click', checkout);
+        }
+
+        // ── CHECKOUT ──────────────────────────────────────────────────
+        async function checkout() {
+            if (!cart.length) return;
+            if (!window.subscriptionModule.isAccessAllowed()) {
+                openSubscriptionModal();
+                return;
+            }
+            const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+            const discount = redeemedPoints / POINTS_TO_KES;
+            const total    = Math.max(0, subtotal - discount);
+            await processCheckout(cart, subtotal, total, selectedPayment);
+        }
+
+        async function processCheckout(cartItems, subtotal, total, paymentMethod) {
+            try {
+                const currentUser = authModule.getCurrentUser();
+                if (!currentUser) throw new Error('Not authenticated');
+
+                const itemsSold  = cartItems.reduce((s, i) => s + i.quantity, 0);
+                const saleItems  = cartItems.map(i => ({ product_id: i.id, quantity: i.quantity, unit_price: i.price }));
+                const saleRecord = {
+                    user_id:         currentUser.id,
+                    total_amount:    total,
+                    items_sold:      itemsSold,
+                    payment_method:  paymentMethod,
+                    customer_id:     selectedCustomer?.id || null,
+                    discount_amount: subtotal - total,
+                    points_redeemed: redeemedPoints
+                };
+
+                const saleResult = await window.dataModule.createSale(saleRecord, saleItems);
+                if (!saleResult.success) throw new Error(saleResult.error);
+
+                // Update stock
+                let stockFailed = [];
+                for (const item of cartItems) {
+                    const r = await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
+                    if (!r.success) stockFailed.push(item.name);
+                }
+                if (stockFailed.length) alert('Sale complete, but stock update failed for: ' + stockFailed.join(', '));
+
+                // ── LOYALTY POINTS ──
+                let pointsEarned  = 0;
+                let newTotalPoints = 0;
+                if (selectedCustomer) {
+                    pointsEarned         = Math.floor(total * POINTS_PER_KES);
+                    const currentPts     = selectedCustomer.loyalty_points || 0;
+                    const afterRedeem    = Math.max(0, currentPts - redeemedPoints);
+                    newTotalPoints       = afterRedeem + pointsEarned;
+
+                    const loyaltyResult  = await window.dataModule.updateCustomer(selectedCustomer.id, { loyalty_points: newTotalPoints });
+                    if (!loyaltyResult.success) console.warn('Loyalty points update failed:', loyaltyResult.error);
+                    else {
+                        const idx = allCustomers.findIndex(c => c.id === selectedCustomer.id);
+                        if (idx !== -1) allCustomers[idx].loyalty_points = newTotalPoints;
+                        console.log(`✅ Loyalty: -${redeemedPoints} redeemed, +${pointsEarned} earned → total ${newTotalPoints}`);
+                    }
+                }
+
+                // Show success modal
+                document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
+                const loyaltySection = document.getElementById('loyaltyEarnedSection');
+                if (selectedCustomer && (pointsEarned > 0 || redeemedPoints > 0)) {
+                    loyaltySection.style.display = 'block';
+                    loyaltySection.innerHTML = `<div class="loyalty-earned">
+                        <div class="loyalty-earned-title">⭐ Loyalty Points for ${selectedCustomer.name}</div>
+                        ${redeemedPoints > 0 ? `<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px;">🎁 Redeemed: ${redeemedPoints} pts (KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off)</div>` : ''}
+                        <div class="loyalty-earned-pts">+${pointsEarned} pts earned</div>
+                        <div class="loyalty-total">Total balance: ${newTotalPoints} pts</div>
+                    </div>`;
+                } else { loyaltySection.style.display = 'none'; }
+
                 document.getElementById('successModal').classList.add('show');
-                cart=[];selectedCustomer=null;redeemedPoints=0;document.getElementById('customerSearchInput').value='';document.getElementById('selectedCustomerCard').style.display='none';document.getElementById('redeemBadge').style.display='none';renderCart();await loadProducts();
-            }catch(err){console.error('Checkout error:',err);alert('Checkout failed: '+err.message);}
+
+                // Reset
+                cart = []; selectedCustomer = null; redeemedPoints = 0;
+                document.getElementById('customerSearchInput').value = '';
+                document.getElementById('selectedCustomerCard').style.display = 'none';
+                document.getElementById('redeemBadge').style.display = 'none';
+                renderCart();
+                await loadProducts();
+
+            } catch (err) {
+                console.error('Checkout error:', err);
+                alert('Checkout failed: ' + err.message);
+            }
         }
-        window.closeSuccessModal=function(){document.getElementById('successModal').classList.remove('show');};
+
+        window.closeSuccessModal = function() { document.getElementById('successModal').classList.remove('show'); };
     })();
-    window.addEventListener('beforeunload',()=>{if(messagesCheckInterval)clearInterval(messagesCheckInterval);});
+
+    window.addEventListener('beforeunload', () => {
+        if (messagesCheckInterval) clearInterval(messagesCheckInterval);
+    });
     </script>
+    <footer style="text-align: center; padding: 15px; background-color: black;">
+  <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
