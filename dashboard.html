@@ -90,13 +90,11 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-state-icon { font-size: 4rem; margin-bottom: 20px; }
         .info-box { background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px; }
-
         /* ── Notification Bell ── */
         .message-notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
         .message-notification-bell:hover { background: rgba(88, 166, 255, 0.1); }
         .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 20px; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-
         /* ── Messages Popup ── */
         .messages-popup { position: fixed; top: 70px; right: 20px; width: 480px; max-height: 80vh; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; overflow: hidden; }
         .messages-popup.active { display: flex; }
@@ -105,12 +103,10 @@
         .close-popup { background: none; border: none; color: var(--text-muted); font-size: 1.6rem; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
         .close-popup:hover { color: var(--danger); background: rgba(248,81,73,0.1); }
         .messages-list { flex: 1; overflow-y: auto; padding: 16px; }
-
         /* ── Message items ── */
         .message-item { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; }
         .message-item.sent { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.3); }
         .message-item.read { opacity: 0.6; background: rgba(139,148,158,0.08); border-color: rgba(139,148,158,0.2); }
-
         /* ── REJECTION card ── */
         .message-item.rejection {
             background: rgba(248,81,73,0.08);
@@ -125,7 +121,6 @@
         }
         .rejection-label { display: inline-flex; align-items: center; gap: 4px; background: var(--danger); color: white; font-size: 0.7rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
         .rejection-reason { background: rgba(248,81,73,0.1); border-left: 3px solid var(--danger); padding: 7px 12px; border-radius: 0 6px 6px 0; font-size: 0.88rem; color: #fca5a5; margin: 8px 0; font-style: italic; line-height: 1.5; }
-
         /* ── Rejection action buttons ── */
         .rejection-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
         .rej-btn { padding: 6px 14px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; font-family: 'Archivo', sans-serif; }
@@ -136,7 +131,6 @@
         .rej-btn-dismiss { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
         .rej-btn-dismiss:hover { background: rgba(248,81,73,0.12); color: var(--danger); border-color: rgba(248,81,73,0.45); }
         .rej-dismissed-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 5px; }
-
         .message-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem; color: var(--text-muted); }
         .message-sender { font-weight: 600; color: var(--accent-orange); }
         .message-time { font-size: 0.8rem; }
@@ -146,7 +140,6 @@
         .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; margin-top: 8px; margin-left: 8px; }
         .empty-messages { text-align: center; padding: 60px 20px; color: var(--text-muted); }
         .empty-messages-icon { font-size: 3.5rem; margin-bottom: 12px; }
-
         /* ── Popup tabs ── */
         .popup-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
         .popup-tab { flex: 1; padding: 10px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
@@ -155,7 +148,6 @@
         .popup-tab.tab-staff.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
         .popup-section { display: none; }
         .popup-section.active { display: block; }
-
         /* Status badges */
         .status-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
         .status-pending { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
@@ -163,7 +155,6 @@
         .status-shipped { background: rgba(139,92,246,0.15); color: #a78bfa; }
         .status-delivered { background: rgba(16,185,129,0.15); color: #10b981; }
         .status-cancelled { background: rgba(248,81,73,0.15); color: var(--danger); }
-
         /* Dashboard tabs */
         .dashboard-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); overflow-x: auto; }
         .dashboard-tab { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
@@ -171,11 +162,9 @@
         .dashboard-tab.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
         .supplier-order-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .order-id { font-size: 1.2rem; font-weight: 700; color: var(--accent-orange); }
-
         /* ── Contact Supplier Modal ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 10000; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
@@ -184,12 +173,10 @@
         .modal-box textarea { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Archivo', sans-serif; font-size: 0.95rem; resize: vertical; min-height: 110px; margin-bottom: 16px; }
         .modal-box textarea:focus { outline: none; border-color: var(--accent-blue); }
         .modal-actions { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Archivo', sans-serif; font-size: 0.95rem; transition: all 0.15s; }
         .modal-btn-send { background: var(--accent-blue); color: white; }
         .modal-btn-send:hover { background: #3b8de8; }
         .modal-btn-cancel { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
         .modal-btn-cancel:hover { color: var(--text); }
-
         @media (max-width: 768px) {
             .messages-popup { width: 90vw; right: 5vw; top: 60px; }
             .dashboard-tabs { border-bottom: none; }
@@ -229,7 +216,6 @@
             </div>
         </div>
     </nav>
-
     <!-- ══ MESSAGES POPUP ══ -->
     <div class="messages-popup" id="messagesPopup">
         <div class="messages-header">
@@ -252,7 +238,6 @@
             </div>
         </div>
     </div>
-
     <!-- ══ CONTACT SUPPLIER MODAL ══ -->
     <div class="modal-overlay" id="contactSupplierModal">
         <div class="modal-box">
@@ -268,19 +253,16 @@
             </div>
         </div>
     </div>
-
     <div class="container">
         <div class="page-header">
             <h1>📊 Dashboard Overview</h1>
             <p>Real-time sales, performance insights, and supplier communications</p>
         </div>
-
         <div class="dashboard-tabs">
             <button class="dashboard-tab active" onclick="switchDashboardTab('analytics', this)">📈 Analytics</button>
             <button class="dashboard-tab" onclick="window.location.href='supply-requests.html'">🏭 Supplier Orders</button>
             <button class="dashboard-tab" onclick="switchDashboardTab('messaging', this)">💬 Staff Messaging</button>
         </div>
-
         <!-- Analytics Tab -->
         <div id="analyticsTab" class="tab-content active">
             <div class="info-box" id="infoBox" style="display:none;">
@@ -312,6 +294,18 @@
                 <canvas id="topProductsChart" style="max-height:400px;"></canvas>
                 <div id="productsChartEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">📦</div><h3>No Product Sales Data</h3></div>
             </div>
+            <!-- NEW: Expenses by User -->
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Expenses by User</h2></div>
+                <canvas id="expensesByUserChart" style="max-height:400px;"></canvas>
+                <div id="expensesChartEmpty" class="empty-state" style="display:none;"><div class="empty-state-icon">💸</div><h3>No Expense Data</h3><p>No expenses recorded in this period.</p></div>
+                <div class="table-container" style="margin-top:24px;">
+                    <table class="table">
+                        <thead><tr><th>User</th><th>Total Expenses (KES)</th></tr></thead>
+                        <tbody id="expensesByUserTable"><tr><td colspan="2" class="loading">Loading expenses by user...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
             <div style="margin-top:40px;">
                 <h2>Recent Transactions</h2>
                 <div class="table-container">
@@ -322,7 +316,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Supplier Orders Tab -->
         <div id="suppliersTab" class="tab-content">
             <div class="chart-container">
@@ -344,7 +337,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Staff Messaging Tab -->
         <div id="messagingTab" class="tab-content">
             <div class="chart-container">
@@ -374,7 +366,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
@@ -382,7 +373,6 @@
     <script src="assets/sales-analytics.js"></script>
     <script src="assets/messaging-module.js"></script>
     <script src="assets/supplier-orders-module.js"></script>
-
     <script>
     // ════════════════════════════════════════════════════════════════
     // SUPABASE CLIENT
@@ -393,7 +383,6 @@
         _db = window.DukaPOS?.supabaseClient || null;
         return _db;
     }
-
     // ════════════════════════════════════════════════════════════════
     // POPUP TAB SWITCHING
     // ════════════════════════════════════════════════════════════════
@@ -403,7 +392,6 @@
         document.getElementById('sectionRejections').classList.toggle('active', tab === 'rejections');
         document.getElementById('sectionStaff').classList.toggle('active', tab === 'staff');
     }
-
     // ════════════════════════════════════════════════════════════════
     // NAVIGATION
     // ════════════════════════════════════════════════════════════════
@@ -420,7 +408,6 @@
             const el = document.getElementById('posLink'); if (el) el.style.display = 'flex';
         }
     }
-
     // ════════════════════════════════════════════════════════════════
     // DASHBOARD TAB SWITCHING
     // ════════════════════════════════════════════════════════════════
@@ -431,19 +418,11 @@
         document.getElementById(tabName + 'Tab').classList.add('active');
         if (tabName === 'suppliers') loadSupplierOrders();
     }
-
     // ════════════════════════════════════════════════════════════════
     // ★ REJECTION PERSISTENCE
-    //
-    // We store DISMISSED rejection IDs in localStorage under a
-    // per-user key so one user's dismissals don't bleed into another's.
-    // A rejection that has been dismissed will NEVER re-appear unseen.
     // ════════════════════════════════════════════════════════════════
-
-    // Key includes the current user id — set after auth resolves
     let _rejectionStoreKey = 'dismissedRejections_default';
-    let _dismissedIds = new Set(); // populated once on init
-
+    let _dismissedIds = new Set();
     function _initRejectionStore(userId) {
         _rejectionStoreKey = `dismissedRejections_${userId}`;
         try {
@@ -453,22 +432,18 @@
             _dismissedIds = new Set();
         }
     }
-
     function _persistDismissed() {
         try {
             localStorage.setItem(_rejectionStoreKey, JSON.stringify([..._dismissedIds]));
         } catch (e) { console.warn('Could not persist dismissed rejections:', e); }
     }
-
     function _isDismissed(id) {
         return _dismissedIds.has(String(id));
     }
-
     function _markDismissed(id) {
         _dismissedIds.add(String(id));
         _persistDismissed();
     }
-
     // ════════════════════════════════════════════════════════════════
     // LOAD REJECTIONS FROM DB
     // ════════════════════════════════════════════════════════════════
@@ -487,10 +462,8 @@
                 .eq('status', 'rejected')
                 .order('approved_at', { ascending: false })
                 .limit(40);
-
             if (error) throw error;
             const rejections = data || [];
-            // Unseen = not yet dismissed by this user
             const unseen = rejections.filter(r => !_isDismissed(r.id)).length;
             return { rejections, unseen };
         } catch (err) {
@@ -498,7 +471,6 @@
             return { rejections: [], unseen: 0 };
         }
     }
-
     // ════════════════════════════════════════════════════════════════
     // RENDER REJECTION CARDS
     // ════════════════════════════════════════════════════════════════
@@ -508,15 +480,13 @@
             section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">✅</div><p>No supplier rejections</p></div>';
             return;
         }
-
         section.innerHTML = rejections.map(r => {
-            const dismissed      = _isDismissed(r.id);
-            const supplierName   = r.supplier?.full_name || r.supplier?.email || 'Supplier';
-            const supplierId     = r.supplier?.id || r.supplier_id || null;
-            const rejectedAt     = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
-            const itemName       = r.item_name || 'Unknown item';
-            const qty            = `${r.quantity || '—'} ${r.unit || ''}`.trim();
-
+            const dismissed = _isDismissed(r.id);
+            const supplierName = r.supplier?.full_name || r.supplier?.email || 'Supplier';
+            const supplierId = r.supplier?.id || r.supplier_id || null;
+            const rejectedAt = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
+            const itemName = r.item_name || 'Unknown item';
+            const qty = `${r.quantity || '—'} ${r.unit || ''}`.trim();
             const actionsHtml = dismissed
                 ? `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
                 : `<div class="rejection-actions">
@@ -524,7 +494,6 @@
                     ${supplierId ? `<button class="rej-btn rej-btn-contact" onclick="openContactModal(${supplierId}, '${encodeURIComponent(supplierName)}', '${encodeURIComponent(itemName)}')">💬 Contact Supplier</button>` : ''}
                     <button class="rej-btn rej-btn-dismiss" onclick="dismissRejection(${r.id}, this)">Dismiss</button>
                    </div>`;
-
             return `
                 <div class="message-item rejection ${dismissed ? 'read' : ''}" id="rejection-${r.id}">
                     <span class="rejection-label">❌ Request Rejected</span>
@@ -541,22 +510,18 @@
             `;
         }).join('');
     }
-
     // ════════════════════════════════════════════════════════════════
     // REJECTION ACTIONS
     // ════════════════════════════════════════════════════════════════
-
-    /** Mark a single rejection as dismissed — updates UI + localStorage */
     function dismissRejection(id, btn) {
         _markDismissed(id);
         const card = document.getElementById(`rejection-${id}`);
         if (card) {
             card.classList.add('read');
-            // Replace action buttons with compact dismissed state
             const actions = card.querySelector('.rejection-actions');
             if (actions) {
                 const itemNameEl = card.querySelector('.message-text strong');
-                const itemName   = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
+                const itemName = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
                 actions.outerHTML = `<div class="rej-dismissed-label">✔ Dismissed &nbsp;—&nbsp;
                     <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.75rem;" onclick="reorderRejected('${itemName}', '')">🔄 Reorder anyway</button>
                 </div>`;
@@ -564,44 +529,33 @@
         }
         updateBellBadge();
     }
-
-    /**
-     * Redirect to supply-requests page to create a new request
-     * for the same item (pre-fills query params if the page supports it).
-     */
     function reorderRejected(encodedItem, encodedQty) {
         const item = decodeURIComponent(encodedItem);
-        const qty  = decodeURIComponent(encodedQty);
-        const url  = `supply-requests.html?prefill_item=${encodeURIComponent(item)}&prefill_qty=${encodeURIComponent(qty)}`;
+        const qty = decodeURIComponent(encodedQty);
+        const url = `supply-requests.html?prefill_item=${encodeURIComponent(item)}&prefill_qty=${encodeURIComponent(qty)}`;
         window.location.href = url;
     }
-
     // ════════════════════════════════════════════════════════════════
     // CONTACT SUPPLIER MODAL
     // ════════════════════════════════════════════════════════════════
     let _contactSupplierId = null;
-
     function openContactModal(supplierId, encodedName, encodedItem) {
         _contactSupplierId = supplierId;
         document.getElementById('contactSupplierName').textContent = decodeURIComponent(encodedName);
-        document.getElementById('contactItemName').textContent     = decodeURIComponent(encodedItem);
-        document.getElementById('contactSupplierMessage').value    = '';
+        document.getElementById('contactItemName').textContent = decodeURIComponent(encodedItem);
+        document.getElementById('contactSupplierMessage').value = '';
         document.getElementById('contactSupplierModal').classList.add('show');
     }
-
     function closeContactModal() {
         document.getElementById('contactSupplierModal').classList.remove('show');
         _contactSupplierId = null;
     }
-
     async function sendContactMessage() {
         if (!_contactSupplierId) return;
         const text = document.getElementById('contactSupplierMessage').value.trim();
         if (!text) { alert('Please enter a message.'); return; }
-
         const btn = document.getElementById('contactSendBtn');
         btn.disabled = true; btn.textContent = '⏳ Sending…';
-
         try {
             let result = { success: false, error: 'messagingModule not available' };
             if (window.messagingModule) {
@@ -619,18 +573,14 @@
             btn.disabled = false; btn.textContent = '📤 Send Message';
         }
     }
-
-    // Close modal on backdrop click
     document.getElementById('contactSupplierModal').addEventListener('click', function(e) {
         if (e.target === this) closeContactModal();
     });
-
     // ════════════════════════════════════════════════════════════════
-    // BELL BADGE — counts only UNSEEN (not dismissed) rejections
+    // BELL BADGE
     // ════════════════════════════════════════════════════════════════
     async function updateBellBadge() {
         const { unseen: rejUnseen } = await loadRejectionNotifications();
-
         let staffUnseen = 0;
         try {
             if (window.messagingModule) {
@@ -638,17 +588,14 @@
                 if (r.success) staffUnseen = r.count || 0;
             }
         } catch (_) {}
-
         const total = rejUnseen + staffUnseen;
         const badge = document.getElementById('messageBadge');
-        badge.textContent   = total > 99 ? '99+' : total;
+        badge.textContent = total > 99 ? '99+' : total;
         badge.style.display = total > 0 ? 'flex' : 'none';
-
         const rBadge = document.getElementById('rejectionTabBadge');
         if (rejUnseen > 0) { rBadge.textContent = rejUnseen; rBadge.style.display = 'inline'; }
         else rBadge.style.display = 'none';
     }
-
     // ════════════════════════════════════════════════════════════════
     // POPUP TOGGLE
     // ════════════════════════════════════════════════════════════════
@@ -659,27 +606,21 @@
             return;
         }
         popup.classList.add('active');
-
-        // Show skeleton
         document.getElementById('sectionRejections').innerHTML =
             '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
         document.getElementById('sectionStaff').innerHTML =
             '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-
         const { rejections } = await loadRejectionNotifications();
         renderRejectionSection(rejections);
         await loadStaffMessagesIntoPopup();
     }
-
-    // Close on outside click
     document.addEventListener('click', function(e) {
         const popup = document.getElementById('messagesPopup');
-        const bell  = document.getElementById('messageBell');
+        const bell = document.getElementById('messageBell');
         if (popup?.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target)) {
             popup.classList.remove('active');
         }
     });
-
     // ════════════════════════════════════════════════════════════════
     // STAFF MESSAGES IN POPUP
     // ════════════════════════════════════════════════════════════════
@@ -698,7 +639,6 @@
                 );
             }
             messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
             if (!messages.length) {
                 section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No staff messages yet</p></div>';
                 return;
@@ -721,22 +661,19 @@
             section.innerHTML = `<div class="empty-messages"><p>Error: ${err.message}</p></div>`;
         }
     }
-
     async function markMessageAsRead(messageId, event) {
-        const btn  = event.target;
+        const btn = event.target;
         const item = btn.closest('.message-item');
         try {
             const result = await window.messagingModule.markAsRead(messageId);
             if (result.success) { btn.remove(); if (item) item.classList.add('read'); updateBellBadge(); }
         } catch (err) { console.error('Mark read error:', err); }
     }
-
     // ════════════════════════════════════════════════════════════════
     // DASHBOARD ANALYTICS
     // ════════════════════════════════════════════════════════════════
     (function() {
-        let revenueChart, topProductsChart;
-
+        let revenueChart, topProductsChart, expensesByUserChart;
         function waitFor(getter, cb, interval = 300, max = 40) {
             let n = 0;
             const t = setInterval(() => {
@@ -744,45 +681,30 @@
                 else if (++n >= max) clearInterval(t);
             }, interval);
         }
-
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 await window.DukaPOS.initializeSupabase();
                 _db = window.DukaPOS.supabaseClient;
-
                 const isAuthenticated = await authModule.requireAuth();
                 if (!isAuthenticated) return;
-
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) return;
-
                 const userRole = (currentUser.role || '').trim().toLowerCase();
-                const isAdmin  = ['administrator','admin','superadmin','manager'].includes(userRole);
-
+                const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
                 if (!isAdmin) {
                     window.location.replace(userRole === 'supplier' ? 'suppliers.html' : 'pos.html');
                     return;
                 }
-
-                // ── Init rejection store for this user (must happen after auth) ──
                 _initRejectionStore(currentUser.id);
-
                 document.body.style.visibility = 'visible';
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
                 setNavigationVisibility(userRole);
                 setDateRange('month');
                 await loadDashboard();
-
-                // Start badge polling — respects per-user dismissed set
                 updateBellBadge();
                 setInterval(updateBellBadge, 30000);
-
                 waitFor(() => window.messagingModule, () => { loadUsersForMessaging(); loadSentMessages(); });
-
-            // ✅ FIX: Auth is fully done here — shop context is guaranteed ready
-             // waitFor only checks if the module exists, not if auth/shop is ready
                 setTimeout(() => loadSupplierOrders(), 500);
-
                 console.log('✅ Dashboard initialized');
             } catch (err) {
                 console.error('Dashboard init failed:', err);
@@ -790,7 +712,6 @@
                     `<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
             }
         });
-
         window.setDateRange = function(range) {
             const today = new Date();
             let start = new Date(today);
@@ -798,58 +719,62 @@
             else if (range === 'week') start.setDate(today.getDate() - 7);
             else start.setDate(today.getDate() - 30);
             document.getElementById('startDate').value = start.toISOString().split('T')[0];
-            document.getElementById('endDate').value   = today.toISOString().split('T')[0];
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
             loadDashboard();
         };
-
         async function loadDashboard() {
             const start = document.getElementById('startDate').value;
-            const end   = document.getElementById('endDate').value;
+            const end = document.getElementById('endDate').value;
             if (!start || !end) { alert('Please select both start and end dates'); return; }
             try {
                 const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
                 if (!result.success) throw new Error(result.error || 'Failed to load sales data');
                 const sales = result.sales || [];
-
                 const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
                 const expenses = expensesResult.success ? (expensesResult.data || []) : [];
                 const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
 
+                // ── NEW: Group expenses by user ──
+                const expensesByUser = expenses.reduce((acc, exp) => {
+                    const userName = exp.users?.full_name || exp.created_by?.full_name || 'Unknown User';
+                    acc[userName] = (acc[userName] || 0) + parseFloat(exp.amount || 0);
+                    return acc;
+                }, {});
+
                 document.getElementById('infoBox').style.display = (sales.length === 0 && expenses.length === 0) ? 'block' : 'none';
                 if (sales.length === 0 && expenses.length === 0)
                     document.getElementById('infoText').textContent = 'No sales or expenses found in this period.';
-
                 const grossProfit = sales.reduce((s, x) => s + (x.total_profit || 0), 0);
-                const netProfit   = grossProfit - totalExpenses;
-
-                document.getElementById('totalRevenue').textContent     = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
-                document.getElementById('totalProfit').textContent      = `KES ${netProfit.toFixed(2)}`;
-                document.getElementById('totalExpenses').textContent    = `KES ${totalExpenses.toFixed(2)}`;
+                const netProfit = grossProfit - totalExpenses;
+                document.getElementById('totalRevenue').textContent = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
+                document.getElementById('totalProfit').textContent = `KES ${netProfit.toFixed(2)}`;
+                document.getElementById('totalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
                 document.getElementById('transactionCount').textContent = sales.length;
-                document.getElementById('itemsSold').textContent        = sales.reduce((s,x) => s+(x.items_sold||0), 0);
-                document.getElementById('profitBreakdown').textContent  = `Gross: KES ${grossProfit.toFixed(2)} - Expenses: KES ${totalExpenses.toFixed(2)}`;
-
+                document.getElementById('itemsSold').textContent = sales.reduce((s,x) => s+(x.items_sold||0), 0);
+                document.getElementById('profitBreakdown').textContent = `Gross: KES ${grossProfit.toFixed(2)} - Expenses: KES ${totalExpenses.toFixed(2)}`;
                 if (sales.length > 0) {
                     const top = sales.reduce((m,s) => (s.total_profit||0)>(m.total_profit||0)?s:m, sales[0]);
-                    document.getElementById('topPerformerName').textContent   = top.users?.full_name || 'Unknown';
+                    document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
                     document.getElementById('topPerformerProfit').textContent = (top.total_profit||0).toFixed(2);
                     document.getElementById('topCashier').style.display = 'block';
                 } else {
                     document.getElementById('topCashier').style.display = 'none';
                 }
-
                 renderCashierChart(sales);
                 renderTopProductsChart(sales);
                 renderRecentTransactions(sales.slice(0, 10));
+
+                // ── NEW: Render expenses by user chart & table ──
+                renderExpensesByUserChart(expensesByUser);
+                renderExpensesByUserTable(expensesByUser);
             } catch (err) {
                 console.error('Dashboard load failed:', err);
                 document.getElementById('recentTransactions').innerHTML = `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
             }
         }
-
         function renderCashierChart(sales) {
             const canvas = document.getElementById('cashierChart');
-            const empty  = document.getElementById('cashierChartEmpty');
+            const empty = document.getElementById('cashierChartEmpty');
             if (!sales.length) { canvas.style.display = 'none'; empty.style.display = 'block'; if (revenueChart) revenueChart.destroy(); return; }
             canvas.style.display = 'block'; empty.style.display = 'none';
             if (revenueChart) revenueChart.destroy();
@@ -857,7 +782,7 @@
                 const name = s.users?.full_name || 'Unknown';
                 if (!acc[name]) acc[name] = { revenue: 0, profit: 0 };
                 acc[name].revenue += s.total_amount || 0;
-                acc[name].profit  += s.total_profit || 0;
+                acc[name].profit += s.total_profit || 0;
                 return acc;
             }, {});
             const labels = Object.keys(byCashier);
@@ -865,15 +790,14 @@
                 type: 'bar',
                 data: { labels, datasets: [
                     { label: 'Revenue (KES)', data: labels.map(k => byCashier[k].revenue), backgroundColor: 'rgba(63,185,80,0.65)' },
-                    { label: 'Profit (KES)',  data: labels.map(k => byCashier[k].profit),  backgroundColor: 'rgba(245,158,11,0.65)' }
+                    { label: 'Profit (KES)', data: labels.map(k => byCashier[k].profit), backgroundColor: 'rgba(245,158,11,0.65)' }
                 ]},
                 options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
             });
         }
-
         function renderTopProductsChart(sales) {
             const canvas = document.getElementById('topProductsChart');
-            const empty  = document.getElementById('productsChartEmpty');
+            const empty = document.getElementById('productsChartEmpty');
             const totals = sales.reduce((acc, sale) => {
                 (sale.sale_items || []).forEach(item => {
                     const name = item.products?.name || `Item #${item.product_id}`;
@@ -891,7 +815,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
             });
         }
-
         function renderRecentTransactions(transactions) {
             const tbody = document.getElementById('recentTransactions');
             if (!transactions.length) { tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Recent Transactions</h3></td></tr>`; return; }
@@ -906,10 +829,60 @@
                 </tr>
             `).join('');
         }
-
+        // ── NEW: Render Expenses by User Chart ──
+        function renderExpensesByUserChart(expensesByUser) {
+            const canvas = document.getElementById('expensesByUserChart');
+            const empty = document.getElementById('expensesChartEmpty');
+            const users = Object.keys(expensesByUser);
+            const values = users.map(u => expensesByUser[u]);
+            if (!users.length || values.every(v => v === 0)) {
+                canvas.style.display = 'none';
+                empty.style.display = 'block';
+                if (expensesByUserChart) expensesByUserChart.destroy();
+                return;
+            }
+            canvas.style.display = 'block';
+            empty.style.display = 'none';
+            if (expensesByUserChart) expensesByUserChart.destroy();
+            expensesByUserChart = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: users,
+                    datasets: [{
+                        label: 'Expenses (KES)',
+                        data: values,
+                        backgroundColor: 'rgba(248,81,73,0.65)',
+                        borderColor: 'rgba(248,81,73,0.9)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+        // ── NEW: Render Expenses by User Table ──
+        function renderExpensesByUserTable(expensesByUser) {
+            const tbody = document.getElementById('expensesByUserTable');
+            const entries = Object.entries(expensesByUser)
+                .sort(([,a], [,b]) => b - a)
+                .filter(([,amount]) => amount > 0);
+            if (!entries.length) {
+                tbody.innerHTML = `<tr><td colspan="2" class="empty-state"><p>No expenses by users in this period</p></td></tr>`;
+                return;
+            }
+            tbody.innerHTML = entries.map(([user, amount]) => `
+                <tr>
+                    <td>${user}</td>
+                    <td style="color:var(--danger);font-weight:600;">KES ${amount.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
         window.loadDashboard = loadDashboard;
     })();
-
     // ════════════════════════════════════════════════════════════════
     // SUPPLIER ORDERS
     // ════════════════════════════════════════════════════════════════
@@ -922,10 +895,10 @@
                 return;
             }
             const orders = result.data;
-            document.getElementById('pendingOrdersCount').textContent    = orders.filter(o => o.status === 'pending').length;
+            document.getElementById('pendingOrdersCount').textContent = orders.filter(o => o.status === 'pending').length;
             document.getElementById('processingOrdersCount').textContent = orders.filter(o => ['processing','shipped'].includes(o.status)).length;
-            document.getElementById('deliveredOrdersCount').textContent  = orders.filter(o => o.status === 'delivered').length;
-            document.getElementById('totalOrdersValue').textContent      = `KES ${orders.reduce((s,o) => s+(o.total_amount||0),0).toLocaleString()}`;
+            document.getElementById('deliveredOrdersCount').textContent = orders.filter(o => o.status === 'delivered').length;
+            document.getElementById('totalOrdersValue').textContent = `KES ${orders.reduce((s,o) => s+(o.total_amount||0),0).toLocaleString()}`;
             if (!orders.length) { document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`; return; }
             document.getElementById('supplierOrdersList').innerHTML = orders.map(order => `
                 <div class="supplier-order-card">
@@ -941,7 +914,7 @@
                     </div>
                     <div style="display:flex;gap:12px;">
                         <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
-                        <button class="btn btn-small btn-primary"   onclick="messageSupplier(${order.supplier_id})">💬 Message Supplier</button>
+                        <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message Supplier</button>
                     </div>
                 </div>
             `).join('');
@@ -949,11 +922,9 @@
             document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${err.message}</p></div>`;
         }
     }
-
     window.createNewSupplierOrder = () => alert('Create New Supplier Order — Coming soon');
-    window.viewOrderDetails       = (id) => alert(`View details for order #${id}`);
-    window.messageSupplier        = (id) => alert(`Message supplier #${id}`);
-
+    window.viewOrderDetails = (id) => alert(`View details for order #${id}`);
+    window.messageSupplier = (id) => alert(`Message supplier #${id}`);
     // ════════════════════════════════════════════════════════════════
     // STAFF MESSAGING TAB
     // ════════════════════════════════════════════════════════════════
@@ -971,7 +942,6 @@
             });
         } catch (err) { console.error('Load users error:', err); }
     }
-
     async function sendMessageToUser() {
         const recipientId = document.getElementById('messageRecipient').value;
         const messageText = document.getElementById('messageText').value.trim();
@@ -989,7 +959,6 @@
         } catch (err) { alert('Error: ' + err.message); }
         finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
     }
-
     async function loadSentMessages() {
         const tbody = document.getElementById('sentMessagesTable');
         try {
@@ -1014,9 +983,8 @@
     <footer style="text-align: center; padding: 15px; background-color: black;">
   <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
 </footer>
-
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
 </body>
-</html>s
+</html>
