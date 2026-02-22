@@ -1,6 +1,8 @@
 // ════════════════════════════════════════════════════════════
 // DUKA POS - MULTI-TENANT AUTHENTICATION MODULE
 // With Role-Based Page Access Control
+// FIX: Redirect loop prevention - checkSession now trusts
+//      localStorage first, only hits Supabase in background
 // ════════════════════════════════════════════════════════════
 
 (function () {
@@ -13,19 +15,19 @@
     window.authModule.initialized = true;
 
     const SESSION_KEY = 'duka_session';
-    const USER_KEY = 'duka_user';
-    const SHOP_KEY = 'duka_shop';
+    const USER_KEY    = 'duka_user';
+    const SHOP_KEY    = 'duka_shop';
 
     // ════════════════════════════════════════════════════════════
     // ROLE-BASED PAGE ACCESS RULES
     // ════════════════════════════════════════════════════════════
     const PAGE_ACCESS_RULES = {
         'administrator': {
-            allowed: ['*'], // All pages
+            allowed: ['*'],
             homepage: 'dashboard.html'
         },
         'manager': {
-            allowed: ['dashboard.html', 'pos.html', 'products.html', 'inventory.html', 'customers.html', 'suppliers.html'],
+            allowed: ['dashboard.html', 'pos.html', 'products.html', 'inventory.html', 'customers.html', 'suppliers.html', 'supply-requests.html'],
             homepage: 'dashboard.html'
         },
         'cashier': {
@@ -33,42 +35,53 @@
             homepage: 'pos.html'
         },
         'supplier': {
-            allowed: ['suppliers.html'], // Only supplier page
+            allowed: ['suppliers.html'],
             homepage: 'suppliers.html'
         },
         'customer': {
-            allowed: ['customers.html'], // Only customer page
+            allowed: ['customers.html'],
             homepage: 'customers.html'
         }
     };
 
-    /**
-     * Check if user has access to current page
-     */
+    // ════════════════════════════════════════════════════════════
+    // REDIRECT LOOP GUARD
+    // Prevents bouncing between pages more than once per 2 seconds
+    // ════════════════════════════════════════════════════════════
+    function safeRedirect(url) {
+        const lastRedirect     = parseInt(sessionStorage.getItem('_lastRedirect') || '0');
+        const lastRedirectUrl  = sessionStorage.getItem('_lastRedirectUrl') || '';
+        const now              = Date.now();
+
+        // If we redirected to the same URL within the last 2 seconds, stop
+        if (lastRedirectUrl === url && now - lastRedirect < 2000) {
+            console.error('🔴 Redirect loop detected — stopping redirect to:', url);
+            return;
+        }
+
+        sessionStorage.setItem('_lastRedirect',    String(now));
+        sessionStorage.setItem('_lastRedirectUrl', url);
+        window.location.href = url;
+    }
+
     function checkPageAccess() {
         const user = getCurrentUser();
         if (!user) return false;
 
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-        const userRules = PAGE_ACCESS_RULES[user.role];
+        const userRules   = PAGE_ACCESS_RULES[user.role];
 
         if (!userRules) {
             console.error('Unknown role:', user.role);
             return false;
         }
 
-        // Administrators have access to all pages
-        if (userRules.allowed.includes('*')) {
-            return true;
-        }
+        if (userRules.allowed.includes('*')) return true;
 
-        // Check if current page is in allowed list
         const hasAccess = userRules.allowed.includes(currentPage);
-
         if (!hasAccess) {
             console.warn(`Access denied: ${user.role} cannot access ${currentPage}`);
-            // Redirect to homepage
-            window.location.href = userRules.homepage;
+            safeRedirect(userRules.homepage);
             return false;
         }
 
@@ -76,10 +89,10 @@
     }
 
     async function hashPassword(password) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
+        const encoder    = new TextEncoder();
+        const data       = encoder.encode(password);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashArray  = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
@@ -89,89 +102,51 @@
         return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
     }
 
+    // ════════════════════════════════════════════════════════════
+    // LOGIN
+    // ════════════════════════════════════════════════════════════
     async function login(username, password) {
         try {
             console.log('🔐 Attempting login for:', username);
-
             const passwordHash = await hashPassword(password);
 
-            // Get user with shop information
             const { data: users, error } = await window.DukaPOS.supabaseClient
                 .from('users')
-                .select(`
-                    *,
-                    shops (
-                        id,
-                        shop_name,
-                        shop_code,
-                        owner_name,
-                        is_active
-                    )
-                `)
+                .select(`*, shops(id, shop_name, shop_code, owner_name, is_active)`)
                 .eq('username', username)
                 .eq('password_hash', passwordHash)
                 .eq('is_active', true)
                 .limit(1);
 
             if (error) throw error;
-            if (!users || users.length === 0) {
-                throw new Error('Invalid username or password');
-            }
+            if (!users || users.length === 0) throw new Error('Invalid username or password');
 
             const user = users[0];
-
-            // Check if shop is active
-            if (!user.shops || !user.shops.is_active) {
-                throw new Error('Shop is inactive. Please contact support.');
-            }
+            if (!user.shops || !user.shops.is_active) throw new Error('Shop is inactive. Please contact support.');
 
             const sessionToken = generateSessionToken();
-            const expiresAt = new Date();
+            const expiresAt    = new Date();
             expiresAt.setHours(expiresAt.getHours() + 8);
             const loginTime = new Date().toISOString();
 
             const { data: sessionData, error: sessionError } = await window.DukaPOS.supabaseClient
                 .from('user_sessions')
-                .insert([{
-                    user_id: user.id,
-                    session_token: sessionToken,
-                    login_time: loginTime,
-                    is_active: true,
-                    expires_at: expiresAt.toISOString()
-                }])
+                .insert([{ user_id: user.id, session_token: sessionToken, login_time: loginTime, is_active: true, expires_at: expiresAt.toISOString() }])
                 .select();
 
             if (sessionError) throw sessionError;
             const sessionId = sessionData[0].id;
 
-            await window.DukaPOS.supabaseClient
-                .from('users')
-                .update({ last_login: loginTime })
-                .eq('id', user.id);
+            await window.DukaPOS.supabaseClient.from('users').update({ last_login: loginTime }).eq('id', user.id);
+            await window.DukaPOS.supabaseClient.from('activity_logs').insert([{
+                user_id: user.id, session_id: sessionId, action_type: 'login',
+                action_details: { username: user.username, full_name: user.full_name, role: user.role, shop_name: user.shops.shop_name }
+            }]);
 
-            await window.DukaPOS.supabaseClient
-                .from('activity_logs')
-                .insert([{
-                    user_id: user.id,
-                    session_id: sessionId,
-                    action_type: 'login',
-                    action_details: {
-                        username: user.username,
-                        full_name: user.full_name,
-                        role: user.role,
-                        shop_name: user.shops.shop_name
-                    }
-                }]);
-
-            // Store session, user, and shop info
             localStorage.setItem(SESSION_KEY, sessionToken);
             localStorage.setItem(USER_KEY, JSON.stringify({
-                id: user.id,
-                username: user.username,
-                full_name: user.full_name,
-                role: user.role,
-                email: user.email,
-                shop_id: user.shop_id
+                id: user.id, username: user.username, full_name: user.full_name,
+                role: user.role, email: user.email, shop_id: user.shop_id
             }));
             localStorage.setItem(SHOP_KEY, JSON.stringify(user.shops));
 
@@ -183,133 +158,161 @@
         }
     }
 
+    // ════════════════════════════════════════════════════════════
+    // LOGOUT
+    // ════════════════════════════════════════════════════════════
     async function logout() {
         try {
             const sessionToken = localStorage.getItem(SESSION_KEY);
-            const userJson = localStorage.getItem(USER_KEY);
+            const userJson     = localStorage.getItem(USER_KEY);
 
             if (sessionToken && userJson) {
-                const user = JSON.parse(userJson);
+                const user       = JSON.parse(userJson);
                 const logoutTime = new Date().toISOString();
 
                 const { data: sessions } = await window.DukaPOS.supabaseClient
-                    .from('user_sessions')
-                    .select('*')
-                    .eq('session_token', sessionToken)
-                    .limit(1);
+                    .from('user_sessions').select('*').eq('session_token', sessionToken).limit(1);
 
                 if (sessions && sessions.length > 0) {
                     const session = sessions[0];
-
-                    await window.DukaPOS.supabaseClient
-                        .from('user_sessions')
-                        .update({
-                            logout_time: logoutTime,
-                            is_active: false
-                        })
-                        .eq('session_token', sessionToken);
-
-                    await window.DukaPOS.supabaseClient
-                        .from('users')
-                        .update({ last_logout: logoutTime })
-                        .eq('id', user.id);
-
-                    await window.DukaPOS.supabaseClient
-                        .from('activity_logs')
-                        .insert([{
-                            user_id: user.id,
-                            session_id: session.id,
-                            action_type: 'logout',
-                            action_details: {
-                                username: user.username,
-                                full_name: user.full_name
-                            }
-                        }]);
+                    await window.DukaPOS.supabaseClient.from('user_sessions')
+                        .update({ logout_time: logoutTime, is_active: false }).eq('session_token', sessionToken);
+                    await window.DukaPOS.supabaseClient.from('users')
+                        .update({ last_logout: logoutTime }).eq('id', user.id);
+                    await window.DukaPOS.supabaseClient.from('activity_logs').insert([{
+                        user_id: user.id, session_id: session.id, action_type: 'logout',
+                        action_details: { username: user.username, full_name: user.full_name }
+                    }]);
                 }
             }
-
-            localStorage.removeItem(SESSION_KEY);
-            localStorage.removeItem(USER_KEY);
-            localStorage.removeItem(SHOP_KEY);
-            console.log('✅ Logged out successfully');
-
-            window.location.href = 'login.html';
         } catch (error) {
             console.error('❌ Logout error:', error);
+        } finally {
             localStorage.removeItem(SESSION_KEY);
             localStorage.removeItem(USER_KEY);
             localStorage.removeItem(SHOP_KEY);
+            sessionStorage.removeItem('_lastRedirect');
+            sessionStorage.removeItem('_lastRedirectUrl');
+            console.log('✅ Logged out successfully');
             window.location.href = 'login.html';
         }
     }
 
     function getCurrentUser() {
-        const userJson = localStorage.getItem(USER_KEY);
-        return userJson ? JSON.parse(userJson) : null;
+        try {
+            const userJson = localStorage.getItem(USER_KEY);
+            return userJson ? JSON.parse(userJson) : null;
+        } catch { return null; }
     }
 
     function getCurrentShop() {
-        const shopJson = localStorage.getItem(SHOP_KEY);
-        return shopJson ? JSON.parse(shopJson) : null;
+        try {
+            const shopJson = localStorage.getItem(SHOP_KEY);
+            return shopJson ? JSON.parse(shopJson) : null;
+        } catch { return null; }
     }
 
+    // ════════════════════════════════════════════════════════════
+    // CHECK SESSION
+    // ════════════════════════════════════════════════════════════
+    // FIX: Trust localStorage first. If token + user exist in
+    // localStorage, let the page load immediately. Validate
+    // against Supabase silently in the background — only clear
+    // the session if Supabase explicitly says it's invalid.
+    // This prevents the redirect loop caused by slow Supabase
+    // responses during page load.
+    // ════════════════════════════════════════════════════════════
     async function checkSession() {
+        const sessionToken = localStorage.getItem(SESSION_KEY);
+        const userJson     = localStorage.getItem(USER_KEY);
+
+        // No token at all — definitely not logged in
+        if (!sessionToken || !userJson) return false;
+
+        // ✅ Trust localStorage immediately — page can render
+        // Validate in background without blocking
+        _validateSessionInBackground(sessionToken);
+        return true;
+    }
+
+    // Background validation — silently logs out if session is expired
+    // Does NOT redirect during normal page loads, only clears storage
+    async function _validateSessionInBackground(sessionToken) {
         try {
-            const sessionToken = localStorage.getItem(SESSION_KEY);
-            if (!sessionToken) return false;
+            // Wait for Supabase to be ready
+            let attempts = 0;
+            while (!window.DukaPOS?.supabaseClient && attempts < 20) {
+                await new Promise(r => setTimeout(r, 200));
+                attempts++;
+            }
+            if (!window.DukaPOS?.supabaseClient) return;
 
             const { data: sessions, error } = await window.DukaPOS.supabaseClient
                 .from('user_sessions')
-                .select('*, users(*)')
+                .select('id, expires_at, is_active')
                 .eq('session_token', sessionToken)
-                .gte('expires_at', new Date().toISOString())
                 .limit(1);
 
-            if (error) throw error;
+            if (error) {
+                // Network error — don't log out, just warn
+                console.warn('⚠️ Background session check failed (network?):', error.message);
+                return;
+            }
+
             if (!sessions || sessions.length === 0) {
+                // Token not in DB — clear and redirect to login
+                console.warn('⚠️ Session token not found in DB — logging out');
                 localStorage.removeItem(SESSION_KEY);
                 localStorage.removeItem(USER_KEY);
                 localStorage.removeItem(SHOP_KEY);
-                return false;
+                safeRedirect('login.html');
+                return;
             }
 
-            return true;
-        } catch (error) {
-            console.error('❌ Session check failed:', error);
-            return false;
+            const session = sessions[0];
+            if (!session.is_active || new Date(session.expires_at) < new Date()) {
+                console.warn('⚠️ Session expired — logging out');
+                localStorage.removeItem(SESSION_KEY);
+                localStorage.removeItem(USER_KEY);
+                localStorage.removeItem(SHOP_KEY);
+                safeRedirect('login.html');
+            }
+        } catch (err) {
+            // Never crash — just warn
+            console.warn('⚠️ Background session validation error:', err.message);
         }
     }
 
+    // ════════════════════════════════════════════════════════════
+    // REQUIRE AUTH
+    // ════════════════════════════════════════════════════════════
     async function requireAuth(requiredRole = null) {
         const isValid = await checkSession();
+
         if (!isValid) {
             console.log('⚠️ No valid session, redirecting to login...');
-            window.location.href = 'login.html';
+            safeRedirect('login.html');
             return false;
         }
 
         const user = getCurrentUser();
-
-        // ⭐ Check page access based on role
-        if (!checkPageAccess()) {
-            return false; // Redirect already handled in checkPageAccess
+        if (!user) {
+            safeRedirect('login.html');
+            return false;
         }
 
+        // Check page access based on role
+        if (!checkPageAccess()) return false;
+
         if (requiredRole) {
-            const roleHierarchy = {
-                'administrator': 4,
-                'manager': 3,
-                'cashier': 2,
-                'supplier': 1,
-                'customer': 1
-            };
-            const userLevel = roleHierarchy[user.role] || 0;
-            const requiredLevel = roleHierarchy[requiredRole] || 0;
+            const roleHierarchy = { 'administrator': 4, 'manager': 3, 'cashier': 2, 'supplier': 1, 'customer': 1 };
+            const userLevel     = roleHierarchy[user.role]     || 0;
+            const requiredLevel = roleHierarchy[requiredRole]  || 0;
 
             if (userLevel < requiredLevel) {
                 alert('You do not have permission to access this page.');
                 const userRules = PAGE_ACCESS_RULES[user.role];
-                window.location.href = userRules ? userRules.homepage : 'login.html';
+                safeRedirect(userRules ? userRules.homepage : 'login.html');
                 return false;
             }
         }
@@ -317,46 +320,29 @@
         return true;
     }
 
+    // ════════════════════════════════════════════════════════════
+    // USER MANAGEMENT (unchanged)
+    // ════════════════════════════════════════════════════════════
     async function createUser(userData) {
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (currentUser.role !== 'administrator') {
-                throw new Error('Only administrators can create users');
-            }
+            if (currentUser.role !== 'administrator') throw new Error('Only administrators can create users');
 
-            // Check if username exists
             const { data: existingUser } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .select('id')
-                .eq('username', userData.username)
-                .single();
-
-            if (existingUser) {
-                throw new Error('Username already exists. Please choose a different username.');
-            }
+                .from('users').select('id').eq('username', userData.username).single();
+            if (existingUser) throw new Error('Username already exists. Please choose a different username.');
 
             const passwordHash = await hashPassword(userData.password);
-
-            // Create user in the SAME shop as current user
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('users')
-                .insert([{
-                    shop_id: currentShop.id, // IMPORTANT: Same shop
-                    username: userData.username,
-                    password_hash: passwordHash,
-                    full_name: userData.full_name,
-                    role: userData.role,
-                    email: userData.email,
-                    phone: userData.phone,
-                    created_by: currentUser.id
-                }])
+                .insert([{ shop_id: currentShop.id, username: userData.username, password_hash: passwordHash,
+                    full_name: userData.full_name, role: userData.role, email: userData.email,
+                    phone: userData.phone, created_by: currentUser.id }])
                 .select();
 
             if (error) throw error;
-
-            console.log('✅ User created:', userData.username, 'for shop:', currentShop.shop_name);
+            console.log('✅ User created:', userData.username);
             return { success: true, user: data[0] };
         } catch (error) {
             console.error('❌ Create user failed:', error);
@@ -368,20 +354,15 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (!['administrator', 'manager'].includes(currentUser.role)) {
-                throw new Error('Insufficient permissions');
-            }
+            if (!['administrator', 'manager'].includes(currentUser.role)) throw new Error('Insufficient permissions');
 
-            // Get ONLY users from the same shop
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('users')
                 .select('id, username, full_name, role, email, phone, is_active, created_at, last_login, created_by, shop_id')
-                .eq('shop_id', currentShop.id) // Filter by shop
+                .eq('shop_id', currentShop.id)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-
             return { success: true, users: data };
         } catch (error) {
             console.error('❌ Get users failed:', error);
@@ -393,33 +374,16 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (currentUser.role !== 'administrator') {
-                throw new Error('Only administrators can update users');
-            }
+            if (currentUser.role !== 'administrator') throw new Error('Only administrators can update users');
 
-            // Verify user belongs to same shop
             const { data: targetUser } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .select('shop_id')
-                .eq('id', userId)
-                .single();
+                .from('users').select('shop_id').eq('id', userId).single();
+            if (!targetUser || targetUser.shop_id !== currentShop.id) throw new Error('Cannot update users from other shops');
 
-            if (!targetUser || targetUser.shop_id !== currentShop.id) {
-                throw new Error('Cannot update users from other shops');
-            }
-
-            if (updates.password) {
-                updates.password_hash = await hashPassword(updates.password);
-                delete updates.password;
-            }
+            if (updates.password) { updates.password_hash = await hashPassword(updates.password); delete updates.password; }
 
             const { data, error } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .update(updates)
-                .eq('id', userId)
-                .select();
-
+                .from('users').update(updates).eq('id', userId).select();
             if (error) throw error;
 
             console.log('✅ User updated:', userId);
@@ -434,30 +398,15 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (currentUser.role !== 'administrator') {
-                throw new Error('Only administrators can deactivate users');
-            }
-            if (userId === currentUser.id) {
-                throw new Error('You cannot deactivate your own account');
-            }
+            if (currentUser.role !== 'administrator') throw new Error('Only administrators can deactivate users');
+            if (userId === currentUser.id) throw new Error('You cannot deactivate your own account');
 
-            // Verify user belongs to same shop
             const { data: targetUser } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .select('shop_id')
-                .eq('id', userId)
-                .single();
-
-            if (!targetUser || targetUser.shop_id !== currentShop.id) {
-                throw new Error('Cannot deactivate users from other shops');
-            }
+                .from('users').select('shop_id').eq('id', userId).single();
+            if (!targetUser || targetUser.shop_id !== currentShop.id) throw new Error('Cannot deactivate users from other shops');
 
             const { error } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .update({ is_active: false })
-                .eq('id', userId);
-
+                .from('users').update({ is_active: false }).eq('id', userId);
             if (error) throw error;
 
             console.log('✅ User deactivated:', userId);
@@ -472,32 +421,18 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (!['administrator', 'manager'].includes(currentUser.role)) {
-                throw new Error('Insufficient permissions');
-            }
+            if (!['administrator', 'manager'].includes(currentUser.role)) throw new Error('Insufficient permissions');
 
             let query = window.DukaPOS.supabaseClient
                 .from('user_sessions')
-                .select(`
-                    *,
-                    users!inner (
-                        id,
-                        username,
-                        full_name,
-                        role,
-                        shop_id
-                    )
-                `)
-                .eq('users.shop_id', currentShop.id) // Filter by shop
+                .select(`*, users!inner(id, username, full_name, role, shop_id)`)
+                .eq('users.shop_id', currentShop.id)
                 .order('login_time', { ascending: false })
                 .limit(limit);
 
             if (userId) query = query.eq('user_id', userId);
-
             const { data, error } = await query;
             if (error) throw error;
-
             return { success: true, sessions: data };
         } catch (error) {
             console.error('❌ Get sessions failed:', error);
@@ -509,33 +444,20 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (!['administrator', 'manager'].includes(currentUser.role)) {
-                throw new Error('Insufficient permissions');
-            }
+            if (!['administrator', 'manager'].includes(currentUser.role)) throw new Error('Insufficient permissions');
 
             let query = window.DukaPOS.supabaseClient
                 .from('activity_logs')
-                .select(`
-                    *,
-                    users!inner (
-                        id,
-                        username,
-                        full_name,
-                        role,
-                        shop_id
-                    )
-                `)
-                .eq('users.shop_id', currentShop.id) // Filter by shop
+                .select(`*, users!inner(id, username, full_name, role, shop_id)`)
+                .eq('users.shop_id', currentShop.id)
                 .order('created_at', { ascending: false })
                 .limit(limit);
 
-            if (userId) query = query.eq('user_id', userId);
+            if (userId)     query = query.eq('user_id', userId);
             if (actionType) query = query.eq('action_type', actionType);
 
             const { data, error } = await query;
             if (error) throw error;
-
             return { success: true, logs: data };
         } catch (error) {
             console.error('❌ Get activity logs failed:', error);
@@ -547,74 +469,32 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (!['administrator', 'manager'].includes(currentUser.role)) {
-                throw new Error('Insufficient permissions');
-            }
+            if (!['administrator', 'manager'].includes(currentUser.role)) throw new Error('Insufficient permissions');
 
-            // Get users from current shop only
             const { data: allUsers, error: usersError } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .select('id, is_active')
-                .eq('shop_id', currentShop.id);
-
+                .from('users').select('id, is_active').eq('shop_id', currentShop.id);
             if (usersError) throw usersError;
 
-            const totalUsers = allUsers ? allUsers.length : 0;
-            const activeUsers = allUsers ? allUsers.filter(u => u.is_active).length : 0;
+            const totalUsers  = allUsers?.length || 0;
+            const activeUsers = allUsers?.filter(u => u.is_active).length || 0;
+            const userIds     = allUsers?.map(u => u.id) || [];
 
-            const userIds = allUsers ? allUsers.map(u => u.id) : [];
+            const { data: activeSessions } = await window.DukaPOS.supabaseClient
+                .from('user_sessions').select('id, user_id').in('user_id', userIds)
+                .eq('is_active', true).gte('expires_at', new Date().toISOString());
 
-            const { data: activeSessions, error: sessionsError } = await window.DukaPOS.supabaseClient
-                .from('user_sessions')
-                .select('id, user_id')
-                .in('user_id', userIds)
-                .eq('is_active', true)
-                .gte('expires_at', new Date().toISOString());
+            const activeSessionCount = activeSessions?.length || 0;
+            const onlineNow = [...new Set(activeSessions?.map(s => s.user_id) || [])].length;
 
-            if (sessionsError) throw sessionsError;
+            const today = new Date(); today.setHours(0,0,0,0);
+            const { data: todayLogins } = await window.DukaPOS.supabaseClient
+                .from('activity_logs').select('id').in('user_id', userIds)
+                .eq('action_type', 'login').gte('created_at', today.toISOString());
 
-            const activeSessionCount = activeSessions ? activeSessions.length : 0;
-            const onlineUserIds = activeSessions ? [...new Set(activeSessions.map(s => s.user_id))] : [];
-            const onlineNow = onlineUserIds.length;
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const { data: todayLogins, error: todayError } = await window.DukaPOS.supabaseClient
-                .from('activity_logs')
-                .select('id')
-                .in('user_id', userIds)
-                .eq('action_type', 'login')
-                .gte('created_at', today.toISOString());
-
-            if (todayError) throw todayError;
-
-            const totalLoginsToday = todayLogins ? todayLogins.length : 0;
-
-            return {
-                success: true,
-                statistics: {
-                    totalUsers,
-                    activeUsers,
-                    activeSessionCount,
-                    onlineNow,
-                    totalLoginsToday
-                }
-            };
+            return { success: true, statistics: { totalUsers, activeUsers, activeSessionCount, onlineNow, totalLoginsToday: todayLogins?.length || 0 } };
         } catch (error) {
             console.error('❌ Get user statistics failed:', error);
-            return {
-                success: false,
-                error: error.message,
-                statistics: {
-                    totalUsers: 0,
-                    activeUsers: 0,
-                    activeSessionCount: 0,
-                    onlineNow: 0,
-                    totalLoginsToday: 0
-                }
-            };
+            return { success: false, error: error.message, statistics: { totalUsers:0, activeUsers:0, activeSessionCount:0, onlineNow:0, totalLoginsToday:0 } };
         }
     }
 
@@ -622,96 +502,40 @@
         try {
             const currentUser = getCurrentUser();
             const currentShop = getCurrentShop();
-            
-            if (!['administrator', 'manager'].includes(currentUser.role)) {
-                throw new Error('Insufficient permissions');
-            }
+            if (!['administrator', 'manager'].includes(currentUser.role)) throw new Error('Insufficient permissions');
 
-            // Verify user belongs to same shop
             const { data: targetUser } = await window.DukaPOS.supabaseClient
-                .from('users')
-                .select('shop_id')
-                .eq('id', userId)
-                .single();
+                .from('users').select('shop_id').eq('id', userId).single();
+            if (!targetUser || targetUser.shop_id !== currentShop.id) throw new Error('Cannot view statistics for users from other shops');
 
-            if (!targetUser || targetUser.shop_id !== currentShop.id) {
-                throw new Error('Cannot view statistics for users from other shops');
-            }
+            const { data: sessions } = await window.DukaPOS.supabaseClient
+                .from('user_sessions').select('*').eq('user_id', userId).order('login_time', { ascending: false });
 
-            const { data: sessions, error: sessionsError } = await window.DukaPOS.supabaseClient
-                .from('user_sessions')
-                .select('*')
-                .eq('user_id', userId)
-                .order('login_time', { ascending: false });
-
-            if (sessionsError) throw sessionsError;
-
-            const activeSessions = sessions ? sessions.filter(s =>
-                s.is_active && new Date(s.expires_at) > new Date()
-            ).length : 0;
-
-            const lastLogin = sessions && sessions.length > 0 ? sessions[0].login_time : null;
-            const lastLogout = sessions && sessions.length > 0 ? sessions[0].logout_time : null;
+            const activeSessions = sessions?.filter(s => s.is_active && new Date(s.expires_at) > new Date()).length || 0;
+            const lastLogin  = sessions?.[0]?.login_time  || null;
+            const lastLogout = sessions?.[0]?.logout_time || null;
 
             let totalMinutes = 0;
-            if (sessions) {
-                sessions.forEach(session => {
-                    if (session.logout_time) {
-                        const start = new Date(session.login_time);
-                        const end = new Date(session.logout_time);
-                        const diffMins = Math.floor((end - start) / 60000);
-                        totalMinutes += diffMins;
-                    }
-                });
-            }
+            sessions?.forEach(s => {
+                if (s.logout_time) totalMinutes += Math.floor((new Date(s.logout_time) - new Date(s.login_time)) / 60000);
+            });
 
-            const hours = Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
-            const totalLoginTime = `${hours}h ${minutes}m`;
-
-            return {
-                success: true,
-                statistics: {
-                    totalSessions: sessions ? sessions.length : 0,
-                    activeSessions,
-                    lastLogin,
-                    lastLogout,
-                    totalLoginTime
-                }
-            };
+            return { success: true, statistics: {
+                totalSessions: sessions?.length || 0, activeSessions, lastLogin, lastLogout,
+                totalLoginTime: `${Math.floor(totalMinutes/60)}h ${totalMinutes%60}m`
+            }};
         } catch (error) {
             console.error('❌ Get user statistics by ID failed:', error);
-            return {
-                success: false,
-                error: error.message,
-                statistics: {
-                    totalSessions: 0,
-                    activeSessions: 0,
-                    lastLogin: null,
-                    lastLogout: null,
-                    totalLoginTime: '0h 0m'
-                }
-            };
+            return { success: false, error: error.message, statistics: { totalSessions:0, activeSessions:0, lastLogin:null, lastLogout:null, totalLoginTime:'0h 0m' } };
         }
     }
 
     Object.assign(window.authModule, {
-        login,
-        logout,
-        getCurrentUser,
-        getCurrentShop,
-        checkSession,
-        requireAuth,
-        createUser,
-        updateUser,
-        deactivateUser,
-        getAllUsers,
-        getUserSessions,
-        getActivityLogs,
-        getUserStatistics,
-        getUserStatisticsById,
-        checkPageAccess,
-        PAGE_ACCESS_RULES
+        login, logout, getCurrentUser, getCurrentShop,
+        checkSession, requireAuth, createUser, updateUser,
+        deactivateUser, getAllUsers, getUserSessions,
+        getActivityLogs, getUserStatistics, getUserStatisticsById,
+        checkPageAccess, PAGE_ACCESS_RULES
     });
 
     console.log('🔐 Multi-tenant authModule loaded with role-based access control');
