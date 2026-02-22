@@ -1,27 +1,51 @@
 // ═══════════════════════════════════════════════════════════
-// SUPPLIER ORDERS MODULE
-// Handles all supplier order operations, communications, and tracking
+// SUPPLIER ORDERS MODULE — Fixed
+// Changes:
+//   1. getDB() helper used everywhere instead of window.supabase
+//   2. getAllOrders() waits for shop context with retry instead of hard throw
 // ═══════════════════════════════════════════════════════════
 
 (function() {
     'use strict';
 
+    // ── Supabase client helper (matches how dashboard.html accesses it) ──
+    function getDB() {
+        return window.DukaPOS?.supabaseClient || window.supabase || null;
+    }
+
+    // ── Wait for shop context to be available (max ~5 seconds) ─────────
+    function waitForShopContext(maxWaitMs = 5000) {
+        return new Promise((resolve, reject) => {
+            const start = Date.now();
+            const check = () => {
+                const shop = window.DukaPOS?.currentShop;
+                if (shop) return resolve(shop);
+                if (Date.now() - start > maxWaitMs) return reject(new Error('Shop context not available'));
+                setTimeout(check, 200);
+            };
+            check();
+        });
+    }
+
     const supplierOrdersModule = {
+
         // ═══════════════════════════════════════════════════════════
         // ORDER MANAGEMENT
         // ═══════════════════════════════════════════════════════════
 
         /**
-         * Get all supplier orders for current shop
-         * @param {Object} filters - Optional filters (status, supplier_id, date_range)
-         * @returns {Promise<Object>} Result with orders data
+         * Get all supplier orders for current shop.
+         * FIX: waits for shop context rather than throwing immediately.
          */
         async getAllOrders(filters = {}) {
             try {
-                const currentShop = window.DukaPOS?.currentShop;
-                if (!currentShop) throw new Error('No shop context');
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                let query = window.supabase
+                // ✅ Wait for shop context instead of hard-failing
+                const currentShop = await waitForShopContext();
+
+                let query = db
                     .from('supplier_orders')
                     .select(`
                         *,
@@ -38,22 +62,12 @@
                     .eq('shop_id', currentShop.id)
                     .order('created_at', { ascending: false });
 
-                // Apply filters
-                if (filters.status) {
-                    query = query.eq('status', filters.status);
-                }
-                if (filters.supplier_id) {
-                    query = query.eq('supplier_id', filters.supplier_id);
-                }
-                if (filters.start_date) {
-                    query = query.gte('created_at', filters.start_date);
-                }
-                if (filters.end_date) {
-                    query = query.lte('created_at', filters.end_date);
-                }
+                if (filters.status)      query = query.eq('status', filters.status);
+                if (filters.supplier_id) query = query.eq('supplier_id', filters.supplier_id);
+                if (filters.start_date)  query = query.gte('created_at', filters.start_date);
+                if (filters.end_date)    query = query.lte('created_at', filters.end_date);
 
                 const { data, error } = await query;
-
                 if (error) throw error;
 
                 return { success: true, data: data || [] };
@@ -68,7 +82,10 @@
          */
         async getOrderById(orderId) {
             try {
-                const { data, error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { data, error } = await db
                     .from('supplier_orders')
                     .select(`
                         *,
@@ -80,7 +97,6 @@
                     .single();
 
                 if (error) throw error;
-
                 return { success: true, data };
             } catch (err) {
                 console.error('Get order by ID error:', err);
@@ -93,21 +109,18 @@
          */
         async createOrder(orderData, items) {
             try {
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
                 const currentUser = authModule.getCurrentUser();
-                const currentShop = window.DukaPOS?.currentShop;
-                
-                if (!currentShop) throw new Error('No shop context');
+                const currentShop = await waitForShopContext();
 
-                // Generate order number
                 const orderNumber = `PO-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-
-                // Calculate totals
                 const totalAmount = items.reduce((sum, item) => sum + item.subtotal, 0);
-                const finalAmount = totalAmount + (orderData.tax_amount || 0) + 
+                const finalAmount = totalAmount + (orderData.tax_amount || 0) +
                                    (orderData.shipping_cost || 0) - (orderData.discount_amount || 0);
 
-                // Insert order
-                const { data: order, error: orderError } = await window.supabase
+                const { data: order, error: orderError } = await db
                     .from('supplier_orders')
                     .insert({
                         shop_id: currentShop.id,
@@ -129,7 +142,6 @@
 
                 if (orderError) throw orderError;
 
-                // Insert order items
                 const orderItems = items.map(item => ({
                     order_id: order.id,
                     product_id: item.product_id,
@@ -142,13 +154,12 @@
                     discount_rate: item.discount_rate || 0
                 }));
 
-                const { error: itemsError } = await window.supabase
+                const { error: itemsError } = await db
                     .from('supplier_order_items')
                     .insert(orderItems);
 
                 if (itemsError) throw itemsError;
 
-                // Create notification for supplier
                 await this.createNotification({
                     type: 'new_order',
                     title: 'New Purchase Order',
@@ -169,15 +180,14 @@
          */
         async updateOrderStatus(orderId, status, notes = null) {
             try {
-                const updateData = {
-                    status,
-                    updated_at: new Date().toISOString()
-                };
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
+                const updateData = { status, updated_at: new Date().toISOString() };
                 if (notes) updateData.notes = notes;
                 if (status === 'delivered') updateData.actual_delivery = new Date().toISOString();
 
-                const { data, error } = await window.supabase
+                const { data, error } = await db
                     .from('supplier_orders')
                     .update(updateData)
                     .eq('id', orderId)
@@ -186,7 +196,6 @@
 
                 if (error) throw error;
 
-                // Create notification
                 await this.createNotification({
                     type: 'order_updated',
                     title: 'Order Status Updated',
@@ -201,25 +210,21 @@
             }
         },
 
-        /**
-         * Accept order (supplier action)
-         */
         async acceptOrder(orderId, confirmedItems = null) {
             try {
-                const { error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { error } = await db
                     .from('supplier_orders')
-                    .update({
-                        status: 'accepted',
-                        updated_at: new Date().toISOString()
-                    })
+                    .update({ status: 'accepted', updated_at: new Date().toISOString() })
                     .eq('id', orderId);
 
                 if (error) throw error;
 
-                // Update confirmed quantities if provided
                 if (confirmedItems && Array.isArray(confirmedItems)) {
                     for (const item of confirmedItems) {
-                        await window.supabase
+                        await db
                             .from('supplier_order_items')
                             .update({ confirmed_quantity: item.confirmed_quantity })
                             .eq('id', item.id);
@@ -233,22 +238,17 @@
             }
         },
 
-        /**
-         * Reject order (supplier action)
-         */
         async rejectOrder(orderId, reason) {
             try {
-                const { error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { error } = await db
                     .from('supplier_orders')
-                    .update({
-                        status: 'rejected',
-                        notes: reason,
-                        updated_at: new Date().toISOString()
-                    })
+                    .update({ status: 'rejected', notes: reason, updated_at: new Date().toISOString() })
                     .eq('id', orderId);
 
                 if (error) throw error;
-
                 return { success: true };
             } catch (err) {
                 console.error('Reject order error:', err);
@@ -260,19 +260,18 @@
         // ORDER MESSAGING
         // ═══════════════════════════════════════════════════════════
 
-        /**
-         * Send message on an order
-         */
         async sendOrderMessage(orderId, message, senderType) {
             try {
-                const currentUser = authModule.getCurrentUser();
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                const { data, error } = await window.supabase
+                const currentUser = authModule.getCurrentUser();
+                const { data, error } = await db
                     .from('order_messages')
                     .insert({
                         order_id: orderId,
                         sender_id: currentUser.id,
-                        sender_type: senderType, // 'admin' or 'supplier'
+                        sender_type: senderType,
                         message: message,
                         is_read: false
                     })
@@ -281,7 +280,6 @@
 
                 if (error) throw error;
 
-                // Create notification for recipient
                 await this.createNotification({
                     type: 'message_received',
                     title: 'New Message',
@@ -296,22 +294,18 @@
             }
         },
 
-        /**
-         * Get all messages for an order
-         */
         async getOrderMessages(orderId) {
             try {
-                const { data, error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { data, error } = await db
                     .from('order_messages')
-                    .select(`
-                        *,
-                        sender:users (id, full_name, role)
-                    `)
+                    .select(`*, sender:users (id, full_name, role)`)
                     .eq('order_id', orderId)
                     .order('created_at', { ascending: true });
 
                 if (error) throw error;
-
                 return { success: true, data: data || [] };
             } catch (err) {
                 console.error('Get order messages error:', err);
@@ -319,21 +313,17 @@
             }
         },
 
-        /**
-         * Mark message as read
-         */
         async markMessageAsRead(messageId) {
             try {
-                const { error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { error } = await db
                     .from('order_messages')
-                    .update({
-                        is_read: true,
-                        read_at: new Date().toISOString()
-                    })
+                    .update({ is_read: true, read_at: new Date().toISOString() })
                     .eq('id', messageId);
 
                 if (error) throw error;
-
                 return { success: true };
             } catch (err) {
                 console.error('Mark message as read error:', err);
@@ -341,25 +331,22 @@
             }
         },
 
-        /**
-         * Get unread messages count
-         */
         async getUnreadMessagesCount(userType = 'admin') {
             try {
-                const currentShop = window.DukaPOS?.currentShop;
-                if (!currentShop) throw new Error('No shop context');
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
+                const currentShop = await waitForShopContext();
                 const senderTypeFilter = userType === 'admin' ? 'supplier' : 'admin';
 
-                const { data, error } = await window.supabase
+                const { count, error } = await db
                     .from('order_messages')
                     .select('id', { count: 'exact', head: true })
                     .eq('sender_type', senderTypeFilter)
                     .eq('is_read', false);
 
                 if (error) throw error;
-
-                return { success: true, count: data || 0 };
+                return { success: true, count: count || 0 };
             } catch (err) {
                 console.error('Get unread count error:', err);
                 return { success: false, error: err.message, count: 0 };
@@ -370,19 +357,18 @@
         // ISSUES & DISPUTES
         // ═══════════════════════════════════════════════════════════
 
-        /**
-         * Report an issue on an order
-         */
         async reportIssue(issueData) {
             try {
-                const currentUser = authModule.getCurrentUser();
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                const { data, error } = await window.supabase
+                const currentUser = authModule.getCurrentUser();
+                const { data, error } = await db
                     .from('order_issues')
                     .insert({
                         order_id: issueData.order_id,
                         reported_by: currentUser.id,
-                        reporter_type: issueData.reporter_type, // 'admin' or 'supplier'
+                        reporter_type: issueData.reporter_type,
                         issue_type: issueData.issue_type,
                         priority: issueData.priority || 'medium',
                         status: 'open',
@@ -394,7 +380,6 @@
 
                 if (error) throw error;
 
-                // Create notification
                 await this.createNotification({
                     type: 'issue_reported',
                     title: 'New Issue Reported',
@@ -410,12 +395,12 @@
             }
         },
 
-        /**
-         * Get all issues for an order
-         */
         async getOrderIssues(orderId) {
             try {
-                const { data, error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { data, error } = await db
                     .from('order_issues')
                     .select(`
                         *,
@@ -426,7 +411,6 @@
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
-
                 return { success: true, data: data || [] };
             } catch (err) {
                 console.error('Get order issues error:', err);
@@ -434,16 +418,13 @@
             }
         },
 
-        /**
-         * Update issue status
-         */
         async updateIssueStatus(issueId, status, resolution = null) {
             try {
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
                 const currentUser = authModule.getCurrentUser();
-                const updateData = {
-                    status,
-                    updated_at: new Date().toISOString()
-                };
+                const updateData = { status, updated_at: new Date().toISOString() };
 
                 if (status === 'resolved' || status === 'closed') {
                     updateData.resolved_by = currentUser.id;
@@ -451,7 +432,7 @@
                     if (resolution) updateData.resolution = resolution;
                 }
 
-                const { data, error } = await window.supabase
+                const { data, error } = await db
                     .from('order_issues')
                     .update(updateData)
                     .eq('id', issueId)
@@ -459,7 +440,6 @@
                     .single();
 
                 if (error) throw error;
-
                 return { success: true, data };
             } catch (err) {
                 console.error('Update issue status error:', err);
@@ -471,15 +451,15 @@
         // PRODUCT UPDATES
         // ═══════════════════════════════════════════════════════════
 
-        /**
-         * Submit product update (supplier action)
-         */
         async submitProductUpdate(updateData) {
             try {
-                const currentUser = authModule.getCurrentUser();
-                const currentShop = window.DukaPOS?.currentShop;
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                const { data, error } = await window.supabase
+                const currentUser = authModule.getCurrentUser();
+                const currentShop = await waitForShopContext();
+
+                const { data, error } = await db
                     .from('supplier_product_updates')
                     .insert({
                         supplier_id: updateData.supplier_id,
@@ -499,7 +479,6 @@
                     .single();
 
                 if (error) throw error;
-
                 return { success: true, data };
             } catch (err) {
                 console.error('Submit product update error:', err);
@@ -507,25 +486,21 @@
             }
         },
 
-        /**
-         * Get product updates for a supplier
-         */
         async getProductUpdates(supplierId, status = null) {
             try {
-                let query = window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                let query = db
                     .from('supplier_product_updates')
                     .select('*')
                     .eq('supplier_id', supplierId)
                     .order('created_at', { ascending: false });
 
-                if (status) {
-                    query = query.eq('status', status);
-                }
+                if (status) query = query.eq('status', status);
 
                 const { data, error } = await query;
-
                 if (error) throw error;
-
                 return { success: true, data: data || [] };
             } catch (err) {
                 console.error('Get product updates error:', err);
@@ -537,15 +512,15 @@
         // PAYMENTS
         // ═══════════════════════════════════════════════════════════
 
-        /**
-         * Record supplier payment
-         */
         async recordPayment(paymentData) {
             try {
-                const currentUser = authModule.getCurrentUser();
-                const currentShop = window.DukaPOS?.currentShop;
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                const { data, error } = await window.supabase
+                const currentUser = authModule.getCurrentUser();
+                const currentShop = await waitForShopContext();
+
+                const { data, error } = await db
                     .from('supplier_payments')
                     .insert({
                         shop_id: currentShop.id,
@@ -564,7 +539,6 @@
 
                 if (error) throw error;
 
-                // Update order payment status if applicable
                 if (paymentData.order_id) {
                     await this.updateOrderPaymentStatus(paymentData.order_id);
                 }
@@ -576,25 +550,21 @@
             }
         },
 
-        /**
-         * Get payment history for supplier
-         */
         async getPaymentHistory(supplierId, orderId = null) {
             try {
-                let query = window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                let query = db
                     .from('supplier_payments')
                     .select('*')
                     .eq('supplier_id', supplierId)
                     .order('payment_date', { ascending: false });
 
-                if (orderId) {
-                    query = query.eq('order_id', orderId);
-                }
+                if (orderId) query = query.eq('order_id', orderId);
 
                 const { data, error } = await query;
-
                 if (error) throw error;
-
                 return { success: true, data: data || [] };
             } catch (err) {
                 console.error('Get payment history error:', err);
@@ -602,13 +572,12 @@
             }
         },
 
-        /**
-         * Update order payment status based on payments
-         */
         async updateOrderPaymentStatus(orderId) {
             try {
-                // Get order total
-                const { data: order } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { data: order } = await db
                     .from('supplier_orders')
                     .select('final_amount')
                     .eq('id', orderId)
@@ -616,23 +585,18 @@
 
                 if (!order) return;
 
-                // Get total paid
-                const { data: payments } = await window.supabase
+                const { data: payments } = await db
                     .from('supplier_payments')
                     .select('amount')
                     .eq('order_id', orderId);
 
-                const totalPaid = payments?.reduce((sum, p) => sum + parseFloat(p.amount), 0) || 0;
-                const orderTotal = parseFloat(order.final_amount);
-
+                const totalPaid   = payments?.reduce((sum, p) => sum + parseFloat(p.amount), 0) || 0;
+                const orderTotal  = parseFloat(order.final_amount);
                 let paymentStatus = 'pending';
-                if (totalPaid >= orderTotal) {
-                    paymentStatus = 'paid';
-                } else if (totalPaid > 0) {
-                    paymentStatus = 'partial';
-                }
+                if (totalPaid >= orderTotal) paymentStatus = 'paid';
+                else if (totalPaid > 0)      paymentStatus = 'partial';
 
-                await window.supabase
+                await db
                     .from('supplier_orders')
                     .update({ payment_status: paymentStatus })
                     .eq('id', orderId);
@@ -648,36 +612,32 @@
         // NOTIFICATIONS
         // ═══════════════════════════════════════════════════════════
 
-        /**
-         * Create notification
-         */
         async createNotification(notificationData) {
             try {
-                // Get relevant users to notify
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
                 let userIds = [];
 
                 if (notificationData.supplier_id) {
-                    // Notify supplier users
-                    const { data: supplierUsers } = await window.supabase
+                    const { data: supplierUsers } = await db
                         .from('users')
                         .select('id')
                         .eq('role', 'supplier')
                         .eq('supplier_id', notificationData.supplier_id);
-
                     userIds = supplierUsers?.map(u => u.id) || [];
                 } else {
-                    // Notify admin users
                     const currentShop = window.DukaPOS?.currentShop;
-                    const { data: adminUsers } = await window.supabase
-                        .from('users')
-                        .select('id')
-                        .eq('shop_id', currentShop.id)
-                        .in('role', ['admin', 'administrator', 'manager']);
-
-                    userIds = adminUsers?.map(u => u.id) || [];
+                    if (currentShop) {
+                        const { data: adminUsers } = await db
+                            .from('users')
+                            .select('id')
+                            .eq('shop_id', currentShop.id)
+                            .in('role', ['admin', 'administrator', 'manager']);
+                        userIds = adminUsers?.map(u => u.id) || [];
+                    }
                 }
 
-                // Insert notifications for each user
                 const notifications = userIds.map(userId => ({
                     user_id: userId,
                     notification_type: notificationData.type,
@@ -689,9 +649,7 @@
                 }));
 
                 if (notifications.length > 0) {
-                    await window.supabase
-                        .from('supplier_notifications')
-                        .insert(notifications);
+                    await db.from('supplier_notifications').insert(notifications);
                 }
 
                 return { success: true };
@@ -701,14 +659,13 @@
             }
         },
 
-        /**
-         * Get notifications for current user
-         */
         async getNotifications(limit = 20) {
             try {
-                const currentUser = authModule.getCurrentUser();
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
 
-                const { data, error } = await window.supabase
+                const currentUser = authModule.getCurrentUser();
+                const { data, error } = await db
                     .from('supplier_notifications')
                     .select('*')
                     .eq('user_id', currentUser.id)
@@ -716,7 +673,6 @@
                     .limit(limit);
 
                 if (error) throw error;
-
                 return { success: true, data: data || [] };
             } catch (err) {
                 console.error('Get notifications error:', err);
@@ -724,21 +680,17 @@
             }
         },
 
-        /**
-         * Mark notification as read
-         */
         async markNotificationAsRead(notificationId) {
             try {
-                const { error } = await window.supabase
+                const db = getDB();
+                if (!db) throw new Error('Supabase client not ready');
+
+                const { error } = await db
                     .from('supplier_notifications')
-                    .update({
-                        is_read: true,
-                        read_at: new Date().toISOString()
-                    })
+                    .update({ is_read: true, read_at: new Date().toISOString() })
                     .eq('id', notificationId);
 
                 if (error) throw error;
-
                 return { success: true };
             } catch (err) {
                 console.error('Mark notification as read error:', err);
@@ -747,8 +699,6 @@
         }
     };
 
-    // Expose to global scope
     window.supplierOrdersModule = supplierOrdersModule;
-
     console.log('✅ Supplier Orders Module loaded');
 })();

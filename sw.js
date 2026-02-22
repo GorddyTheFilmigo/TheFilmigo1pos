@@ -1,19 +1,12 @@
 // ═══════════════════════════════════════════════════════════════════
 // G&H Solutions POS — Service Worker
-// File: sw.js  (place in your project ROOT, next to pos.html)
-//
-// Strategy:
-//   • App shell (HTML, CSS, JS assets) → Cache-first, network-fallback
-//   • Supabase / API calls           → Network-first, no cache
-//   • Images / icons                 → Cache-first, long TTL
-//   • Offline fallback page          → Always cached
 // ═══════════════════════════════════════════════════════════════════
 
-const APP_VERSION  = 'gh-pos-v1.0.0';   // ← bump this to force cache refresh
+const APP_VERSION  = 'gh-pos-v1.0.1';   // ← bump this to force cache refresh
 const SHELL_CACHE  = `${APP_VERSION}-shell`;
 const IMAGE_CACHE  = `${APP_VERSION}-images`;
 
-// ── App shell: everything that makes the app work offline ───────────
+// ── App shell: only include files that ACTUALLY EXIST on the server ─
 const SHELL_FILES = [
   '/',
   '/pos.html',
@@ -23,8 +16,9 @@ const SHELL_FILES = [
   '/customers.html',
   '/admin.html',
   '/manifest.json',
+  '/offline.html',
 
-  // Your local assets (adjust paths if different)
+  // Assets
   '/assets/script.js',
   '/assets/auth.js',
   '/assets/nav-styles.css',
@@ -38,29 +32,26 @@ const SHELL_FILES = [
   '/assets/sales-analytics.js',
   '/assets/supplier-orders-module.js',
 
-  // Icons
+  // ✅ Only icons confirmed to exist — add more here once uploaded
   '/assets/icons/icon-192x192.png',
   '/assets/icons/icon-512x512.png',
-
-  // Offline fallback
-  '/offline.html',
 ];
 
-// ── Hosts that should NEVER be cached (always go to network) ────────
+// ── Hosts that should NEVER be cached ───────────────────────────────
 const NETWORK_ONLY_HOSTS = [
   'supabase.co',
   'supabase.in',
   'intasend.com',
   'sandbox.intasend.com',
   'payment.intasend.com',
-  'cdn.jsdelivr.net',       // supabase-js CDN — always latest
+  'cdn.jsdelivr.net',
 ];
 
 function isNetworkOnly(url) {
   try {
     const { hostname, pathname } = new URL(url);
     if (NETWORK_ONLY_HOSTS.some(h => hostname.includes(h))) return true;
-    if (pathname.startsWith('/functions/')) return true; // Edge functions
+    if (pathname.startsWith('/functions/')) return true;
     return false;
   } catch { return false; }
 }
@@ -71,19 +62,22 @@ function isImage(url) {
 
 // ════════════════════════════════════════════════════════════════════
 // INSTALL — pre-cache the app shell
+// FIX: Use Promise.allSettled so one missing file doesn't crash everything
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('install', event => {
   console.log(`[SW] Installing ${APP_VERSION}`);
   event.waitUntil(
     caches.open(SHELL_CACHE).then(cache =>
-      // Use {cache: 'reload'} so we always fetch fresh on install
       Promise.allSettled(
         SHELL_FILES.map(url =>
           cache.add(new Request(url, { cache: 'reload' }))
-               .catch(err => console.warn(`[SW] Could not cache ${url}:`, err.message))
+               .catch(err => console.warn(`[SW] Skipped caching ${url}: ${err.message}`))
         )
       )
-    ).then(() => self.skipWaiting()) // activate immediately
+    ).then(() => {
+      console.log(`[SW] Install complete — skipping waiting`);
+      return self.skipWaiting();
+    })
   );
 });
 
@@ -109,7 +103,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const { request } = event;
 
-  // Skip non-GET and chrome-extension requests
   if (request.method !== 'GET') return;
   if (request.url.startsWith('chrome-extension://')) return;
 
@@ -150,7 +143,6 @@ self.addEventListener('fetch', event => {
         return cached;
       }
 
-      // Not in cache — try network
       try {
         const response = await fetch(request);
         if (response.ok) {
@@ -159,7 +151,6 @@ self.addEventListener('fetch', event => {
         }
         return response;
       } catch {
-        // Offline and not cached
         const offlinePage = await caches.match('/offline.html');
         if (offlinePage) return offlinePage;
         return new Response(
@@ -178,13 +169,9 @@ self.addEventListener('fetch', event => {
 
 // ════════════════════════════════════════════════════════════════════
 // MESSAGE — allow pages to trigger cache refresh
-// Send: { type: 'SKIP_WAITING' }  to activate a waiting SW immediately
-// Send: { type: 'CLEAR_CACHE' }   to wipe all caches (useful for dev)
 // ════════════════════════════════════════════════════════════════════
 self.addEventListener('message', event => {
-  if (event.data?.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
   if (event.data?.type === 'CLEAR_CACHE') {
     caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k))));
   }
