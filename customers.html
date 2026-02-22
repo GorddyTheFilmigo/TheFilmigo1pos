@@ -12,7 +12,9 @@
     <meta name="description" content="Multi-tenant Point of Sale system">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="assets/offline-styles.css">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -35,17 +37,20 @@
         }
         * { box-sizing: border-box; }
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
+
         .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
 
+        /* Stats Row */
         .loyalty-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .loyalty-stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
         .loyalty-stat-card.purple { border-color: rgba(163,113,247,0.4); background: rgba(163,113,247,0.08); }
         .loyalty-stat-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
         .loyalty-stat-value { font-size: 1.8rem; font-weight: 900; }
         .loyalty-stat-value.purple { color: var(--accent-purple); }
-        .loyalty-stat-value.green  { color: var(--accent-green); }
+        .loyalty-stat-value.green { color: var(--accent-green); }
         .loyalty-stat-value.orange { color: var(--accent-orange); }
 
+        /* Form */
         .customer-form { background: var(--bg-secondary); padding: 24px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 32px; }
         .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .form-group { margin-bottom: 16px; }
@@ -57,12 +62,14 @@
 
         .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; font-family: 'Archivo', sans-serif; }
         .btn:hover { transform: translateY(-2px); }
-        .btn-primary   { background: var(--accent-orange); color: white; }
+        .btn-primary { background: var(--accent-orange); color: white; }
         .btn-secondary { background: transparent; color: var(--accent-orange); border: 2px solid var(--accent-orange); }
         .btn-secondary:hover { background: var(--accent-orange); color: white; }
-        .btn-danger    { background: var(--danger); color: white; }
-        .btn-small     { padding: 7px 14px; font-size: 12px; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-purple { background: var(--accent-purple); color: white; }
+        .btn-small { padding: 7px 14px; font-size: 12px; }
 
+        /* Table */
         .table-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; overflow-x: auto; }
         .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 16px; }
         .table { width: 100%; border-collapse: collapse; min-width: 900px; }
@@ -70,25 +77,28 @@
         th { background: var(--bg-tertiary); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; }
         tr:hover { background: rgba(88,166,255,0.05); }
 
+        /* Loyalty badge */
         .loyalty-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
         .loyalty-badge.high { background: rgba(163,113,247,0.2); color: var(--accent-purple); border: 1px solid rgba(163,113,247,0.4); }
-        .loyalty-badge.mid  { background: rgba(245,158,11,0.15);  color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.3); }
-        .loyalty-badge.low  { background: rgba(139,148,158,0.1);  color: var(--text-muted);    border: 1px solid var(--border); }
+        .loyalty-badge.mid { background: rgba(245,158,11,0.15); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.3); }
+        .loyalty-badge.low { background: rgba(139,148,158,0.1); color: var(--text-muted); border: 1px solid var(--border); }
         .loyalty-tier { font-size: 0.75rem; font-weight: 600; }
-        .tier-gold   { color: #f59e0b; }
+        .tier-gold { color: #f59e0b; }
         .tier-silver { color: #94a3b8; }
         .tier-bronze { color: #cd7c3b; }
-        .tier-new    { color: var(--text-muted); }
+        .tier-new { color: var(--text-muted); }
 
+        /* Adjust Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal.show { display: flex; }
         .modal-content { background: var(--bg-secondary); border: 2px solid var(--accent-purple); border-radius: 12px; padding: 36px; max-width: 480px; width: 90%; }
         .modal-content.green-border { border-color: var(--accent-orange); }
-        .modal-title    { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
+        .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 6px; }
         .modal-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
-        .modal-actions  { display: flex; gap: 10px; margin-top: 24px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
         .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 15px; font-family: 'Archivo', sans-serif; }
 
+        /* Points history panel */
         .points-history { background: var(--bg-primary); border-radius: 8px; padding: 16px; margin-top: 16px; max-height: 200px; overflow-y: auto; }
         .history-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
         .history-item:last-child { border-bottom: none; }
@@ -98,7 +108,7 @@
         .loading, .error-message { text-align: center; padding: 40px; color: var(--text-muted); }
         .error-message { color: var(--danger); }
         .success-msg { color: var(--accent-green); margin-top: 10px; font-weight: 600; }
-        .error-msg   { color: var(--danger);       margin-top: 10px; font-weight: 600; }
+        .error-msg { color: var(--danger); margin-top: 10px; font-weight: 600; }
 
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
@@ -109,39 +119,29 @@
     </style>
 </head>
 <body>
-
-    <!-- ══ NAV — matches dashboard.html exactly ══ -->
     <nav class="nav">
         <div class="nav-container">
             <div class="logo">G&H Solutions</div>
             <div class="nav-tabs">
-                <a href="dashboard.html"       class="nav-tab" id="dashboardLink"  style="display:none;">Dashboard</a>
-                <a href="pos.html"             class="nav-tab" id="posLink"        style="display:none;">Point of Sale</a>
-                <a href="products.html"        class="nav-tab">Products</a>
-                <a href="inventory.html"       class="nav-tab" id="inventoryLink"  style="display:none;">Inventory</a>
-                <a href="customers.html"       class="nav-tab active">Customers</a>
-                <a href="supply-requests.html" class="nav-tab" id="suppliersLink"  style="display:none;">Suppliers</a>
-                <a href="admin.html"           class="nav-tab" id="adminTab"       style="display:none;">Users</a>
+                <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
+                <a href="pos.html" class="nav-tab">Point of Sale</a>
+                <a href="products.html" class="nav-tab">Products</a>
+                <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
+                <a href="customers.html" class="nav-tab active">Customers</a>
+                <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
-            <div class="nav-right">
-                <div class="user-badge">
-                    <div class="user-avatar">👤</div>
-                    <div>
-                        <div id="currentUserName">User</div>
-                        <div id="currentDate"></div>
-                    </div>
-                </div>
-                <button onclick="authModule.logout()"
-                    style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;"
-                    onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
-                    onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
+            <div class="user-badge">
+                <div class="user-avatar">👤</div>
+                <div><div id="currentUserName">User</div><div id="currentDate"></div></div>
             </div>
+            <button onclick="authModule.logout()" style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'" onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
         </div>
     </nav>
 
     <div class="container">
         <h1 style="margin-bottom:24px;">👥 Customers Management</h1>
 
+        <!-- Loyalty Overview Stats -->
         <div class="loyalty-stats">
             <div class="loyalty-stat-card purple">
                 <div class="loyalty-stat-label">⭐ Total Points Issued</div>
@@ -161,6 +161,7 @@
             </div>
         </div>
 
+        <!-- Add / Edit Form -->
         <div class="customer-form">
             <h2 id="formTitle">Add New Customer</h2>
             <form id="customerForm">
@@ -195,6 +196,7 @@
             </form>
         </div>
 
+        <!-- Customers Table -->
         <div class="table-container">
             <div class="table-header">
                 <h2>Customers List</h2>
@@ -212,8 +214,14 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>ID</th><th>Name</th><th>Phone</th><th>Email</th>
-                        <th>Address</th><th>Loyalty Points</th><th>Tier</th><th>Actions</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Loyalty Points</th>
+                        <th>Tier</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="customersTableBody">
@@ -256,7 +264,7 @@
         </div>
     </div>
 
-    <!-- Customer Detail Modal -->
+    <!-- Customer Detail / History Modal -->
     <div class="modal" id="detailModal">
         <div class="modal-content green-border" style="max-width:560px;">
             <div class="modal-title" id="detailModalTitle">Customer Details</div>
@@ -285,19 +293,18 @@
         </div>
     </div>
 
-    <!-- ✅ SCRIPT ORDER MATCHES DASHBOARD: script.js → auth.js → data-module.js → page logic -->
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
+    <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
-
     <script>
     (function() {
-        const POINTS_TO_KES = 10;
+        const POINTS_TO_KES = 10; // 10 points = KES 1
 
-        let customers        = [];
-        let editingId        = null;
+        let customers = [];
+        let editingId = null;
         let adjustingCustomer = null;
-        let detailCustomer   = null;
+        let detailCustomer = null;
 
         // ─── INIT ───
         window.addEventListener('DOMContentLoaded', async () => {
@@ -308,10 +315,7 @@
 
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-
-                // Date display
-                document.getElementById('currentDate').textContent =
-                    new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+                if (window.setupNavigationForRole) window.setupNavigationForRole();
 
                 await loadCustomers();
 
@@ -323,8 +327,7 @@
                 console.log('✅ Customers page initialized');
             } catch (err) {
                 console.error('Customers init failed:', err);
-                document.getElementById('customersTableBody').innerHTML =
-                    `<tr><td colspan="8" class="error-message">Error: ${err.message}</td></tr>`;
+                document.getElementById('customersTableBody').innerHTML = `<tr><td colspan="8" class="error-message">Error: ${err.message}</td></tr>`;
             }
         });
 
@@ -337,45 +340,45 @@
                 renderCustomersTable();
                 renderLoyaltyStats();
             } catch (err) {
-                document.getElementById('customersTableBody').innerHTML =
-                    `<tr><td colspan="8" class="error-message">Failed to load: ${err.message}</td></tr>`;
+                document.getElementById('customersTableBody').innerHTML = `<tr><td colspan="8" class="error-message">Failed to load: ${err.message}</td></tr>`;
             }
         }
 
         function getTier(pts) {
-            if (pts >= 500) return { label: '🏆 Gold',   key: 'gold',   cls: 'tier-gold' };
+            if (pts >= 500) return { label: '🏆 Gold', key: 'gold', cls: 'tier-gold' };
             if (pts >= 200) return { label: '🥈 Silver', key: 'silver', cls: 'tier-silver' };
             if (pts >= 50)  return { label: '🥉 Bronze', key: 'bronze', cls: 'tier-bronze' };
-            return             { label: '🆕 New',    key: 'new',    cls: 'tier-new' };
+            return { label: '🆕 New', key: 'new', cls: 'tier-new' };
         }
+
         function getBadgeClass(pts) {
             if (pts >= 200) return 'high';
-            if (pts >= 50)  return 'mid';
+            if (pts >= 50) return 'mid';
             return 'low';
         }
 
         function renderLoyaltyStats() {
-            const total  = customers.reduce((s, c) => s + (c.loyalty_points || 0), 0);
-            const gold   = customers.filter(c => (c.loyalty_points || 0) >= 500).length;
+            const total = customers.reduce((s, c) => s + (c.loyalty_points || 0), 0);
+            const gold = customers.filter(c => (c.loyalty_points || 0) >= 500).length;
             const silver = customers.filter(c => (c.loyalty_points || 0) >= 200 && (c.loyalty_points || 0) < 500).length;
-            document.getElementById('statTotalPoints').textContent   = total.toLocaleString();
-            document.getElementById('statGoldMembers').textContent   = gold;
+            document.getElementById('statTotalPoints').textContent = total.toLocaleString();
+            document.getElementById('statGoldMembers').textContent = gold;
             document.getElementById('statSilverMembers').textContent = silver;
             document.getElementById('statTotalCustomers').textContent = customers.length;
         }
 
         function applyFilters() {
             const search = document.getElementById('searchInput').value.toLowerCase();
-            const tier   = document.getElementById('tierFilter').value;
+            const tier = document.getElementById('tierFilter').value;
             const filtered = customers.filter(c => {
                 const matchSearch = !search || c.name?.toLowerCase().includes(search) || (c.phone && c.phone.includes(search));
                 let matchTier = true;
                 if (tier) {
                     const pts = c.loyalty_points || 0;
-                    if      (tier === 'gold')   matchTier = pts >= 500;
+                    if (tier === 'gold') matchTier = pts >= 500;
                     else if (tier === 'silver') matchTier = pts >= 200 && pts < 500;
-                    else if (tier === 'bronze') matchTier = pts >= 50  && pts < 200;
-                    else if (tier === 'new')    matchTier = pts < 50;
+                    else if (tier === 'bronze') matchTier = pts >= 50 && pts < 200;
+                    else if (tier === 'new') matchTier = pts < 50;
                 }
                 return matchSearch && matchTier;
             });
@@ -389,8 +392,8 @@
                 return;
             }
             tbody.innerHTML = list.map(c => {
-                const pts      = c.loyalty_points || 0;
-                const tier     = getTier(pts);
+                const pts = c.loyalty_points || 0;
+                const tier = getTier(pts);
                 const badgeCls = getBadgeClass(pts);
                 return `<tr>
                     <td style="color:var(--text-muted);font-size:0.85rem;">${c.id}</td>
@@ -399,14 +402,16 @@
                     <td style="font-size:0.9rem;">${c.email || '—'}</td>
                     <td style="font-size:0.9rem;">${c.address || '—'}</td>
                     <td>
-                        <span class="loyalty-badge ${badgeCls}">⭐ ${pts.toLocaleString()} pts</span>
+                        <span class="loyalty-badge ${badgeCls}">
+                            ⭐ ${pts.toLocaleString()} pts
+                        </span>
                         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">≈ KES ${Math.floor(pts / POINTS_TO_KES).toLocaleString()} value</div>
                     </td>
                     <td><span class="loyalty-tier ${tier.cls}">${tier.label}</span></td>
                     <td style="white-space:nowrap;">
                         <button class="btn btn-secondary btn-small" onclick="customersPage.viewDetail(${c.id})" title="View & adjust points">⭐</button>
                         <button class="btn btn-secondary btn-small" onclick="customersPage.editCustomer(${c.id})" style="margin:0 4px;">✏️</button>
-                        <button class="btn btn-danger btn-small"    onclick="customersPage.deleteCustomer(${c.id})">🗑️</button>
+                        <button class="btn btn-danger btn-small" onclick="customersPage.deleteCustomer(${c.id})">🗑️</button>
                     </td>
                 </tr>`;
             }).join('');
@@ -421,11 +426,14 @@
             const address = document.getElementById('address').value.trim();
             const notes   = document.getElementById('notes').value.trim();
             if (!name) { showMessage('Customer name is required', 'error'); return; }
-            const customerData = { name, phone: phone||null, email: email||null, address: address||null, notes: notes||null };
+            const customerData = { name, phone: phone || null, email: email || null, address: address || null, notes: notes || null };
             try {
-                const result = editingId
-                    ? await window.dataModule.updateCustomer(editingId, customerData)
-                    : await window.dataModule.createCustomer(customerData);
+                let result;
+                if (editingId) {
+                    result = await window.dataModule.updateCustomer(editingId, customerData);
+                } else {
+                    result = await window.dataModule.createCustomer(customerData);
+                }
                 if (!result.success) throw new Error(result.error);
                 showMessage(editingId ? '✅ Customer updated!' : '✅ Customer added!', 'success');
                 clearForm();
@@ -437,8 +445,8 @@
             const c = customers.find(x => x.id === id);
             if (!c) return;
             editingId = id;
-            document.getElementById('formTitle').textContent  = 'Edit Customer';
-            document.getElementById('submitBtn').textContent  = 'Update Customer';
+            document.getElementById('formTitle').textContent = 'Edit Customer';
+            document.getElementById('submitBtn').textContent = 'Update Customer';
             document.getElementById('name').value    = c.name    || '';
             document.getElementById('phone').value   = c.phone   || '';
             document.getElementById('email').value   = c.email   || '';
@@ -459,8 +467,8 @@
 
         function clearForm() {
             editingId = null;
-            document.getElementById('formTitle').textContent  = 'Add New Customer';
-            document.getElementById('submitBtn').textContent  = '+ Add Customer';
+            document.getElementById('formTitle').textContent = 'Add New Customer';
+            document.getElementById('submitBtn').textContent = '+ Add Customer';
             document.getElementById('customerForm').reset();
             document.getElementById('formMessage').textContent = '';
         }
@@ -468,7 +476,7 @@
         function showMessage(text, type) {
             const el = document.getElementById('formMessage');
             el.textContent = text;
-            el.className   = type === 'success' ? 'success-msg' : 'error-msg';
+            el.className = type === 'success' ? 'success-msg' : 'error-msg';
             setTimeout(() => el.textContent = '', 5000);
         }
 
@@ -480,8 +488,9 @@
             document.getElementById('detailModalTitle').textContent = `👤 ${detailCustomer.name}`;
             document.getElementById('detailModalPhone').textContent = detailCustomer.phone || detailCustomer.email || '';
             document.getElementById('detailPoints').textContent = pts.toLocaleString();
-            document.getElementById('detailValue').textContent  = `KES ${Math.floor(pts / POINTS_TO_KES).toLocaleString()}`;
+            document.getElementById('detailValue').textContent = `KES ${Math.floor(pts / POINTS_TO_KES).toLocaleString()}`;
             document.getElementById('detailModal').classList.add('show');
+            // Load purchase history from sales
             await loadCustomerHistory(id);
         }
 
@@ -496,8 +505,8 @@
                     return;
                 }
                 historyEl.innerHTML = sales.map(s => {
-                    const date    = new Date(s.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-                    const earned  = Math.floor(s.total_amount * 1);
+                    const date = new Date(s.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+                    const earned = Math.floor(s.total_amount * 1); // 1pt per KES
                     const redeemed = s.points_redeemed || 0;
                     return `<div class="history-item">
                         <div>
@@ -515,10 +524,7 @@
             }
         }
 
-        function closeDetailModal() {
-            document.getElementById('detailModal').classList.remove('show');
-            detailCustomer = null;
-        }
+        function closeDetailModal() { document.getElementById('detailModal').classList.remove('show'); detailCustomer = null; }
 
         window.openAdjustFromDetail = function() {
             if (!detailCustomer) return;
@@ -530,26 +536,30 @@
         function openAdjustModal(id) {
             adjustingCustomer = customers.find(c => c.id === id);
             if (!adjustingCustomer) return;
-            document.getElementById('adjustModalSubtitle').textContent  = `Adjusting points for ${adjustingCustomer.name}`;
-            document.getElementById('adjustCurrentPts').textContent     = `${(adjustingCustomer.loyalty_points || 0).toLocaleString()} pts`;
+            document.getElementById('adjustModalSubtitle').textContent = `Adjusting points for ${adjustingCustomer.name}`;
+            document.getElementById('adjustCurrentPts').textContent = `${(adjustingCustomer.loyalty_points || 0).toLocaleString()} pts`;
             document.getElementById('adjustPointsValue').value = '';
-            document.getElementById('adjustReason').value      = '';
-            document.getElementById('adjustOperation').value   = 'add';
+            document.getElementById('adjustReason').value = '';
+            document.getElementById('adjustOperation').value = 'add';
             document.getElementById('adjustMessage').textContent = '';
             document.getElementById('adjustPointsModal').classList.add('show');
         }
 
         window.savePointsAdjustment = async function() {
             if (!adjustingCustomer) return;
-            const op  = document.getElementById('adjustOperation').value;
+            const op = document.getElementById('adjustOperation').value;
             const val = parseInt(document.getElementById('adjustPointsValue').value) || 0;
             if (val < 0) { document.getElementById('adjustMessage').innerHTML = '<span style="color:var(--danger);">Value must be positive</span>'; return; }
             const current = adjustingCustomer.loyalty_points || 0;
-            const newPts  = op === 'add' ? current + val : op === 'subtract' ? Math.max(0, current - val) : val;
+            let newPts;
+            if (op === 'add') newPts = current + val;
+            else if (op === 'subtract') newPts = Math.max(0, current - val);
+            else newPts = val;
             try {
                 const result = await window.dataModule.updateCustomer(adjustingCustomer.id, { loyalty_points: newPts });
                 if (!result.success) throw new Error(result.error);
                 document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--accent-green);">✅ Points updated to ${newPts}</span>`;
+                // Update local cache
                 const idx = customers.findIndex(c => c.id === adjustingCustomer.id);
                 if (idx !== -1) customers[idx].loyalty_points = newPts;
                 adjustingCustomer.loyalty_points = newPts;
@@ -557,20 +567,17 @@
                 renderLoyaltyStats();
                 renderCustomersTable();
                 setTimeout(closeAdjustModal, 1500);
-            } catch (err) {
-                document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--danger);">❌ ${err.message}</span>`;
-            }
+            } catch (err) { document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--danger);">❌ ${err.message}</span>`; }
         };
 
-        window.closeAdjustModal = function() {
-            document.getElementById('adjustPointsModal').classList.remove('show');
-            adjustingCustomer = null;
-        };
+        window.closeAdjustModal = function() { document.getElementById('adjustPointsModal').classList.remove('show'); adjustingCustomer = null; };
 
-        window.customersPage  = { editCustomer, deleteCustomer, viewDetail };
+        // ─── GLOBAL EXPOSURE ───
+        window.customersPage = { editCustomer, deleteCustomer, viewDetail };
         window.closeDetailModal = closeDetailModal;
 
     })();
     </script>
+    <script src="assets/pwa-registration.js"></script>
 </body>
 </html>

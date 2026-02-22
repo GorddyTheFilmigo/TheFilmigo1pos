@@ -1,479 +1,1050 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G&H Solutions - Users</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f59e0b">
+<title>G&H Solutions</title>
+    
+    <!-- ✅ PWA META TAGS - ADD THESE -->
     <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
+    
+    <!-- ✅ PWA MANIFEST LINK -->
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="assets/offline-styles.css">
+    <!-- Offline Mode Styles -->
+<link rel="stylesheet" href="assets/offline-styles.css">
+    
+    <!-- ✅ APPLE TOUCH ICONS -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
+    
+    <!-- ✅ FAVICON -->
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
+    
+    <!-- Your existing styles and scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/nav-styles.css">
-    <script src="assets/page-access-guard.js"></script>
-    <script src="assets/nav-visibility-controller.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); }
+  <title>TheFilmigoPro - Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/nav-styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <script src="assets/page-access-guard.js"></script>
+  <script src="assets/nav-visibility-controller.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .container { max-width: 1600px; margin: 0 auto; padding: 32px 24px; }
-        .page-header { margin-bottom: 32px; }
-        .page-header h1 { font-size: 2rem; font-weight: 900; margin-bottom: 8px; }
+    body {
+      font-family: 'Archivo', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text);
+    }
+    @media (max-width: 768px) {
 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 32px; }
-        .stat-card  { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
-        .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px; }
-        .stat-value { font-size: 2rem; font-weight: 900; color: var(--accent-orange); }
+  /* Container padding */
+  .container {
+    padding: 16px 12px;
+  }
 
-        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
-        .tab  { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit; }
-        .tab:hover  { color: var(--text); background: rgba(88,166,255,0.05); }
-        .tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
-        .tab-content        { display: none; }
-        .tab-content.active { display: block; }
+  /* Page header */
+  .page-header h1 {
+    font-size: 1.4rem;
+  }
 
-        .section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .section-title  { font-size: 1.3rem; font-weight: 700; }
+  /* Stats grid: 1 column on phone */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 
-        .btn         { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.15s; }
-        .btn-primary { background: var(--accent-green); color: white; }
-        .btn-primary:hover   { background: #2ea043; }
-        .btn-secondary       { background: var(--border); color: var(--text); }
-        .btn-danger          { background: var(--danger); color: white; }
-        .btn-danger:hover    { background: #d63939; }
-        .btn-small           { padding: 6px 12px; font-size: 0.85rem; }
+  .stat-card {
+    padding: 16px;
+  }
 
-        .table-container { overflow-x: auto; }
-        .table { width: 100%; border-collapse: collapse; }
-        .table thead { background: var(--bg-tertiary); }
-        .table th { padding: 14px; text-align: left; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        .table td { padding: 14px; border-bottom: 1px solid var(--border); }
-        .table tbody tr:hover { background: rgba(88,166,255,0.05); }
+  .stat-value {
+    font-size: 1.5rem;
+  }
 
-        .role-badge         { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
-        .role-administrator { background: rgba(245,158,11,.15); color: var(--accent-orange); }
-        .role-manager       { background: rgba(88,166,255,.15);  color: var(--accent-blue); }
-        .role-cashier       { background: rgba(63,185,80,.15);   color: var(--accent-green); }
-        .role-supplier      { background: rgba(163,113,247,.15); color: #a371f7; }
-        .role-customer      { background: rgba(139,148,158,.15); color: var(--text-muted); }
+  /* Tabs become scrollable */
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 4px;
+  }
 
-        .status-badge   { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
-        .status-online  { background: rgba(63,185,80,.15);   color: var(--accent-green); }
-        .status-offline { background: rgba(139,148,158,.15); color: var(--text-muted); }
+  .tab {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
 
-        .action-btns { display: flex; gap: 8px; }
+  /* Section padding */
+  .section {
+    padding: 16px;
+  }
 
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; }
-        .modal-header  { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-        .form-input, .form-select { width: 100%; padding: 12px 14px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; font-family: inherit; }
-        .form-input:focus, .form-select:focus { outline: none; border-color: var(--accent-blue); }
-        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+  /* Buttons full width on mobile */
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
 
-        .duration-text  { font-family: 'Space Mono', monospace; color: var(--accent-blue); font-weight: 600; }
-        .activity-type  { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
-        .activity-login  { background: rgba(63,185,80,.15);   color: var(--accent-green); }
-        .activity-logout { background: rgba(139,148,158,.15); color: var(--text-muted); }
-        .activity-sale   { background: rgba(245,158,11,.15);  color: var(--accent-orange); }
+  .btn-small {
+    width: auto;
+  }
 
-        .user-detail-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
-        .user-detail-row  { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .user-detail-label { color: var(--text-muted); font-weight: 600; }
-        .user-detail-value { font-family: 'Space Mono', monospace; color: var(--text); }
+  /* Tables: better mobile scrolling */
+  .table th,
+  .table td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
 
-        @media (max-width: 768px) {
-            .container { padding: 16px 12px; }
-            .stats-grid { grid-template-columns: 1fr; gap: 12px; }
-            .tabs { overflow-x: auto; white-space: nowrap; }
-            .section { padding: 16px; }
-            .section-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .btn { width: 100%; text-align: center; }
-            .btn-small { width: auto; }
-            .action-btns { flex-direction: column; gap: 6px; }
-            .modal-content { padding: 20px; }
-        }
-    </style>
+  /* Action buttons stack */
+  .action-btns {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Modal full-screen feel on phone */
+  .modal-content {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .modal-header {
+    font-size: 1.2rem;
+  }
+
+  /* User detail rows stack */
+  .user-detail-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+}
+  
+  @media (max-width: 768px) {
+
+  /* Navbar container */
+.nav {
+    background-color: var(--bg-secondary);
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.btn-danger:hover {
+    background-color: #d63939; /* darker red */
+}
+
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+}
+
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent-orange);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .tab:hover {
+      color: var(--text);
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    .tab.active {
+      color: var(--accent-blue);
+      border-bottom-color: var(--accent-blue);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2ea043;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table thead {
+      background: var(--bg-tertiary);
+    }
+
+    .table th {
+      padding: 14px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table tbody tr:hover {
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    .role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .role-administrator {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-orange);
+    }
+
+    .role-manager {
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+    }
+
+    .role-cashier {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-online {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+    }
+
+    .status-offline {
+      background: rgba(139, 148, 158, 0.15);
+      color: var(--text-muted);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .duration-text {
+      font-family: 'Space Mono', monospace;
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    .activity-type {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .activity-login {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-green);
+    }
+
+    .activity-logout {
+      background: rgba(139, 148, 158, 0.15);
+      color: var(--text-muted);
+    }
+
+    .activity-sale {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-orange);
+    }
+
+    .user-detail-card {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .user-detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .user-detail-label {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .user-detail-value {
+      font-family: 'Space Mono', monospace;
+      color: var(--text);
+    }
+  </style>
 </head>
 <body>
 
-    <!-- ══ NAV — matches dashboard.html exactly ══ -->
-    <nav class="nav">
-        <div class="nav-container">
-            <div class="logo">G&H Solutions</div>
-            <div class="nav-tabs">
-                <a href="dashboard.html"       class="nav-tab" id="dashboardLink"  style="display:none;">Dashboard</a>
-                <a href="pos.html"             class="nav-tab" id="posLink"        style="display:none;">Point of Sale</a>
-                <a href="products.html"        class="nav-tab">Products</a>
-                <a href="inventory.html"       class="nav-tab" id="inventoryLink"  style="display:none;">Inventory</a>
-                <a href="customers.html"       class="nav-tab">Customers</a>
-                <a href="supply-requests.html" class="nav-tab" id="suppliersLink"  style="display:none;">Suppliers</a>
-                <a href="admin.html"           class="nav-tab active">Users</a>
-            </div>
-            <div class="nav-right">
-                <div class="user-badge">
-                    <div class="user-avatar">👤</div>
-                    <div>
-                        <div class="user-name" id="currentUserName">Administrator</div>
-                        <div id="currentDate"></div>
-                    </div>
-                </div>
-                <button onclick="authModule.logout()"
-                    style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;"
-                    onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
-                    onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
-            </div>
+  <nav class="nav">
+    <div class="nav-container">
+      <div class="logo">G&H Solutions</div>
+      <div class="nav-tabs">
+        <a href="dashboard.html" class="nav-tab">📊 Dashboard</a>
+        <a href="pos.html" class="nav-tab">💰 Point Of Sale </a>
+        <a href="products.html" class="nav-tab">📦 Products</a>
+        <a href="inventory.html" class="nav-tab">📊 Inventory</a>
+        <a href="customers.html" class="nav-tab">📊 Customers</a>
+        <a href="admin.html" class="nav-tab active">👥 Users</a>
+      </div>
+      <div class="nav-right">
+        <div class="user-badge">
+          <div class="user-avatar">👤</div>
+          <div class="user-details">
+            <div class="user-name" id="currentUserName">Administrator</div>
+            <div class="user-date" id="currentDate"></div>
+          </div>
         </div>
-    </nav>
+        <button
+  onclick="authModule.logout()"
+  style="
+    padding: 10px 18px;
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s ease;
+  "
+  onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'"
+  onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'"
+>
+  Logout
+</button>
 
-    <div class="container">
-        <div class="page-header">
-            <h1>👥 User Management & Activity Monitor</h1>
-            <p style="color:var(--text-muted);">Manage system users and monitor their activities</p>
-        </div>
+        </button>
+      </div>
+    </div>
+  </nav>
 
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value" id="totalUsers">0</div></div>
-            <div class="stat-card"><div class="stat-label">Active Sessions</div><div class="stat-value" id="activeSessions">0</div></div>
-            <div class="stat-card"><div class="stat-label">Online Now</div><div class="stat-value" id="onlineUsers">0</div></div>
-            <div class="stat-card"><div class="stat-label">Total Logins Today</div><div class="stat-value" id="todayLogins">0</div></div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('users',this)">Users</button>
-            <button class="tab" onclick="switchTab('sessions',this)">Sessions</button>
-            <button class="tab" onclick="switchTab('activity',this)">Activity Log</button>
-        </div>
-
-        <!-- Users Tab -->
-        <div id="usersTab" class="tab-content active">
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">All Users</h2>
-                    <button class="btn btn-primary" onclick="openCreateUserModal()">➕ Add New User</button>
-                </div>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Username</th><th>Full Name</th><th>Role</th><th>Status</th>
-                                <th>Last Login</th><th>Last Logout</th><th>Total Time</th><th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <tr><td colspan="8" style="text-align:center;padding:40px;">Loading users...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sessions Tab -->
-        <div id="sessionsTab" class="tab-content">
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">User Sessions</h2>
-                    <button class="btn btn-secondary btn-small" onclick="loadSessions()">🔄 Refresh</button>
-                </div>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr><th>User</th><th>Login Time</th><th>Logout Time</th><th>Duration</th><th>Status</th></tr>
-                        </thead>
-                        <tbody id="sessionsTableBody">
-                            <tr><td colspan="5" style="text-align:center;padding:40px;">Loading sessions...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Activity Tab -->
-        <div id="activityTab" class="tab-content">
-            <div class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Activity Log</h2>
-                    <button class="btn btn-secondary btn-small" onclick="loadActivityLogs()">🔄 Refresh</button>
-                </div>
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr>
-                        </thead>
-                        <tbody id="activityTableBody">
-                            <tr><td colspan="4" style="text-align:center;padding:40px;">Loading activity logs...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="page-header">
+      <h1>👥 User Management & Activity Monitor</h1>
+      <p style="color: var(--text-muted);">Manage system users and monitor their activities</p>
     </div>
 
-    <!-- Create User Modal -->
-    <div class="modal" id="userModal">
-        <div class="modal-content">
-            <h2 class="modal-header" id="modalTitle">Create New User</h2>
-            <form id="userForm" onsubmit="handleSubmitUser(event)">
-                <div class="form-group">
-                    <label class="form-label">Username *</label>
-                    <input type="text" class="form-input" id="modalUsername" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Full Name *</label>
-                    <input type="text" class="form-input" id="modalFullName" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password *</label>
-                    <input type="password" class="form-input" id="modalPassword" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Role *</label>
-                    <select class="form-select" id="modalRole" required>
-                        <option value="cashier">Cashier</option>
-                        <option value="manager">Manager</option>
-                        <option value="administrator">Administrator</option>
-                        <option value="supplier">Supplier</option>
-                        <option value="customer">Customer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="modalEmail">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Phone</label>
-                    <input type="tel" class="form-input" id="modalPhone">
-                </div>
-                <div class="modal-actions">
-                    <button type="submit" class="btn btn-primary">Create User</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
-                </div>
-            </form>
-        </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value" id="totalUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Sessions</div>
+        <div class="stat-value" id="activeSessions">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Online Now</div>
+        <div class="stat-value" id="onlineUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Logins Today</div>
+        <div class="stat-value" id="todayLogins">0</div>
+      </div>
     </div>
 
-    <!-- User Details Modal -->
-    <div class="modal" id="userDetailsModal">
-        <div class="modal-content">
-            <h2 class="modal-header">User Activity Details</h2>
-            <div id="userDetailsContent"></div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" onclick="closeUserDetailsModal()">Close</button>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('users', this)">Users</button>
+      <button class="tab" onclick="switchTab('sessions', this)">Sessions</button>
+      <button class="tab" onclick="switchTab('activity', this)">Activity Log</button>
+    </div>
+
+    <!-- Users Tab -->
+    <div id="usersTab" class="tab-content active">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">All Users</h2>
+          <button class="btn btn-primary" onclick="openCreateUserModal()">
+            ➕ Add New User
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th>Last Logout</th>
+                <th>Total Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 40px;">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sessions Tab -->
+    <div id="sessionsTab" class="tab-content">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">User Sessions</h2>
+          <button class="btn btn-secondary btn-small" onclick="loadSessions()">🔄 Refresh</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Login Time</th>
+                <th>Logout Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="sessionsTableBody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 40px;">Loading sessions...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Tab -->
+    <div id="activityTab" class="tab-content">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">Activity Log</h2>
+          <button class="btn btn-secondary btn-small" onclick="loadActivityLogs()">🔄 Refresh</button>
+        </div>
+
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>User</th>
+                <th>Action</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody id="activityTableBody">
+              <tr>
+                <td colspan="4" style="text-align: center; padding: 40px;">Loading activity logs...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit User Modal -->
+  <div class="modal" id="userModal">
+    <div class="modal-content">
+      <h2 class="modal-header" id="modalTitle">Create New User</h2>
+      
+      <form id="userForm" onsubmit="handleSubmitUser(event)">
+        <div class="form-group">
+          <label class="form-label">Username *</label>
+          <input type="text" class="form-input" id="modalUsername" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-input" id="modalFullName" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" class="form-input" id="modalPassword" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Role *</label>
+          <select class="form-select" id="modalRole" required>
+    <option value="cashier">Cashier</option>
+    <option value="manager">Manager</option>
+    <option value="administrator">Administrator</option>
+    <option value="supplier">Supplier</option>   <!-- ⭐ ADD THIS -->
+    <option value="customer">Customer</option>   <!-- ⭐ ADD THIS -->
+</select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="modalEmail" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="tel" class="form-input" id="modalPhone" />
+        </div>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Create User</button>
+          <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal" id="userDetailsModal">
+    <div class="modal-content">
+      <h2 class="modal-header">User Activity Details</h2>
+      <div id="userDetailsContent"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeUserDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/script.js"></script>
+  <script src="assets/auth.js"></script>
+  <script>
+    let allUsers = [];
+    let allSessions = [];
+    let allActivities = [];
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await window.DukaPOS.initializeSupabase();
+      
+      // Require administrator role AND ensure it's not the default admin
+      await authModule.requireAuth('administrator', true);
+
+      const currentUser = authModule.getCurrentUser();
+      document.getElementById('currentUserName').textContent = currentUser.full_name;
+
+      await loadSystemStats();
+      await loadUsers();
+      await loadSessions();
+      await loadActivityLogs();
+
+      setInterval(loadSystemStats, 30000); // Update stats every 30 seconds
+    });
+
+    async function loadSystemStats() {
+      const result = await authModule.getUserStatistics();
+      
+      if (result.success) {
+        const stats = result.statistics;
+        document.getElementById('totalUsers').textContent = stats.totalUsers;
+        document.getElementById('activeSessions').textContent = stats.activeSessionCount;
+        document.getElementById('onlineUsers').textContent = stats.onlineNow;
+        document.getElementById('todayLogins').textContent = stats.totalLoginsToday;
+      }
+    }
+
+    function switchTab(tabName, clickedElement) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      if (clickedElement) {
+        clickedElement.classList.add('active');
+      }
+      document.getElementById(tabName + 'Tab').classList.add('active');
+    }
+
+    async function loadUsers() {
+      const result = await authModule.getAllUsers();
+      
+      if (result.success) {
+        allUsers = result.users;
+
+        // Get statistics for each user
+        for (let user of allUsers) {
+          const statsResult = await authModule.getUserStatisticsById(user.id);
+          if (statsResult.success) {
+            user.stats = statsResult.statistics;
+          }
+        }
+
+        renderUsersTable();
+      }
+    }
+
+    async function loadSessions() {
+      const result = await authModule.getUserSessions();
+      
+      if (result.success) {
+        allSessions = result.sessions;
+        renderSessionsTable();
+      }
+    }
+
+    async function loadActivityLogs() {
+      const result = await authModule.getActivityLogs();
+      
+      if (result.success) {
+        allActivities = result.logs;
+        renderActivityTable();
+      }
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('usersTableBody');
+      
+      if (allUsers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No users found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allUsers.map(user => {
+        const stats = user.stats || {};
+        const isOnline = stats.activeSessions > 0;
+        const lastLogin = stats.lastLogin 
+          ? new Date(stats.lastLogin).toLocaleString()
+          : 'Never';
+        const lastLogout = stats.lastLogout 
+          ? new Date(stats.lastLogout).toLocaleString()
+          : 'Never';
+
+        return `
+          <tr>
+            <td style="font-family: 'Space Mono', monospace;">${user.username}</td>
+            <td style="font-weight: 600;">${user.full_name}</td>
+            <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+            <td><span class="status-badge status-${isOnline ? 'online' : 'offline'}">
+              ${isOnline ? '● Online' : '○ Offline'}
+            </span></td>
+            <td style="font-size: 0.9rem;">${lastLogin}</td>
+            <td style="font-size: 0.9rem;">${lastLogout}</td>
+            <td class="duration-text">${stats.totalLoginTime || '0h 0m'}</td>
+            <td>
+              <div class="action-btns">
+                <button class="btn btn-small btn-secondary" onclick="viewUserDetails(${user.id})">
+                  📊 Details
+                </button>
+                <button class="btn btn-small btn-secondary" onclick="deactivateUserConfirm(${user.id}, '${user.username}')">
+                  Deactivate
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderSessionsTable() {
+      const tbody = document.getElementById('sessionsTableBody');
+      
+      if (allSessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No sessions found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allSessions.map(session => {
+        const loginTime = new Date(session.login_time).toLocaleString();
+        const logoutTime = session.logout_time 
+          ? new Date(session.logout_time).toLocaleString()
+          : '—';
+        
+        let duration = '—';
+        if (session.logout_time) {
+          const start = new Date(session.login_time);
+          const end = new Date(session.logout_time);
+          const diffMins = Math.floor((end - start) / 60000);
+          const hours = Math.floor(diffMins / 60);
+          const minutes = diffMins % 60;
+          duration = `${hours}h ${minutes}m`;
+        } else if (session.is_active) {
+          const start = new Date(session.login_time);
+          const now = new Date();
+          const diffMins = Math.floor((now - start) / 60000);
+          const hours = Math.floor(diffMins / 60);
+          const minutes = diffMins % 60;
+          duration = `${hours}h ${minutes}m (ongoing)`;
+        }
+
+        return `
+          <tr>
+            <td style="font-weight: 600;">${session.users?.full_name || 'Unknown'}</td>
+            <td>${loginTime}</td>
+            <td>${logoutTime}</td>
+            <td class="duration-text">${duration}</td>
+            <td><span class="status-badge status-${session.is_active ? 'online' : 'offline'}">
+              ${session.is_active ? '● Active' : '○ Ended'}
+            </span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderActivityTable() {
+      const tbody = document.getElementById('activityTableBody');
+      
+      if (allActivities.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px;">No activities logged</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allActivities.map(activity => {
+        const time = new Date(activity.created_at).toLocaleString();
+        const details = activity.action_details 
+          ? JSON.stringify(activity.action_details, null, 2)
+          : '—';
+
+        let actionClass = 'activity-login';
+        if (activity.action_type === 'logout') actionClass = 'activity-logout';
+        else if (activity.action_type === 'sale') actionClass = 'activity-sale';
+
+        return `
+          <tr>
+            <td style="font-size: 0.9rem;">${time}</td>
+            <td style="font-weight: 600;">${activity.users?.full_name || 'System'}</td>
+            <td><span class="activity-type ${actionClass}">${activity.action_type}</span></td>
+            <td style="font-family: 'Space Mono', monospace; font-size: 0.85rem; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${details}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openCreateUserModal() {
+      document.getElementById('modalTitle').textContent = 'Create New User';
+      document.getElementById('userForm').reset();
+      document.getElementById('userModal').classList.add('active');
+    }
+
+    function closeUserModal() {
+      document.getElementById('userModal').classList.remove('active');
+    }
+
+    async function handleSubmitUser(event) {
+      event.preventDefault();
+
+      const userData = {
+        username: document.getElementById('modalUsername').value.trim(),
+        full_name: document.getElementById('modalFullName').value.trim(),
+        password: document.getElementById('modalPassword').value,
+        role: document.getElementById('modalRole').value,
+        email: document.getElementById('modalEmail').value.trim() || null,
+        phone: document.getElementById('modalPhone').value.trim() || null
+      };
+
+      const result = await authModule.createUser(userData);
+
+      if (result.success) {
+        alert('User created successfully!');
+        closeUserModal();
+        await loadUsers();
+        await loadSystemStats();
+      } else {
+        alert('Failed to create user: ' + result.error);
+      }
+    }
+
+    async function deactivateUserConfirm(userId, username) {
+      if (!confirm(`Deactivate user "${username}"?`)) return;
+
+      const result = await authModule.deactivateUser(userId);
+
+      if (result.success) {
+        alert('User deactivated successfully!');
+        await loadUsers();
+        await loadSystemStats();
+      } else {
+        alert('Failed to deactivate user: ' + result.error);
+      }
+    }
+
+    async function viewUserDetails(userId) {
+      const user = allUsers.find(u => u.id === userId);
+      if (!user) return;
+
+      const sessionsResult = await authModule.getUserSessions(userId);
+      const sessions = sessionsResult.success ? sessionsResult.sessions : [];
+
+      const html = `
+        <div class="user-detail-card">
+          <h3 style="margin-bottom: 16px;">${user.full_name}</h3>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Username:</span>
+            <span class="user-detail-value">${user.username}</span>
+          </div>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Role:</span>
+            <span class="role-badge role-${user.role}">${user.role}</span>
+          </div>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Total Sessions:</span>
+            <span class="user-detail-value">${user.stats?.totalSessions || 0}</span>
+          </div>
+          <div class="user-detail-row">
+            <span class="user-detail-label">Total Login Time:</span>
+            <span class="user-detail-value">${user.stats?.totalLoginTime || '0h 0m'}</span>
+          </div>
+        </div>
+        <h3 style="margin: 20px 0 12px;">Recent Sessions</h3>
+        <div style="max-height: 300px; overflow-y: auto;">
+          ${sessions.slice(0, 10).map(s => `
+            <div class="user-detail-card" style="font-size: 0.9rem;">
+              <div class="user-detail-row">
+                <span class="user-detail-label">Login:</span>
+                <span class="user-detail-value">${new Date(s.login_time).toLocaleString()}</span>
+              </div>
+              <div class="user-detail-row">
+                <span class="user-detail-label">Logout:</span>
+                <span class="user-detail-value">${s.logout_time ? new Date(s.logout_time).toLocaleString() : '—'}</span>
+              </div>
+              <div class="user-detail-row">
+                <span class="user-detail-label">Status:</span>
+                <span class="status-badge status-${s.is_active ? 'online' : 'offline'}">
+                  ${s.is_active ? '● Active' : '○ Ended'}
+                </span>
+              </div>
             </div>
+          `).join('')}
         </div>
-    </div>
+      `;
 
-    <!-- ✅ SCRIPT ORDER: script.js → auth.js → page logic -->
-    <script src="assets/script.js"></script>
-    <script src="assets/auth.js"></script>
-    <script>
-        let allUsers      = [];
-        let allSessions   = [];
-        let allActivities = [];
+      document.getElementById('userDetailsContent').innerHTML = html;
+      document.getElementById('userDetailsModal').classList.add('active');
+    }
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            await window.DukaPOS.initializeSupabase();
-            const isAuthenticated = await authModule.requireAuth('administrator');
-            if (!isAuthenticated) return;
+    function closeUserDetailsModal() {
+      document.getElementById('userDetailsModal').classList.remove('active');
+    }
 
-            const currentUser = authModule.getCurrentUser();
-            document.getElementById('currentUserName').textContent = currentUser.full_name || 'Administrator';
-            document.getElementById('currentDate').textContent =
-                new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+    function updateDate() {
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', options);
+    }
+    setInterval(updateDate, 60000);
+    updateDate();
+  </script>
+  <script src="assets/pwa-registration.js"></script>
 
-            await loadSystemStats();
-            await loadUsers();
-            await loadSessions();
-            await loadActivityLogs();
-
-            setInterval(loadSystemStats, 30000);
-        });
-
-        async function loadSystemStats() {
-            const result = await authModule.getUserStatistics();
-            if (result.success) {
-                const s = result.statistics;
-                document.getElementById('totalUsers').textContent    = s.totalUsers;
-                document.getElementById('activeSessions').textContent = s.activeSessionCount;
-                document.getElementById('onlineUsers').textContent   = s.onlineNow;
-                document.getElementById('todayLogins').textContent   = s.totalLoginsToday;
-            }
-        }
-
-        function switchTab(tabName, clickedElement) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            if (clickedElement) clickedElement.classList.add('active');
-            document.getElementById(tabName+'Tab').classList.add('active');
-        }
-
-        async function loadUsers() {
-            const result = await authModule.getAllUsers();
-            if (result.success) {
-                allUsers = result.users;
-                for (let user of allUsers) {
-                    const sr = await authModule.getUserStatisticsById(user.id);
-                    if (sr.success) user.stats = sr.statistics;
-                }
-                renderUsersTable();
-            }
-        }
-
-        async function loadSessions() {
-            const result = await authModule.getUserSessions();
-            if (result.success) { allSessions = result.sessions; renderSessionsTable(); }
-        }
-
-        async function loadActivityLogs() {
-            const result = await authModule.getActivityLogs();
-            if (result.success) { allActivities = result.logs; renderActivityTable(); }
-        }
-
-        function renderUsersTable() {
-            const tbody = document.getElementById('usersTableBody');
-            if (!allUsers.length) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;">No users found</td></tr>';
-                return;
-            }
-            tbody.innerHTML = allUsers.map(user => {
-                const stats     = user.stats || {};
-                const isOnline  = stats.activeSessions > 0;
-                const lastLogin  = stats.lastLogin  ? new Date(stats.lastLogin).toLocaleString()  : 'Never';
-                const lastLogout = stats.lastLogout ? new Date(stats.lastLogout).toLocaleString() : 'Never';
-                return `<tr>
-                    <td style="font-family:'Space Mono',monospace;">${user.username}</td>
-                    <td style="font-weight:600;">${user.full_name}</td>
-                    <td><span class="role-badge role-${user.role}">${user.role}</span></td>
-                    <td><span class="status-badge status-${isOnline?'online':'offline'}">${isOnline?'● Online':'○ Offline'}</span></td>
-                    <td style="font-size:0.9rem;">${lastLogin}</td>
-                    <td style="font-size:0.9rem;">${lastLogout}</td>
-                    <td class="duration-text">${stats.totalLoginTime||'0h 0m'}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="btn btn-small btn-secondary" onclick="viewUserDetails(${user.id})">📊 Details</button>
-                            <button class="btn btn-small btn-danger"    onclick="deactivateUserConfirm(${user.id},'${user.username}')">Deactivate</button>
-                        </div>
-                    </td>
-                </tr>`;
-            }).join('');
-        }
-
-        function renderSessionsTable() {
-            const tbody = document.getElementById('sessionsTableBody');
-            if (!allSessions.length) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;">No sessions found</td></tr>';
-                return;
-            }
-            tbody.innerHTML = allSessions.map(s => {
-                const loginTime  = new Date(s.login_time).toLocaleString();
-                const logoutTime = s.logout_time ? new Date(s.logout_time).toLocaleString() : '—';
-                let duration = '—';
-                if (s.logout_time) {
-                    const mins  = Math.floor((new Date(s.logout_time) - new Date(s.login_time)) / 60000);
-                    duration = `${Math.floor(mins/60)}h ${mins%60}m`;
-                } else if (s.is_active) {
-                    const mins  = Math.floor((new Date() - new Date(s.login_time)) / 60000);
-                    duration = `${Math.floor(mins/60)}h ${mins%60}m (ongoing)`;
-                }
-                return `<tr>
-                    <td style="font-weight:600;">${s.users?.full_name||'Unknown'}</td>
-                    <td>${loginTime}</td><td>${logoutTime}</td>
-                    <td class="duration-text">${duration}</td>
-                    <td><span class="status-badge status-${s.is_active?'online':'offline'}">${s.is_active?'● Active':'○ Ended'}</span></td>
-                </tr>`;
-            }).join('');
-        }
-
-        function renderActivityTable() {
-            const tbody = document.getElementById('activityTableBody');
-            if (!allActivities.length) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;">No activities logged</td></tr>';
-                return;
-            }
-            tbody.innerHTML = allActivities.map(a => {
-                const time    = new Date(a.created_at).toLocaleString();
-                const details = a.action_details ? JSON.stringify(a.action_details) : '—';
-                const cls     = a.action_type==='logout' ? 'activity-logout' : a.action_type==='sale' ? 'activity-sale' : 'activity-login';
-                return `<tr>
-                    <td style="font-size:0.9rem;">${time}</td>
-                    <td style="font-weight:600;">${a.users?.full_name||'System'}</td>
-                    <td><span class="activity-type ${cls}">${a.action_type}</span></td>
-                    <td style="font-family:'Space Mono',monospace;font-size:0.85rem;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${details}</td>
-                </tr>`;
-            }).join('');
-        }
-
-        function openCreateUserModal() {
-            document.getElementById('modalTitle').textContent = 'Create New User';
-            document.getElementById('userForm').reset();
-            document.getElementById('userModal').classList.add('active');
-        }
-        function closeUserModal()        { document.getElementById('userModal').classList.remove('active'); }
-        function closeUserDetailsModal() { document.getElementById('userDetailsModal').classList.remove('active'); }
-
-        async function handleSubmitUser(event) {
-            event.preventDefault();
-            const userData = {
-                username:  document.getElementById('modalUsername').value.trim(),
-                full_name: document.getElementById('modalFullName').value.trim(),
-                password:  document.getElementById('modalPassword').value,
-                role:      document.getElementById('modalRole').value,
-                email:     document.getElementById('modalEmail').value.trim() || null,
-                phone:     document.getElementById('modalPhone').value.trim()  || null
-            };
-            const result = await authModule.createUser(userData);
-            if (result.success) {
-                alert('User created successfully!');
-                closeUserModal();
-                await loadUsers();
-                await loadSystemStats();
-            } else { alert('Failed to create user: ' + result.error); }
-        }
-
-        async function deactivateUserConfirm(userId, username) {
-            if (!confirm(`Deactivate user "${username}"?`)) return;
-            const result = await authModule.deactivateUser(userId);
-            if (result.success) {
-                alert('User deactivated successfully!');
-                await loadUsers(); await loadSystemStats();
-            } else { alert('Failed to deactivate user: ' + result.error); }
-        }
-
-        async function viewUserDetails(userId) {
-            const user = allUsers.find(u => u.id === userId);
-            if (!user) return;
-            const sr       = await authModule.getUserSessions(userId);
-            const sessions = sr.success ? sr.sessions : [];
-            document.getElementById('userDetailsContent').innerHTML = `
-                <div class="user-detail-card">
-                    <h3 style="margin-bottom:16px;">${user.full_name}</h3>
-                    <div class="user-detail-row"><span class="user-detail-label">Username:</span><span class="user-detail-value">${user.username}</span></div>
-                    <div class="user-detail-row"><span class="user-detail-label">Role:</span><span class="role-badge role-${user.role}">${user.role}</span></div>
-                    <div class="user-detail-row"><span class="user-detail-label">Total Sessions:</span><span class="user-detail-value">${user.stats?.totalSessions||0}</span></div>
-                    <div class="user-detail-row"><span class="user-detail-label">Total Login Time:</span><span class="user-detail-value">${user.stats?.totalLoginTime||'0h 0m'}</span></div>
-                </div>
-                <h3 style="margin:20px 0 12px;">Recent Sessions</h3>
-                <div style="max-height:300px;overflow-y:auto;">
-                    ${sessions.slice(0,10).map(s => `
-                        <div class="user-detail-card" style="font-size:0.9rem;">
-                            <div class="user-detail-row"><span class="user-detail-label">Login:</span><span class="user-detail-value">${new Date(s.login_time).toLocaleString()}</span></div>
-                            <div class="user-detail-row"><span class="user-detail-label">Logout:</span><span class="user-detail-value">${s.logout_time?new Date(s.logout_time).toLocaleString():'—'}</span></div>
-                            <div class="user-detail-row"><span class="user-detail-label">Status:</span><span class="status-badge status-${s.is_active?'online':'offline'}">${s.is_active?'● Active':'○ Ended'}</span></div>
-                        </div>`).join('')}
-                </div>`;
-            document.getElementById('userDetailsModal').classList.add('active');
-        }
-    </script>
 </body>
 </html>
