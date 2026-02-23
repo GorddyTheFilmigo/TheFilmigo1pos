@@ -184,7 +184,14 @@
 <body>
     <nav class="nav">
         <div class="nav-container">
-            <div class="logo">G&H Solutions</div>
+            <div class="logo"><img src="assets/icons/icon-512x512.png" alt="Logo" class="logo">
+
+<style>
+.logo {
+    width: 120px;
+    height: auto;
+}
+</style></div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab">Point of Sale</a>
@@ -520,25 +527,7 @@
     <!-- Offline Manager -->
 <script src="assets/offline-manager.js"></script>
 
-<!-- Offline UI Elements -->
-<div id="onlineStatus" class="status-indicator status-online">🟢 Online</div>
 
-<div id="queueInfo" class="queue-info" style="display: none;">
-    <div class="queue-info-header">
-        <span class="queue-info-title">Pending Transactions</span>
-        <span class="queue-count-badge" id="queueCount">0</span>
-    </div>
-    <div class="queue-info-body">
-        These transactions will sync when you're back online
-    </div>
-    <button class="sync-now-btn" onclick="window.offlineManager.syncNow()">
-        Sync Now
-    </button>
-</div>
-
-<div id="offlineBanner" class="offline-banner">
-    📴 You're offline - Transactions will be saved and synced when online
-</div>
 <footer style="text-align: center; padding: 15px; background-color: black;">
   <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
 </footer>
