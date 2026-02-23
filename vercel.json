@@ -1,22 +1,21 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "^/$", "dest": "/login.html", "status": 302 },
-    { "src": "^/index.html$", "dest": "/login.html", "status": 302 },
-    { "src": "/(.*)", "dest": "/$1" }
+  "redirects": [
+    { "source": "/", "destination": "/login.html", "permanent": false },
+    { "source": "/index.html", "destination": "/login.html", "permanent": false }
   ],
   "headers": [
     {
-      "source": "/(manifest\\.json|sw\\.js)",
+      "source": "/(manifest.json|sw.js)",
       "headers": [
-        { "key": "Cache-Control", "value": "public,  max-age=3600, must-revalidate" },
+        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     },
     {
-      "source": "/(assets/.*|.*\\.(png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|eot))$",
+      "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public,  max-age=31536000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ]
