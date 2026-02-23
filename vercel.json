@@ -1,15 +1,11 @@
 {
   "version": 2,
   "routes": [
-    // Redirect root and index.html to login
     { "src": "^/$", "dest": "/login.html", "status": 302 },
     { "src": "^/index.html$", "dest": "/login.html", "status": 302 },
-
-    // Handle all other paths as SPA (client-side routing)
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
-    // Strong caching for PWA manifest & service worker
     {
       "source": "/(manifest\\.json|sw\\.js)",
       "headers": [
@@ -17,7 +13,6 @@
         { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     },
-    // Long-term caching for static assets (icons, fonts, images)
     {
       "source": "/(assets/.*|.*\\.(png|jpg|jpeg|gif|svg|ico|webp|woff2?|ttf|eot))$",
       "headers": [
