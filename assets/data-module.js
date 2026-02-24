@@ -14,22 +14,9 @@
         return currentUser.shop_id;
     }
 
-    async function getCurrentAuthUserId(maxRetries = 3, delayMs = 1000) {
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-            try {
-                const { data: { user }, error } = await window.DukaPOS.supabaseClient.auth.getUser();
-                if (error) throw error;
-                if (user && user.id) return user.id;
-                const { data: sessionData } = await window.DukaPOS.supabaseClient.auth.getSession();
-                if (sessionData?.session?.user?.id) return sessionData.session.user.id;
-                console.warn(`Auth user not ready yet (attempt ${attempt}/${maxRetries})`);
-            } catch (err) {
-                console.warn(`Auth fetch attempt ${attempt} failed:`, err.message);
-            }
-            if (attempt < maxRetries) await new Promise(r => setTimeout(r, delayMs));
-        }
-        throw new Error('Could not get authenticated user ID - please log out and log in again');
-    }
+    // ⚠️ REMOVED: getCurrentAuthUserId() — was returning a UUID from auth.uid()
+    // but expenses.user_id is a bigint (your custom users table ID).
+    // We now use authModule.getCurrentUser().id directly everywhere.
 
     // ============================================================================
     // CUSTOMERS
@@ -270,34 +257,33 @@
     async function createExpense(expenseData) {
         try {
             const shopId = getCurrentShopId();
-            let authUserId = null;
-            try {
-                authUserId = await getCurrentAuthUserId();
-            } catch (authErr) {
-                const localUser = authModule.getCurrentUser();
-                authUserId = localUser?.id || null;
+
+            // ✅ FIX: Use authModule.getCurrentUser().id (bigint) NOT auth.getUser() (UUID)
+            // expenses.user_id is bigint — it stores your custom users table ID,
+            // NOT the Supabase auth UUID. Mixing them caused RLS policy violation.
+            const currentUser = authModule.getCurrentUser();
+            const userId = currentUser?.id || null;
+
+            if (!userId) {
+                throw new Error('Could not determine current user. Please log in again.');
             }
+
             const dataToInsert = {
                 category:    expenseData.category,
                 amount:      expenseData.amount,
                 description: expenseData.description,
                 date:        expenseData.date,
                 shop_id:     shopId,
-                user_id:     authUserId,
+                user_id:     userId,          // bigint ✅ matches expenses.user_id column
                 created_at:  new Date().toISOString()
             };
+
             const { data, error } = await window.DukaPOS.supabaseClient
                 .from('expenses').insert([dataToInsert]).select().single();
-            if (error) {
-                if (error.message?.includes('foreign key') && authUserId !== null) {
-                    const { data: retryResult, error: retryError } = await window.DukaPOS.supabaseClient
-                        .from('expenses').insert([{ ...dataToInsert, user_id: null }]).select().single();
-                    if (retryError) throw retryError;
-                    return { success: true, data: retryResult };
-                }
-                throw error;
-            }
+
+            if (error) throw error;
             return { success: true, data };
+
         } catch (err) {
             console.error('createExpense failed:', err);
             return { success: false, error: err.message };
@@ -328,13 +314,10 @@
 
             const rows = data || [];
             if (!rows.length) {
-                console.log('No expenses found in this date range');
                 return { success: true, data: [] };
             }
 
             // Step 2 — collect unique user_ids and resolve names
-            // Use the users from authModule cache first (free, no RLS hit)
-            // then fall back to a separate Supabase query on the users table.
             const userIds = [...new Set(rows.map(r => r.user_id).filter(Boolean))];
             const userMap = {};
 
@@ -344,13 +327,12 @@
                         .from('users')
                         .select('id, full_name')
                         .in('id', userIds)
-                        .eq('shop_id', shopId); // Only query own shop — reduces RLS exposure
+                        .eq('shop_id', shopId);
 
                     if (!usersError && usersData) {
                         usersData.forEach(u => { userMap[u.id] = u.full_name; });
                     } else {
                         console.warn('Could not resolve user names for expenses:', usersError?.message);
-                        // Gracefully degrade — expenses still load, just without names
                     }
                 } catch (userLookupErr) {
                     console.warn('User lookup for expenses failed gracefully:', userLookupErr.message);
