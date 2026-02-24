@@ -19,12 +19,7 @@
     <link rel="stylesheet" href="assets/nav-styles.css">
     <script src="assets/page-access-guard.js"></script>
     <script src="assets/nav-visibility-controller.js"></script>
-
-    <!-- ══ IntaSend Inline Payment SDK ══ -->
     <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.5/build/intasend-inline.js"></script>
-    <head>
-</head>
-</h2>
 
     <style>
         :root {
@@ -43,236 +38,319 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); }
 
-        /* Message Notification */
-        .message-notification-bell { position: relative; cursor: pointer; font-size: 1.5rem; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; }
-        .message-notification-bell:hover { background: rgba(88, 166, 255, 0.1); }
-        .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-        .messages-popup { position: fixed; top: 70px; right: 20px; width: 400px; max-height: 500px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; }
-        .messages-popup.active { display: flex; }
-        .messages-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .messages-header h3 { margin: 0; font-size: 1.1rem; }
-        .close-popup { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
-        .close-popup:hover { background: rgba(248,81,73,0.2); color: var(--danger); }
-        .messages-list { flex: 1; overflow-y: auto; padding: 12px; max-height: 400px; }
-        .message-item { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
-        .message-item.unread { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); }
-        .message-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
-        .message-sender { font-weight: 700; color: var(--accent-orange); font-size: 0.95rem; }
-        .message-time { font-size: 0.8rem; color: var(--text-muted); }
-        .message-text { color: var(--text); line-height: 1.5; margin-bottom: 8px; font-size: 0.95rem; }
-        .message-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .message-expiry { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
-        .mark-read-btn { background: var(--accent-green); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
-        .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
-        .empty-messages { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-        .empty-messages-icon { font-size: 3rem; margin-bottom: 12px; }
+        /* ── BELL ── */
+        .message-notification-bell { position: relative; cursor: pointer; font-size: 1.4rem; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; }
+        .message-notification-bell:hover { background: rgba(88,166,255,0.1); }
+        .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 18px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
 
-        /* Tab Navigation */
-        .pos-tabs { display: flex; gap: 10px; padding: 15px 20px; background: var(--bg-secondary); border-bottom: 2px solid var(--border); }
-        .pos-tab-btn { padding: 12px 24px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 16px; transition: all 0.2s; }
-        .pos-tab-btn:hover { border-color: var(--accent-orange); }
+        /* ── MESSAGES POPUP ── */
+        .messages-popup { position: fixed; top: 70px; right: 10px; width: min(400px, calc(100vw - 20px)); max-height: 70vh; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; }
+        .messages-popup.active { display: flex; }
+        .messages-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .messages-header h3 { margin: 0; font-size: 1rem; }
+        .close-popup { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+        .close-popup:hover { background: rgba(248,81,73,0.2); color: var(--danger); }
+        .messages-list { flex: 1; overflow-y: auto; padding: 10px; max-height: 60vh; }
+        .message-item { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .message-item.unread { background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.4); }
+        .message-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; flex-wrap: wrap; gap: 4px; }
+        .message-sender { font-weight: 700; color: var(--accent-orange); font-size: 0.9rem; }
+        .message-time   { font-size: 0.78rem; color: var(--text-muted); }
+        .message-text   { color: var(--text); line-height: 1.5; margin-bottom: 8px; font-size: 0.9rem; }
+        .message-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 6px; }
+        .message-expiry { font-size: 0.73rem; color: var(--text-muted); font-style: italic; }
+        .mark-read-btn  { background: var(--accent-green); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; }
+        .reply-btn      { background: var(--accent-blue);  color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; }
+        .empty-messages { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+        .empty-messages-icon { font-size: 2.8rem; margin-bottom: 10px; }
+
+        /* ── TAB NAVIGATION ── */
+        .pos-tabs { display: flex; gap: 8px; padding: 12px 16px; background: var(--bg-secondary); border-bottom: 2px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .pos-tab-btn { padding: 10px 20px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+        .pos-tab-btn:hover  { border-color: var(--accent-orange); }
         .pos-tab-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* POS Layout */
-        .pos-container { display: grid; grid-template-columns: 1fr 420px; gap: 20px; padding: 20px; height: calc(100vh - 160px); }
-        .products-section, .cart-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .products-section { overflow-y: auto; }
-        .cart-section { display: flex; flex-direction: column; overflow-y: auto; height: 100%; }
+        /* ════════════════════════════════════
+           POS LAYOUT — desktop 2-col,
+           portrait stacks to 1-col
+           ════════════════════════════════════ */
+        .pos-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 16px;
+            padding: 16px;
+            /* full viewport height minus nav + tabs */
+            height: calc(100vh - 130px);
+        }
+        .products-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-y: auto; }
+        .cart-section     { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; overflow-y: auto; }
 
-        /* Customer Selector */
-        .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 16px; }
-        .customer-selector-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        /* ── CUSTOMER SELECTOR ── */
+        .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+        .customer-selector-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
         .customer-select-row { display: flex; gap: 8px; align-items: center; }
-        .customer-search-wrap { position: relative; flex: 1; }
-        .customer-search-input { width: 100%; padding: 9px 12px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 14px; font-family: 'Archivo', sans-serif; }
+        .customer-search-wrap { position: relative; flex: 1; min-width: 0; }
+        .customer-search-input { width: 100%; padding: 9px 10px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; font-family: 'Archivo', sans-serif; }
         .customer-search-input:focus { outline: none; border-color: var(--accent-orange); }
         .customer-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--accent-orange); border-radius: 8px; max-height: 180px; overflow-y: auto; z-index: 100; margin-top: 4px; display: none; }
         .customer-dropdown.open { display: block; }
-        .customer-option { padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .customer-option { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 0.87rem; }
         .customer-option:hover { background: rgba(245,158,11,0.1); }
         .customer-option:last-child { border-bottom: none; }
         .customer-opt-name { font-weight: 600; }
-        .customer-opt-pts { font-size: 0.8rem; color: var(--accent-purple); margin-top: 2px; }
-        .clear-customer-btn { background: var(--danger); color: white; border: none; border-radius: 8px; padding: 9px 12px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap; }
-        .selected-customer-card { background: rgba(163,113,247,0.1); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 10px 14px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .selected-customer-info .cust-name { font-weight: 700; color: var(--accent-purple); font-size: 0.95rem; }
-        .selected-customer-info .cust-pts { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
-        .redeem-btn { background: var(--accent-purple); color: white; border: none; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; cursor: pointer; font-weight: 600; }
+        .customer-opt-pts  { font-size: 0.78rem; color: var(--accent-purple); margin-top: 2px; }
+        .clear-customer-btn { background: var(--danger); color: white; border: none; border-radius: 8px; padding: 9px 10px; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+        .selected-customer-card { background: rgba(163,113,247,0.1); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 10px 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .selected-customer-info .cust-name { font-weight: 700; color: var(--accent-purple); font-size: 0.9rem; }
+        .selected-customer-info .cust-pts  { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .redeem-btn { background: var(--accent-purple); color: white; border: none; border-radius: 6px; padding: 6px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; }
         .redeem-btn:hover { background: #8b5cf6; }
-        .redeem-badge { background: rgba(163,113,247,0.2); border: 1px solid rgba(163,113,247,0.5); border-radius: 6px; padding: 6px 10px; margin-top: 8px; font-size: 0.82rem; color: var(--accent-purple); display: flex; justify-content: space-between; align-items: center; }
+        .redeem-badge { background: rgba(163,113,247,0.2); border: 1px solid rgba(163,113,247,0.5); border-radius: 6px; padding: 6px 10px; margin-top: 8px; font-size: 0.8rem; color: var(--accent-purple); display: flex; justify-content: space-between; align-items: center; }
         .remove-redeem { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1rem; font-weight: 700; }
 
-        /* Products */
-        .search-bar { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; margin-bottom: 20px; }
-        .categories { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .category-btn { padding: 10px 20px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; white-space: nowrap; }
+        /* ── PRODUCTS ── */
+        .search-bar { width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; margin-bottom: 14px; }
+        .categories { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .category-btn { padding: 8px 16px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.87rem; white-space: nowrap; }
         .category-btn.active { background: var(--accent-orange); color: white; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        .product-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 15px; cursor: pointer; transition: all 0.2s; text-align: center; }
-        .product-card:hover { transform: translateY(-5px); border-color: var(--accent-orange); }
-        .product-icon { width: 60px; height: 60px; margin: 0 auto 10px; font-size: 3rem; line-height: 60px; }
-        .product-name { font-weight: 600; margin-bottom: 5px; }
-        .product-price { color: var(--accent-orange); font-weight: 700; font-size: 1.2rem; }
-        .product-stock { font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .product-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .product-card:hover { transform: translateY(-4px); border-color: var(--accent-orange); }
+        .product-icon  { font-size: 2.5rem; margin-bottom: 8px; line-height: 1; }
+        .product-name  { font-weight: 600; margin-bottom: 4px; font-size: 0.88rem; }
+        .product-price { color: var(--accent-orange); font-weight: 700; font-size: 1.1rem; }
+        .product-stock { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* Cart */
-        .cart-header { margin-bottom: 12px; }
-        .cart-items { overflow-y: visible; margin-bottom: 12px; }
-        .cart-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .cart-item-info { flex: 1; }
-        .cart-item-name { font-weight: 600; margin-bottom: 5px; }
-        .cart-item-price { color: var(--text-muted); font-size: 0.9rem; }
-        .cart-item-controls { display: flex; align-items: center; gap: 10px; }
-        .qty-btn { width: 30px; height: 30px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 5px; cursor: pointer; font-weight: 700; }
-        .qty-value { min-width: 30px; text-align: center; font-weight: 600; }
-        .remove-btn { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        /* ── CART ── */
+        .cart-header { margin-bottom: 10px; }
+        .cart-header h2 { font-size: 1.1rem; }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 10px; }
+        .cart-item  { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-name  { font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cart-item-price { color: var(--text-muted); font-size: 0.82rem; }
+        .cart-item-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .qty-btn   { width: 28px; height: 28px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
+        .qty-value { min-width: 24px; text-align: center; font-weight: 600; font-size: 0.9rem; }
+        .remove-btn{ background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.82rem; }
+        .empty-cart{ text-align: center; padding: 32px 16px; color: var(--text-muted); }
 
-        /* Cart Summary */
-        .cart-summary { border-top: 2px solid var(--border); padding-top: 12px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        /* ── CART SUMMARY ── */
+        .cart-summary { border-top: 2px solid var(--border); padding-top: 10px; flex-shrink: 0; }
+        .summary-row  { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.88rem; }
         .summary-row.discount { color: var(--accent-purple); }
-        .summary-total { font-size: 1.4rem; font-weight: 900; color: var(--accent-orange); }
-        .loyalty-earn-note { font-size: 0.8rem; color: var(--accent-green); margin-bottom: 8px; text-align: center; background: rgba(63,185,80,0.1); border-radius: 6px; padding: 6px; }
-        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .payment-btn { padding: 10px; border: 2px solid var(--border); background: var(--bg-primary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; }
+        .summary-total { font-size: 1.3rem; font-weight: 900; color: var(--accent-orange); }
+        .loyalty-earn-note { font-size: 0.78rem; color: var(--accent-green); margin-bottom: 8px; text-align: center; background: rgba(63,185,80,0.1); border-radius: 6px; padding: 5px; }
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; margin-top: 8px; }
+        .payment-btn { padding: 9px 6px; border: 2px solid var(--border); background: var(--bg-primary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; text-align: center; }
         .payment-btn.active { border-color: var(--accent-green); background: rgba(63,185,80,0.1); }
-        .checkout-btn { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+        .checkout-btn { width: 100%; padding: 13px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
         .checkout-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
-        .empty-cart { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 
-        /* Expenses */
-        .expenses-container { padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .expenses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .add-expense-btn { padding: 12px 24px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; }
-        .expenses-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .stat-label { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
-        .stat-value { font-size: 2rem; font-weight: 900; color: var(--danger); }
-        .expenses-list { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .expense-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .expense-info h4 { margin-bottom: 5px; font-size: 16px; }
-        .expense-meta { font-size: 13px; color: var(--text-muted); }
-        .expense-amount { font-size: 1.3rem; font-weight: 700; color: var(--danger); }
+        /* ── EXPENSES ── */
+        .expenses-container { padding: 16px; max-width: 1400px; margin: 0 auto; }
+        .expenses-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+        .expenses-header h1 { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+        .add-expense-btn { padding: 10px 20px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
+        .expenses-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,180px), 1fr)); gap: 14px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .stat-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+        .stat-value { font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 900; color: var(--danger); word-break: break-all; }
+        .expenses-list { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+        .expense-item { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 13px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .expense-info h4  { margin-bottom: 4px; font-size: 15px; }
+        .expense-meta     { font-size: 12px; color: var(--text-muted); }
+        .expense-amount   { font-size: 1.2rem; font-weight: 700; color: var(--danger); flex-shrink: 0; }
 
-        /* Modals */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        /* ── MODALS ── */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
         .modal.show { display: flex; }
-        .modal-content { background: var(--bg-secondary); border: 2px solid var(--accent-green); border-radius: 12px; padding: 40px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { margin-bottom: 25px; }
-        .modal-header h2 { font-size: 1.8rem; margin-bottom: 5px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px; font-family: 'Archivo', sans-serif; }
-        .form-group textarea { min-height: 100px; resize: vertical; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 25px; }
-        .modal-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
-        .modal-btn-primary { background: var(--accent-green); color: white; }
-        .modal-btn-secondary { background: var(--danger); color: white; }
-        .modal-icon { font-size: 4rem; margin-bottom: 20px; text-align: center; }
+        .modal-content { background: var(--bg-secondary); border: 2px solid var(--accent-green); border-radius: 12px; padding: 28px 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .modal-header   { margin-bottom: 20px; }
+        .modal-header h2{ font-size: clamp(1.2rem, 4vw, 1.6rem); margin-bottom: 4px; }
+        .form-group     { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; font-family: 'Archivo', sans-serif; }
+        .form-group textarea { min-height: 90px; resize: vertical; }
+        .modal-actions  { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-btn      { flex: 1; padding: 11px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 15px; font-family: 'Archivo', sans-serif; }
+        .modal-btn-primary  { background: var(--accent-green); color: white; }
+        .modal-btn-secondary{ background: var(--danger); color: white; }
+        .modal-icon { font-size: 3.5rem; margin-bottom: 16px; text-align: center; }
 
-        /* Success modal loyalty section */
-        .loyalty-earned { background: rgba(163,113,247,0.15); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 14px; margin: 16px 0; }
-        .loyalty-earned-title { color: var(--accent-purple); font-weight: 700; margin-bottom: 4px; }
-        .loyalty-earned-pts { font-size: 1.8rem; font-weight: 900; color: var(--accent-purple); }
-        .loyalty-total { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+        /* Loyalty success */
+        .loyalty-earned { background: rgba(163,113,247,0.15); border: 1px solid rgba(163,113,247,0.4); border-radius: 8px; padding: 12px; margin: 14px 0; }
+        .loyalty-earned-title { color: var(--accent-purple); font-weight: 700; margin-bottom: 4px; font-size: 0.9rem; }
+        .loyalty-earned-pts   { font-size: 1.6rem; font-weight: 900; color: var(--accent-purple); }
+        .loyalty-total        { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* Redeem Modal */
+        /* Redeem modal */
         .redeem-modal-content { border-color: var(--accent-purple); }
-        .redeem-info { background: var(--bg-primary); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-        .redeem-info p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px; }
-        .redeem-available { font-size: 1.6rem; font-weight: 900; color: var(--accent-purple); }
-        .redeem-conversion { font-size: 0.85rem; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 6px; padding: 8px 12px; margin-bottom: 16px; }
+        .redeem-info { background: var(--bg-primary); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+        .redeem-info p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 6px; }
+        .redeem-available  { font-size: 1.5rem; font-weight: 900; color: var(--accent-purple); }
+        .redeem-conversion { font-size: 0.82rem; color: var(--text-muted); background: var(--bg-tertiary); border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; }
 
-        @media (max-width: 900px) {
-            .pos-container { grid-template-columns: 1fr; height: auto; }
-            .expenses-stats { grid-template-columns: 1fr; }
-            .messages-popup { width: calc(100vw - 40px); right: 20px; max-height: 70vh; }
-        }
-
-        /* ── SUBSCRIPTION STYLES ─────────────────────────────── */
-        .sub-banner { display: none; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; z-index: 900; }
+        /* ── SUBSCRIPTION STYLES ── */
+        .sub-banner { display: none; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 16px; font-size: 0.85rem; font-weight: 600; z-index: 900; flex-wrap: wrap; }
         .sub-banner.warning { display: flex; background: rgba(245,158,11,0.18); border-bottom: 1px solid rgba(245,158,11,0.5); color: var(--accent-orange); }
-        .sub-banner.grace { display: flex; background: rgba(248,81,73,0.15); border-bottom: 1px solid rgba(248,81,73,0.5); color: var(--danger); }
-        .sub-banner-renew { background: var(--accent-orange); color: #000; border: none; border-radius: 6px; padding: 5px 14px; font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .sub-banner.grace   { display: flex; background: rgba(248,81,73,0.15);  border-bottom: 1px solid rgba(248,81,73,0.5);  color: var(--danger); }
+        .sub-banner-renew { background: var(--accent-orange); color: #000; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 
-        .sub-expired-overlay { display: none; position: fixed; inset: 0; z-index: 8000; background: rgba(13,17,23,0.97); flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; }
+        .sub-expired-overlay { display: none; position: fixed; inset: 0; z-index: 8000; background: rgba(13,17,23,0.97); flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
         .sub-expired-overlay.show { display: flex; }
-        .sub-expired-icon { font-size: 5rem; margin-bottom: 20px; }
-        .sub-expired-title { font-size: 2rem; font-weight: 900; color: var(--danger); margin-bottom: 10px; }
-        .sub-expired-msg { color: var(--text-muted); font-size: 1rem; max-width: 480px; line-height: 1.7; margin-bottom: 30px; }
-        .sub-expired-card { background: var(--bg-secondary); border: 2px solid var(--danger); border-radius: 16px; padding: 32px 40px; max-width: 500px; width: 100%; }
-        .sub-plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .sub-plan-option { border: 2px solid var(--border); border-radius: 10px; padding: 14px 10px; cursor: pointer; transition: all 0.2s; background: var(--bg-primary); text-align: center; }
-        .sub-plan-option:hover { border-color: var(--accent-orange); }
+        .sub-expired-icon  { font-size: 4rem; margin-bottom: 16px; }
+        .sub-expired-title { font-size: clamp(1.4rem, 5vw, 2rem); font-weight: 900; color: var(--danger); margin-bottom: 10px; }
+        .sub-expired-msg   { color: var(--text-muted); font-size: 0.95rem; max-width: 440px; line-height: 1.7; margin-bottom: 24px; }
+        .sub-expired-card  { background: var(--bg-secondary); border: 2px solid var(--danger); border-radius: 16px; padding: 24px; max-width: 480px; width: 100%; }
+        .sub-plan-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .sub-plan-option{ border: 2px solid var(--border); border-radius: 10px; padding: 12px 8px; cursor: pointer; transition: all 0.2s; background: var(--bg-primary); text-align: center; }
+        .sub-plan-option:hover    { border-color: var(--accent-orange); }
         .sub-plan-option.selected { border-color: var(--accent-orange); background: rgba(245,158,11,0.1); }
-        .sub-plan-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
-        .sub-plan-price { color: var(--accent-orange); font-weight: 900; font-size: 1.2rem; }
-        .sub-plan-period { font-size: 0.75rem; color: var(--text-muted); }
-        .sub-renew-btn { width: 100%; padding: 14px; background: var(--accent-green); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-bottom: 10px; }
-        .sub-renew-btn:hover { background: #2ea043; }
-        .sub-logout-link { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; cursor: pointer; text-decoration: underline; margin-top: 6px; }
+        .sub-plan-name  { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+        .sub-plan-price { color: var(--accent-orange); font-weight: 900; font-size: 1.1rem; }
+        .sub-plan-period{ font-size: 0.73rem; color: var(--text-muted); }
+        .sub-renew-btn  { width: 100%; padding: 13px; background: var(--accent-green); color: white; border: none; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-bottom: 10px; font-family: 'Archivo', sans-serif; }
+        .sub-renew-btn:hover  { background: #2ea043; }
+        .sub-logout-link{ background: none; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer; text-decoration: underline; margin-top: 6px; font-family: 'Archivo', sans-serif; }
 
         .nav-locked .nav-tab:not(.nav-tab-active-page) { pointer-events: none; opacity: 0.35; cursor: not-allowed; }
-        .pos-locked { position: relative; }
-        .pos-locked::after { content: ''; position: absolute; inset: 0; background: rgba(13,17,23,0.0); pointer-events: all; z-index: 500; cursor: not-allowed; }
 
-        /* ── INTASEND PAYMENT TAB STYLES ── */
-        .pay-tab-btn { flex: 1; padding: 10px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: all 0.2s; font-family: 'Archivo', sans-serif; }
-        .pay-tab-btn.active-online { border: 2px solid var(--accent-green); background: rgba(63,185,80,0.12); color: var(--accent-green); }
-        .pay-tab-btn.inactive { border: 2px solid var(--border); background: var(--bg-primary); color: var(--text-muted); }
-        .pay-tab-btn.active-manual { border: 2px solid var(--accent-orange); background: rgba(245,158,11,0.12); color: var(--accent-orange); }
-        .intasend-info-box { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; padding: 14px; margin-bottom: 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
-        .intasend-status-bar { display: none; margin-top: 12px; padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; text-align: center; }
-        .intasend-status-bar.processing { display: block; background: rgba(88,166,255,0.15); border: 1px solid rgba(88,166,255,0.4); color: var(--accent-blue); }
-        .intasend-status-bar.success { display: block; background: rgba(63,185,80,0.15); border: 1px solid rgba(63,185,80,0.4); color: var(--accent-green); }
-        .intasend-status-bar.error { display: block; background: rgba(248,81,73,0.15); border: 1px solid rgba(248,81,73,0.4); color: var(--danger); }
-        .intasend-status-bar.info { display: block; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: var(--accent-orange); }
+        /* ── INTASEND STYLES ── */
+        .pay-tab-btn { flex: 1; padding: 9px 6px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: 'Archivo', sans-serif; }
+        .pay-tab-btn.active-online  { border: 2px solid var(--accent-green);  background: rgba(63,185,80,0.12);  color: var(--accent-green); }
+        .pay-tab-btn.inactive       { border: 2px solid var(--border);         background: var(--bg-primary);     color: var(--text-muted); }
+        .pay-tab-btn.active-manual  { border: 2px solid var(--accent-orange);  background: rgba(245,158,11,0.12); color: var(--accent-orange); }
+        .intasend-info-box  { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+        .intasend-status-bar{ display: none; margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-align: center; }
+        .intasend-status-bar.processing{ display:block; background:rgba(88,166,255,0.15);  border:1px solid rgba(88,166,255,0.4);  color:var(--accent-blue); }
+        .intasend-status-bar.success   { display:block; background:rgba(63,185,80,0.15);   border:1px solid rgba(63,185,80,0.4);   color:var(--accent-green); }
+        .intasend-status-bar.error     { display:block; background:rgba(248,81,73,0.15);   border:1px solid rgba(248,81,73,0.4);   color:var(--danger); }
+        .intasend-status-bar.info      { display:block; background:rgba(245,158,11,0.15);  border:1px solid rgba(245,158,11,0.4);  color:var(--accent-orange); }
+
+        /* ════════════════════════════════════
+           PORTRAIT / MOBILE  (≤ 768 px)
+           ════════════════════════════════════ */
+        @media (max-width: 768px) {
+
+            /* ── Stack POS layout vertically ── */
+            .pos-container {
+                grid-template-columns: 1fr;   /* single column */
+                height: auto;                  /* let content scroll naturally */
+                padding: 10px;
+                gap: 12px;
+            }
+
+            /* Products section: fixed height so it doesn't swamp the screen */
+            .products-section {
+                max-height: 55vh;
+                padding: 12px;
+            }
+
+            /* Cart: natural height */
+            .cart-section {
+                padding: 12px;
+                height: auto;
+                overflow-y: visible;
+            }
+            .cart-items { max-height: 35vh; overflow-y: auto; }
+
+            /* Smaller product grid on phones */
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+            .product-card  { padding: 10px; }
+            .product-icon  { font-size: 2rem; margin-bottom: 6px; }
+            .product-name  { font-size: 0.8rem; }
+            .product-price { font-size: 0.95rem; }
+            .product-stock { font-size: 0.72rem; }
+
+            /* Cart items */
+            .cart-item { padding: 8px 10px; }
+            .cart-item-name { font-size: 0.82rem; }
+
+            /* Summary */
+            .summary-total { font-size: 1.1rem; }
+            .checkout-btn  { padding: 12px; font-size: 0.95rem; }
+
+            /* Payment buttons — 2 per row still fine */
+            .payment-btn { font-size: 11px; padding: 8px 4px; }
+
+            /* Expenses */
+            .expenses-container { padding: 12px; }
+            .expenses-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-value     { font-size: 1.3rem; }
+
+            /* Expense item — stack on tiny screens */
+            .expense-item { flex-direction: column; align-items: flex-start; }
+            .expense-amount { align-self: flex-end; }
+
+            /* Modals */
+            .modal { padding: 10px; }
+            .modal-content { padding: 18px 14px; }
+            .modal-actions { flex-direction: column; }
+            .modal-btn { flex: none; width: 100%; }
+
+            /* Sub plan grid */
+            .sub-plan-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .sub-plan-price { font-size: 0.95rem; }
+
+            /* Payment tabs */
+            .pay-tab-btn { font-size: 0.78rem; padding: 8px 4px; }
+
+            /* Popup */
+            .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 65vh; }
+
+            /* Customer selector */
+            .customer-search-input { font-size: 12px; }
+            .clear-customer-btn    { font-size: 11px; padding: 8px 8px; }
+
+            /* Nav badge */
+            #subNavLabel { display: none; }
+            #subNavBadge { padding: 7px 8px !important; }
+        }
+
+        @media (max-width: 400px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .pos-tabs .pos-tab-btn { font-size: 13px; padding: 9px 14px; }
+            .expenses-stats { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
     <nav class="nav">
-
         <div class="nav-container">
-            
             <div class="logo"><img src="assets/icons/icon-512x512.png" alt="Logo" class="logo">
-
-<style>
-.logo {
-    width: 120px;
-    height: auto;
-}
-</style></div>
+<style>.logo { width: 100px; height: auto; }</style></div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
-                <a href="pos.html" class="nav-tab active">Point of Sale</a>
-                <a href="products.html" class="nav-tab">Products</a>
-                <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
-                <a href="customers.html" class="nav-tab">Customers</a>
-                <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
+                <a href="pos.html"        class="nav-tab active">Point of Sale</a>
+                <a href="products.html"   class="nav-tab">Products</a>
+                <a href="inventory.html"  class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
+                <a href="customers.html"  class="nav-tab">Customers</a>
+                <a href="admin.html"      class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
             <div class="nav-right">
                 <div class="user-badge">
                     <div class="user-avatar">👤</div>
                     <div><div id="currentUserName">User</div></div>
                 </div>
-                <!-- Subscription Status Badge -->
                 <div id="subNavBadge" onclick="openSubscriptionModal()" title="Subscription Status"
-                    style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;font-size:0.8rem;font-weight:700;border:2px solid var(--border);background:var(--bg-primary);transition:all 0.2s;">
+                    style="cursor:pointer;display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:8px;font-size:0.78rem;font-weight:700;border:2px solid var(--border);background:var(--bg-primary);transition:all 0.2s;">
                     <span id="subNavIcon">⭐</span>
                     <span id="subNavLabel">Subscription</span>
                 </div>
                 <div class="message-notification-bell" onclick="toggleMessagesPopup()" id="messageBell">
                     🔔
-                    <span class="message-badge" id="messageBadge" style="display: none;">0</span>
+                    <span class="message-badge" id="messageBadge" style="display:none;">0</span>
                 </div>
                 <button onclick="authModule.logout()"
-                    style="padding:10px 18px;background-color:#ef4444;color:#ffffff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,0.3);transition:all 0.2s ease;"
+                    style="padding:9px 14px;background-color:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 10px rgba(239,68,68,.3);transition:all .2s ease;"
                     onmouseover="this.style.backgroundColor='#dc2626';this.style.transform='translateY(-1px)'"
-                    onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'">Logout</button>
+                    onmouseout="this.style.backgroundColor='#ef4444';this.style.transform='translateY(0)'"
+                >Logout</button>
             </div>
         </div>
     </nav>
@@ -283,138 +361,87 @@
         <button class="sub-banner-renew" onclick="openSubscriptionModal()">🔄 Renew Now</button>
     </div>
 
-    <!-- Subscription Expired Full-Page Overlay -->
+    <!-- Subscription Expired Overlay -->
     <div class="sub-expired-overlay" id="subExpiredOverlay">
         <div class="sub-expired-icon">🔒</div>
         <div class="sub-expired-title">Subscription Expired</div>
-        <div class="sub-expired-msg">Your subscription has expired. All system features are locked.<br>Please subscribe below to continue using G&amp;H Solutions POS.</div>
-        <button class="sub-renew-btn" style="max-width:300px;margin-bottom:16px;" onclick="openSubscriptionModal()">⭐ Subscribe / Renew Now</button>
+        <div class="sub-expired-msg">Your subscription has expired. All features are locked.<br>Subscribe below to continue using G&amp;H Solutions POS.</div>
+        <button class="sub-renew-btn" style="max-width:280px;margin-bottom:14px;" onclick="openSubscriptionModal()">⭐ Subscribe / Renew Now</button>
         <button class="sub-logout-link" onclick="authModule.logout()">Logout instead</button>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════════════
-         SUBSCRIPTION MODAL — with IntaSend + Manual payment tabs
-         ══════════════════════════════════════════════════════════════ -->
+    <!-- Subscription Modal -->
     <div class="modal" id="subscriptionModal" style="z-index:9000;">
-        <div class="modal-content" style="border-color:var(--accent-orange);max-width:580px;">
+        <div class="modal-content" style="border-color:var(--accent-orange);max-width:560px;">
 
-            <!-- Current Status Header -->
-            <div id="subModalStatus" style="background:var(--bg-primary);border-radius:10px;padding:16px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div id="subModalStatus" style="background:var(--bg-primary);border-radius:10px;padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
                 <div>
-                    <div style="font-size:0.78rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Current Subscription</div>
-                    <div id="subModalStatusText" style="font-weight:700;font-size:1rem;">Checking...</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Current Subscription</div>
+                    <div id="subModalStatusText" style="font-weight:700;font-size:0.95rem;">Checking...</div>
                 </div>
                 <div id="subModalDaysLeft" style="text-align:right;"></div>
             </div>
 
-            <h3 style="margin-bottom:6px;font-size:1.05rem;color:var(--text-muted);">Choose a Plan</h3>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;">Pay securely via M-Pesa or Card. Subscription activates instantly on payment.</p>
+            <h3 style="margin-bottom:5px;font-size:1rem;color:var(--text-muted);">Choose a Plan</h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Pay securely via M-Pesa or Card. Activates instantly.</p>
 
-            <!-- Plan Grid -->
-            <div class="sub-plan-grid" style="margin-bottom:16px;">
-                <div class="sub-plan-option selected" data-plan="Monthly" data-days="30" data-price="2000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">📅 Monthly</div>
-                    <div class="sub-plan-price">KES 2,000</div>
-                    <div class="sub-plan-period">30 days</div>
-                </div>
-                <div class="sub-plan-option" data-plan="Quarterly" data-days="90" data-price="5500" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">📆 Quarterly</div>
-                    <div class="sub-plan-price">KES 5,500</div>
-                    <div class="sub-plan-period">90 days</div>
-                </div>
-                <div class="sub-plan-option" data-plan="Semi-Annual" data-days="180" data-price="10000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">🗓️ Semi-Annual</div>
-                    <div class="sub-plan-price">KES 10,000</div>
-                    <div class="sub-plan-period">180 days</div>
-                </div>
-                <div class="sub-plan-option" data-plan="Annual" data-days="365" data-price="18000" onclick="selectPlan(this)">
-                    <div class="sub-plan-name">⭐ Annual</div>
-                    <div class="sub-plan-price">KES 18,000</div>
-                    <div class="sub-plan-period">365 days</div>
-                </div>
+            <div class="sub-plan-grid" style="margin-bottom:14px;">
+                <div class="sub-plan-option selected" data-plan="Monthly"     data-days="30"  data-price="2000"  onclick="selectPlan(this)"><div class="sub-plan-name">📅 Monthly</div><div class="sub-plan-price">KES 2,000</div><div class="sub-plan-period">30 days</div></div>
+                <div class="sub-plan-option"           data-plan="Quarterly"  data-days="90"  data-price="5500"  onclick="selectPlan(this)"><div class="sub-plan-name">📆 Quarterly</div><div class="sub-plan-price">KES 5,500</div><div class="sub-plan-period">90 days</div></div>
+                <div class="sub-plan-option"           data-plan="Semi-Annual" data-days="180" data-price="10000" onclick="selectPlan(this)"><div class="sub-plan-name">🗓️ Semi-Annual</div><div class="sub-plan-price">KES 10,000</div><div class="sub-plan-period">180 days</div></div>
+                <div class="sub-plan-option"           data-plan="Annual"     data-days="365" data-price="18000" onclick="selectPlan(this)"><div class="sub-plan-name">⭐ Annual</div><div class="sub-plan-price">KES 18,000</div><div class="sub-plan-period">365 days</div></div>
             </div>
 
-            <!-- Summary row -->
-            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:0.88rem;">
+            <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 14px;margin-bottom:18px;font-size:0.85rem;">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <span style="color:var(--text-muted);">Selected plan:</span>
                     <strong id="subSummaryPlan" style="color:var(--accent-orange);">Monthly — KES 2,000</strong>
                 </div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
                     <span style="color:var(--text-muted);">Access until:</span>
                     <strong id="subSummaryExpiry" style="color:var(--accent-green);">—</strong>
                 </div>
             </div>
 
-            <!-- Payment Method Tabs -->
             <div style="margin-bottom:4px;">
-                <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">💳 Payment Method</div>
-                <div style="display:flex;gap:8px;margin-bottom:14px;">
-                    <button id="pmTabOnline" class="pay-tab-btn active-online" onclick="switchPaymentTab('online')">
-                        📱 M-Pesa / Card
-                    </button>
-                    <button id="pmTabManual" class="pay-tab-btn inactive" onclick="switchPaymentTab('manual')">
-                        💵 Cash / Manual
-                    </button>
+                <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">💳 Payment Method</div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <button id="pmTabOnline" class="pay-tab-btn active-online" onclick="switchPaymentTab('online')">📱 M-Pesa / Card</button>
+                    <button id="pmTabManual" class="pay-tab-btn inactive"      onclick="switchPaymentTab('manual')">💵 Cash / Manual</button>
                 </div>
 
-                <!-- ── ONLINE PAYMENT PANEL (IntaSend) ── -->
                 <div id="pmPanelOnline">
                     <div class="intasend-info-box">
-                        🔒 Payments are processed securely by <strong style="color:var(--text);">IntaSend</strong>.<br>
-                        <strong>M-Pesa:</strong> you'll receive an STK push on your phone.<br>
-                        <strong>Card:</strong> enter your card details in the secure popup.
+                        🔒 Secured by <strong style="color:var(--text);">IntaSend</strong>. M-Pesa STK push sent to your phone.
                     </div>
-
-                    <!--
-                        Hidden button managed by the IntaSend SDK.
-                        Its data-* attributes are synced dynamically before every payment.
-                        Required — do NOT remove.
-                    -->
-                    <button id="intasendTriggerBtn"
-                        class="intaSendPayButton"
-                        data-amount="2000"
-                        data-currency="KES"
-                        data-api_ref=""
-                        data-email=""
-                        data-first_name=""
-                        data-last_name=""
+                    <button id="intasendTriggerBtn" class="intaSendPayButton"
+                        data-amount="2000" data-currency="KES" data-api_ref="" data-email="" data-first_name="" data-last_name=""
                         style="display:none;">Pay via IntaSend</button>
-
-                    <!-- Visible Pay button -->
                     <button id="subPayOnlineBtn" onclick="initiateIntaSendPayment()"
-                        style="width:100%;padding:14px;background:var(--accent-green);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;transition:background 0.2s;">
+                        style="width:100%;padding:13px;background:var(--accent-green);color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;transition:background 0.2s;">
                         ✅ Pay KES 2,000 via M-Pesa / Card
                     </button>
-
-                    <!-- Payment status feedback -->
                     <div id="intasendStatus" class="intasend-status-bar"></div>
                 </div>
 
-                <!-- ── MANUAL / CASH PAYMENT PANEL ── -->
                 <div id="pmPanelManual" style="display:none;">
-                    <div style="background:var(--bg-primary);border-radius:8px;padding:14px;margin-bottom:14px;font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
-                        Payment reference: <strong id="subPayRef" style="color:var(--accent-orange);letter-spacing:1px;">—</strong><br>
-                        Pay via M-Pesa Paybill / Cash then enter the transaction code below to activate.
+                    <div style="background:var(--bg-primary);border-radius:8px;padding:12px;margin-bottom:12px;font-size:0.8rem;color:var(--text-muted);line-height:1.7;">
+                        Reference: <strong id="subPayRef" style="color:var(--accent-orange);letter-spacing:1px;">—</strong><br>
+                        Pay via M-Pesa Paybill / Cash then enter the transaction code below.
                     </div>
-                    <div class="form-group" style="margin-bottom:16px;">
-                        <label style="font-size:0.85rem;">
-                            M-Pesa / Payment Transaction Code
-                            <span style="color:var(--text-muted);font-weight:400;">(required)</span>
-                        </label>
-                        <input type="text" id="subTransactionCode" placeholder="e.g. QJK3X7ABCD"
-                            style="text-transform:uppercase;letter-spacing:1px;">
+                    <div class="form-group" style="margin-bottom:14px;">
+                        <label style="font-size:0.83rem;">M-Pesa / Payment Transaction Code</label>
+                        <input type="text" id="subTransactionCode" placeholder="e.g. QJK3X7ABCD" style="text-transform:uppercase;letter-spacing:1px;">
                     </div>
                     <button id="subActivateManualBtn" onclick="activateSubscriptionManual()"
-                        style="width:100%;padding:14px;background:var(--accent-orange);color:white;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;">
+                        style="width:100%;padding:13px;background:var(--accent-orange);color:white;border:none;border-radius:10px;font-size:0.95rem;font-weight:700;cursor:pointer;font-family:'Archivo',sans-serif;">
                         ✅ Activate Manually
                     </button>
                 </div>
             </div>
 
-            <!-- Cancel -->
             <button onclick="closeSubscriptionModal()"
-                style="width:100%;padding:10px;background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;cursor:pointer;font-size:0.9rem;margin-top:14px;font-family:'Archivo',sans-serif;">
+                style="width:100%;padding:10px;background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;cursor:pointer;font-size:0.88rem;margin-top:12px;font-family:'Archivo',sans-serif;">
                 Cancel
             </button>
         </div>
@@ -434,7 +461,7 @@
     <!-- Tab Navigation -->
     <div class="pos-tabs">
         <button class="pos-tab-btn active" onclick="switchTab('sales')">💰 Sales</button>
-        <button class="pos-tab-btn" onclick="switchTab('expenses')">💸 Expenses</button>
+        <button class="pos-tab-btn"        onclick="switchTab('expenses')">💸 Expenses</button>
     </div>
 
     <!-- Sales Tab -->
@@ -451,9 +478,7 @@
 
             <!-- Cart Panel -->
             <div class="cart-section">
-                <div class="cart-header">
-                    <h2>🛒 Shopping Cart</h2>
-                </div>
+                <div class="cart-header"><h2>🛒 Cart</h2></div>
 
                 <!-- Customer Selector -->
                 <div class="customer-selector">
@@ -461,7 +486,7 @@
                     <div class="customer-select-row">
                         <div class="customer-search-wrap">
                             <input type="text" class="customer-search-input" id="customerSearchInput"
-                                placeholder="Search customer by name or phone..." autocomplete="off">
+                                placeholder="Search by name or phone..." autocomplete="off">
                             <div class="customer-dropdown" id="customerDropdown"></div>
                         </div>
                         <button class="clear-customer-btn" onclick="clearSelectedCustomer()">✕ Clear</button>
@@ -471,26 +496,24 @@
                 </div>
 
                 <div class="cart-items" id="cartItems">
-                    <div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>
+                    <div class="empty-cart"><div style="font-size:2.5rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>
                 </div>
 
                 <div class="cart-summary">
                     <div class="summary-row"><span>Items:</span><span id="itemCount">0</span></div>
                     <div class="summary-row"><span>Subtotal:</span><span id="subtotalAmount">KES 0.00</span></div>
                     <div class="summary-row discount" id="discountRow" style="display:none;">
-                        <span>🎁 Loyalty Discount:</span>
-                        <span id="discountAmount">- KES 0.00</span>
+                        <span>🎁 Loyalty Discount:</span><span id="discountAmount">- KES 0.00</span>
                     </div>
                     <div class="summary-row">
-                        <strong>Total:</strong>
-                        <strong class="summary-total" id="totalAmount">KES 0.00</strong>
+                        <strong>Total:</strong><strong class="summary-total" id="totalAmount">KES 0.00</strong>
                     </div>
                     <div class="loyalty-earn-note" id="loyaltyEarnNote" style="display:none;"></div>
-                    <div class="payment-methods" style="margin-top:10px;">
+                    <div class="payment-methods">
                         <button class="payment-btn active" data-method="Cash">💵 Cash</button>
-                        <button class="payment-btn" data-method="M-Pesa">📱 M-Pesa</button>
-                        <button class="payment-btn" data-method="Card">💳 Card</button>
-                        <button class="payment-btn" data-method="Credit">📋 Credit</button>
+                        <button class="payment-btn"        data-method="M-Pesa">📱 M-Pesa</button>
+                        <button class="payment-btn"        data-method="Card">💳 Card</button>
+                        <button class="payment-btn"        data-method="Credit">📋 Credit</button>
                     </div>
                     <button class="checkout-btn" id="checkoutBtn" disabled>Complete Sale</button>
                 </div>
@@ -506,13 +529,13 @@
                 <button class="add-expense-btn" onclick="openAddExpenseModal()">➕ Add Expense</button>
             </div>
             <div class="expenses-stats">
-                <div class="stat-card"><div class="stat-label">📅 Today's Expenses</div><div class="stat-value" id="todayExpenses">KES 0.00</div></div>
+                <div class="stat-card"><div class="stat-label">📅 Today</div><div class="stat-value" id="todayExpenses">KES 0.00</div></div>
                 <div class="stat-card"><div class="stat-label">📆 This Week</div><div class="stat-value" id="weekExpenses">KES 0.00</div></div>
                 <div class="stat-card"><div class="stat-label">📊 This Month</div><div class="stat-value" id="monthExpenses">KES 0.00</div></div>
                 <div class="stat-card"><div class="stat-label">📈 This Year</div><div class="stat-value" id="yearExpenses">KES 0.00</div></div>
             </div>
             <div class="expenses-list">
-                <h3 style="margin-bottom:20px;">Recent Expenses</h3>
+                <h3 style="margin-bottom:16px;">Recent Expenses</h3>
                 <div id="expensesList"><div style="text-align:center;padding:40px;color:var(--text-muted);">Loading expenses...</div></div>
             </div>
         </div>
@@ -523,7 +546,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Add New Expense</h2>
-                <p style="color:var(--text-muted);">Record a business expense</p>
+                <p style="color:var(--text-muted);font-size:0.88rem;">Record a business expense</p>
             </div>
             <form id="expenseForm">
                 <div class="form-group">
@@ -554,8 +577,8 @@
                     <input type="date" id="expenseDate" required>
                 </div>
                 <div class="modal-actions">
-                    <button type="submit" class="modal-btn modal-btn-primary" id="saveExpenseBtn">Save Expense</button>
-                    <button type="button" class="modal-btn modal-btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
+                    <button type="submit"  class="modal-btn modal-btn-primary"   id="saveExpenseBtn">Save Expense</button>
+                    <button type="button"  class="modal-btn modal-btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
                 </div>
             </form>
         </div>
@@ -566,17 +589,17 @@
         <div class="modal-content redeem-modal-content" style="border-color:var(--accent-purple);">
             <div class="modal-header">
                 <h2>🎁 Redeem Loyalty Points</h2>
-                <p style="color:var(--text-muted);">Apply a discount using loyalty points</p>
+                <p style="color:var(--text-muted);font-size:0.88rem;">Apply a discount using loyalty points</p>
             </div>
             <div class="redeem-info">
                 <p>Available points for <strong id="redeemCustomerName">—</strong>:</p>
                 <div class="redeem-available" id="redeemAvailablePoints">0 pts</div>
             </div>
-            <div class="redeem-conversion">💡 Conversion rate: <strong>100 points = KES 1 discount</strong></div>
+            <div class="redeem-conversion">💡 100 points = KES 1 discount</div>
             <div class="form-group">
                 <label>Points to redeem</label>
                 <input type="number" id="redeemPointsInput" min="100" step="100" placeholder="e.g. 100">
-                <small style="color:var(--text-muted);margin-top:6px;display:block;" id="redeemEquivalent">= KES 0.00 discount</small>
+                <small style="color:var(--text-muted);margin-top:5px;display:block;" id="redeemEquivalent">= KES 0.00 discount</small>
             </div>
             <div class="modal-actions">
                 <button class="modal-btn modal-btn-primary" style="background:var(--accent-purple);" onclick="applyRedemption()">Apply Discount</button>
@@ -589,11 +612,11 @@
     <div class="modal" id="successModal">
         <div class="modal-content" style="text-align:center;">
             <div class="modal-icon">✅</div>
-            <h2 style="margin-bottom:10px;">Sale Complete!</h2>
-            <p style="color:var(--text-muted);margin-bottom:10px;">Transaction processed successfully</p>
-            <div style="font-size:2rem;font-weight:900;color:var(--accent-green);" id="saleTotal">KES 0.00</div>
+            <h2 style="margin-bottom:8px;">Sale Complete!</h2>
+            <p style="color:var(--text-muted);margin-bottom:8px;">Transaction processed successfully</p>
+            <div style="font-size:1.8rem;font-weight:900;color:var(--accent-green);" id="saleTotal">KES 0.00</div>
             <div id="loyaltyEarnedSection" style="display:none;"></div>
-            <button class="modal-btn modal-btn-primary" onclick="closeSuccessModal()" style="margin-top:20px;width:100%;">New Sale</button>
+            <button class="modal-btn modal-btn-primary" onclick="closeSuccessModal()" style="margin-top:18px;width:100%;">New Sale</button>
         </div>
     </div>
 
@@ -604,134 +627,85 @@
     <script src="assets/messaging-module.js"></script>
     <script src="assets/subscription-module.js"></script>
 
-    <!-- ── SUBSCRIPTION DATA PATCH ─────────────────────────────────────── -->
+    <!-- ── SUBSCRIPTION DATA PATCH ── -->
     <script>
     (function patchDataModuleWithSubscription() {
         document.addEventListener('DOMContentLoaded', function() {
             if (!window.dataModule) { console.warn('dataModule not found — subscription patch skipped'); return; }
-
             function getDb() {
-                return window.DukaPOS?.supabaseClient
-                    || window._supabaseClient
-                    || window.supabaseClient
-                    || window.DukaPOS?.client
-                    || window.DukaPOS?.supabase
-                    || null;
+                return window.DukaPOS?.supabaseClient || window._supabaseClient || window.supabaseClient || window.DukaPOS?.client || window.DukaPOS?.supabase || null;
             }
-
             window.dataModule.upsertSubscription = async function(fullPayload, minimalPayload) {
                 try {
                     const db = getDb();
                     if (!db) throw new Error('Supabase client not found');
-                    const shop = window.authModule?.getCurrentShop();
+                    const shop   = window.authModule?.getCurrentShop();
                     const shopId = shop?.id;
                     if (!shopId) throw new Error('Cannot determine shop — please log in again.');
-
-                    const { data: existing } = await db
-                        .from('subscriptions').select('id')
-                        .eq('shop_id', shopId)
-                        .order('id', { ascending: false }).limit(1).maybeSingle();
-
+                    const { data: existing } = await db.from('subscriptions').select('id').eq('shop_id', shopId).order('id', { ascending: false }).limit(1).maybeSingle();
                     let result;
                     if (existing?.id) {
                         result = await db.from('subscriptions').update(fullPayload).eq('id', existing.id).eq('shop_id', shopId);
-                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema')) {
+                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema'))
                             result = await db.from('subscriptions').update(minimalPayload).eq('id', existing.id).eq('shop_id', shopId);
-                        }
                     } else {
                         result = await db.from('subscriptions').insert([fullPayload]);
-                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema')) {
+                        if (result.error?.message?.includes('column') || result.error?.message?.includes('schema'))
                             result = await db.from('subscriptions').insert([minimalPayload]);
-                        }
                     }
                     if (result.error) return { success: false, error: result.error.message };
                     return { success: true };
-                } catch (e) {
-                    return { success: false, error: e.message };
-                }
+                } catch (e) { return { success: false, error: e.message }; }
             };
-
             window.dataModule.getSubscription = async function() {
                 try {
                     const db = getDb();
                     if (!db) return { success: false, error: 'No Supabase client' };
-                    const shop = window.authModule?.getCurrentShop();
+                    const shop   = window.authModule?.getCurrentShop();
                     const shopId = shop?.id;
                     if (!shopId) return { success: false, error: 'No shop context' };
-                    const { data, error } = await db
-                        .from('subscriptions').select('*')
-                        .eq('shop_id', shopId)
-                        .order('expires_at', { ascending: false }).limit(1).maybeSingle();
+                    const { data, error } = await db.from('subscriptions').select('*').eq('shop_id', shopId).order('expires_at', { ascending: false }).limit(1).maybeSingle();
                     if (error) return { success: false, error: error.message };
                     return { success: true, data };
-                } catch (e) {
-                    return { success: false, error: e.message };
-                }
+                } catch (e) { return { success: false, error: e.message }; }
             };
-
             console.log('✅ dataModule patched with subscription methods');
         });
     })();
     </script>
 
-    <!-- ══════════════════════════════════════════════════════════════════
-         SUBSCRIPTION UI CONTROLLER  —  IntaSend + Supabase
-         ══════════════════════════════════════════════════════════════════ -->
+    <!-- ── SUBSCRIPTION UI CONTROLLER ── -->
     <script>
-    // ─────────────────────────────────────────────────────────────────────
-    // INTASEND CONFIG
-    //
-    // Get your key at: https://payment.intasend.com → Settings → API Keys
-    // Sandbox testing: https://sandbox.intasend.com  (no account needed)
-    // Set INTASEND_LIVE_MODE = true before going live.
-    // ─────────────────────────────────────────────────────────────────────
-    const INTASEND_PUBLIC_KEY = 'YOUR_INTASEND_PUBLISHABLE_KEY'; // ← REPLACE
-    const INTASEND_LIVE_MODE  = false;                            // ← true for production
+    const INTASEND_PUBLIC_KEY = 'YOUR_INTASEND_PUBLISHABLE_KEY';
+    const INTASEND_LIVE_MODE  = false;
 
-    // ── STATE ──────────────────────────────────────────────────────────
-    let _selectedPlan = { plan: 'Monthly', days: 30, price: 2000 };
-    let _intaSendInst = null;
+    let _selectedPlan   = { plan: 'Monthly', days: 30, price: 2000 };
+    let _intaSendInst   = null;
 
-    // ── PLAN SELECTOR ──────────────────────────────────────────────────
     function selectPlan(el) {
         document.querySelectorAll('.sub-plan-option').forEach(o => o.classList.remove('selected'));
         el.classList.add('selected');
-        _selectedPlan = {
-            plan:  el.dataset.plan,
-            days:  parseInt(el.dataset.days),
-            price: parseInt(el.dataset.price)
-        };
+        _selectedPlan = { plan: el.dataset.plan, days: parseInt(el.dataset.days), price: parseInt(el.dataset.price) };
         _updateSubSummary();
     }
 
     function _updateSubSummary() {
         const expiry = new Date();
         expiry.setDate(expiry.getDate() + _selectedPlan.days);
-
-        document.getElementById('subSummaryPlan').textContent =
-            `${_selectedPlan.plan} — KES ${_selectedPlan.price.toLocaleString()}`;
-        document.getElementById('subSummaryExpiry').textContent =
-            expiry.toLocaleDateString('en-KE', { year:'numeric', month:'long', day:'numeric' });
-
-        // Update visible pay-button label
+        document.getElementById('subSummaryPlan').textContent   = `${_selectedPlan.plan} — KES ${_selectedPlan.price.toLocaleString()}`;
+        document.getElementById('subSummaryExpiry').textContent = expiry.toLocaleDateString('en-KE', { year:'numeric', month:'long', day:'numeric' });
         const payBtn = document.getElementById('subPayOnlineBtn');
         if (payBtn) payBtn.textContent = `✅ Pay KES ${_selectedPlan.price.toLocaleString()} via M-Pesa / Card`;
-
-        // Build unique payment reference
         const user = window.authModule?.getCurrentUser();
-        const ref  = `GHS-${(user?.full_name || 'USER').replace(/\s+/g,'').toUpperCase().slice(0,6)}-${_selectedPlan.plan.toUpperCase().slice(0,3)}-${Date.now().toString(36).toUpperCase()}`;
-
-        // Manual tab reference label
+        const ref  = `GHS-${(user?.full_name||'USER').replace(/\s+/g,'').toUpperCase().slice(0,6)}-${_selectedPlan.plan.toUpperCase().slice(0,3)}-${Date.now().toString(36).toUpperCase()}`;
         const refEl = document.getElementById('subPayRef');
         if (refEl) refEl.textContent = ref;
-
-        // Sync all fields onto the hidden IntaSend button
         const triggerBtn = document.getElementById('intasendTriggerBtn');
         if (triggerBtn) {
-            triggerBtn.setAttribute('data-amount',  _selectedPlan.price);
+            triggerBtn.setAttribute('data-amount', _selectedPlan.price);
             triggerBtn.setAttribute('data-currency', 'KES');
             triggerBtn.setAttribute('data-api_ref', ref);
-            if (user?.email) triggerBtn.setAttribute('data-email', user.email);
+            if (user?.email)      triggerBtn.setAttribute('data-email', user.email);
             if (user?.full_name) {
                 const parts = user.full_name.trim().split(' ');
                 triggerBtn.setAttribute('data-first_name', parts[0] || '');
@@ -740,322 +714,181 @@
         }
     }
 
-    // ── PAYMENT TAB SWITCHER ───────────────────────────────────────────
     function switchPaymentTab(tab) {
-        const onlinePanel = document.getElementById('pmPanelOnline');
-        const manualPanel = document.getElementById('pmPanelManual');
-        const onlineTab   = document.getElementById('pmTabOnline');
-        const manualTab   = document.getElementById('pmTabManual');
-
-        if (tab === 'online') {
-            onlinePanel.style.display = 'block';
-            manualPanel.style.display = 'none';
-            onlineTab.className = 'pay-tab-btn active-online';
-            manualTab.className = 'pay-tab-btn inactive';
-        } else {
-            onlinePanel.style.display = 'none';
-            manualPanel.style.display = 'block';
-            manualTab.className = 'pay-tab-btn active-manual';
-            onlineTab.className = 'pay-tab-btn inactive';
-        }
+        document.getElementById('pmPanelOnline').style.display = tab === 'online' ? 'block' : 'none';
+        document.getElementById('pmPanelManual').style.display = tab === 'manual' ? 'block' : 'none';
+        document.getElementById('pmTabOnline').className = tab === 'online' ? 'pay-tab-btn active-online' : 'pay-tab-btn inactive';
+        document.getElementById('pmTabManual').className = tab === 'manual' ? 'pay-tab-btn active-manual' : 'pay-tab-btn inactive';
     }
 
-    // ── OPEN / CLOSE MODAL ─────────────────────────────────────────────
     function openSubscriptionModal() {
         const status    = window.subscriptionModule?.getStatus();
         const statusEl  = document.getElementById('subModalStatusText');
         const daysEl    = document.getElementById('subModalDaysLeft');
         const statusBox = document.getElementById('subModalStatus');
-
         if (!status || status.missing) {
-            statusEl.textContent = '❌ No active subscription';
-            statusEl.style.color = 'var(--danger)';
-            daysEl.innerHTML = '';
-            statusBox.style.borderLeft = '4px solid var(--danger)';
+            statusEl.textContent = '❌ No active subscription'; statusEl.style.color = 'var(--danger)';
+            daysEl.innerHTML = ''; statusBox.style.borderLeft = '4px solid var(--danger)';
         } else if (status.expired) {
-            statusEl.textContent = '🔒 Expired';
-            statusEl.style.color = 'var(--danger)';
-            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Expired on</div>
-                <div style="font-weight:700;color:var(--danger);">${status.expiresAt.toLocaleDateString('en-KE',{month:'short',day:'numeric',year:'numeric'})}</div>`;
+            statusEl.textContent = '🔒 Expired'; statusEl.style.color = 'var(--danger)';
+            daysEl.innerHTML = `<div style="font-size:0.73rem;color:var(--text-muted);">Expired on</div><div style="font-weight:700;color:var(--danger);">${status.expiresAt.toLocaleDateString('en-KE',{month:'short',day:'numeric',year:'numeric'})}</div>`;
             statusBox.style.borderLeft = '4px solid var(--danger)';
         } else if (status.grace) {
-            statusEl.textContent = '⚠️ Grace Period';
-            statusEl.style.color = 'var(--accent-orange)';
-            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Renew immediately</div>`;
+            statusEl.textContent = '⚠️ Grace Period'; statusEl.style.color = 'var(--accent-orange)';
+            daysEl.innerHTML = `<div style="font-size:0.73rem;color:var(--text-muted);">Renew immediately</div>`;
             statusBox.style.borderLeft = '4px solid var(--accent-orange)';
         } else if (status.active) {
-            statusEl.textContent = `✅ Active — ${status.plan || 'Plan'}`;
-            statusEl.style.color = 'var(--accent-green)';
+            statusEl.textContent = `✅ Active — ${status.plan || 'Plan'}`; statusEl.style.color = 'var(--accent-green)';
             const dl = status.daysLeft;
-            daysEl.innerHTML = `<div style="font-size:0.75rem;color:var(--text-muted);">Days remaining</div>
-                <div style="font-size:1.6rem;font-weight:900;color:${dl <= 7 ? 'var(--danger)' : 'var(--accent-green)'};">${dl}</div>`;
+            daysEl.innerHTML = `<div style="font-size:0.73rem;color:var(--text-muted);">Days remaining</div><div style="font-size:1.4rem;font-weight:900;color:${dl<=7?'var(--danger)':'var(--accent-green)'};">${dl}</div>`;
             statusBox.style.borderLeft = '4px solid var(--accent-green)';
         }
-
-        // Reset to defaults
         document.querySelectorAll('.sub-plan-option').forEach(o => o.classList.remove('selected'));
         document.querySelector('.sub-plan-option[data-plan="Monthly"]').classList.add('selected');
         _selectedPlan = { plan: 'Monthly', days: 30, price: 2000 };
         const txEl = document.getElementById('subTransactionCode');
         if (txEl) txEl.value = '';
-        _setIntaSendStatus('');   // hide status bar
+        _setIntaSendStatus('');
         switchPaymentTab('online');
         _updateSubSummary();
-        _initIntaSend();          // (re)init SDK listeners
-
+        _initIntaSend();
         document.getElementById('subscriptionModal').classList.add('show');
     }
+    function closeSubscriptionModal() { document.getElementById('subscriptionModal').classList.remove('show'); }
 
-    function closeSubscriptionModal() {
-        document.getElementById('subscriptionModal').classList.remove('show');
-    }
-
-    // ── INTASEND SDK INIT ──────────────────────────────────────────────
     function _initIntaSend() {
-        if (!window.IntaSend) {
-            console.warn('IntaSend SDK not yet available.');
-            return;
-        }
-        // Remove old listeners before re-attaching to avoid duplicates
-        if (_intaSendInst) {
-            try {
-                _intaSendInst.off('COMPLETE');
-                _intaSendInst.off('FAILED');
-                _intaSendInst.off('IN-PROGRESS');
-            } catch (_) {}
-        }
-
-        _intaSendInst = new window.IntaSend({
-            publicAPIKey: INTASEND_PUBLIC_KEY,
-            live:         INTASEND_LIVE_MODE
-        })
-        .on('COMPLETE', async (response) => {
-            console.log('✅ IntaSend COMPLETE:', response);
-            _setIntaSendStatus('processing', '⏳ Payment confirmed! Activating your subscription…');
-            await _activateSubscriptionInSupabase({
-                method:           'IntaSend',
-                transaction_code: response?.invoice_id
-                               || response?.tracking_id
-                               || response?.id
-                               || 'INTASEND-AUTO'
-            });
-        })
-        .on('FAILED', (response) => {
-            console.error('❌ IntaSend FAILED:', response);
-            _setIntaSendStatus('error', `❌ Payment failed: ${response?.failed_reason || 'Unknown error'}. Please try again.`);
-            _resetPayBtn();
-        })
-        .on('IN-PROGRESS', () => {
-            _setIntaSendStatus('info', '📱 Waiting — check your phone for the M-Pesa STK push…');
-        });
+        if (!window.IntaSend) return;
+        if (_intaSendInst) { try { _intaSendInst.off('COMPLETE'); _intaSendInst.off('FAILED'); _intaSendInst.off('IN-PROGRESS'); } catch(_){} }
+        _intaSendInst = new window.IntaSend({ publicAPIKey: INTASEND_PUBLIC_KEY, live: INTASEND_LIVE_MODE })
+            .on('COMPLETE', async (response) => {
+                _setIntaSendStatus('processing', '⏳ Payment confirmed! Activating…');
+                await _activateSubscriptionInSupabase({ method:'IntaSend', transaction_code: response?.invoice_id||response?.tracking_id||response?.id||'INTASEND-AUTO' });
+            })
+            .on('FAILED',      (response) => { _setIntaSendStatus('error', `❌ Payment failed: ${response?.failed_reason||'Unknown'}. Try again.`); _resetPayBtn(); })
+            .on('IN-PROGRESS', ()         => { _setIntaSendStatus('info', '📱 Check your phone for the M-Pesa push…'); });
     }
 
-    // ── TRIGGER INTASEND PAYMENT ───────────────────────────────────────
     function initiateIntaSendPayment() {
-        if (!window.IntaSend) {
-            alert('Payment SDK is still loading. Please wait a moment and try again.');
-            return;
-        }
-
+        if (!window.IntaSend) { alert('Payment SDK still loading. Please wait.'); return; }
         const btn = document.getElementById('subPayOnlineBtn');
-        btn.disabled    = true;
-        btn.textContent = '⏳ Opening payment…';
+        btn.disabled = true; btn.textContent = '⏳ Opening payment…';
         _setIntaSendStatus('');
-
-        // Sync latest data onto the hidden button, then re-init fresh listeners
         _updateSubSummary();
         _initIntaSend();
-
         const triggerBtn = document.getElementById('intasendTriggerBtn');
-        if (triggerBtn) {
-            triggerBtn.click();
-        } else {
-            _resetPayBtn();
-            alert('Payment button not found. Please refresh the page and try again.');
-            return;
-        }
-
-        // Safety re-enable after 10 s (if user closes popup without paying)
+        if (triggerBtn) triggerBtn.click();
+        else { _resetPayBtn(); alert('Payment button not found. Refresh and try again.'); return; }
         setTimeout(_resetPayBtn, 10000);
     }
 
     function _resetPayBtn() {
         const btn = document.getElementById('subPayOnlineBtn');
-        if (btn) {
-            btn.disabled    = false;
-            btn.textContent = `✅ Pay KES ${_selectedPlan.price.toLocaleString()} via M-Pesa / Card`;
-        }
+        if (btn) { btn.disabled = false; btn.textContent = `✅ Pay KES ${_selectedPlan.price.toLocaleString()} via M-Pesa / Card`; }
     }
 
-    // ── STATUS BAR ────────────────────────────────────────────────────
     function _setIntaSendStatus(type, message) {
         const el = document.getElementById('intasendStatus');
         if (!el) return;
         if (!type) { el.className = 'intasend-status-bar'; el.textContent = ''; return; }
-        el.className   = `intasend-status-bar ${type}`;
-        el.textContent = message;
+        el.className = `intasend-status-bar ${type}`; el.textContent = message;
     }
 
-    // ── WRITE TO SUPABASE ──────────────────────────────────────────────
-    // Shared by both IntaSend COMPLETE callback and manual cash activation.
-    async function _activateSubscriptionInSupabase({ method = 'IntaSend', transaction_code = '' } = {}) {
+    async function _activateSubscriptionInSupabase({ method='IntaSend', transaction_code='' } = {}) {
         try {
-            const now       = new Date();
-            const expiresAt = new Date();
+            const now = new Date(); const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + _selectedPlan.days);
-
             const shop   = window.authModule?.getCurrentShop();
             const shopId = shop?.id;
-            if (!shopId) throw new Error('Cannot determine shop. Please log out and log back in.');
-
-            const minimalPayload = {
-                shop_id:    shopId,
-                plan:       _selectedPlan.plan,
-                status:     'active',
-                expires_at: expiresAt.toISOString()
-            };
-            const fullPayload = {
-                ...minimalPayload,
-                started_at:       now.toISOString(),
-                updated_at:       now.toISOString(),
-                payment_method:   method,
-                transaction_code: transaction_code || null
-            };
-
+            if (!shopId) throw new Error('Cannot determine shop. Log out and back in.');
+            const minimalPayload = { shop_id: shopId, plan: _selectedPlan.plan, status: 'active', expires_at: expiresAt.toISOString() };
+            const fullPayload    = { ...minimalPayload, started_at: now.toISOString(), updated_at: now.toISOString(), payment_method: method, transaction_code: transaction_code || null };
             if (window.dataModule?.upsertSubscription) {
                 const r = await window.dataModule.upsertSubscription(fullPayload, minimalPayload);
                 if (!r.success) throw new Error(r.error);
             } else {
-                // Direct Supabase fallback
                 const db = _getDb();
                 if (!db) throw new Error('Supabase client not available.');
-
-                const { data: existing } = await db
-                    .from('subscriptions').select('id')
-                    .eq('shop_id', shopId)
-                    .order('id', { ascending: false }).limit(1).maybeSingle();
-
+                const { data: existing } = await db.from('subscriptions').select('id').eq('shop_id', shopId).order('id', { ascending: false }).limit(1).maybeSingle();
                 let r = existing?.id
                     ? await db.from('subscriptions').update(fullPayload).eq('id', existing.id).eq('shop_id', shopId)
                     : await db.from('subscriptions').insert([fullPayload]);
-
                 if (r.error?.message?.includes('column') || r.error?.message?.includes('schema')) {
-                    console.warn('Full payload failed, retrying minimal:', r.error.message);
                     r = existing?.id
                         ? await db.from('subscriptions').update(minimalPayload).eq('id', existing.id).eq('shop_id', shopId)
                         : await db.from('subscriptions').insert([minimalPayload]);
                 }
                 if (r.error) throw new Error(r.error.message);
             }
-
-            _setIntaSendStatus('success', '🎉 Subscription activated! Reloading the system…');
-            setTimeout(() => {
-                closeSubscriptionModal();
-                document.getElementById('subExpiredOverlay')?.classList.remove('show');
-                window.location.reload();
-            }, 1800);
-
+            _setIntaSendStatus('success', '🎉 Subscription activated! Reloading…');
+            setTimeout(() => { closeSubscriptionModal(); document.getElementById('subExpiredOverlay')?.classList.remove('show'); window.location.reload(); }, 1800);
         } catch (err) {
-            console.error('❌ Supabase activation error:', err);
+            console.error('❌ Activation error:', err);
             _setIntaSendStatus('error', `❌ Activation failed: ${err.message}`);
             _resetPayBtn();
             alert(`❌ Subscription activation failed:\n${err.message}`);
         }
     }
 
-    // ── MANUAL ACTIVATION (cash) ───────────────────────────────────────
     async function activateSubscriptionManual() {
         const txCode = (document.getElementById('subTransactionCode')?.value || '').trim().toUpperCase();
-        if (!txCode) {
-            alert('Please enter the M-Pesa / payment transaction code to activate manually.');
-            return;
-        }
+        if (!txCode) { alert('Please enter the transaction code.'); return; }
         const btn = document.getElementById('subActivateManualBtn');
-        btn.disabled    = true;
-        btn.textContent = '⏳ Activating…';
-        try {
-            await _activateSubscriptionInSupabase({ method: 'Manual', transaction_code: txCode });
-        } finally {
-            btn.disabled    = false;
-            btn.textContent = '✅ Activate Manually';
-        }
+        btn.disabled = true; btn.textContent = '⏳ Activating…';
+        try { await _activateSubscriptionInSupabase({ method:'Manual', transaction_code:txCode }); }
+        finally { btn.disabled = false; btn.textContent = '✅ Activate Manually'; }
     }
 
-    // ── SUPABASE CLIENT RESOLVER ───────────────────────────────────────
     function _getDb() {
-        return window.DukaPOS?.supabaseClient
-            || window._supabaseClient
-            || window.supabaseClient
-            || window.DukaPOS?.client
-            || window.DukaPOS?.supabase
-            || null;
+        return window.DukaPOS?.supabaseClient || window._supabaseClient || window.supabaseClient || window.DukaPOS?.client || window.DukaPOS?.supabase || null;
     }
 
-    // ── NAV BADGE ──────────────────────────────────────────────────────
     function updateSubNavBadge(status) {
         const badge = document.getElementById('subNavBadge');
         const icon  = document.getElementById('subNavIcon');
         const label = document.getElementById('subNavLabel');
         if (!badge) return;
-
         if (!status || status.missing || status.expired) {
-            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)';
-            icon.textContent = '🔒'; label.textContent = 'Expired';
+            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)'; icon.textContent = '🔒'; label.textContent = 'Expired';
         } else if (status.grace) {
-            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)';
-            icon.textContent = '⚠️'; label.textContent = 'Grace Period';
+            badge.style.borderColor = 'var(--danger)'; badge.style.color = 'var(--danger)'; icon.textContent = '⚠️'; label.textContent = 'Grace Period';
         } else if (status.active && status.daysLeft <= 7) {
-            badge.style.borderColor = 'var(--accent-orange)'; badge.style.color = 'var(--accent-orange)';
-            icon.textContent = '⚠️'; label.textContent = `${status.daysLeft}d left`;
+            badge.style.borderColor = 'var(--accent-orange)'; badge.style.color = 'var(--accent-orange)'; icon.textContent = '⚠️'; label.textContent = `${status.daysLeft}d left`;
         } else if (status.active) {
-            badge.style.borderColor = 'var(--accent-green)'; badge.style.color = 'var(--accent-green)';
-            icon.textContent = '✅'; label.textContent = `${status.daysLeft}d left`;
+            badge.style.borderColor = 'var(--accent-green)'; badge.style.color = 'var(--accent-green)'; icon.textContent = '✅'; label.textContent = `${status.daysLeft}d left`;
         }
     }
 
-    // ── APPLY SUBSCRIPTION UI (called on page init) ────────────────────
     async function applySubscriptionUI() {
         const status = await window.subscriptionModule.checkSubscription();
         updateSubNavBadge(status);
-
         if (status.expired || status.missing) {
             document.getElementById('subExpiredOverlay').classList.add('show');
             document.querySelector('.nav')?.classList.add('nav-locked');
-            document.querySelectorAll('.pos-tab-btn').forEach(btn => {
-                btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
-            });
-            document.getElementById('salesTab')?.classList.add('pos-locked');
-            document.getElementById('expensesTab')?.classList.add('pos-locked');
+            document.querySelectorAll('.pos-tab-btn').forEach(btn => { btn.disabled=true; btn.style.opacity='0.4'; btn.style.cursor='not-allowed'; });
             console.warn('🔒 Subscription expired — system locked');
             return false;
         }
-
         if (status.grace) {
             const banner = document.getElementById('subBanner');
             banner.classList.add('grace');
-            document.getElementById('subBannerMsg').textContent =
-                '🚨 Grace period active — subscription expired. Renew immediately to keep access!';
+            document.getElementById('subBannerMsg').textContent = '🚨 Grace period active — renew immediately!';
             banner.style.display = 'flex';
         } else if (status.active && status.daysLeft <= 7) {
             const banner = document.getElementById('subBanner');
             banner.classList.add('warning');
-            document.getElementById('subBannerMsg').textContent =
-                `⚠️ Subscription expires in ${status.daysLeft} day${status.daysLeft !== 1 ? 's' : ''}. Renew to avoid interruption.`;
+            document.getElementById('subBannerMsg').textContent = `⚠️ Subscription expires in ${status.daysLeft} day${status.daysLeft !== 1 ? 's' : ''}.`;
             banner.style.display = 'flex';
         }
-
         return true;
     }
     </script>
 
-    <!-- ── LOYALTY CONFIG + MESSAGING + TABS + EXPENSES + POS CORE ─── -->
+    <!-- ── LOYALTY + MESSAGING + TABS + EXPENSES + POS CORE ── -->
     <script>
     const POINTS_PER_KES = 1;
     const POINTS_TO_KES  = 100;
 
-    // ─────────────────────────────────────────────
-    // MESSAGING
-    // ─────────────────────────────────────────────
+    // ── MESSAGING ──
     let messagesCheckInterval = null;
 
     function toggleMessagesPopup() {
@@ -1066,10 +899,10 @@
     document.addEventListener('click', function(e) {
         const popup = document.getElementById('messagesPopup');
         const bell  = document.getElementById('messageBell');
-        if (popup && bell && popup.classList.contains('active')) {
-            if (!popup.contains(e.target) && !bell.contains(e.target)) popup.classList.remove('active');
-        }
+        if (popup && bell && popup.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target))
+            popup.classList.remove('active');
     });
+
     async function loadUserMessages() {
         try {
             const result = await window.messagingModule.getAllMessages(20);
@@ -1082,21 +915,20 @@
                 const sentAt    = new Date(msg.created_at);
                 const expiresAt = new Date(msg.expires_at);
                 const hoursLeft = Math.round((expiresAt - new Date()) / 3600000);
-                const senderId  = msg.sender?.id || 'unknown';
                 return `<div class="message-item ${msg.is_read ? '' : 'unread'}">
                     <div class="message-header"><div class="message-sender">👤 ${msg.sender?.full_name || 'Administrator'}</div><div class="message-time">${getTimeAgo(sentAt)}</div></div>
                     <div class="message-text">${escapeHtml(msg.message_text)}</div>
                     <div class="message-footer">
                         <div class="message-expiry">${hoursLeft > 0 ? `Expires in ${hoursLeft}h` : 'Expired'}</div>
                         <div>
-                            ${!msg.is_read ? `<button class="mark-read-btn" onclick="markMessageRead(${msg.id})">✓ Mark as Read</button>` : ''}
-                            <button class="reply-btn" onclick="replyToMessage(${senderId})">↩ Reply</button>
+                            ${!msg.is_read ? `<button class="mark-read-btn" onclick="markMessageRead(${msg.id})">✓ Read</button>` : ''}
+                            <button class="reply-btn" onclick="replyToMessage(${msg.sender?.id || 'unknown'})">↩ Reply</button>
                         </div>
                     </div>
                 </div>`;
             }).join('');
         } catch (err) {
-            document.getElementById('messagesList').innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">⚠️</div><p>Error loading messages</p></div>`;
+            document.getElementById('messagesList').innerHTML = `<div class="empty-messages"><div class="empty-messages-icon">⚠️</div><p>Error loading</p></div>`;
         }
     }
     async function replyToMessage(senderId) {
@@ -1116,7 +948,7 @@
             const result = await window.messagingModule.getUnreadCount();
             const badge  = document.getElementById('messageBadge');
             const count  = result.success ? (result.count || 0) : 0;
-            badge.textContent  = count > 99 ? '99+' : count;
+            badge.textContent   = count > 99 ? '99+' : count;
             badge.style.display = count > 0 ? 'flex' : 'none';
         } catch { document.getElementById('messageBadge').style.display = 'none'; }
     }
@@ -1128,14 +960,9 @@
         return `${Math.floor(s/86400)}d ago`;
     }
     function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
-    function initializeMessageNotifications() {
-        updateUnreadCount();
-        messagesCheckInterval = setInterval(updateUnreadCount, 30000);
-    }
+    function initializeMessageNotifications() { updateUnreadCount(); messagesCheckInterval = setInterval(updateUnreadCount, 30000); }
 
-    // ─────────────────────────────────────────────
-    // TAB SWITCHING
-    // ─────────────────────────────────────────────
+    // ── TAB SWITCHING ──
     function switchTab(tab) {
         document.querySelectorAll('.pos-tab-btn').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1149,19 +976,15 @@
         }
     }
 
-    // ─────────────────────────────────────────────
-    // EXPENSES
-    // ─────────────────────────────────────────────
+    // ── EXPENSES ──
     function openAddExpenseModal() {
         document.getElementById('expenseDate').valueAsDate = new Date();
         document.getElementById('addExpenseModal').classList.add('show');
-        document.getElementById('saveExpenseBtn').disabled = false;
+        document.getElementById('saveExpenseBtn').disabled    = false;
         document.getElementById('saveExpenseBtn').textContent = 'Save Expense';
     }
-    function closeAddExpenseModal() {
-        document.getElementById('addExpenseModal').classList.remove('show');
-        document.getElementById('expenseForm').reset();
-    }
+    function closeAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('show'); document.getElementById('expenseForm').reset(); }
+
     async function loadExpenses() {
         try {
             const result = await window.dataModule.getAllExpenses();
@@ -1175,7 +998,7 @@
     function renderExpenses(expenses) {
         const c = document.getElementById('expensesList');
         if (!expenses.length) {
-            c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:3rem;margin-bottom:10px;">📊</div><p>No expenses recorded yet</p></div>`;
+            c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);"><div style="font-size:2.5rem;margin-bottom:10px;">📊</div><p>No expenses recorded yet</p></div>`;
             return;
         }
         c.innerHTML = expenses.map(e =>
@@ -1189,30 +1012,28 @@
         ).join('');
     }
     function calculateExpenseStats(expenses) {
-        const now       = new Date();
-        const today     = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const weekStart = new Date(today); weekStart.setDate(today.getDate() - today.getDay());
+        const now        = new Date();
+        const today      = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const weekStart  = new Date(today); weekStart.setDate(today.getDate() - today.getDay());
         const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
         const yearStart  = new Date(now.getFullYear(), 0, 1);
         let t=0, w=0, m=0, y=0;
         expenses.forEach(e => {
             const d = new Date(e.date); const a = parseFloat(e.amount);
-            if (d >= today) t += a;
-            if (d >= weekStart) w += a;
-            if (d >= monthStart) m += a;
-            if (d >= yearStart) y += a;
+            if (d >= today) t += a; if (d >= weekStart) w += a; if (d >= monthStart) m += a; if (d >= yearStart) y += a;
         });
         document.getElementById('todayExpenses').textContent = `KES ${t.toFixed(2)}`;
         document.getElementById('weekExpenses').textContent  = `KES ${w.toFixed(2)}`;
         document.getElementById('monthExpenses').textContent = `KES ${m.toFixed(2)}`;
         document.getElementById('yearExpenses').textContent  = `KES ${y.toFixed(2)}`;
     }
+
     document.getElementById('expenseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('saveExpenseBtn');
         btn.disabled = true; btn.textContent = 'Saving...';
         let user = authModule.getCurrentUser();
-        if (!user) { const j = localStorage.getItem('duka_user'); if(j) try { user = JSON.parse(j); } catch{} }
+        if (!user) { const j = localStorage.getItem('duka_user'); if(j) try { user=JSON.parse(j); } catch{} }
         if (!user?.id) { btn.disabled=false; btn.textContent='Save Expense'; alert('Session expired. Please log in again.'); return; }
         try {
             const result = await window.dataModule.createExpense({
@@ -1229,9 +1050,7 @@
         finally { btn.disabled=false; btn.textContent='Save Expense'; }
     });
 
-    // ─────────────────────────────────────────────
-    // POS CORE
-    // ─────────────────────────────────────────────
+    // ── POS CORE ──
     (function() {
         let cart             = [];
         let products         = [];
@@ -1248,14 +1067,8 @@
                 const currentUser = authModule.getCurrentUser();
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
                 if (window.setupNavigationForRole) window.setupNavigationForRole();
-
-                // ── SUBSCRIPTION CHECK ──
                 const canProceed = await applySubscriptionUI();
-                if (!canProceed) {
-                    setTimeout(initializeMessageNotifications, 1000);
-                    return;
-                }
-
+                if (!canProceed) { setTimeout(initializeMessageNotifications, 1000); return; }
                 await Promise.all([loadProducts(), loadCustomers()]);
                 setupEventListeners();
                 setTimeout(initializeMessageNotifications, 1000);
@@ -1266,7 +1079,6 @@
             }
         });
 
-        // ── PRODUCTS ──────────────────────────────────────────────────
         async function loadProducts() {
             try {
                 const result = await window.dataModule.getAllProducts();
@@ -1275,8 +1087,7 @@
                 renderProducts(products);
                 renderCategoryButtons();
             } catch (err) {
-                document.getElementById('productsGrid').innerHTML =
-                    '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load products</div>';
+                document.getElementById('productsGrid').innerHTML = '<div style="text-align:center;padding:40px;color:var(--danger);">Failed to load products</div>';
             }
         }
         function renderCategoryButtons() {
@@ -1312,7 +1123,6 @@
             ).join('');
         }
 
-        // ── CUSTOMERS ─────────────────────────────────────────────────
         async function loadCustomers() {
             try {
                 const result = await window.dataModule.getAllCustomers();
@@ -1327,24 +1137,17 @@
             input.addEventListener('input', () => {
                 const q = input.value.trim().toLowerCase();
                 if (!q) { dropdown.classList.remove('open'); return; }
-                const matches = allCustomers.filter(c =>
-                    c.name?.toLowerCase().includes(q) || c.phone?.includes(q)
-                ).slice(0, 8);
-                if (!matches.length) {
-                    dropdown.innerHTML = '<div class="customer-option" style="color:var(--text-muted);">No customers found</div>';
-                    dropdown.classList.add('open'); return;
-                }
+                const matches = allCustomers.filter(c => c.name?.toLowerCase().includes(q) || c.phone?.includes(q)).slice(0, 8);
+                if (!matches.length) { dropdown.innerHTML = '<div class="customer-option" style="color:var(--text-muted);">No customers found</div>'; dropdown.classList.add('open'); return; }
                 dropdown.innerHTML = matches.map(c =>
                     `<div class="customer-option" onclick="selectCustomer(${c.id})">
                         <div class="customer-opt-name">👤 ${c.name}</div>
-                        <div class="customer-opt-pts">${c.phone || ''} • ${c.loyalty_points || 0} pts</div>
+                        <div class="customer-opt-pts">${c.phone||''} • ${c.loyalty_points||0} pts</div>
                     </div>`
                 ).join('');
                 dropdown.classList.add('open');
             });
-            document.addEventListener('click', e => {
-                if (!e.target.closest('.customer-search-wrap')) dropdown.classList.remove('open');
-            });
+            document.addEventListener('click', e => { if (!e.target.closest('.customer-search-wrap')) dropdown.classList.remove('open'); });
         }
         window.selectCustomer = function(id) {
             selectedCustomer = allCustomers.find(c => c.id === id);
@@ -1369,7 +1172,7 @@
             card.innerHTML = `
                 <div class="selected-customer-info">
                     <div class="cust-name">👤 ${selectedCustomer.name}</div>
-                    <div class="cust-pts">⭐ ${pts} loyalty points available</div>
+                    <div class="cust-pts">⭐ ${pts} loyalty points</div>
                 </div>
                 ${pts >= 100 ? `<button class="redeem-btn" onclick="openRedeemModal()">🎁 Redeem</button>` : ''}`;
             renderRedeemBadge();
@@ -1378,24 +1181,19 @@
             const badge = document.getElementById('redeemBadge');
             if (redeemedPoints > 0) {
                 badge.style.display = 'flex';
-                badge.innerHTML = `<span>🎁 Redeeming ${redeemedPoints} pts = KES ${(redeemedPoints / POINTS_TO_KES).toFixed(2)} off</span>
+                badge.innerHTML = `<span>🎁 ${redeemedPoints} pts = KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off</span>
                     <button class="remove-redeem" onclick="removeRedemption()">✕</button>`;
             } else { badge.style.display = 'none'; }
         }
 
-        // ── REDEEM MODAL ──────────────────────────────────────────────
         window.openRedeemModal = function() {
             if (!selectedCustomer) return;
-            document.getElementById('redeemCustomerName').textContent = selectedCustomer.name;
-            document.getElementById('redeemAvailablePoints').textContent = `${selectedCustomer.loyalty_points || 0} pts`;
+            document.getElementById('redeemCustomerName').textContent      = selectedCustomer.name;
+            document.getElementById('redeemAvailablePoints').textContent   = `${selectedCustomer.loyalty_points||0} pts`;
             const input = document.getElementById('redeemPointsInput');
-            input.value = '';
-            input.max   = selectedCustomer.loyalty_points || 0;
+            input.value = ''; input.max = selectedCustomer.loyalty_points || 0;
             document.getElementById('redeemEquivalent').textContent = '= KES 0.00 discount';
-            input.oninput = () => {
-                const v = parseInt(input.value) || 0;
-                document.getElementById('redeemEquivalent').textContent = `= KES ${(v / POINTS_TO_KES).toFixed(2)} discount`;
-            };
+            input.oninput = () => { const v = parseInt(input.value)||0; document.getElementById('redeemEquivalent').textContent = `= KES ${(v/POINTS_TO_KES).toFixed(2)} discount`; };
             document.getElementById('redeemModal').classList.add('show');
         };
         window.closeRedeemModal = function() { document.getElementById('redeemModal').classList.remove('show'); };
@@ -1403,17 +1201,13 @@
             const input     = document.getElementById('redeemPointsInput');
             const pts       = parseInt(input.value) || 0;
             const available = selectedCustomer?.loyalty_points || 0;
-            if (pts < 100)           { alert('Minimum redemption is 100 points.'); return; }
-            if (pts > available)     { alert(`You only have ${available} points available.`); return; }
-            if (pts % 100 !== 0)     { alert('Points must be in multiples of 100.'); return; }
-            redeemedPoints = pts;
-            closeRedeemModal();
-            renderRedeemBadge();
-            updateCartSummary();
+            if (pts < 100)        { alert('Minimum redemption is 100 points.'); return; }
+            if (pts > available)  { alert(`You only have ${available} points available.`); return; }
+            if (pts % 100 !== 0)  { alert('Points must be in multiples of 100.'); return; }
+            redeemedPoints = pts; closeRedeemModal(); renderRedeemBadge(); updateCartSummary();
         };
         window.removeRedemption = function() { redeemedPoints = 0; renderRedeemBadge(); updateCartSummary(); };
 
-        // ── CART ──────────────────────────────────────────────────────
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
@@ -1423,7 +1217,7 @@
                 if (existing.quantity >= product.stock) { alert('Cannot add more than available stock!'); return; }
                 existing.quantity++;
             } else {
-                cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1, maxStock: product.stock });
+                cart.push({ id:product.id, name:product.name, price:product.price, quantity:1, maxStock:product.stock });
             }
             renderCart();
         };
@@ -1431,10 +1225,8 @@
             const container = document.getElementById('cartItems');
             const btn       = document.getElementById('checkoutBtn');
             if (!cart.length) {
-                container.innerHTML = `<div class="empty-cart"><div style="font-size:3rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>`;
-                btn.disabled = true;
-                updateCartSummary();
-                return;
+                container.innerHTML = `<div class="empty-cart"><div style="font-size:2.5rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>`;
+                btn.disabled = true; updateCartSummary(); return;
             }
             container.innerHTML = cart.map(item =>
                 `<div class="cart-item">
@@ -1450,8 +1242,7 @@
                     </div>
                 </div>`
             ).join('');
-            btn.disabled = false;
-            updateCartSummary();
+            btn.disabled = false; updateCartSummary();
         }
         window.updateQuantity = function(productId, change) {
             const item   = cart.find(i => i.id === productId);
@@ -1459,10 +1250,10 @@
             const newQty = item.quantity + change;
             if (newQty <= 0) { removeFromCart(productId); return; }
             if (newQty > item.maxStock) { alert('Cannot exceed available stock!'); return; }
-            item.quantity = newQty;
-            renderCart();
+            item.quantity = newQty; renderCart();
         };
         window.removeFromCart = function(productId) { cart = cart.filter(i => i.id !== productId); renderCart(); };
+
         function updateCartSummary() {
             const itemCount  = cart.reduce((s, i) => s + i.quantity, 0);
             const subtotal   = cart.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -1474,45 +1265,35 @@
             document.getElementById('subtotalAmount').textContent = `KES ${subtotal.toFixed(2)}`;
 
             const discountRow = document.getElementById('discountRow');
-            if (discount > 0) {
-                discountRow.style.display = 'flex';
-                document.getElementById('discountAmount').textContent = `- KES ${discount.toFixed(2)}`;
-            } else { discountRow.style.display = 'none'; }
+            if (discount > 0) { discountRow.style.display='flex'; document.getElementById('discountAmount').textContent = `- KES ${discount.toFixed(2)}`; }
+            else { discountRow.style.display = 'none'; }
 
             document.getElementById('totalAmount').textContent = `KES ${total.toFixed(2)}`;
 
             const earnNote = document.getElementById('loyaltyEarnNote');
             if (selectedCustomer && itemCount > 0) {
                 earnNote.style.display = 'block';
-                earnNote.textContent   = `⭐ ${selectedCustomer.name} will earn ${pointsEarned} loyalty point${pointsEarned !== 1 ? 's' : ''} on this purchase`;
+                earnNote.textContent   = `⭐ ${selectedCustomer.name} earns ${pointsEarned} pts`;
             } else { earnNote.style.display = 'none'; }
         }
 
-        // ── EVENTS ────────────────────────────────────────────────────
         function setupEventListeners() {
             document.getElementById('searchInput').addEventListener('input', e => {
                 const q = e.target.value.toLowerCase();
-                renderProducts(products.filter(p =>
-                    p.name.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q)
-                ));
+                renderProducts(products.filter(p => p.name.toLowerCase().includes(q) || p.category?.toLowerCase().includes(q)));
             });
             document.querySelectorAll('.payment-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    selectedPayment = btn.dataset.method;
+                    btn.classList.add('active'); selectedPayment = btn.dataset.method;
                 });
             });
             document.getElementById('checkoutBtn').addEventListener('click', checkout);
         }
 
-        // ── CHECKOUT ──────────────────────────────────────────────────
         async function checkout() {
             if (!cart.length) return;
-            if (!window.subscriptionModule.isAccessAllowed()) {
-                openSubscriptionModal();
-                return;
-            }
+            if (!window.subscriptionModule.isAccessAllowed()) { openSubscriptionModal(); return; }
             const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
             const discount = redeemedPoints / POINTS_TO_KES;
             const total    = Math.max(0, subtotal - discount);
@@ -1523,9 +1304,8 @@
             try {
                 const currentUser = authModule.getCurrentUser();
                 if (!currentUser) throw new Error('Not authenticated');
-
                 const itemsSold  = cartItems.reduce((s, i) => s + i.quantity, 0);
-                const saleItems  = cartItems.map(i => ({ product_id: i.id, quantity: i.quantity, unit_price: i.price }));
+                const saleItems  = cartItems.map(i => ({ product_id:i.id, quantity:i.quantity, unit_price:i.price }));
                 const saleRecord = {
                     user_id:         currentUser.id,
                     total_amount:    total,
@@ -1535,11 +1315,9 @@
                     discount_amount: subtotal - total,
                     points_redeemed: redeemedPoints
                 };
-
                 const saleResult = await window.dataModule.createSale(saleRecord, saleItems);
                 if (!saleResult.success) throw new Error(saleResult.error);
 
-                // Update stock
                 let stockFailed = [];
                 for (const item of cartItems) {
                     const r = await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
@@ -1547,47 +1325,40 @@
                 }
                 if (stockFailed.length) alert('Sale complete, but stock update failed for: ' + stockFailed.join(', '));
 
-                // ── LOYALTY POINTS ──
                 let pointsEarned  = 0;
                 let newTotalPoints = 0;
                 if (selectedCustomer) {
-                    pointsEarned         = Math.floor(total * POINTS_PER_KES);
-                    const currentPts     = selectedCustomer.loyalty_points || 0;
-                    const afterRedeem    = Math.max(0, currentPts - redeemedPoints);
-                    newTotalPoints       = afterRedeem + pointsEarned;
-
-                    const loyaltyResult  = await window.dataModule.updateCustomer(selectedCustomer.id, { loyalty_points: newTotalPoints });
+                    pointsEarned      = Math.floor(total * POINTS_PER_KES);
+                    const currentPts  = selectedCustomer.loyalty_points || 0;
+                    const afterRedeem = Math.max(0, currentPts - redeemedPoints);
+                    newTotalPoints    = afterRedeem + pointsEarned;
+                    const loyaltyResult = await window.dataModule.updateCustomer(selectedCustomer.id, { loyalty_points: newTotalPoints });
                     if (!loyaltyResult.success) console.warn('Loyalty points update failed:', loyaltyResult.error);
                     else {
                         const idx = allCustomers.findIndex(c => c.id === selectedCustomer.id);
                         if (idx !== -1) allCustomers[idx].loyalty_points = newTotalPoints;
-                        console.log(`✅ Loyalty: -${redeemedPoints} redeemed, +${pointsEarned} earned → total ${newTotalPoints}`);
                     }
                 }
 
-                // Show success modal
                 document.getElementById('saleTotal').textContent = `KES ${total.toFixed(2)}`;
                 const loyaltySection = document.getElementById('loyaltyEarnedSection');
                 if (selectedCustomer && (pointsEarned > 0 || redeemedPoints > 0)) {
                     loyaltySection.style.display = 'block';
                     loyaltySection.innerHTML = `<div class="loyalty-earned">
-                        <div class="loyalty-earned-title">⭐ Loyalty Points for ${selectedCustomer.name}</div>
-                        ${redeemedPoints > 0 ? `<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:4px;">🎁 Redeemed: ${redeemedPoints} pts (KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off)</div>` : ''}
+                        <div class="loyalty-earned-title">⭐ Loyalty — ${selectedCustomer.name}</div>
+                        ${redeemedPoints > 0 ? `<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">🎁 Redeemed: ${redeemedPoints} pts (KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off)</div>` : ''}
                         <div class="loyalty-earned-pts">+${pointsEarned} pts earned</div>
-                        <div class="loyalty-total">Total balance: ${newTotalPoints} pts</div>
+                        <div class="loyalty-total">Total: ${newTotalPoints} pts</div>
                     </div>`;
                 } else { loyaltySection.style.display = 'none'; }
 
                 document.getElementById('successModal').classList.add('show');
-
-                // Reset
                 cart = []; selectedCustomer = null; redeemedPoints = 0;
                 document.getElementById('customerSearchInput').value = '';
                 document.getElementById('selectedCustomerCard').style.display = 'none';
                 document.getElementById('redeemBadge').style.display = 'none';
                 renderCart();
                 await loadProducts();
-
             } catch (err) {
                 console.error('Checkout error:', err);
                 alert('Checkout failed: ' + err.message);
@@ -1597,16 +1368,12 @@
         window.closeSuccessModal = function() { document.getElementById('successModal').classList.remove('show'); };
     })();
 
-    window.addEventListener('beforeunload', () => {
-        if (messagesCheckInterval) clearInterval(messagesCheckInterval);
-    });
+    window.addEventListener('beforeunload', () => { if (messagesCheckInterval) clearInterval(messagesCheckInterval); });
     </script>
-    <footer style="text-align: center; padding: 15px; background-color: black;">
-  <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
-</footer>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+    <footer style="text-align:center;padding:15px;background-color:black;">
+        <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color:gold;font-family:'Great Vibes',cursive;"> Gordon Onyango.</b> All rights reserved.</p>
+    </footer>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>
