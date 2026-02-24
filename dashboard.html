@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <script>
-        // ── EARLY ROLE REDIRECT ──
         (function() {
             const keys = ['currentUser', 'user', 'duka_user', 'gh_user', 'pos_user', 'auth_user'];
             let role = null;
@@ -56,19 +55,12 @@
             --accent-green: #3fb950;
             --danger: #f85149;
         }
-
         * { box-sizing: border-box; }
-
         body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
-
         .container { max-width: 1600px; margin: 0 auto; padding: 20px 16px; }
-
-        /* ── PAGE HEADER ── */
         .page-header { margin-bottom: 24px; }
         .page-header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; margin-bottom: 8px; }
-        .page-header p  { font-size: 0.9rem; color: var(--text-muted); }
-
-        /* ── STATS GRID ── */
+        .page-header p { font-size: 0.9rem; color: var(--text-muted); }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
@@ -80,44 +72,33 @@
         .stat-title { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
         .stat-value { font-size: clamp(1.6rem, 4vw, 2.5rem); font-weight: 900; color: var(--accent-orange); word-break: break-all; }
         .stat-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
-
-        /* ── CHARTS ── */
         .chart-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; overflow: hidden; }
         .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
         .chart-title { font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 700; }
-
-        /* ── DATE RANGE ── */
         .date-range { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .date-input { padding: 8px 10px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.85rem; min-width: 0; flex: 1 1 120px; max-width: 180px; }
         .btn { padding: 9px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; white-space: nowrap; }
         .btn:hover { transform: translateY(-2px); }
-        .btn-primary  { background: var(--accent-green); color: white; }
-        .btn-secondary{ background: var(--accent-blue);  color: white; }
-        .btn-small    { padding: 6px 12px; font-size: 0.8rem; }
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-secondary{ background: var(--accent-blue); color: white; }
+        .btn-small { padding: 6px 12px; font-size: 0.8rem; }
         .btn-danger-sm{ padding: 6px 12px; font-size: 0.8rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s; font-weight: 600; }
         .btn-danger-sm:hover{ background: rgba(248,81,73,0.12); color: var(--danger); border-color: var(--danger); }
-
-        /* ── TABLE ── */
         .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .table { width: 100%; border-collapse: collapse; min-width: 500px; }
         th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
         th { background: var(--bg-tertiary); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.78rem; }
         tr:hover { background: rgba(88,166,255,0.08); }
-
         .top-cashier { background: rgba(63,185,80,0.15); padding: 14px; border-radius: 10px; margin-top: 16px; font-size: 0.9rem; }
-        .loading     { text-align: center; padding: 40px; color: var(--text-muted); }
+        .loading { text-align: center; padding: 40px; color: var(--text-muted); }
         .error-message{ color: var(--danger); text-align: center; padding: 40px; }
         .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
         .empty-state-icon { font-size: 3.5rem; margin-bottom: 16px; }
-        .info-box    { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 0.9rem; }
-
-        /* ── NOTIFICATION BELL ── */
+        .info-box { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 0.9rem; }
         .message-notification-bell { position: relative; cursor: pointer; font-size: 1.4rem; padding: 8px 10px; border-radius: 8px; transition: background 0.2s; }
         .message-notification-bell:hover { background: rgba(88,166,255,0.1); }
         .message-badge { position: absolute; top: 4px; right: 4px; background: #f85149; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; box-shadow: 0 0 0 2px var(--bg-primary); min-width: 18px; animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
-
-        /* ── MESSAGES POPUP ── */
         .messages-popup { position: fixed; top: 70px; right: 10px; width: min(480px, calc(100vw - 20px)); max-height: 80vh; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 9999; display: none; flex-direction: column; overflow: hidden; }
         .messages-popup.active { display: flex; }
         .messages-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary); }
@@ -143,15 +124,13 @@
         .rej-dismissed-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; display: flex; align-items: center; gap: 5px; }
         .message-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.85rem; color: var(--text-muted); flex-wrap: wrap; gap: 4px; }
         .message-sender { font-weight: 600; color: var(--accent-orange); }
-        .message-time   { font-size: 0.78rem; }
-        .message-text   { color: var(--text); line-height: 1.4; word-break: break-word; font-size: 0.9rem; }
-        .mark-read-btn  { background: var(--accent-green); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; margin-top: 8px; }
+        .message-time { font-size: 0.78rem; }
+        .message-text { color: var(--text); line-height: 1.4; word-break: break-word; font-size: 0.9rem; }
+        .mark-read-btn { background: var(--accent-green); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; margin-top: 8px; }
         .mark-read-btn:hover { background: #2ea043; }
-        .reply-btn      { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; margin-top: 8px; margin-left: 6px; }
+        .reply-btn { background: var(--accent-blue); color: white; border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.78rem; cursor: pointer; font-weight: 600; margin-top: 8px; margin-left: 6px; }
         .empty-messages { text-align: center; padding: 40px 16px; color: var(--text-muted); }
         .empty-messages-icon { font-size: 3rem; margin-bottom: 10px; }
-
-        /* ── POPUP TABS ── */
         .popup-tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
         .popup-tab { flex: 1; padding: 10px 8px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
         .popup-tab:hover { color: var(--text); }
@@ -159,16 +138,12 @@
         .popup-tab.tab-staff.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
         .popup-section { display: none; }
         .popup-section.active { display: block; }
-
-        /* ── STATUS BADGES ── */
-        .status-badge     { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
-        .status-pending   { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
-        .status-processing{ background: rgba(88,166,255,0.15);  color: var(--accent-blue); }
-        .status-shipped   { background: rgba(139,92,246,0.15);  color: #a78bfa; }
-        .status-delivered { background: rgba(16,185,129,0.15);  color: #10b981; }
-        .status-cancelled { background: rgba(248,81,73,0.15);   color: var(--danger); }
-
-        /* ── DASHBOARD TABS ── */
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
+        .status-pending { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+        .status-processing{ background: rgba(88,166,255,0.15); color: var(--accent-blue); }
+        .status-shipped { background: rgba(139,92,246,0.15); color: #a78bfa; }
+        .status-delivered { background: rgba(16,185,129,0.15); color: #10b981; }
+        .status-cancelled { background: rgba(248,81,73,0.15); color: var(--danger); }
         .dashboard-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .dashboard-tabs::-webkit-scrollbar { display: none; }
         .dashboard-tab { padding: 10px 18px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--text-muted); font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
@@ -176,13 +151,9 @@
         .dashboard-tab.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        /* ── SUPPLIER CARDS ── */
         .supplier-order-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 14px; }
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
         .order-id { font-size: 1.1rem; font-weight: 700; color: var(--accent-orange); }
-
-        /* ── CONTACT MODAL ── */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 10000; align-items: center; justify-content: center; padding: 16px; }
         .modal-overlay.show { display: flex; }
         .modal-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 14px; padding: 24px; width: 100%; max-width: 480px; }
@@ -190,42 +161,71 @@
         .modal-box textarea { width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Archivo', sans-serif; font-size: 0.92rem; resize: vertical; min-height: 100px; margin-bottom: 14px; }
         .modal-box textarea:focus { outline: none; border-color: var(--accent-blue); }
         .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .modal-btn-send   { background: var(--accent-blue);    color: white; }
+        .modal-btn-send { background: var(--accent-blue); color: white; }
         .modal-btn-send:hover { background: #3b8de8; }
         .modal-btn-cancel { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
         .modal-btn-cancel:hover { color: var(--text); }
-
-        /* ── MESSAGING TAB TEXTAREA ── */
         #messageText { box-sizing: border-box; }
-
-        /* ════════════════════════════════════
-           PORTRAIT / MOBILE  (≤ 768 px)
-           ════════════════════════════════════ */
+        .insight-card {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .insight-card strong { color: var(--accent-orange); }
+        .insight-card.danger { background: rgba(248,81,73,0.08); border-color: rgba(248,81,73,0.4); }
+        .insight-card.danger strong { color: var(--danger); }
+        .heatmap-container {
+            position: relative;
+            height: 340px;
+            margin: 16px 0;
+        }
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 3px; }
+        .segment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        .segment-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+        .segment-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--accent-blue); }
+        .export-btn {
+            background: var(--accent-blue);
+            color: white;
+            margin-left: auto;
+        }
+        .export-btn:hover { background: #3b8de8; }
         @media (max-width: 768px) {
-
             .container { padding: 12px; }
-
-            /* Header */
             .page-header { margin-bottom: 16px; }
             .page-header p { font-size: 0.82rem; }
-
-            /* Stats – 2 columns on small phones */
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-            .stat-card   { padding: 14px 12px; }
-            .stat-value  { font-size: 1.35rem; }
-            .stat-title  { font-size: 0.78rem; }
-
-            /* Date range – stack inputs */
+            .stat-card { padding: 14px 12px; }
+            .stat-value { font-size: 1.35rem; }
+            .stat-title { font-size: 0.78rem; }
             .date-range { gap: 6px; }
             .date-input { max-width: 100%; flex: 1 1 100px; font-size: 0.8rem; padding: 7px 8px; }
-            .btn        { padding: 8px 12px; font-size: 0.8rem; }
-
-            /* Charts */
+            .btn { padding: 8px 12px; font-size: 0.8rem; }
             .chart-container { padding: 14px; }
             .chart-title { font-size: 1rem; }
             canvas { max-height: 260px !important; }
-
-            /* Tables – horizontal scroll hint */
             .table-container::before {
                 content: '← scroll →';
                 display: block;
@@ -235,51 +235,47 @@
                 margin-bottom: 6px;
             }
             th, td { padding: 10px 8px; font-size: 0.8rem; }
-
-            /* Supplier order grid */
             .supplier-order-card > div[style*="grid"] {
                 grid-template-columns: 1fr 1fr !important;
             }
-
-            /* Messaging textarea */
             #messageText { min-height: 80px; font-size: 0.9rem; }
-
-            /* Popup */
             .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 75vh; }
-
-            /* Modal */
             .modal-box { padding: 18px; }
             .modal-actions { flex-direction: column; }
             .modal-actions .btn, .modal-actions button { width: 100%; }
-
-            /* Top cashier / top spender box */
             .top-cashier { font-size: 0.85rem; padding: 10px 12px; }
-
-            /* Sent messages table column hiding on tiny screens */
             #sentMessagesTable td:nth-child(5),
             #sentMessagesTable th:nth-child(5) { display: none; }
         }
-
         @media (max-width: 400px) {
             .stats-grid { grid-template-columns: 1fr; }
-            .stat-value  { font-size: 1.6rem; }
+            .stat-value { font-size: 1.6rem; }
             .dashboard-tab { padding: 8px 12px; font-size: 0.82rem; }
+        }
+        @media (orientation: landscape) and (max-width: 896px) {
+            body::before {
+                content: "For best experience, use portrait mode";
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 12px;
+                z-index: 9999; display: none;
+            }
         }
     </style>
 </head>
 <body style="visibility:hidden;">
+
     <nav class="nav">
         <div class="nav-container">
             <div class="logo"><img src="assets/icons/icon-512x512.png" alt="Logo" class="logo">
-<style>.logo { width: 100px; height: auto; }</style></div>
+            <style>.logo { width: 100px; height: auto; }</style></div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab active" id="dashboardLink" style="display:none;">Dashboard</a>
-                <a href="pos.html"        class="nav-tab"        id="posLink"        style="display:none;">Point of Sale</a>
-                <a href="products.html"   class="nav-tab"        id="productsLink"   style="display:none;">Products</a>
-                <a href="inventory.html"  class="nav-tab"        id="inventoryLink"  style="display:none;">Inventory</a>
-                <a href="customers.html"  class="nav-tab"        id="customersLink"  style="display:none;">Customers</a>
-                <a href="supply-requests.html" class="nav-tab"   id="suppliersLink"  style="display:none;">Suppliers</a>
-                <a href="admin.html"      class="nav-tab"        id="adminTab"       style="display:none;">Users</a>
+                <a href="pos.html" class="nav-tab" id="posLink" style="display:none;">Point of Sale</a>
+                <a href="products.html" class="nav-tab" id="productsLink" style="display:none;">Products</a>
+                <a href="inventory.html" class="nav-tab" id="inventoryLink" style="display:none;">Inventory</a>
+                <a href="customers.html" class="nav-tab" id="customersLink" style="display:none;">Customers</a>
+                <a href="supply-requests.html" class="nav-tab" id="suppliersLink" style="display:none;">Suppliers</a>
+                <a href="admin.html" class="nav-tab" id="adminTab" style="display:none;">Users</a>
             </div>
             <div class="nav-right">
                 <div class="user-badge">
@@ -302,7 +298,6 @@
         </div>
     </nav>
 
-    <!-- Messages Popup -->
     <div class="messages-popup" id="messagesPopup">
         <div class="messages-header">
             <h3>🔔 Notifications</h3>
@@ -325,7 +320,6 @@
         </div>
     </div>
 
-    <!-- Contact Supplier Modal -->
     <div class="modal-overlay" id="contactSupplierModal">
         <div class="modal-box">
             <h3>💬 Contact Supplier</h3>
@@ -335,7 +329,7 @@
             </p>
             <textarea id="contactSupplierMessage" placeholder="e.g. Could you clarify why this was rejected?"></textarea>
             <div class="modal-actions">
-                <button class="btn modal-btn-send"   id="contactSendBtn" onclick="sendContactMessage()">📤 Send Message</button>
+                <button class="btn modal-btn-send" id="contactSendBtn" onclick="sendContactMessage()">📤 Send Message</button>
                 <button class="btn modal-btn-cancel" onclick="closeContactModal()">Cancel</button>
             </div>
         </div>
@@ -353,19 +347,21 @@
             <button class="dashboard-tab" onclick="switchDashboardTab('messaging', this)">💬 Staff Messaging</button>
         </div>
 
-        <!-- Analytics Tab -->
         <div id="analyticsTab" class="tab-content active">
             <div class="info-box" id="infoBox" style="display:none;">
                 <strong>ℹ️ Quick Tip:</strong> <span id="infoText"></span>
             </div>
 
-            <div class="date-range">
-                <input type="date" id="startDate" class="date-input">
-                <input type="date" id="endDate"   class="date-input">
-                <button class="btn btn-primary"   onclick="loadDashboard()">Refresh</button>
-                <button class="btn btn-secondary" onclick="setDateRange('today')">Today</button>
-                <button class="btn btn-secondary" onclick="setDateRange('week')">Week</button>
-                <button class="btn btn-secondary" onclick="setDateRange('month')">Month</button>
+            <div class="date-range" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <input type="date" id="startDate" class="date-input">
+                    <input type="date" id="endDate" class="date-input">
+                    <button class="btn btn-primary" onclick="loadDashboard()">Refresh</button>
+                    <button class="btn btn-secondary" onclick="setDateRange('today')">Today</button>
+                    <button class="btn btn-secondary" onclick="setDateRange('week')">Week</button>
+                    <button class="btn btn-secondary" onclick="setDateRange('month')">Month</button>
+                </div>
+                <button class="btn export-btn" onclick="exportAnalyticsToCSV()">Export to CSV</button>
             </div>
 
             <div class="stats-grid">
@@ -376,7 +372,102 @@
                 <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
             </div>
 
-            <!-- Sales by Cashier -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2 class="chart-title">Peak Sales Hours</h2>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">Hour vs Day of Week (darker = higher revenue)</p>
+                </div>
+                <div class="heatmap-container">
+                    <canvas id="salesHeatmap" style="max-height:340px;"></canvas>
+                </div>
+                <div class="heatmap-legend">
+                    <div class="legend-item"><div class="legend-color" style="background:#3fb950;"></div>High</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div>Medium</div>
+                    <div class="legend-item"><div class="legend-color" style="background:#f85149;"></div>Low</div>
+                </div>
+                <div id="bestTimeSlots" class="insight-card">
+                    <strong>Best performing time slots:</strong><br>
+                    <span id="topSlots">Loading...</span>
+                </div>
+                <div class="insight-card danger" id="revenueLeakInsight" style="display:none;">
+                    <strong>⚠️ Low performing slot detected</strong><br>
+                    <span id="leakMessage"></span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Customer Overview</h2></div>
+                <div class="stats-grid" style="margin-top:0;">
+                    <div class="stat-card">
+                        <div class="stat-title">New vs Returning</div>
+                        <div class="stat-value" id="newVsReturning">Loading...</div>
+                        <div class="stat-subtitle">New: <span id="newCustomers">0</span> • Returning: <span id="returningCustomers">0</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Customer Lifetime Value (CLV)</div>
+                        <div class="stat-value" id="clv">KES 0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Avg Spend per Customer</div>
+                        <div class="stat-value" id="avgSpend">KES 0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Purchase Behavior</h2></div>
+                <div class="insight-card">
+                    <strong>Most common product combinations:</strong><br>
+                    <ul id="productBundles" style="margin:8px 0 0 20px; padding:0; list-style:disc;">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+                <div class="insight-card">
+                    <strong>Purchase frequency:</strong> Average <span id="purchaseFrequency">—</span> orders per customer<br>
+                    <strong>Time between purchases:</strong> Average <span id="timeBetweenPurchases">—</span> days
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Customer Segmentation</h2></div>
+                <div class="segment-grid">
+                    <div class="segment-card">
+                        <div class="segment-title">High Spenders</div>
+                        <p id="highSpenders">Loading...</p>
+                    </div>
+                    <div class="segment-card">
+                        <div class="segment-title">Occasional Buyers</div>
+                        <p id="occasionalBuyers">Loading...</p>
+                    </div>
+                    <div class="segment-card">
+                        <div class="segment-title">At-Risk Customers</div>
+                        <p id="atRiskCustomers">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header"><h2 class="chart-title">Predictive Insights & AI Suggestions</h2></div>
+                <div class="insight-card">
+                    <strong>📅 Predicted revenue next week:</strong> <span id="forecastRevenue">KES —</span>
+                    <span id="forecastTrend" style="font-weight:600;"></span>
+                </div>
+                <div class="insight-card">
+                    <strong>🧠 AI product restock suggestions:</strong><br>
+                    <ul id="restockSuggestions">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+                <div class="insight-card">
+                    <strong>🎯 Customers who buy X also buy Y:</strong><br>
+                    <span id="bundleInsight">Loading...</span>
+                </div>
+                <div class="insight-card danger">
+                    <strong>📉 Margin alert:</strong><br>
+                    <span id="marginAlert">Loading...</span>
+                </div>
+            </div>
+
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Sales by Cashier</h2></div>
                 <canvas id="cashierChart" style="max-height:340px;"></canvas>
@@ -388,7 +479,6 @@
                 </div>
             </div>
 
-            <!-- Top Selling Products -->
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Top Selling Products</h2></div>
                 <canvas id="topProductsChart" style="max-height:340px;"></canvas>
@@ -397,7 +487,6 @@
                 </div>
             </div>
 
-            <!-- Expenses by Cashier -->
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Expenses by Cashier</h2></div>
                 <canvas id="expensesByCashierChart" style="max-height:340px;"></canvas>
@@ -409,7 +498,6 @@
                 </div>
             </div>
 
-            <!-- Recent Transactions -->
             <div style="margin-top:32px;">
                 <h2 style="margin-bottom:12px;">Recent Transactions</h2>
                 <div class="table-container">
@@ -432,7 +520,6 @@
             </div>
         </div>
 
-        <!-- Supplier Orders Tab -->
         <div id="suppliersTab" class="tab-content">
             <div class="chart-container">
                 <div class="chart-header">
@@ -454,7 +541,6 @@
             </div>
         </div>
 
-        <!-- Staff Messaging Tab -->
         <div id="messagingTab" class="tab-content">
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">📨 Send Message to Staff</h2></div>
@@ -497,9 +583,6 @@
     <script src="assets/supplier-orders-module.js"></script>
 
     <script>
-        // ════════════════════════════════════════════════════════════════
-        // SUPABASE CLIENT
-        // ════════════════════════════════════════════════════════════════
         let _db = null;
         function getDB() {
             if (_db) return _db;
@@ -507,9 +590,6 @@
             return _db;
         }
 
-        // ════════════════════════════════════════════════════════════════
-        // POPUP TAB SWITCHING
-        // ════════════════════════════════════════════════════════════════
         function switchPopupTab(tab) {
             document.getElementById('tabRejections').classList.toggle('active', tab === 'rejections');
             document.getElementById('tabStaff').classList.toggle('active', tab === 'staff');
@@ -517,9 +597,6 @@
             document.getElementById('sectionStaff').classList.toggle('active', tab === 'staff');
         }
 
-        // ════════════════════════════════════════════════════════════════
-        // NAVIGATION VISIBILITY
-        // ════════════════════════════════════════════════════════════════
         function setNavigationVisibility(userRole) {
             const role = userRole.toLowerCase().trim();
             ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
@@ -534,9 +611,6 @@
             }
         }
 
-        // ════════════════════════════════════════════════════════════════
-        // DASHBOARD TAB SWITCHING
-        // ════════════════════════════════════════════════════════════════
         function switchDashboardTab(tabName, el) {
             document.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -545,9 +619,6 @@
             if (tabName === 'suppliers') loadSupplierOrders();
         }
 
-        // ════════════════════════════════════════════════════════════════
-        // REJECTION PERSISTENCE
-        // ════════════════════════════════════════════════════════════════
         let _rejectionStoreKey = 'dismissedRejections_default';
         let _dismissedIds = new Set();
         function _initRejectionStore(userId) {
@@ -564,9 +635,6 @@
         function _isDismissed(id) { return _dismissedIds.has(String(id)); }
         function _markDismissed(id) { _dismissedIds.add(String(id)); _persistDismissed(); }
 
-        // ════════════════════════════════════════════════════════════════
-        // LOAD & RENDER REJECTIONS
-        // ════════════════════════════════════════════════════════════════
         async function loadRejectionNotifications() {
             const db = getDB();
             if (!db) return { rejections: [], unseen: 0 };
@@ -594,13 +662,13 @@
                 return;
             }
             section.innerHTML = rejections.map(r => {
-                const dismissed    = _isDismissed(r.id);
+                const dismissed = _isDismissed(r.id);
                 const supplierName = r.supplier?.full_name || r.supplier?.email || 'Supplier';
-                const supplierId   = r.supplier?.id || r.supplier_id || null;
-                const rejectedAt   = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
-                const itemName     = r.item_name || 'Unknown item';
-                const qty          = `${r.quantity || '—'} ${r.unit || ''}`.trim();
-                const actionsHtml  = dismissed
+                const supplierId = r.supplier?.id || r.supplier_id || null;
+                const rejectedAt = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
+                const itemName = r.item_name || 'Unknown item';
+                const qty = `${r.quantity || '—'} ${r.unit || ''}`.trim();
+                const actionsHtml = dismissed
                     ? `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
                     : `<div class="rejection-actions">
                         <button class="rej-btn rej-btn-reorder" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder</button>
@@ -626,9 +694,9 @@
             const card = document.getElementById(`rejection-${id}`);
             if (card) {
                 card.classList.add('read');
-                const actions   = card.querySelector('.rejection-actions');
-                const itemNameEl= card.querySelector('.message-text strong');
-                const itemName  = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
+                const actions = card.querySelector('.rejection-actions');
+                const itemNameEl = card.querySelector('.message-text strong');
+                const itemName = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
                 if (actions) actions.outerHTML = `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${itemName}', '')">🔄 Reorder anyway</button></div>`;
             }
             updateBellBadge();
@@ -638,19 +706,20 @@
             window.location.href = `supply-requests.html?prefill_item=${encodedItem}&prefill_qty=${encodedQty}`;
         }
 
-        // Contact Supplier Modal
         let _contactSupplierId = null;
         function openContactModal(supplierId, encodedName, encodedItem) {
             _contactSupplierId = supplierId;
             document.getElementById('contactSupplierName').textContent = decodeURIComponent(encodedName);
-            document.getElementById('contactItemName').textContent     = decodeURIComponent(encodedItem);
-            document.getElementById('contactSupplierMessage').value    = '';
+            document.getElementById('contactItemName').textContent = decodeURIComponent(encodedItem);
+            document.getElementById('contactSupplierMessage').value = '';
             document.getElementById('contactSupplierModal').classList.add('show');
         }
+
         function closeContactModal() {
             document.getElementById('contactSupplierModal').classList.remove('show');
             _contactSupplierId = null;
         }
+
         async function sendContactMessage() {
             if (!_contactSupplierId) return;
             const text = document.getElementById('contactSupplierMessage').value.trim();
@@ -665,11 +734,11 @@
             } catch (err) { alert('Error: ' + err.message); }
             finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
         }
+
         document.getElementById('contactSupplierModal').addEventListener('click', function(e) {
             if (e.target === this) closeContactModal();
         });
 
-        // Bell Badge
         async function updateBellBadge() {
             const { unseen: rejUnseen } = await loadRejectionNotifications();
             let staffUnseen = 0;
@@ -681,32 +750,31 @@
             } catch (_) {}
             const total = rejUnseen + staffUnseen;
             const badge = document.getElementById('messageBadge');
-            badge.textContent   = total > 99 ? '99+' : total;
+            badge.textContent = total > 99 ? '99+' : total;
             badge.style.display = total > 0 ? 'flex' : 'none';
             const rBadge = document.getElementById('rejectionTabBadge');
             if (rejUnseen > 0) { rBadge.textContent = rejUnseen; rBadge.style.display = 'inline'; }
             else rBadge.style.display = 'none';
         }
 
-        // Popup Toggle
         async function toggleMessagesPopup() {
             const popup = document.getElementById('messagesPopup');
             if (popup.classList.contains('active')) { popup.classList.remove('active'); return; }
             popup.classList.add('active');
             document.getElementById('sectionRejections').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-            document.getElementById('sectionStaff').innerHTML      = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
+            document.getElementById('sectionStaff').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
             const { rejections } = await loadRejectionNotifications();
             renderRejectionSection(rejections);
             await loadStaffMessagesIntoPopup();
         }
+
         document.addEventListener('click', function(e) {
             const popup = document.getElementById('messagesPopup');
-            const bell  = document.getElementById('messageBell');
+            const bell = document.getElementById('messageBell');
             if (popup?.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target))
                 popup.classList.remove('active');
         });
 
-        // Staff Messages in Popup
         async function loadStaffMessagesIntoPopup() {
             const section = document.getElementById('sectionStaff');
             try {
@@ -746,7 +814,7 @@
         }
 
         async function markMessageAsRead(messageId, event) {
-            const btn  = event.target;
+            const btn = event.target;
             const item = btn.closest('.message-item');
             try {
                 const result = await window.messagingModule.markAsRead(messageId);
@@ -754,9 +822,254 @@
             } catch (err) { console.error('Mark read error:', err); }
         }
 
-        // ════════════════════════════════════════════════════════════════
-        // DASHBOARD ANALYTICS LOGIC
-        // ════════════════════════════════════════════════════════════════
+        async function getDateRangeFilter() {
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            if (!start || !end) return null;
+            return {
+                start: `${start} 00:00:00`,
+                end:   `${end} 23:59:59.999`
+            };
+        }
+
+        let salesHeatmapChart = null;
+        async function renderHeatmapAndInsights() {
+            const ctx = document.getElementById('salesHeatmap').getContext('2d');
+            const range = await getDateRangeFilter();
+            if (!range) return;
+
+            const { data, error } = await getDB()
+                .from('sales')
+                .select('created_at, total_amount')
+                .gte('created_at', range.start)
+                .lte('created_at', range.end);
+
+            if (error || !data?.length) {
+                document.getElementById('topSlots').textContent = "No sales data in selected period";
+                document.getElementById('revenueLeakInsight').style.display = 'none';
+                return;
+            }
+
+            const matrix = Array(7).fill().map(() => Array(24).fill(0));
+            data.forEach(sale => {
+                const d = new Date(sale.created_at);
+                const day = d.getDay();
+                const hour = d.getHours();
+                matrix[day][hour] += Number(sale.total_amount || 0);
+            });
+
+            const flat = matrix.flat();
+            const max = Math.max(...flat) || 1;
+            const normalized = matrix.map(row => row.map(v => (v / max) * 100));
+
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const hours = Array.from({length:24}, (_,i) => i.toString().padStart(2,'0') + 'h');
+
+            function getColor(value) {
+                if (value < 20) return 'rgba(248,81,73,0.6)';
+                if (value < 50) return 'rgba(245,158,11,0.7)';
+                return 'rgba(63,185,80,0.8)';
+            }
+
+            if (salesHeatmapChart) salesHeatmapChart.destroy();
+            salesHeatmapChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: hours,
+                    datasets: days.map((day, i) => ({
+                        label: day,
+                        data: normalized[i],
+                        backgroundColor: normalized[i].map(v => getColor(v)),
+                        borderWidth: 0,
+                        barPercentage: 0.95,
+                        categoryPercentage: 0.9
+                    }))
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: { x: { stacked: false }, y: { stacked: false } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            let topSlots = [];
+            matrix.forEach((row, dayIdx) => {
+                row.forEach((val, hour) => {
+                    if (val > 0) topSlots.push({ day: days[dayIdx], hour, value: val });
+                });
+            });
+            topSlots.sort((a,b) => b.value - a.value);
+            topSlots = topSlots.slice(0,3).map(s => `${s.day} ${s.hour.toString().padStart(2,'0')}:00–${(s.hour+1).toString().padStart(2,'0')}:00`);
+
+            document.getElementById('topSlots').textContent = topSlots.join(', ') || "No significant peaks";
+
+            const friAfternoon = matrix[5][14] + matrix[5][15];
+            const avg = flat.reduce((a,b)=>a+b,0) / flat.length;
+            if (friAfternoon < avg * 0.5) {
+                document.getElementById('leakMessage').textContent = `Fridays 2–4 PM are ~${Math.round(100 - (friAfternoon/avg*100))}% below average — consider promotions.`;
+                document.getElementById('revenueLeakInsight').style.display = 'block';
+            } else {
+                document.getElementById('revenueLeakInsight').style.display = 'none';
+            }
+        }
+
+        async function renderCustomerOverview() {
+            const range = await getDateRangeFilter();
+            if (!range) return;
+
+            const { count: newCount, error: newErr } = await getDB()
+                .from('customers')
+                .select('*', { count: 'exact', head: true })
+                .gte('created_at', range.start)
+                .lte('created_at', range.end);
+
+            if (newErr) return;
+
+            const { data: salesInPeriod } = await getDB()
+                .from('sales')
+                .select('customer_id')
+                .gte('created_at', range.start)
+                .lte('created_at', range.end);
+
+            const uniqueCustomers = new Set(salesInPeriod?.map(s => s.customer_id) || []);
+            const returning = uniqueCustomers.size - (newCount || 0);
+
+            const { data: revenueData } = await getDB()
+                .from('sales')
+                .select('total_amount, customer_id')
+                .gte('created_at', range.start)
+                .lte('created_at', range.end);
+
+            let totalRevenue = 0;
+            const spendByCustomer = {};
+            revenueData?.forEach(s => {
+                const amt = Number(s.total_amount || 0);
+                totalRevenue += amt;
+                spendByCustomer[s.customer_id] = (spendByCustomer[s.customer_id] || 0) + amt;
+            });
+
+            const customerCount = Object.keys(spendByCustomer).length || 1;
+            const avgSpend = totalRevenue / customerCount;
+            const clvApprox = totalRevenue / (newCount + returning || 1);
+
+            document.getElementById('newCustomers').textContent = newCount || 0;
+            document.getElementById('returningCustomers').textContent = returning > 0 ? returning : 0;
+            document.getElementById('newVsReturning').textContent =
+                customerCount > 0
+                    ? `${Math.round((newCount / customerCount) * 100)}% New • ${Math.round((returning / customerCount) * 100)}% Returning`
+                    : "No customers in period";
+
+            document.getElementById('clv').textContent = `KES ${clvApprox.toFixed(2)}`;
+            document.getElementById('avgSpend').textContent = `KES ${avgSpend.toFixed(2)}`;
+        }
+
+        async function renderPurchaseBehavior() {
+            const range = await getDateRangeFilter();
+            if (!range) return;
+
+            const { data: sales } = await getDB()
+                .from('sales')
+                .select('id, customer_id, created_at')
+                .gte('created_at', range.start)
+                .lte('created_at', range.end)
+                .order('created_at');
+
+            if (!sales?.length) {
+                document.getElementById('purchaseFrequency').textContent = "—";
+                document.getElementById('timeBetweenPurchases').textContent = "—";
+                document.getElementById('productBundles').innerHTML = "<li>No data available</li>";
+                return;
+            }
+
+            const ordersByCustomer = {};
+            sales.forEach(s => {
+                if (!ordersByCustomer[s.customer_id]) ordersByCustomer[s.customer_id] = [];
+                ordersByCustomer[s.customer_id].push(new Date(s.created_at));
+            });
+
+            const frequencies = Object.values(ordersByCustomer).map(orders => orders.length);
+            const avgFrequency = frequencies.reduce((a,b)=>a+b,0) / frequencies.length || 0;
+
+            let totalDaysBetween = 0;
+            let pairCount = 0;
+            Object.values(ordersByCustomer).forEach(dates => {
+                if (dates.length < 2) return;
+                dates.sort((a,b)=>a-b);
+                for (let i = 1; i < dates.length; i++) {
+                    const diffDays = (dates[i] - dates[i-1]) / (1000 * 60 * 60 * 24);
+                    totalDaysBetween += diffDays;
+                    pairCount++;
+                }
+            });
+
+            const avgDaysBetween = pairCount > 0 ? totalDaysBetween / pairCount : 0;
+
+            document.getElementById('purchaseFrequency').textContent = avgFrequency.toFixed(1);
+            document.getElementById('timeBetweenPurchases').textContent = Math.round(avgDaysBetween);
+
+            document.getElementById('productBundles').innerHTML = "<li>Advanced bundle analysis coming soon</li>";
+        }
+
+        async function renderCustomerSegmentation() {
+            const { data: allSales } = await getDB()
+                .from('sales')
+                .select('customer_id, total_amount');
+
+            if (!allSales?.length) {
+                document.getElementById('highSpenders').textContent = "No data";
+                document.getElementById('occasionalBuyers').textContent = "No data";
+                document.getElementById('atRiskCustomers').textContent = "No data";
+                return;
+            }
+
+            const lifetimeByCustomer = {};
+            allSales.forEach(s => {
+                lifetimeByCustomer[s.customer_id] = (lifetimeByCustomer[s.customer_id] || 0) + Number(s.total_amount || 0);
+            });
+
+            const values = Object.values(lifetimeByCustomer);
+            const sorted = values.sort((a,b)=>b-a);
+            const top15PercentThreshold = sorted[Math.floor(sorted.length * 0.15)] || 0;
+
+            let highSpenders = 0, occasional = 0;
+            values.forEach(v => {
+                if (v >= top15PercentThreshold) highSpenders++;
+                else if (v < 3000) occasional++;
+            });
+
+            document.getElementById('highSpenders').innerHTML = `${highSpenders} customers • top 15% • drive most revenue`;
+            document.getElementById('occasionalBuyers').innerHTML = `${occasional} customers • low spenders`;
+            document.getElementById('atRiskCustomers').innerHTML = "At-risk detection requires last purchase date — coming soon";
+        }
+
+        async function renderPredictiveInsights() {
+            const range = await getDateRangeFilter();
+            if (!range) return;
+
+            const { data } = await getDB()
+                .from('sales')
+                .select('total_amount, created_at')
+                .gte('created_at', range.start)
+                .lte('created_at', range.end);
+
+            if (!data?.length) {
+                document.getElementById('forecastRevenue').textContent = "KES —";
+                return;
+            }
+
+            const daysInRange = (new Date(range.end) - new Date(range.start)) / (1000*60*60*24) + 1;
+            const totalRev = data.reduce((sum, s) => sum + Number(s.total_amount || 0), 0);
+            const avgDaily = totalRev / daysInRange;
+            const nextWeekForecast = avgDaily * 7;
+
+            const trend = nextWeekForecast > totalRev ? "↑" : "↓";
+            document.getElementById('forecastRevenue').textContent = `KES ${nextWeekForecast.toFixed(0)}`;
+            document.getElementById('forecastTrend').textContent = `${trend} ${Math.round(Math.abs((nextWeekForecast - totalRev)/totalRev * 100))}% vs this period`;
+            document.getElementById('restockSuggestions').innerHTML = "<li>Restock suggestions require velocity analysis — coming soon</li>";
+        }
+
         (function() {
             let revenueChart, topProductsChart, expensesByCashierChart;
 
@@ -777,7 +1090,7 @@
                     const currentUser = authModule.getCurrentUser();
                     if (!currentUser) return;
                     const userRole = (currentUser.role || '').trim().toLowerCase();
-                    const isAdmin  = ['administrator','admin','superadmin','manager'].includes(userRole);
+                    const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
                     if (!isAdmin) {
                         window.location.replace(userRole === 'supplier' ? 'suppliers.html' : 'pos.html');
                         return;
@@ -802,19 +1115,20 @@
 
             window.setDateRange = function(range) {
                 const today = new Date();
-                let start   = new Date(today);
+                let start = new Date(today);
                 if (range === 'today') start = today;
                 else if (range === 'week') start.setDate(today.getDate() - 7);
                 else start.setDate(today.getDate() - 30);
                 document.getElementById('startDate').value = start.toISOString().split('T')[0];
-                document.getElementById('endDate').value   = today.toISOString().split('T')[0];
+                document.getElementById('endDate').value = today.toISOString().split('T')[0];
                 loadDashboard();
             };
 
             async function loadDashboard() {
                 const start = document.getElementById('startDate').value;
-                const end   = document.getElementById('endDate').value;
+                const end = document.getElementById('endDate').value;
                 if (!start || !end) { alert('Please select both start and end dates'); return; }
+
                 try {
                     const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
                     if (!result.success) throw new Error(result.error || 'Failed to load sales data');
@@ -822,7 +1136,6 @@
                     const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
                     const expenses = expensesResult.success ? (expensesResult.data || []) : [];
                     const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
-
                     const expensesByCashier = expenses.reduce((acc, exp) => {
                         const name = exp.cashier?.full_name || exp.users?.full_name || exp.created_by?.full_name || 'Unknown Cashier';
                         acc[name] = (acc[name] || 0) + parseFloat(exp.amount || 0);
@@ -834,18 +1147,19 @@
                         document.getElementById('infoText').textContent = 'No sales or expenses found in this period.';
 
                     const grossProfit = sales.reduce((s, x) => s + (x.total_profit || 0), 0);
-                    const netProfit   = grossProfit - totalExpenses;
+                    const netProfit = grossProfit - totalExpenses;
 
-                    document.getElementById('totalRevenue').textContent    = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
-                    document.getElementById('totalProfit').textContent     = `KES ${netProfit.toFixed(2)}`;
-                    document.getElementById('totalExpenses').textContent   = `KES ${totalExpenses.toFixed(2)}`;
-                    document.getElementById('transactionCount').textContent= sales.length;
-                    document.getElementById('itemsSold').textContent       = sales.reduce((s,x) => s+(x.items_sold||0), 0);
+                    document.getElementById('totalRevenue').textContent = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
+                    document.getElementById('totalProfit').textContent = `KES ${netProfit.toFixed(2)}`;
+                    document.getElementById('totalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
+                    document.getElementById('transactionCount').textContent = sales.length;
+                    document.getElementById('itemsSold').textContent = sales.reduce((s,x) => s+(x.items_sold||0), 0);
+
                     document.getElementById('profitBreakdown').textContent = `Gross: KES ${grossProfit.toFixed(2)} - Exp: KES ${totalExpenses.toFixed(2)}`;
 
                     if (sales.length > 0) {
                         const top = sales.reduce((m,s) => (s.total_profit||0)>(m.total_profit||0)?s:m, sales[0]);
-                        document.getElementById('topPerformerName').textContent   = top.users?.full_name || 'Unknown';
+                        document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
                         document.getElementById('topPerformerProfit').textContent = (top.total_profit||0).toFixed(2);
                         document.getElementById('topCashier').style.display = 'block';
                     } else { document.getElementById('topCashier').style.display = 'none'; }
@@ -854,6 +1168,13 @@
                     renderExpensesByCashierChart(expensesByCashier);
                     renderTopProductsChart(sales);
                     renderRecentTransactions(sales.slice(0, 10));
+
+                    await renderHeatmapAndInsights();
+                    await renderCustomerOverview();
+                    await renderPurchaseBehavior();
+                    await renderCustomerSegmentation();
+                    await renderPredictiveInsights();
+
                 } catch (err) {
                     console.error('Dashboard load failed:', err);
                     document.getElementById('recentTransactions').innerHTML = `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
@@ -862,7 +1183,7 @@
 
             function renderCashierChart(sales) {
                 const canvas = document.getElementById('cashierChart');
-                const empty  = document.getElementById('cashierChartEmpty');
+                const empty = document.getElementById('cashierChartEmpty');
                 if (!sales.length) { canvas.style.display='none'; empty.style.display='block'; if(revenueChart) revenueChart.destroy(); return; }
                 canvas.style.display='block'; empty.style.display='none';
                 if (revenueChart) revenueChart.destroy();
@@ -870,7 +1191,7 @@
                     const name = s.users?.full_name || 'Unknown';
                     if (!acc[name]) acc[name] = { revenue:0, profit:0 };
                     acc[name].revenue += s.total_amount || 0;
-                    acc[name].profit  += s.total_profit || 0;
+                    acc[name].profit += s.total_profit || 0;
                     return acc;
                 }, {});
                 const labels = Object.keys(byCashier);
@@ -878,15 +1199,15 @@
                     type: 'bar',
                     data: { labels, datasets: [
                         { label:'Revenue (KES)', data:labels.map(k=>byCashier[k].revenue), backgroundColor:'rgba(63,185,80,0.65)' },
-                        { label:'Profit (KES)',  data:labels.map(k=>byCashier[k].profit),  backgroundColor:'rgba(245,158,11,0.65)' }
+                        { label:'Profit (KES)', data:labels.map(k=>byCashier[k].profit), backgroundColor:'rgba(245,158,11,0.65)' }
                     ]},
                     options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true } } }
                 });
             }
 
             function renderExpensesByCashierChart(expensesByCashier) {
-                const canvas      = document.getElementById('expensesByCashierChart');
-                const empty       = document.getElementById('expensesChartEmpty');
+                const canvas = document.getElementById('expensesByCashierChart');
+                const empty = document.getElementById('expensesChartEmpty');
                 const topSpenderDiv = document.getElementById('topSpender');
                 if (!Object.keys(expensesByCashier).length || Object.values(expensesByCashier).every(v=>v===0)) {
                     canvas.style.display='none'; empty.style.display='block'; topSpenderDiv.style.display='none';
@@ -903,7 +1224,7 @@
                 });
                 if (values.length > 0) {
                     const maxIndex = values.indexOf(Math.max(...values));
-                    document.getElementById('topSpenderName').textContent   = labels[maxIndex];
+                    document.getElementById('topSpenderName').textContent = labels[maxIndex];
                     document.getElementById('topSpenderAmount').textContent = values[maxIndex].toFixed(2);
                     topSpenderDiv.style.display = 'block';
                 } else { topSpenderDiv.style.display = 'none'; }
@@ -911,7 +1232,7 @@
 
             function renderTopProductsChart(sales) {
                 const canvas = document.getElementById('topProductsChart');
-                const empty  = document.getElementById('productsChartEmpty');
+                const empty = document.getElementById('productsChartEmpty');
                 const totals = sales.reduce((acc, sale) => {
                     (sale.sale_items || []).forEach(item => {
                         const name = item.products?.name || `Item #${item.product_id}`;
@@ -951,9 +1272,25 @@
             window.loadDashboard = loadDashboard;
         })();
 
-        // ════════════════════════════════════════════════════════════════
-        // SUPPLIER ORDERS
-        // ════════════════════════════════════════════════════════════════
+        function exportAnalyticsToCSV() {
+            const headers = "Metric,Value\n";
+            const rows = [
+                "Total Revenue," + document.getElementById('totalRevenue').textContent.replace('KES ', ''),
+                "Net Profit," + document.getElementById('totalProfit').textContent.replace('KES ', ''),
+                "CLV," + document.getElementById('clv').textContent.replace('KES ', ''),
+                "Avg Spend," + document.getElementById('avgSpend').textContent.replace('KES ', ''),
+                "Best Time Slots," + document.getElementById('topSlots').textContent
+            ].join("\n");
+            const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `analytics_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         async function loadSupplierOrders() {
             if (!window.supplierOrdersModule) return;
             try {
@@ -963,10 +1300,10 @@
                     return;
                 }
                 const orders = result.data;
-                document.getElementById('pendingOrdersCount').textContent    = orders.filter(o=>o.status==='pending').length;
+                document.getElementById('pendingOrdersCount').textContent = orders.filter(o=>o.status==='pending').length;
                 document.getElementById('processingOrdersCount').textContent = orders.filter(o=>['processing','shipped'].includes(o.status)).length;
-                document.getElementById('deliveredOrdersCount').textContent  = orders.filter(o=>o.status==='delivered').length;
-                document.getElementById('totalOrdersValue').textContent      = `KES ${orders.reduce((s,o)=>s+(o.total_amount||0),0).toLocaleString()}`;
+                document.getElementById('deliveredOrdersCount').textContent = orders.filter(o=>o.status==='delivered').length;
+                document.getElementById('totalOrdersValue').textContent = `KES ${orders.reduce((s,o)=>s+(o.total_amount||0),0).toLocaleString()}`;
                 if (!orders.length) {
                     document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`;
                     return;
@@ -988,7 +1325,7 @@
                         </div>
                         <div style="display:flex;gap:10px;flex-wrap:wrap;">
                             <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
-                            <button class="btn btn-small btn-primary"   onclick="messageSupplier(${order.supplier_id})">💬 Message</button>
+                            <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message</button>
                         </div>
                     </div>`
                 ).join('');
@@ -998,12 +1335,9 @@
         }
 
         window.createNewSupplierOrder = () => alert('Create New Supplier Order — Coming soon');
-        window.viewOrderDetails       = (id) => alert(`View details for order #${id}`);
-        window.messageSupplier        = (id) => alert(`Message supplier #${id}`);
+        window.viewOrderDetails = (id) => alert(`View details for order #${id}`);
+        window.messageSupplier = (id) => alert(`Message supplier #${id}`);
 
-        // ════════════════════════════════════════════════════════════════
-        // STAFF MESSAGING TAB
-        // ════════════════════════════════════════════════════════════════
         async function loadUsersForMessaging() {
             try {
                 const result = await window.messagingModule.getUsersForMessaging();
@@ -1012,7 +1346,7 @@
                 select.innerHTML = '<option value="">-- Select a user --</option>';
                 result.data.forEach(user => {
                     const opt = document.createElement('option');
-                    opt.value       = user.id;
+                    opt.value = user.id;
                     opt.textContent = `${user.full_name} (${user.role})`;
                     select.appendChild(opt);
                 });
@@ -1030,7 +1364,7 @@
                 if (result.success) {
                     alert('✅ Message sent!');
                     document.getElementById('messageRecipient').value = '';
-                    document.getElementById('messageText').value       = '';
+                    document.getElementById('messageText').value = '';
                     loadSentMessages();
                 } else { alert('Failed: ' + result.error); }
             } catch (err) { alert('Error: ' + err.message); }
