@@ -111,6 +111,45 @@
         .success-msg { color: var(--accent-green); margin-top: 10px; font-weight: 600; }
         .error-msg { color: var(--danger); margin-top: 10px; font-weight: 600; }
 
+        /* ── PROFESSIONAL NOTIFICATION SYSTEM ── */
+        #posNotifContainer { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; max-width: 360px; pointer-events: none; }
+        .pos-notif { background: #1c1c1e; border-radius: 14px; padding: 14px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); display: flex; align-items: flex-start; gap: 12px; pointer-events: all; transform: translateX(120%); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity: 0; border-left: 4px solid #6b7280; min-width: 280px; }
+        .pos-notif.show { transform: translateX(0); opacity: 1; }
+        .pos-notif.hiding { transform: translateX(120%); opacity: 0; }
+        .pos-notif.type-error { border-left-color: #ef4444; }
+        .pos-notif.type-warning { border-left-color: #f59e0b; }
+        .pos-notif.type-success { border-left-color: #10b981; }
+        .pos-notif.type-info { border-left-color: #3b82f6; }
+        .pos-notif-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+        .pos-notif-body { flex: 1; }
+        .pos-notif-title { font-weight: 700; font-size: 0.875rem; color: #f9fafb; margin-bottom: 2px; }
+        .pos-notif-msg { font-size: 0.8rem; color: #9ca3af; line-height: 1.4; }
+        .pos-notif-close { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 1rem; padding: 0; margin-left: 4px; flex-shrink: 0; line-height: 1; transition: color 0.2s; }
+        .pos-notif-close:hover { color: #e5e7eb; }
+        .pos-notif-progress { position: absolute; bottom: 0; left: 0; height: 2px; border-radius: 0 0 14px 14px; animation: notifProgress linear forwards; }
+        .pos-notif { position: relative; overflow: hidden; }
+        .type-error .pos-notif-progress { background: #ef4444; }
+        .type-warning .pos-notif-progress { background: #f59e0b; }
+        .type-success .pos-notif-progress { background: #10b981; }
+        .type-info .pos-notif-progress { background: #3b82f6; }
+        @keyframes notifProgress { from { width: 100%; } to { width: 0%; } }
+
+        /* ── PROFESSIONAL MODAL (replaces confirm/prompt) ── */
+        #posModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99998; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        #posModalOverlay.show { display: flex; }
+        .pos-modal { background: #1c1c1e; border-radius: 18px; padding: 28px 24px 20px; max-width: 360px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); }
+        .pos-modal-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .pos-modal-title { font-weight: 700; font-size: 1rem; color: #f9fafb; margin-bottom: 8px; }
+        .pos-modal-msg { font-size: 0.875rem; color: #9ca3af; line-height: 1.5; margin-bottom: 20px; }
+        .pos-modal-input { width: 100%; background: #2a2a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #f9fafb; font-size: 0.9rem; outline: none; box-sizing: border-box; margin-bottom: 16px; }
+        .pos-modal-input:focus { border-color: #6366f1; }
+        .pos-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .pos-modal-btn { padding: 9px 20px; border-radius: 10px; border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .pos-modal-btn:hover { opacity: 0.85; }
+        .pos-modal-btn.cancel { background: rgba(255,255,255,0.08); color: #9ca3af; }
+        .pos-modal-btn.confirm { background: #6366f1; color: #fff; }
+        .pos-modal-btn.confirm.danger { background: #ef4444; }
+
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .table-header { flex-direction: column; align-items: stretch; }
@@ -120,16 +159,25 @@
     </style>
 </head>
 <body>
+
+    <!-- Professional Notification Container -->
+    <div id="posNotifContainer"></div>
+
+    <!-- Professional Modal (replaces alert/confirm/prompt) -->
+    <div id="posModalOverlay">
+        <div class="pos-modal" id="posModal">
+            <div class="pos-modal-icon" id="posModalIcon">ℹ️</div>
+            <div class="pos-modal-title" id="posModalTitle">Notice</div>
+            <div class="pos-modal-msg" id="posModalMsg"></div>
+            <input class="pos-modal-input" id="posModalInput" type="text" placeholder="" style="display:none"/>
+            <div class="pos-modal-actions" id="posModalActions"></div>
+        </div>
+    </div>
+
     <nav class="nav">
         <div class="nav-container">
             <div class="logo"><img src="assets/icons/icon-512x512.png" alt="Logo" class="logo">
-
-<style>
-.logo {
-    width: 120px;
-    height: auto;
-}
-</style></div>
+<style>.logo { width: 120px; height: auto; }</style></div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab">Point of Sale</a>
@@ -305,9 +353,100 @@
     <script src="assets/auth.js"></script>
     <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
+
+    <script>
+    /* ═══════════════════════════════════════════════
+       PROFESSIONAL NOTIFICATION & MODAL SYSTEM
+    ═══════════════════════════════════════════════ */
+    window.posNotify = (function() {
+        const ICONS = { error: '❌', warning: '⚠️', success: '✅', info: 'ℹ️' };
+        const TITLES = { error: 'Error', warning: 'Warning', success: 'Success', info: 'Info' };
+        const DURATION = { error: 5000, warning: 4500, success: 3000, info: 3500 };
+
+        function show(type, title, message, duration) {
+            const container = document.getElementById('posNotifContainer');
+            if (!container) { console.warn('[notify]', title, message); return; }
+            const d = duration || DURATION[type] || 4000;
+            const el = document.createElement('div');
+            el.className = `pos-notif type-${type}`;
+            el.innerHTML = `
+                <div class="pos-notif-icon">${ICONS[type]}</div>
+                <div class="pos-notif-body">
+                    <div class="pos-notif-title">${title || TITLES[type]}</div>
+                    ${message ? `<div class="pos-notif-msg">${message}</div>` : ''}
+                </div>
+                <button class="pos-notif-close" onclick="this.closest('.pos-notif').remove()">✕</button>
+                <div class="pos-notif-progress" style="animation-duration: ${d}ms"></div>`;
+            container.appendChild(el);
+            requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+            setTimeout(() => { el.classList.add('hiding'); setTimeout(() => el.remove(), 400); }, d);
+        }
+
+        function error(msg, title)   { show('error',   title || 'Error',   msg); }
+        function warning(msg, title) { show('warning', title || 'Warning', msg); }
+        function success(msg, title) { show('success', title || 'Success', msg); }
+        function info(msg, title)    { show('info',    title || 'Info',    msg); }
+
+        function confirm(opts) {
+            return new Promise(resolve => {
+                const overlay = document.getElementById('posModalOverlay');
+                const icon = document.getElementById('posModalIcon');
+                const titleEl = document.getElementById('posModalTitle');
+                const msgEl = document.getElementById('posModalMsg');
+                const inputEl = document.getElementById('posModalInput');
+                const actionsEl = document.getElementById('posModalActions');
+                icon.textContent = opts.icon || '❓';
+                titleEl.textContent = opts.title || 'Confirm';
+                msgEl.innerHTML = opts.message || '';
+                inputEl.style.display = 'none';
+                inputEl.value = '';
+                actionsEl.innerHTML = '';
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'pos-modal-btn cancel';
+                cancelBtn.textContent = opts.cancelText || 'Cancel';
+                cancelBtn.onclick = () => { overlay.classList.remove('show'); resolve(false); };
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = `pos-modal-btn confirm${opts.danger ? ' danger' : ''}`;
+                confirmBtn.textContent = opts.confirmText || 'OK';
+                confirmBtn.onclick = () => { overlay.classList.remove('show'); resolve(true); };
+                if (opts.cancelText !== false) actionsEl.appendChild(cancelBtn);
+                actionsEl.appendChild(confirmBtn);
+                overlay.classList.add('show');
+                setTimeout(() => confirmBtn.focus(), 50);
+            });
+        }
+
+        function alert(msg, opts) {
+            opts = opts || {};
+            return new Promise(resolve => {
+                const overlay = document.getElementById('posModalOverlay');
+                const icon = document.getElementById('posModalIcon');
+                const titleEl = document.getElementById('posModalTitle');
+                const msgEl = document.getElementById('posModalMsg');
+                const inputEl = document.getElementById('posModalInput');
+                const actionsEl = document.getElementById('posModalActions');
+                icon.textContent = opts.icon || 'ℹ️';
+                titleEl.textContent = opts.title || 'Notice';
+                msgEl.innerHTML = msg || '';
+                inputEl.style.display = 'none';
+                actionsEl.innerHTML = '';
+                const okBtn = document.createElement('button');
+                okBtn.className = `pos-modal-btn confirm${opts.danger ? ' danger' : ''}`;
+                okBtn.textContent = 'OK';
+                okBtn.onclick = () => { overlay.classList.remove('show'); resolve(); };
+                actionsEl.appendChild(okBtn);
+                overlay.classList.add('show');
+                setTimeout(() => okBtn.focus(), 50);
+            });
+        }
+
+        return { show, error, warning, success, info, confirm, alert };
+    })();
+    </script>
+
     <script>
     (function() {
-        const POINTS_TO_KES = 10; // 10 points = KES 1
+        const POINTS_TO_KES = 10;
 
         let customers = [];
         let editingId = null;
@@ -335,6 +474,7 @@
                 console.log('✅ Customers page initialized');
             } catch (err) {
                 console.error('Customers init failed:', err);
+                posNotify.error('Failed to initialize page: ' + err.message, 'Initialization Error');
                 document.getElementById('customersTableBody').innerHTML = `<tr><td colspan="8" class="error-message">Error: ${err.message}</td></tr>`;
             }
         });
@@ -348,6 +488,7 @@
                 renderCustomersTable();
                 renderLoyaltyStats();
             } catch (err) {
+                posNotify.error('Failed to load customers: ' + err.message, 'Load Error');
                 document.getElementById('customersTableBody').innerHTML = `<tr><td colspan="8" class="error-message">Failed to load: ${err.message}</td></tr>`;
             }
         }
@@ -410,9 +551,7 @@
                     <td style="font-size:0.9rem;">${c.email || '—'}</td>
                     <td style="font-size:0.9rem;">${c.address || '—'}</td>
                     <td>
-                        <span class="loyalty-badge ${badgeCls}">
-                            ⭐ ${pts.toLocaleString()} pts
-                        </span>
+                        <span class="loyalty-badge ${badgeCls}">⭐ ${pts.toLocaleString()} pts</span>
                         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:3px;">≈ KES ${Math.floor(pts / POINTS_TO_KES).toLocaleString()} value</div>
                     </td>
                     <td><span class="loyalty-tier ${tier.cls}">${tier.label}</span></td>
@@ -433,7 +572,7 @@
             const email   = document.getElementById('email').value.trim();
             const address = document.getElementById('address').value.trim();
             const notes   = document.getElementById('notes').value.trim();
-            if (!name) { showMessage('Customer name is required', 'error'); return; }
+            if (!name) { posNotify.warning('Customer name is required.', 'Required Field'); return; }
             const customerData = { name, phone: phone || null, email: email || null, address: address || null, notes: notes || null };
             try {
                 let result;
@@ -443,10 +582,12 @@
                     result = await window.dataModule.createCustomer(customerData);
                 }
                 if (!result.success) throw new Error(result.error);
-                showMessage(editingId ? '✅ Customer updated!' : '✅ Customer added!', 'success');
+                posNotify.success(editingId ? `${name} has been updated successfully.` : `${name} has been added to your customers.`, editingId ? 'Customer Updated' : 'Customer Added');
                 clearForm();
                 await loadCustomers();
-            } catch (err) { showMessage('❌ Error: ' + err.message, 'error'); }
+            } catch (err) {
+                posNotify.error('Could not save customer: ' + err.message, 'Save Failed');
+            }
         }
 
         function editCustomer(id) {
@@ -464,13 +605,25 @@
         }
 
         async function deleteCustomer(id) {
-            if (!confirm('Delete this customer? This cannot be undone.')) return;
+            const customer = customers.find(c => c.id === id);
+            const name = customer?.name || 'this customer';
+            const confirmed = await posNotify.confirm({
+                icon: '🗑️',
+                title: 'Delete Customer',
+                message: `Are you sure you want to delete <b>${name}</b>? This action cannot be undone.`,
+                confirmText: 'Delete',
+                cancelText: 'Cancel',
+                danger: true
+            });
+            if (!confirmed) return;
             try {
                 const result = await window.dataModule.deleteCustomer(id);
                 if (!result.success) throw new Error(result.error);
-                showMessage('✅ Customer deleted!', 'success');
+                posNotify.success(`${name} has been removed.`, 'Customer Deleted');
                 await loadCustomers();
-            } catch (err) { showMessage('❌ ' + err.message, 'error'); }
+            } catch (err) {
+                posNotify.error('Could not delete customer: ' + err.message, 'Delete Failed');
+            }
         }
 
         function clearForm() {
@@ -479,13 +632,6 @@
             document.getElementById('submitBtn').textContent = '+ Add Customer';
             document.getElementById('customerForm').reset();
             document.getElementById('formMessage').textContent = '';
-        }
-
-        function showMessage(text, type) {
-            const el = document.getElementById('formMessage');
-            el.textContent = text;
-            el.className = type === 'success' ? 'success-msg' : 'error-msg';
-            setTimeout(() => el.textContent = '', 5000);
         }
 
         // ─── DETAIL MODAL ───
@@ -498,7 +644,6 @@
             document.getElementById('detailPoints').textContent = pts.toLocaleString();
             document.getElementById('detailValue').textContent = `KES ${Math.floor(pts / POINTS_TO_KES).toLocaleString()}`;
             document.getElementById('detailModal').classList.add('show');
-            // Load purchase history from sales
             await loadCustomerHistory(id);
         }
 
@@ -514,7 +659,7 @@
                 }
                 historyEl.innerHTML = sales.map(s => {
                     const date = new Date(s.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-                    const earned = Math.floor(s.total_amount * 1); // 1pt per KES
+                    const earned = Math.floor(s.total_amount * 1);
                     const redeemed = s.points_redeemed || 0;
                     return `<div class="history-item">
                         <div>
@@ -557,7 +702,10 @@
             if (!adjustingCustomer) return;
             const op = document.getElementById('adjustOperation').value;
             const val = parseInt(document.getElementById('adjustPointsValue').value) || 0;
-            if (val < 0) { document.getElementById('adjustMessage').innerHTML = '<span style="color:var(--danger);">Value must be positive</span>'; return; }
+            if (val < 0) {
+                document.getElementById('adjustMessage').innerHTML = '<span style="color:var(--danger);">Value must be positive</span>';
+                return;
+            }
             const current = adjustingCustomer.loyalty_points || 0;
             let newPts;
             if (op === 'add') newPts = current + val;
@@ -567,15 +715,18 @@
                 const result = await window.dataModule.updateCustomer(adjustingCustomer.id, { loyalty_points: newPts });
                 if (!result.success) throw new Error(result.error);
                 document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--accent-green);">✅ Points updated to ${newPts}</span>`;
-                // Update local cache
                 const idx = customers.findIndex(c => c.id === adjustingCustomer.id);
                 if (idx !== -1) customers[idx].loyalty_points = newPts;
                 adjustingCustomer.loyalty_points = newPts;
                 document.getElementById('adjustCurrentPts').textContent = `${newPts.toLocaleString()} pts`;
                 renderLoyaltyStats();
                 renderCustomersTable();
+                posNotify.success(`Points for ${adjustingCustomer.name} updated to ${newPts.toLocaleString()}.`, 'Points Updated');
                 setTimeout(closeAdjustModal, 1500);
-            } catch (err) { document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--danger);">❌ ${err.message}</span>`; }
+            } catch (err) {
+                document.getElementById('adjustMessage').innerHTML = `<span style="color:var(--danger);">❌ ${err.message}</span>`;
+                posNotify.error('Could not update points: ' + err.message, 'Update Failed');
+            }
         };
 
         window.closeAdjustModal = function() { document.getElementById('adjustPointsModal').classList.remove('show'); adjustingCustomer = null; };
@@ -588,11 +739,8 @@
     </script>
     <script src="assets/pwa-registration.js"></script>
     <footer style="text-align: center; padding: 15px; background-color: black;">
-  <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
-</footer>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+        <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
+    </footer>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>

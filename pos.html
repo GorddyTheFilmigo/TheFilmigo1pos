@@ -86,10 +86,10 @@
             height: calc(100vh - 130px);
         }
         .products-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-y: auto; }
-        .cart-section     { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; overflow-y: auto; }
+        .cart-section     { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; overflow: hidden; min-height: 0; height: 100%; }
 
         /* ── CUSTOMER SELECTOR ── */
-        .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+        .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; flex-shrink: 0; }
         .customer-selector-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
         .customer-select-row { display: flex; gap: 8px; align-items: center; }
         .customer-search-wrap { position: relative; flex: 1; min-width: 0; }
@@ -134,28 +134,94 @@
         .stock-badge.badge-critical { background: rgba(239,68,68,0.15); color: #ef4444; }
         .stock-badge.badge-out { background: rgba(107,114,128,0.15); color: #6b7280; }
 
+        /* ── STOCK ALERT BANNER ── */
+        .stock-alert-banner { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.4); border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; display: none; }
+        .stock-alert-banner.has-alerts { display: block; }
+        .stock-alert-title { font-weight: 700; font-size: 0.85rem; color: #ef4444; margin-bottom: 6px; }
+        .stock-alert-list { display: flex; flex-wrap: wrap; gap: 6px; }
+        .stock-alert-chip { font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+        .stock-alert-chip.out  { background: rgba(107,114,128,0.2); color: #9ca3af; }
+        .stock-alert-chip.crit { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .stock-alert-chip.low  { background: rgba(245,158,11,0.2); color: #d97706; }
+
+        /* ── TOAST NOTIFICATION ── */
+        .stock-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120px); background: #1e1e1e; border: 1px solid #ef4444; border-radius: 12px; padding: 14px 20px; z-index: 9999; min-width: 280px; max-width: 380px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+        .stock-toast.show { transform: translateX(-50%) translateY(0); }
+        .stock-toast-title { font-weight: 700; color: #ef4444; font-size: 0.85rem; margin-bottom: 8px; }
+        .stock-toast-items { display: flex; flex-direction: column; gap: 4px; }
+        .stock-toast-item { font-size: 0.8rem; color: #e5e7eb; display: flex; align-items: center; gap: 6px; }
+        .stock-toast-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+
+        /* ── PROFESSIONAL NOTIFICATION SYSTEM ── */
+        #posNotifContainer { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; max-width: 360px; pointer-events: none; }
+        .pos-notif { background: #1c1c1e; border-radius: 14px; padding: 14px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); display: flex; align-items: flex-start; gap: 12px; pointer-events: all; transform: translateX(120%); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity: 0; border-left: 4px solid #6b7280; min-width: 280px; }
+        .pos-notif.show { transform: translateX(0); opacity: 1; }
+        .pos-notif.hiding { transform: translateX(120%); opacity: 0; }
+        .pos-notif.type-error { border-left-color: #ef4444; }
+        .pos-notif.type-warning { border-left-color: #f59e0b; }
+        .pos-notif.type-success { border-left-color: #10b981; }
+        .pos-notif.type-info { border-left-color: #3b82f6; }
+        .pos-notif-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+        .pos-notif-body { flex: 1; }
+        .pos-notif-title { font-weight: 700; font-size: 0.875rem; color: #f9fafb; margin-bottom: 2px; }
+        .pos-notif-msg { font-size: 0.8rem; color: #9ca3af; line-height: 1.4; }
+        .pos-notif-close { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 1rem; padding: 0; margin-left: 4px; flex-shrink: 0; line-height: 1; transition: color 0.2s; }
+        .pos-notif-close:hover { color: #e5e7eb; }
+        .pos-notif-progress { position: absolute; bottom: 0; left: 0; height: 2px; border-radius: 0 0 14px 14px; animation: notifProgress linear forwards; }
+        .pos-notif { position: relative; overflow: hidden; }
+        .type-error .pos-notif-progress { background: #ef4444; }
+        .type-warning .pos-notif-progress { background: #f59e0b; }
+        .type-success .pos-notif-progress { background: #10b981; }
+        .type-info .pos-notif-progress { background: #3b82f6; }
+        @keyframes notifProgress { from { width: 100%; } to { width: 0%; } }
+
+        /* ── PROFESSIONAL MODAL (replaces confirm/prompt) ── */
+        #posModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99998; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        #posModalOverlay.show { display: flex; }
+        .pos-modal { background: #1c1c1e; border-radius: 18px; padding: 28px 24px 20px; max-width: 360px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); }
+        .pos-modal-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .pos-modal-title { font-weight: 700; font-size: 1rem; color: #f9fafb; margin-bottom: 8px; }
+        .pos-modal-msg { font-size: 0.875rem; color: #9ca3af; line-height: 1.5; margin-bottom: 20px; }
+        .pos-modal-input { width: 100%; background: #2a2a2e; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #f9fafb; font-size: 0.9rem; outline: none; box-sizing: border-box; margin-bottom: 16px; }
+        .pos-modal-input:focus { border-color: #6366f1; }
+        .pos-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .pos-modal-btn { padding: 9px 20px; border-radius: 10px; border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .pos-modal-btn:hover { opacity: 0.85; }
+        .pos-modal-btn.cancel { background: rgba(255,255,255,0.08); color: #9ca3af; }
+        .pos-modal-btn.confirm { background: #6366f1; color: #fff; }
+        .pos-modal-btn.confirm.danger { background: #ef4444; }
+
         /* ── CART ── */
-        .cart-header { margin-bottom: 10px; }
+        .cart-header { margin-bottom: 10px; flex-shrink: 0; }
         .cart-header h2 { font-size: 1.1rem; }
-        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 10px; }
-        .cart-item  { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .cart-items { flex: 1; overflow-y: auto; margin-bottom: 10px; min-height: 120px; padding-right: 2px; }
+        .cart-items::-webkit-scrollbar { width: 4px; }
+        .cart-items::-webkit-scrollbar-track { background: transparent; }
+        .cart-items::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .cart-item  { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; transition: border-color 0.15s; }
+        .cart-item:hover { border-color: rgba(245,158,11,0.4); }
         .cart-item-info { flex: 1; min-width: 0; }
-        .cart-item-name  { font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cart-item-price { color: var(--text-muted); font-size: 0.82rem; }
-        .cart-item-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-        .qty-btn   { width: 28px; height: 28px; border: 1px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
-        .qty-value { min-width: 24px; text-align: center; font-weight: 600; font-size: 0.9rem; }
-        .remove-btn{ background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.82rem; }
-        .empty-cart{ text-align: center; padding: 32px 16px; color: var(--text-muted); }
+        .cart-item-name  { font-weight: 700; margin-bottom: 3px; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+        .cart-item-meta  { display: flex; align-items: center; gap: 8px; }
+        .cart-item-price { color: var(--text-muted); font-size: 0.78rem; }
+        .cart-item-subtotal { color: var(--accent-orange); font-weight: 700; font-size: 0.82rem; }
+        .cart-item-controls { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+        .qty-btn   { width: 30px; height: 30px; border: 1.5px solid var(--border); background: var(--bg-tertiary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+        .qty-btn:hover { background: var(--accent-orange); border-color: var(--accent-orange); color: #000; }
+        .qty-btn.minus:hover { background: #ef4444; border-color: #ef4444; color: white; }
+        .qty-value { min-width: 28px; text-align: center; font-weight: 700; font-size: 0.95rem; background: var(--bg-secondary); border-radius: 6px; padding: 3px 4px; }
+        .remove-btn { width: 30px; height: 30px; background: rgba(248,81,73,0.12); color: var(--danger); border: 1.5px solid rgba(248,81,73,0.3); border-radius: 8px; cursor: pointer; font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+        .remove-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .empty-cart{ text-align: center; padding: 40px 16px; color: var(--text-muted); }
 
         /* ── CART SUMMARY ── */
-        .cart-summary { border-top: 2px solid var(--border); padding-top: 10px; flex-shrink: 0; }
-        .summary-row  { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.88rem; }
+        .cart-summary { border-top: 2px solid var(--border); padding-top: 8px; flex-shrink: 0; }
+        .summary-row  { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.88rem; }
         .summary-row.discount { color: var(--accent-purple); }
         .summary-total { font-size: 1.3rem; font-weight: 900; color: var(--accent-orange); }
-        .loyalty-earn-note { font-size: 0.78rem; color: var(--accent-green); margin-bottom: 8px; text-align: center; background: rgba(63,185,80,0.1); border-radius: 6px; padding: 5px; }
-        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; margin-top: 8px; }
-        .payment-btn { padding: 9px 6px; border: 2px solid var(--border); background: var(--bg-primary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; text-align: center; }
+        .loyalty-earn-note { font-size: 0.78rem; color: var(--accent-green); margin-bottom: 6px; text-align: center; background: rgba(63,185,80,0.1); border-radius: 6px; padding: 4px; }
+        .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; margin-top: 6px; }
+        .payment-btn { padding: 8px 6px; border: 2px solid var(--border); background: var(--bg-primary); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px; text-align: center; }
         .payment-btn.active { border-color: var(--accent-green); background: rgba(63,185,80,0.1); }
         .checkout-btn { width: 100%; padding: 13px; background: var(--accent-green); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
         .checkout-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
@@ -260,13 +326,14 @@
                 padding: 12px;
             }
 
-            /* Cart: natural height */
+            /* Cart: natural height on mobile */
             .cart-section {
                 padding: 12px;
                 height: auto;
-                overflow-y: visible;
+                overflow: visible;
+                min-height: unset;
             }
-            .cart-items { max-height: 35vh; overflow-y: auto; }
+            .cart-items { height: auto !important; max-height: 40vh; min-height: 80px; overflow-y: auto; flex: unset; }
 
             /* Smaller product grid on phones */
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
@@ -329,6 +396,20 @@
     </style>
 </head>
 <body>
+
+<!-- Professional Notification Container -->
+<div id="posNotifContainer"></div>
+
+<!-- Professional Modal (replaces alert/confirm/prompt) -->
+<div id="posModalOverlay">
+    <div class="pos-modal" id="posModal">
+        <div class="pos-modal-icon" id="posModalIcon">ℹ️</div>
+        <div class="pos-modal-title" id="posModalTitle">Notice</div>
+        <div class="pos-modal-msg" id="posModalMsg"></div>
+        <input class="pos-modal-input" id="posModalInput" type="text" placeholder="" style="display:none"/>
+        <div class="pos-modal-actions" id="posModalActions"></div>
+    </div>
+</div>
 
     <nav class="nav">
         <div class="nav-container">
@@ -480,6 +561,10 @@
             <!-- Products Panel -->
             <div class="products-section">
                 <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Search products...">
+                <div class="stock-alert-banner" id="stockAlertBanner">
+                    <div class="stock-alert-title">⚠️ Stock Alerts</div>
+                    <div class="stock-alert-list" id="stockAlertList"></div>
+                </div>
                 <div class="categories" id="categoriesContainer"></div>
                 <div class="products-grid" id="productsGrid">
                     <div style="text-align:center;padding:40px;color:var(--text-muted);">Loading products...</div>
@@ -639,6 +724,134 @@
 
     <!-- ── SUBSCRIPTION DATA PATCH ── -->
     <script>
+    /* ═══════════════════════════════════════════════
+       PROFESSIONAL NOTIFICATION & MODAL SYSTEM
+       Replaces all alert(), confirm(), prompt() calls
+    ═══════════════════════════════════════════════ */
+    window.posNotify = (function() {
+        const ICONS = { error: '❌', warning: '⚠️', success: '✅', info: 'ℹ️' };
+        const TITLES = { error: 'Error', warning: 'Warning', success: 'Success', info: 'Info' };
+        const DURATION = { error: 5000, warning: 4500, success: 3000, info: 3500 };
+
+        function show(type, title, message, duration) {
+            const container = document.getElementById('posNotifContainer');
+            if (!container) { console.warn('[notify]', title, message); return; }
+            const d = duration || DURATION[type] || 4000;
+            const el = document.createElement('div');
+            el.className = `pos-notif type-${type}`;
+            el.innerHTML = `
+                <div class="pos-notif-icon">${ICONS[type]}</div>
+                <div class="pos-notif-body">
+                    <div class="pos-notif-title">${title || TITLES[type]}</div>
+                    ${message ? `<div class="pos-notif-msg">${message}</div>` : ''}
+                </div>
+                <button class="pos-notif-close" onclick="this.closest('.pos-notif').remove()">✕</button>
+                <div class="pos-notif-progress" style="animation-duration: ${d}ms"></div>`;
+            container.appendChild(el);
+            requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+            setTimeout(() => {
+                el.classList.add('hiding');
+                setTimeout(() => el.remove(), 400);
+            }, d);
+        }
+
+        function error(msg, title)   { show('error',   title || 'Error',   msg); }
+        function warning(msg, title) { show('warning', title || 'Warning', msg); }
+        function success(msg, title) { show('success', title || 'Success', msg); }
+        function info(msg, title)    { show('info',    title || 'Info',    msg); }
+
+        /* Professional confirm dialog */
+        function confirm(opts) {
+            return new Promise(resolve => {
+                const overlay = document.getElementById('posModalOverlay');
+                const icon = document.getElementById('posModalIcon');
+                const titleEl = document.getElementById('posModalTitle');
+                const msgEl = document.getElementById('posModalMsg');
+                const inputEl = document.getElementById('posModalInput');
+                const actionsEl = document.getElementById('posModalActions');
+                icon.textContent = opts.icon || '❓';
+                titleEl.textContent = opts.title || 'Confirm';
+                msgEl.innerHTML = opts.message || '';
+                inputEl.style.display = 'none';
+                inputEl.value = '';
+                actionsEl.innerHTML = '';
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'pos-modal-btn cancel';
+                cancelBtn.textContent = opts.cancelText || 'Cancel';
+                cancelBtn.onclick = () => { overlay.classList.remove('show'); resolve(false); };
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = `pos-modal-btn confirm${opts.danger ? ' danger' : ''}`;
+                confirmBtn.textContent = opts.confirmText || 'OK';
+                confirmBtn.onclick = () => { overlay.classList.remove('show'); resolve(true); };
+                if (opts.cancelText !== false) actionsEl.appendChild(cancelBtn);
+                actionsEl.appendChild(confirmBtn);
+                overlay.classList.add('show');
+                setTimeout(() => confirmBtn.focus(), 50);
+            });
+        }
+
+        /* Professional prompt dialog */
+        function prompt(opts) {
+            return new Promise(resolve => {
+                const overlay = document.getElementById('posModalOverlay');
+                const icon = document.getElementById('posModalIcon');
+                const titleEl = document.getElementById('posModalTitle');
+                const msgEl = document.getElementById('posModalMsg');
+                const inputEl = document.getElementById('posModalInput');
+                const actionsEl = document.getElementById('posModalActions');
+                icon.textContent = opts.icon || '✏️';
+                titleEl.textContent = opts.title || 'Enter value';
+                msgEl.innerHTML = opts.message || '';
+                inputEl.style.display = 'block';
+                inputEl.placeholder = opts.placeholder || '';
+                inputEl.value = opts.default || '';
+                actionsEl.innerHTML = '';
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'pos-modal-btn cancel';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.onclick = () => { overlay.classList.remove('show'); resolve(null); };
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = 'pos-modal-btn confirm';
+                confirmBtn.textContent = opts.confirmText || 'Send';
+                const doConfirm = () => { overlay.classList.remove('show'); resolve(inputEl.value.trim() || null); };
+                confirmBtn.onclick = doConfirm;
+                inputEl.onkeydown = (e) => { if (e.key === 'Enter') doConfirm(); if (e.key === 'Escape') { overlay.classList.remove('show'); resolve(null); } };
+                actionsEl.appendChild(cancelBtn);
+                actionsEl.appendChild(confirmBtn);
+                overlay.classList.add('show');
+                setTimeout(() => inputEl.focus(), 50);
+            });
+        }
+
+        /* Alert (info-only, single OK button) */
+        function alert(msg, opts) {
+            opts = opts || {};
+            return new Promise(resolve => {
+                const overlay = document.getElementById('posModalOverlay');
+                const icon = document.getElementById('posModalIcon');
+                const titleEl = document.getElementById('posModalTitle');
+                const msgEl = document.getElementById('posModalMsg');
+                const inputEl = document.getElementById('posModalInput');
+                const actionsEl = document.getElementById('posModalActions');
+                icon.textContent = opts.icon || 'ℹ️';
+                titleEl.textContent = opts.title || 'Notice';
+                msgEl.innerHTML = msg || '';
+                inputEl.style.display = 'none';
+                actionsEl.innerHTML = '';
+                const okBtn = document.createElement('button');
+                okBtn.className = `pos-modal-btn confirm${opts.danger ? ' danger' : ''}`;
+                okBtn.textContent = 'OK';
+                okBtn.onclick = () => { overlay.classList.remove('show'); resolve(); };
+                actionsEl.appendChild(okBtn);
+                overlay.classList.add('show');
+                setTimeout(() => okBtn.focus(), 50);
+            });
+        }
+
+        return { show, error, warning, success, info, confirm, prompt, alert };
+    })();
+    </script>
+    <script>
     (function patchDataModuleWithSubscription() {
         document.addEventListener('DOMContentLoaded', function() {
             if (!window.dataModule) { console.warn('dataModule not found — subscription patch skipped'); return; }
@@ -779,7 +992,7 @@
     }
 
     function initiateIntaSendPayment() {
-        if (!window.IntaSend) { alert('Payment SDK still loading. Please wait.'); return; }
+        if (!window.IntaSend) { posNotify.warning('Payment SDK is still loading. Please wait a moment and try again.', 'SDK Loading'); return; }
         const btn = document.getElementById('subPayOnlineBtn');
         btn.disabled = true; btn.textContent = '⏳ Opening payment…';
         _setIntaSendStatus('');
@@ -787,7 +1000,7 @@
         _initIntaSend();
         const triggerBtn = document.getElementById('intasendTriggerBtn');
         if (triggerBtn) triggerBtn.click();
-        else { _resetPayBtn(); alert('Payment button not found. Refresh and try again.'); return; }
+        else { _resetPayBtn(); posNotify.error('Payment button not found. Please refresh the page and try again.', 'UI Error'); return; }
         setTimeout(_resetPayBtn, 10000);
     }
 
@@ -835,13 +1048,13 @@
             console.error('❌ Activation error:', err);
             _setIntaSendStatus('error', `❌ Activation failed: ${err.message}`);
             _resetPayBtn();
-            alert(`❌ Subscription activation failed:\n${err.message}`);
+            posNotify.error('Subscription activation failed: ' + err.message, 'Activation Error');
         }
     }
 
     async function activateSubscriptionManual() {
         const txCode = (document.getElementById('subTransactionCode')?.value || '').trim().toUpperCase();
-        if (!txCode) { alert('Please enter the transaction code.'); return; }
+        if (!txCode) { posNotify.warning('Please enter the M-Pesa transaction code.', 'Required'); return; }
         const btn = document.getElementById('subActivateManualBtn');
         btn.disabled = true; btn.textContent = '⏳ Activating…';
         try { await _activateSubscriptionInSupabase({ method:'Manual', transaction_code:txCode }); }
@@ -942,12 +1155,12 @@
         }
     }
     async function replyToMessage(senderId) {
-        if (!senderId || senderId === 'unknown') { alert("Cannot reply — sender info missing."); return; }
-        const replyText = prompt("Enter your reply:");
+        if (!senderId || senderId === 'unknown') { posNotify.error('Cannot reply — sender information is missing.', 'Reply Failed'); return; }
+        const replyText = await posNotify.prompt({ title: 'Reply to Message', message: 'Type your reply below:', placeholder: 'Enter your reply...', icon: '💬', confirmText: 'Send' });
         if (!replyText?.trim()) return;
         const result = await window.messagingModule.sendMessage(senderId, replyText.trim());
-        if (result.success) { alert("Reply sent!"); loadUserMessages(); updateUnreadCount(); }
-        else alert("Failed to send reply: " + (result.error || "Unknown error"));
+        if (result.success) { posNotify.success('Your reply has been sent.', 'Reply Sent'); loadUserMessages(); updateUnreadCount(); }
+        else posNotify.error('Failed to send reply: ' + (result.error || 'Unknown error'), 'Send Failed');
     }
     async function markMessageRead(messageId) {
         const result = await window.messagingModule.markAsRead(messageId);
@@ -1044,7 +1257,7 @@
         btn.disabled = true; btn.textContent = 'Saving...';
         let user = authModule.getCurrentUser();
         if (!user) { const j = localStorage.getItem('duka_user'); if(j) try { user=JSON.parse(j); } catch{} }
-        if (!user?.id) { btn.disabled=false; btn.textContent='Save Expense'; alert('Session expired. Please log in again.'); return; }
+        if (!user?.id) { btn.disabled=false; btn.textContent='Save Expense'; posNotify.error('Your session has expired. Please log in again.', 'Session Expired'); return; }
         try {
             const result = await window.dataModule.createExpense({
                 category:    document.getElementById('expenseCategory').value,
@@ -1055,8 +1268,8 @@
             if (!result.success) throw new Error(result.error || 'Unknown error');
             closeAddExpenseModal();
             await loadExpenses();
-            alert('✅ Expense added successfully!');
-        } catch (err) { alert('❌ Failed to add expense: ' + err.message); }
+            posNotify.success('Expense has been recorded successfully.', 'Expense Added');
+        } catch (err) { posNotify.error('Failed to add expense: ' + err.message, 'Save Failed'); }
         finally { btn.disabled=false; btn.textContent='Save Expense'; }
     });
 
@@ -1085,7 +1298,7 @@
                 console.log('✅ POS initialized');
             } catch (err) {
                 console.error('POS init failed:', err);
-                alert('Failed to initialize POS: ' + err.message);
+                posNotify.error('Failed to initialize POS: ' + err.message, 'Initialization Error');
             }
         });
 
@@ -1141,6 +1354,40 @@
                     badge +
                     '</div>';
             }).join('');
+            updateStockAlertBanner(products);
+        }
+
+        function updateStockAlertBanner(allProducts) {
+            const banner = document.getElementById('stockAlertBanner');
+            const alertList = document.getElementById('stockAlertList');
+            const lowItems = allProducts.filter(p => p.stock <= 20).sort((a,b) => a.stock - b.stock);
+            if (!lowItems.length) { banner.classList.remove('has-alerts'); return; }
+            banner.classList.add('has-alerts');
+            alertList.innerHTML = lowItems.map(p => {
+                const cls = p.stock <= 0 ? 'out' : p.stock <= 5 ? 'crit' : 'low';
+                const icon = p.stock <= 0 ? '🚫' : p.stock <= 5 ? '🔴' : '🟠';
+                const label = p.stock <= 0 ? 'Out of stock' : p.stock + ' left';
+                return `<span class="stock-alert-chip ${cls}">${icon} ${p.name}: ${label}</span>`;
+            }).join('');
+        }
+
+        function showStockToast(soldItems) {
+            const lowAfterSale = soldItems.filter(item => {
+                const product = products.find(p => p.id === item.id);
+                return product && product.stock <= 20;
+            });
+            if (!lowAfterSale.length) return;
+            const toastItems = document.getElementById('stockToastItems');
+            toastItems.innerHTML = lowAfterSale.map(item => {
+                const product = products.find(p => p.id === item.id);
+                const stock = product ? product.stock : 0;
+                const icon = stock <= 0 ? '🚫' : stock <= 5 ? '🔴' : '🟠';
+                const label = stock <= 0 ? 'Now out of stock!' : `Only ${stock} remaining`;
+                return `<div class="stock-toast-item">${icon} <span><b>${item.name}</b> — ${label}</span></div>`;
+            }).join('');
+            const toast = document.getElementById('stockToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 7000);
         }
 
         async function loadCustomers() {
@@ -1221,9 +1468,9 @@
             const input     = document.getElementById('redeemPointsInput');
             const pts       = parseInt(input.value) || 0;
             const available = selectedCustomer?.loyalty_points || 0;
-            if (pts < 100)        { alert('Minimum redemption is 100 points.'); return; }
-            if (pts > available)  { alert(`You only have ${available} points available.`); return; }
-            if (pts % 100 !== 0)  { alert('Points must be in multiples of 100.'); return; }
+            if (pts < 100)        { posNotify.warning('Minimum redemption is 100 points.', 'Points Redemption'); return; }
+            if (pts > available)  { posNotify.warning(`You only have ${available} points available.`, 'Insufficient Points'); return; }
+            if (pts % 100 !== 0)  { posNotify.warning('Points must be entered in multiples of 100.', 'Invalid Amount'); return; }
             redeemedPoints = pts; closeRedeemModal(); renderRedeemBadge(); updateCartSummary();
         };
         window.removeRedemption = function() { redeemedPoints = 0; renderRedeemBadge(); updateCartSummary(); };
@@ -1231,13 +1478,19 @@
         window.addToCart = function(productId) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
-            if (product.stock <= 0) { alert('Product out of stock!'); return; }
+            if (product.stock <= 0) { posNotify.error(`<b>${product.name}</b> is currently out of stock and cannot be added to the cart.`, 'Out of Stock'); return; }
             const existing = cart.find(i => i.id === productId);
             if (existing) {
-                if (existing.quantity >= product.stock) { alert('Cannot add more than available stock!'); return; }
+                if (existing.quantity >= product.stock) { posNotify.warning(`Only ${product.stock} unit(s) of <b>${product.name}</b> are available in stock.`, 'Stock Limit Reached'); return; }
                 existing.quantity++;
             } else {
                 cart.push({ id:product.id, name:product.name, price:product.price, quantity:1, maxStock:product.stock });
+                /* Show low stock warning on first add */
+                if (product.stock <= 5) {
+                    posNotify.show('error', 'Critical Stock', `Only <b>${product.stock}</b> unit(s) of <b>${product.name}</b> remaining. Consider restocking soon.`);
+                } else if (product.stock <= 20) {
+                    posNotify.show('warning', 'Low Stock', `<b>${product.name}</b> is running low — only <b>${product.stock}</b> unit(s) left in stock.`);
+                }
             }
             renderCart();
         };
@@ -1245,20 +1498,28 @@
             const container = document.getElementById('cartItems');
             const btn       = document.getElementById('checkoutBtn');
             if (!cart.length) {
-                container.innerHTML = `<div class="empty-cart"><div style="font-size:2.5rem;margin-bottom:10px;">🛒</div><p>Cart is empty</p></div>`;
+                container.innerHTML = `<div class="empty-cart">
+                    <div style="font-size:2.8rem;margin-bottom:10px;opacity:0.4;">🛒</div>
+                    <p style="font-weight:600;margin:0 0 4px;">Cart is empty</p>
+                    <p style="font-size:0.8rem;margin:0;">Tap a product to add it</p>
+                </div>`;
                 btn.disabled = true; updateCartSummary(); return;
             }
             container.innerHTML = cart.map(item =>
                 `<div class="cart-item">
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
-                        <div class="cart-item-price">KES ${item.price.toFixed(2)} each</div>
+                        <div class="cart-item-meta">
+                            <span class="cart-item-price">KES ${item.price.toFixed(2)} each</span>
+                            <span style="color:var(--text-muted);font-size:0.75rem;">•</span>
+                            <span class="cart-item-subtotal">KES ${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
                     </div>
                     <div class="cart-item-controls">
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <button class="qty-btn minus" onclick="updateQuantity(${item.id}, -1)" title="Decrease">−</button>
                         <span class="qty-value">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)" title="Increase">+</button>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})" title="Remove">✕</button>
                     </div>
                 </div>`
             ).join('');
@@ -1269,7 +1530,7 @@
             if (!item) return;
             const newQty = item.quantity + change;
             if (newQty <= 0) { removeFromCart(productId); return; }
-            if (newQty > item.maxStock) { alert('Cannot exceed available stock!'); return; }
+            if (newQty > item.maxStock) { posNotify.warning(`Only ${item.maxStock} unit(s) of <b>${item.name}</b> are in stock.`, 'Stock Limit'); return; }
             item.quantity = newQty; renderCart();
         };
         window.removeFromCart = function(productId) { cart = cart.filter(i => i.id !== productId); renderCart(); };
@@ -1343,7 +1604,7 @@
                     const r = await window.dataModule.updateInventory(item.id, item.quantity, 'subtract');
                     if (!r.success) stockFailed.push(item.name);
                 }
-                if (stockFailed.length) alert('Sale complete, but stock update failed for: ' + stockFailed.join(', '));
+                if (stockFailed.length) posNotify.warning('Sale recorded, but stock update failed for: ' + stockFailed.join(', '), 'Partial Warning');
 
                 let pointsEarned  = 0;
                 let newTotalPoints = 0;
@@ -1379,9 +1640,10 @@
                 document.getElementById('redeemBadge').style.display = 'none';
                 renderCart();
                 await loadProducts();
+                showStockToast(cartItems);
             } catch (err) {
                 console.error('Checkout error:', err);
-                alert('Checkout failed: ' + err.message);
+                posNotify.error('Checkout failed: ' + err.message, 'Checkout Error');
             }
         }
 
@@ -1390,6 +1652,12 @@
 
     window.addEventListener('beforeunload', () => { if (messagesCheckInterval) clearInterval(messagesCheckInterval); });
     </script>
+
+    <div class="stock-toast" id="stockToast">
+        <button class="stock-toast-close" onclick="document.getElementById('stockToast').classList.remove('show')">✕</button>
+        <div class="stock-toast-title">⚠️ Low Stock Alert</div>
+        <div class="stock-toast-items" id="stockToastItems"></div>
+    </div>
 
     <footer style="text-align:center;padding:15px;background-color:black;">
         <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color:gold;font-family:'Great Vibes',cursive;"> Gordon Onyango.</b> All rights reserved.</p>
