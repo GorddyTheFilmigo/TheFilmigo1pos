@@ -61,12 +61,7 @@
         .page-header { margin-bottom: 24px; }
         .page-header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 900; margin-bottom: 8px; }
         .page-header p { font-size: 0.9rem; color: var(--text-muted); }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; margin-bottom: 32px; }
         .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: transform 0.2s; }
         .stat-card:hover { transform: translateY(-4px); }
         .stat-title { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
@@ -80,10 +75,10 @@
         .btn { padding: 9px 16px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; white-space: nowrap; }
         .btn:hover { transform: translateY(-2px); }
         .btn-primary { background: var(--accent-green); color: white; }
-        .btn-secondary{ background: var(--accent-blue); color: white; }
+        .btn-secondary { background: var(--accent-blue); color: white; }
         .btn-small { padding: 6px 12px; font-size: 0.8rem; }
-        .btn-danger-sm{ padding: 6px 12px; font-size: 0.8rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s; font-weight: 600; }
-        .btn-danger-sm:hover{ background: rgba(248,81,73,0.12); color: var(--danger); border-color: var(--danger); }
+        .btn-danger-sm { padding: 6px 12px; font-size: 0.8rem; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s; font-weight: 600; }
+        .btn-danger-sm:hover { background: rgba(248,81,73,0.12); color: var(--danger); border-color: var(--danger); }
         .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .table { width: 100%; border-collapse: collapse; min-width: 500px; }
         th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
@@ -91,7 +86,7 @@
         tr:hover { background: rgba(88,166,255,0.08); }
         .top-cashier { background: rgba(63,185,80,0.15); padding: 14px; border-radius: 10px; margin-top: 16px; font-size: 0.9rem; }
         .loading { text-align: center; padding: 40px; color: var(--text-muted); }
-        .error-message{ color: var(--danger); text-align: center; padding: 40px; }
+        .error-message { color: var(--danger); text-align: center; padding: 40px; }
         .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
         .empty-state-icon { font-size: 3.5rem; margin-bottom: 16px; }
         .info-box { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px; margin-bottom: 20px; font-size: 0.9rem; }
@@ -140,7 +135,7 @@
         .popup-section.active { display: block; }
         .status-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; }
         .status-pending { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
-        .status-processing{ background: rgba(88,166,255,0.15); color: var(--accent-blue); }
+        .status-processing { background: rgba(88,166,255,0.15); color: var(--accent-blue); }
         .status-shipped { background: rgba(139,92,246,0.15); color: #a78bfa; }
         .status-delivered { background: rgba(16,185,129,0.15); color: #10b981; }
         .status-cancelled { background: rgba(248,81,73,0.15); color: var(--danger); }
@@ -166,52 +161,76 @@
         .modal-btn-cancel { background: var(--bg-tertiary); color: var(--text-muted); border: 1px solid var(--border); }
         .modal-btn-cancel:hover { color: var(--text); }
         #messageText { box-sizing: border-box; }
-        .insight-card {
-            background: rgba(245,158,11,0.08);
-            border: 1px solid rgba(245,158,11,0.3);
-            border-radius: 10px;
-            padding: 16px;
-            margin: 16px 0;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
+        .insight-card { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 16px; margin: 16px 0; font-size: 0.95rem; line-height: 1.5; }
         .insight-card strong { color: var(--accent-orange); }
         .insight-card.danger { background: rgba(248,81,73,0.08); border-color: rgba(248,81,73,0.4); }
         .insight-card.danger strong { color: var(--danger); }
-        .heatmap-container {
-            position: relative;
-            height: 340px;
-            margin: 16px 0;
-        }
-        .heatmap-legend {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 8px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
+        .heatmap-container { position: relative; height: 340px; margin: 16px 0; }
+        .heatmap-legend { display: flex; justify-content: center; gap: 12px; margin-top: 8px; font-size: 0.82rem; color: var(--text-muted); }
         .legend-item { display: flex; align-items: center; gap: 6px; }
         .legend-color { width: 16px; height: 16px; border-radius: 3px; }
-        .segment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin: 24px 0;
-        }
-        .segment-card {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 18px;
-        }
+        .segment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0; }
+        .segment-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
         .segment-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--accent-blue); }
-        .export-btn {
-            background: var(--accent-blue);
-            color: white;
-            margin-left: auto;
-        }
+        .export-btn { background: var(--accent-blue); color: white; margin-left: auto; }
         .export-btn:hover { background: #3b8de8; }
+
+        /* ── AI INSIGHTS ── */
+        .ai-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+        .ai-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
+        .ai-header h2 { font-size: clamp(1rem,3vw,1.3rem); font-weight: 700; margin: 0; }
+        .ai-timestamp { font-size: 0.75rem; color: var(--text-muted); }
+        .ai-spinner-wrap { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.88rem; padding: 20px 0; }
+        .ai-spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent-orange); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* KPI row */
+        .ai-kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,170px),1fr)); gap: 12px; margin: 16px 0; }
+        .ai-kpi { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+        .ai-kpi-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 6px; }
+        .ai-kpi-value { font-size: 1.4rem; font-weight: 900; line-height: 1.1; }
+        .ai-kpi-value.green  { color: var(--accent-green); }
+        .ai-kpi-value.orange { color: var(--accent-orange); }
+        .ai-kpi-value.red    { color: var(--danger); }
+        .ai-kpi-value.blue   { color: var(--accent-blue); }
+        .ai-kpi-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+
+        /* Section divider */
+        .ai-divider { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
+        .ai-divider::after { content:''; flex:1; height:1px; background: var(--border); }
+
+        /* List cards */
+        .ai-list-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+        .ai-list-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 0.86rem; line-height: 1.45; }
+        .ai-list-item:last-child { border-bottom: none; }
+        .ai-icon { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+        .ai-item-main { flex: 1; }
+        .ai-item-name { font-weight: 700; }
+        .ai-item-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .ai-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; vertical-align: middle; }
+        .badge-red    { background: rgba(248,81,73,0.18);  color: var(--danger); }
+        .badge-orange { background: rgba(245,158,11,0.18); color: var(--accent-orange); }
+        .badge-green  { background: rgba(63,185,80,0.18);  color: var(--accent-green); }
+        .badge-blue   { background: rgba(88,166,255,0.18); color: var(--accent-blue); }
+        .badge-purple { background: rgba(167,139,250,0.18); color: #a78bfa; }
+
+        /* Forecast bar */
+        .ai-forecast-bar { height: 6px; background: var(--border); border-radius: 3px; margin: 6px 0 2px; overflow: hidden; }
+        .ai-forecast-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+        /* Trend chip */
+        .trend-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .trend-up   { background: rgba(63,185,80,0.15);  color: var(--accent-green); }
+        .trend-down { background: rgba(248,81,73,0.15);  color: var(--danger); }
+        .trend-flat { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+
+        /* Alert box */
+        .ai-alert { border-radius: 8px; padding: 12px 14px; font-size: 0.88rem; line-height: 1.5; margin: 10px 0; }
+        .ai-alert.warn  { background: rgba(245,158,11,0.1); border-left: 3px solid var(--accent-orange); }
+        .ai-alert.good  { background: rgba(63,185,80,0.1);  border-left: 3px solid var(--accent-green); }
+        .ai-alert.bad   { background: rgba(248,81,73,0.1);  border-left: 3px solid var(--danger); }
+        .ai-alert.info  { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent-blue); }
+
         @media (max-width: 768px) {
             .container { padding: 12px; }
             .page-header { margin-bottom: 16px; }
@@ -226,39 +245,24 @@
             .chart-container { padding: 14px; }
             .chart-title { font-size: 1rem; }
             canvas { max-height: 260px !important; }
-            .table-container::before {
-                content: '← scroll →';
-                display: block;
-                text-align: center;
-                font-size: 0.7rem;
-                color: var(--text-muted);
-                margin-bottom: 6px;
-            }
+            .table-container::before { content: '← scroll →'; display: block; text-align: center; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; }
             th, td { padding: 10px 8px; font-size: 0.8rem; }
-            .supplier-order-card > div[style*="grid"] {
-                grid-template-columns: 1fr 1fr !important;
-            }
+            .supplier-order-card > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
             #messageText { min-height: 80px; font-size: 0.9rem; }
             .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 75vh; }
             .modal-box { padding: 18px; }
             .modal-actions { flex-direction: column; }
             .modal-actions .btn, .modal-actions button { width: 100%; }
             .top-cashier { font-size: 0.85rem; padding: 10px 12px; }
-            #sentMessagesTable td:nth-child(5),
-            #sentMessagesTable th:nth-child(5) { display: none; }
+            #sentMessagesTable td:nth-child(5), #sentMessagesTable th:nth-child(5) { display: none; }
+            .ai-kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .ai-section { padding: 14px; }
         }
         @media (max-width: 400px) {
             .stats-grid { grid-template-columns: 1fr; }
             .stat-value { font-size: 1.6rem; }
             .dashboard-tab { padding: 8px 12px; font-size: 0.82rem; }
-        }
-        @media (orientation: landscape) and (max-width: 896px) {
-            body::before {
-                content: "For best experience, use portrait mode";
-                position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
-                background: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 12px;
-                z-index: 9999; display: none;
-            }
+            .ai-kpi-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -431,42 +435,118 @@
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Customer Segmentation</h2></div>
                 <div class="segment-grid">
-                    <div class="segment-card">
-                        <div class="segment-title">High Spenders</div>
-                        <p id="highSpenders">Loading...</p>
-                    </div>
-                    <div class="segment-card">
-                        <div class="segment-title">Occasional Buyers</div>
-                        <p id="occasionalBuyers">Loading...</p>
-                    </div>
-                    <div class="segment-card">
-                        <div class="segment-title">At-Risk Customers</div>
-                        <p id="atRiskCustomers">Loading...</p>
-                    </div>
+                    <div class="segment-card"><div class="segment-title">High Spenders</div><p id="highSpenders">Loading...</p></div>
+                    <div class="segment-card"><div class="segment-title">Occasional Buyers</div><p id="occasionalBuyers">Loading...</p></div>
+                    <div class="segment-card"><div class="segment-title">At-Risk Customers</div><p id="atRiskCustomers">Loading...</p></div>
                 </div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-header"><h2 class="chart-title">Predictive Insights & AI Suggestions</h2></div>
-                <div class="insight-card">
-                    <strong>📅 Predicted revenue next week:</strong> <span id="forecastRevenue">KES —</span>
-                    <span id="forecastTrend" style="font-weight:600;"></span>
+            <!-- ═══════════════════════════════════════════════════════
+                 PREDICTIVE INSIGHTS & AI SUGGESTIONS
+                 All data sourced live from Supabase
+                 ═══════════════════════════════════════════════════════ -->
+            <div class="ai-section" id="aiSection">
+                <div class="ai-header">
+                    <h2>🤖 Predictive Insights &amp; AI Suggestions</h2>
+                    <span class="ai-timestamp" id="aiTimestamp"></span>
                 </div>
-                <div class="insight-card">
-                    <strong>🧠 AI product restock suggestions:</strong><br>
-                    <ul id="restockSuggestions">
-                        <li>Loading...</li>
-                    </ul>
+
+                <!-- Loading state -->
+                <div class="ai-spinner-wrap" id="aiLoading">
+                    <div class="ai-spinner"></div>
+                    <span>Analysing your data…</span>
                 </div>
-                <div class="insight-card">
-                    <strong>🎯 Customers who buy X also buy Y:</strong><br>
-                    <span id="bundleInsight">Loading...</span>
-                </div>
-                <div class="insight-card danger">
-                    <strong>📉 Margin alert:</strong><br>
-                    <span id="marginAlert">Loading...</span>
-                </div>
-            </div>
+
+                <!-- Content (hidden until loaded) -->
+                <div id="aiContent" style="display:none;">
+
+                    <!-- ① REVENUE FORECAST -->
+                    <div class="ai-divider">📅 Revenue Forecast</div>
+                    <div class="ai-kpi-row">
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Predicted — Next 7 Days</div>
+                            <div class="ai-kpi-value green" id="ai_forecast7">KES —</div>
+                            <div class="ai-forecast-bar"><div class="ai-forecast-fill" id="ai_forecastBar" style="width:0%;background:var(--accent-green);"></div></div>
+                            <div class="ai-kpi-sub" id="ai_forecastSub">—</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Best Day of Week</div>
+                            <div class="ai-kpi-value blue" id="ai_bestDay">—</div>
+                            <div class="ai-kpi-sub" id="ai_bestDaySub">Based on last 90 days</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Best Hour of Day</div>
+                            <div class="ai-kpi-value blue" id="ai_bestHour">—</div>
+                            <div class="ai-kpi-sub" id="ai_bestHourSub">Peak revenue window</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Avg Daily Revenue</div>
+                            <div class="ai-kpi-value orange" id="ai_avgDaily">KES —</div>
+                            <div class="ai-kpi-sub" id="ai_avgDailySub">In selected period</div>
+                        </div>
+                    </div>
+
+                    <!-- ② RESTOCK SUGGESTIONS -->
+                    <div class="ai-divider">📦 Restock Suggestions</div>
+                    <div class="ai-list-card" id="ai_restockList">
+                        <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
+                    </div>
+
+                    <!-- ③ BUNDLE / CROSS-SELL -->
+                    <div class="ai-divider">🛒 Cross-sell Opportunities</div>
+                    <div class="ai-list-card" id="ai_bundleList">
+                        <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
+                    </div>
+
+                    <!-- ④ MARGIN ALERTS -->
+                    <div class="ai-divider">📉 Margin &amp; Profitability</div>
+                    <div class="ai-kpi-row">
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Avg Profit Margin</div>
+                            <div class="ai-kpi-value" id="ai_margin">—%</div>
+                            <div class="ai-kpi-sub" id="ai_marginSub">Across period</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Low-Margin Days (&lt;20%)</div>
+                            <div class="ai-kpi-value" id="ai_lowMarginDays">—</div>
+                            <div class="ai-kpi-sub" id="ai_lowMarginSub">days flagged</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Best Margin Day</div>
+                            <div class="ai-kpi-value green" id="ai_bestMarginDay">—</div>
+                            <div class="ai-kpi-sub" id="ai_bestMarginDaySub">—</div>
+                        </div>
+                    </div>
+                    <div id="ai_marginAlert"></div>
+
+                    <!-- ⑤ CHURN RISK -->
+                    <div class="ai-divider">🔔 Customer Churn Risk</div>
+                    <div class="ai-list-card" id="ai_churnList">
+                        <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
+                    </div>
+
+                    <!-- ⑥ PAYMENT INSIGHTS -->
+                    <div class="ai-divider">💳 Payment Behaviour</div>
+                    <div class="ai-kpi-row">
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Top Payment Method</div>
+                            <div class="ai-kpi-value blue" id="ai_topPayment">—</div>
+                            <div class="ai-kpi-sub" id="ai_topPaymentSub">—</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Avg Transaction Value</div>
+                            <div class="ai-kpi-value green" id="ai_avgTx">KES —</div>
+                            <div class="ai-kpi-sub" id="ai_avgTxSub">—</div>
+                        </div>
+                        <div class="ai-kpi">
+                            <div class="ai-kpi-label">Credit Sales</div>
+                            <div class="ai-kpi-value orange" id="ai_credit">KES —</div>
+                            <div class="ai-kpi-sub" id="ai_creditSub">Unpaid / deferred</div>
+                        </div>
+                    </div>
+
+                </div><!-- /aiContent -->
+            </div><!-- /ai-section -->
 
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Sales by Cashier</h2></div>
@@ -504,12 +584,8 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Cashier</th>
-                                <th>Total (KES)</th>
-                                <th>Profit (KES)</th>
-                                <th>Items</th>
-                                <th>Payment</th>
+                                <th>Date</th><th>Cashier</th><th>Total (KES)</th>
+                                <th>Profit (KES)</th><th>Items</th><th>Payment</th>
                             </tr>
                         </thead>
                         <tbody id="recentTransactions">
@@ -518,7 +594,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div><!-- /analyticsTab -->
 
         <div id="suppliersTab" class="tab-content">
             <div class="chart-container">
@@ -583,814 +659,852 @@
     <script src="assets/supplier-orders-module.js"></script>
 
     <script>
-        let _db = null;
-        function getDB() {
-            if (_db) return _db;
-            _db = window.DukaPOS?.supabaseClient || null;
-            return _db;
-        }
+    /* ─────────────────────────────────────────────
+       HELPERS
+    ───────────────────────────────────────────── */
+    let _db = null;
+    function getDB() {
+        if (_db) return _db;
+        _db = window.DukaPOS?.supabaseClient || null;
+        return _db;
+    }
 
-        function switchPopupTab(tab) {
-            document.getElementById('tabRejections').classList.toggle('active', tab === 'rejections');
-            document.getElementById('tabStaff').classList.toggle('active', tab === 'staff');
-            document.getElementById('sectionRejections').classList.toggle('active', tab === 'rejections');
-            document.getElementById('sectionStaff').classList.toggle('active', tab === 'staff');
-        }
+    const fmt = (n) => Number(n).toLocaleString('en-KE', { maximumFractionDigits: 0 });
+    const fmtDec = (n, d=2) => Number(n).toLocaleString('en-KE', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-        function setNavigationVisibility(userRole) {
-            const role = userRole.toLowerCase().trim();
+    function set(id, html) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    }
+    function setText(id, txt) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = txt;
+    }
+    function setClass(id, cls) {
+        const el = document.getElementById(id);
+        if (el) el.className = cls;
+    }
+
+    /* ─────────────────────────────────────────────
+       POPUP / NAV / MISC  (unchanged from original)
+    ───────────────────────────────────────────── */
+    function switchPopupTab(tab) {
+        document.getElementById('tabRejections').classList.toggle('active', tab==='rejections');
+        document.getElementById('tabStaff').classList.toggle('active', tab==='staff');
+        document.getElementById('sectionRejections').classList.toggle('active', tab==='rejections');
+        document.getElementById('sectionStaff').classList.toggle('active', tab==='staff');
+    }
+
+    function setNavigationVisibility(userRole) {
+        const role = userRole.toLowerCase().trim();
+        ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
+        if (['admin','administrator','manager'].includes(role)) {
             ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-                .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-            if (['admin','administrator','manager'].includes(role)) {
-                ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-                    .forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
-            } else if (role === 'cashier') {
-                ['posLink','productsLink','customersLink'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'flex'; });
+                .forEach(id => { const el = document.getElementById(id); if (el) el.style.display='flex'; });
+        } else if (role==='cashier') {
+            ['posLink','productsLink','customersLink'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='flex'; });
+        } else {
+            const el=document.getElementById('posLink'); if(el) el.style.display='flex';
+        }
+    }
+
+    function switchDashboardTab(tabName, el) {
+        document.querySelectorAll('.dashboard-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        if(el) el.classList.add('active');
+        document.getElementById(tabName+'Tab').classList.add('active');
+        if(tabName==='suppliers') loadSupplierOrders();
+    }
+
+    let _rejectionStoreKey = 'dismissedRejections_default';
+    let _dismissedIds = new Set();
+    function _initRejectionStore(userId) {
+        _rejectionStoreKey = `dismissedRejections_${userId}`;
+        try { const raw=localStorage.getItem(_rejectionStoreKey); _dismissedIds=new Set(raw?JSON.parse(raw):[]); }
+        catch { _dismissedIds=new Set(); }
+    }
+    function _persistDismissed() { try { localStorage.setItem(_rejectionStoreKey, JSON.stringify([..._dismissedIds])); } catch(e){} }
+    function _isDismissed(id) { return _dismissedIds.has(String(id)); }
+    function _markDismissed(id) { _dismissedIds.add(String(id)); _persistDismissed(); }
+
+    async function loadRejectionNotifications() {
+        const db=getDB(); if(!db) return {rejections:[],unseen:0};
+        try {
+            const {data,error} = await db.from('supply_requests')
+                .select(`id,item_name,quantity,unit,supplier_response,created_at,approved_at,supplier_id,supplier:supplier_id(id,full_name,email)`)
+                .eq('status','rejected').order('approved_at',{ascending:false}).limit(40);
+            if(error) throw error;
+            const rejections=data||[];
+            return {rejections, unseen:rejections.filter(r=>!_isDismissed(r.id)).length};
+        } catch(err) { return {rejections:[],unseen:0}; }
+    }
+
+    function renderRejectionSection(rejections) {
+        const section=document.getElementById('sectionRejections');
+        if(!rejections.length) { section.innerHTML='<div class="empty-messages"><div class="empty-messages-icon">✅</div><p>No supplier rejections</p></div>'; return; }
+        section.innerHTML=rejections.map(r=>{
+            const dismissed=_isDismissed(r.id);
+            const supplierName=r.supplier?.full_name||r.supplier?.email||'Supplier';
+            const supplierId=r.supplier?.id||r.supplier_id||null;
+            const rejectedAt=r.approved_at?new Date(r.approved_at).toLocaleString():'—';
+            const itemName=r.item_name||'Unknown item';
+            const qty=`${r.quantity||'—'} ${r.unit||''}`.trim();
+            const actionsHtml=dismissed
+                ?`<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}','${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
+                :`<div class="rejection-actions">
+                    <button class="rej-btn rej-btn-reorder" onclick="reorderRejected('${encodeURIComponent(itemName)}','${encodeURIComponent(qty)}')">🔄 Reorder</button>
+                    ${supplierId?`<button class="rej-btn rej-btn-contact" onclick="openContactModal(${supplierId},'${encodeURIComponent(supplierName)}','${encodeURIComponent(itemName)}')">💬 Contact</button>`:''}
+                    <button class="rej-btn rej-btn-dismiss" onclick="dismissRejection(${r.id},this)">Dismiss</button>
+                  </div>`;
+            return `<div class="message-item rejection ${dismissed?'read':''}" id="rejection-${r.id}">
+                <span class="rejection-label">❌ Request Rejected</span>
+                <div class="message-header"><span class="message-sender">🏭 ${supplierName}</span><span class="message-time">${rejectedAt}</span></div>
+                <div class="message-text"><strong>${itemName}</strong> · Qty: ${qty}</div>
+                ${r.supplier_response?`<div class="rejection-reason">"${r.supplier_response}"</div>`:''}
+                ${actionsHtml}</div>`;
+        }).join('');
+    }
+
+    function dismissRejection(id,btn) {
+        _markDismissed(id);
+        const card=document.getElementById(`rejection-${id}`);
+        if(card){
+            card.classList.add('read');
+            const actions=card.querySelector('.rejection-actions');
+            const itemNameEl=card.querySelector('.message-text strong');
+            const itemName=itemNameEl?encodeURIComponent(itemNameEl.textContent.trim()):'';
+            if(actions) actions.outerHTML=`<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${itemName}','')">🔄 Reorder anyway</button></div>`;
+        }
+        updateBellBadge();
+    }
+    function reorderRejected(ei,eq) { window.location.href=`supply-requests.html?prefill_item=${ei}&prefill_qty=${eq}`; }
+
+    let _contactSupplierId=null;
+    function openContactModal(sId,eName,eItem) {
+        _contactSupplierId=sId;
+        document.getElementById('contactSupplierName').textContent=decodeURIComponent(eName);
+        document.getElementById('contactItemName').textContent=decodeURIComponent(eItem);
+        document.getElementById('contactSupplierMessage').value='';
+        document.getElementById('contactSupplierModal').classList.add('show');
+    }
+    function closeContactModal() { document.getElementById('contactSupplierModal').classList.remove('show'); _contactSupplierId=null; }
+
+    async function sendContactMessage() {
+        if(!_contactSupplierId) return;
+        const text=document.getElementById('contactSupplierMessage').value.trim();
+        if(!text){alert('Please enter a message.');return;}
+        const btn=document.getElementById('contactSendBtn');
+        btn.disabled=true; btn.textContent='⏳ Sending…';
+        try {
+            let result={success:false,error:'messagingModule not available'};
+            if(window.messagingModule) result=await window.messagingModule.sendMessage(parseInt(_contactSupplierId),text);
+            if(result.success){closeContactModal();alert('✅ Message sent to supplier!');}
+            else alert('Failed: '+(result.error||'Unknown error'));
+        } catch(err){alert('Error: '+err.message);}
+        finally{btn.disabled=false;btn.textContent='📤 Send Message';}
+    }
+    document.getElementById('contactSupplierModal').addEventListener('click',function(e){if(e.target===this)closeContactModal();});
+
+    async function updateBellBadge() {
+        const {unseen:rejUnseen}=await loadRejectionNotifications();
+        let staffUnseen=0;
+        try{if(window.messagingModule){const r=await window.messagingModule.getUnreadCount();if(r.success)staffUnseen=r.count||0;}}catch(_){}
+        const total=rejUnseen+staffUnseen;
+        const badge=document.getElementById('messageBadge');
+        badge.textContent=total>99?'99+':total;
+        badge.style.display=total>0?'flex':'none';
+        const rBadge=document.getElementById('rejectionTabBadge');
+        if(rejUnseen>0){rBadge.textContent=rejUnseen;rBadge.style.display='inline';}
+        else rBadge.style.display='none';
+    }
+
+    async function toggleMessagesPopup() {
+        const popup=document.getElementById('messagesPopup');
+        if(popup.classList.contains('active')){popup.classList.remove('active');return;}
+        popup.classList.add('active');
+        document.getElementById('sectionRejections').innerHTML='<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
+        document.getElementById('sectionStaff').innerHTML='<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
+        const {rejections}=await loadRejectionNotifications();
+        renderRejectionSection(rejections);
+        await loadStaffMessagesIntoPopup();
+    }
+    document.addEventListener('click',function(e){
+        const popup=document.getElementById('messagesPopup');
+        const bell=document.getElementById('messageBell');
+        if(popup?.classList.contains('active')&&!popup.contains(e.target)&&!bell.contains(e.target))popup.classList.remove('active');
+    });
+
+    async function loadStaffMessagesIntoPopup() {
+        const section=document.getElementById('sectionStaff');
+        try{
+            let messages=[];
+            const sentResult=await window.messagingModule?.getSentMessages(20);
+            if(sentResult?.success&&sentResult.data) messages=messages.concat(sentResult.data.map(m=>({...m,type:'sent'})));
+            const allResult=await window.messagingModule?.getAllMessages(30);
+            if(allResult?.success&&allResult.data){
+                const cu=authModule.getCurrentUser();
+                messages=messages.concat(allResult.data.filter(m=>m.recipient_id===cu.id).map(m=>({...m,type:'received'})));
+            }
+            messages.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+            if(!messages.length){section.innerHTML='<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No staff messages yet</p></div>';return;}
+            section.innerHTML=messages.map(msg=>`
+                <div class="message-item ${msg.type} ${msg.is_read?'read':''}">
+                    <div class="message-header">
+                        <span class="message-sender">${msg.type==='sent'?'To '+(msg.recipient?.full_name||'Staff'):'From '+(msg.sender?.full_name||'Staff')}</span>
+                        <span class="message-time">${new Date(msg.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="message-text">${msg.message_text||'(empty)'}</div>
+                    <div style="margin-top:6px;font-size:0.78rem;color:var(--text-muted);">
+                        ${msg.is_read?'✅ Read':'⏳ Unread'}
+                        ${msg.expires_at?' · Expires in '+Math.max(0,Math.round((new Date(msg.expires_at)-new Date())/3600000))+'h':''}
+                    </div>
+                    ${!msg.is_read&&msg.type==='received'?`<button class="mark-read-btn" onclick="markMessageAsRead(${msg.id},event)">Mark as Read</button>`:''}
+                </div>`).join('');
+        }catch(err){section.innerHTML=`<div class="empty-messages"><p>Error: ${err.message}</p></div>`;}
+    }
+
+    async function markMessageAsRead(messageId,event) {
+        const btn=event.target;const item=btn.closest('.message-item');
+        try{const result=await window.messagingModule.markAsRead(messageId);if(result.success){btn.remove();if(item)item.classList.add('read');updateBellBadge();}}
+        catch(err){console.error('Mark read error:',err);}
+    }
+
+    async function getDateRangeFilter() {
+        const start=document.getElementById('startDate').value;
+        const end=document.getElementById('endDate').value;
+        if(!start||!end) return null;
+        return {start:`${start} 00:00:00`,end:`${end} 23:59:59.999`};
+    }
+
+    /* ─────────────────────────────────────────────
+       HEATMAP  (unchanged)
+    ───────────────────────────────────────────── */
+    let salesHeatmapChart=null;
+    async function renderHeatmapAndInsights() {
+        const ctx=document.getElementById('salesHeatmap').getContext('2d');
+        const range=await getDateRangeFilter(); if(!range) return;
+        const {data,error}=await getDB().from('sales').select('created_at,total_amount').gte('created_at',range.start).lte('created_at',range.end);
+        if(error||!data?.length){document.getElementById('topSlots').textContent="No sales data in selected period";document.getElementById('revenueLeakInsight').style.display='none';return;}
+        const matrix=Array(7).fill().map(()=>Array(24).fill(0));
+        data.forEach(sale=>{const d=new Date(sale.created_at);matrix[d.getDay()][d.getHours()]+=Number(sale.total_amount||0);});
+        const flat=matrix.flat(); const max=Math.max(...flat)||1;
+        const normalized=matrix.map(row=>row.map(v=>(v/max)*100));
+        const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const hours=Array.from({length:24},(_,i)=>i.toString().padStart(2,'0')+'h');
+        function getColor(v){return v<20?'rgba(248,81,73,0.6)':v<50?'rgba(245,158,11,0.7)':'rgba(63,185,80,0.8)';}
+        if(salesHeatmapChart)salesHeatmapChart.destroy();
+        salesHeatmapChart=new Chart(ctx,{type:'bar',data:{labels:hours,datasets:days.map((day,i)=>({label:day,data:normalized[i],backgroundColor:normalized[i].map(v=>getColor(v)),borderWidth:0,barPercentage:0.95,categoryPercentage:0.9}))},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{stacked:false},y:{stacked:false}},plugins:{legend:{position:'top'}}}});
+        let topSlots=[];
+        matrix.forEach((row,di)=>row.forEach((val,h)=>{if(val>0)topSlots.push({day:days[di],hour:h,value:val});}));
+        topSlots.sort((a,b)=>b.value-a.value);
+        topSlots=topSlots.slice(0,3).map(s=>`${s.day} ${s.hour.toString().padStart(2,'0')}:00–${(s.hour+1).toString().padStart(2,'0')}:00`);
+        document.getElementById('topSlots').textContent=topSlots.join(', ')||"No significant peaks";
+        const friAfternoon=matrix[5][14]+matrix[5][15];
+        const avg=flat.reduce((a,b)=>a+b,0)/flat.length;
+        if(friAfternoon<avg*0.5){document.getElementById('leakMessage').textContent=`Fridays 2–4 PM are ~${Math.round(100-(friAfternoon/avg*100))}% below average — consider promotions.`;document.getElementById('revenueLeakInsight').style.display='block';}
+        else document.getElementById('revenueLeakInsight').style.display='none';
+    }
+
+    /* ─────────────────────────────────────────────
+       CUSTOMER OVERVIEW / PURCHASE BEHAVIOR / SEGMENTATION  (unchanged)
+    ───────────────────────────────────────────── */
+    async function renderCustomerOverview() {
+        const range=await getDateRangeFilter(); if(!range) return;
+        const {count:newCount}=await getDB().from('customers').select('*',{count:'exact',head:true}).gte('created_at',range.start).lte('created_at',range.end);
+        const {data:salesInPeriod}=await getDB().from('sales').select('customer_id').gte('created_at',range.start).lte('created_at',range.end);
+        const uniqueCustomers=new Set(salesInPeriod?.map(s=>s.customer_id)||[]);
+        const returning=uniqueCustomers.size-(newCount||0);
+        const {data:revenueData}=await getDB().from('sales').select('total_amount,customer_id').gte('created_at',range.start).lte('created_at',range.end);
+        let totalRevenue=0; const spendByCustomer={};
+        revenueData?.forEach(s=>{const amt=Number(s.total_amount||0);totalRevenue+=amt;spendByCustomer[s.customer_id]=(spendByCustomer[s.customer_id]||0)+amt;});
+        const customerCount=Object.keys(spendByCustomer).length||1;
+        document.getElementById('newCustomers').textContent=newCount||0;
+        document.getElementById('returningCustomers').textContent=returning>0?returning:0;
+        document.getElementById('newVsReturning').textContent=customerCount>0?`${Math.round((newCount/customerCount)*100)}% New • ${Math.round((returning/customerCount)*100)}% Returning`:"No customers in period";
+        document.getElementById('clv').textContent=`KES ${fmtDec(totalRevenue/(newCount+returning||1))}`;
+        document.getElementById('avgSpend').textContent=`KES ${fmtDec(totalRevenue/customerCount)}`;
+    }
+
+    async function renderPurchaseBehavior() {
+        const range=await getDateRangeFilter(); if(!range) return;
+        const {data:sales}=await getDB().from('sales').select('id,customer_id,created_at').gte('created_at',range.start).lte('created_at',range.end).order('created_at');
+        if(!sales?.length){document.getElementById('purchaseFrequency').textContent="—";document.getElementById('timeBetweenPurchases').textContent="—";document.getElementById('productBundles').innerHTML="<li>No data available</li>";return;}
+        const ordersByCustomer={};
+        sales.forEach(s=>{if(!ordersByCustomer[s.customer_id])ordersByCustomer[s.customer_id]=[];ordersByCustomer[s.customer_id].push(new Date(s.created_at));});
+        const frequencies=Object.values(ordersByCustomer).map(o=>o.length);
+        const avgFrequency=frequencies.reduce((a,b)=>a+b,0)/frequencies.length||0;
+        let totalDaysBetween=0,pairCount=0;
+        Object.values(ordersByCustomer).forEach(dates=>{
+            if(dates.length<2)return;
+            dates.sort((a,b)=>a-b);
+            for(let i=1;i<dates.length;i++){totalDaysBetween+=(dates[i]-dates[i-1])/86400000;pairCount++;}
+        });
+        document.getElementById('purchaseFrequency').textContent=avgFrequency.toFixed(1);
+        document.getElementById('timeBetweenPurchases').textContent=Math.round(pairCount>0?totalDaysBetween/pairCount:0);
+        document.getElementById('productBundles').innerHTML="<li>Advanced bundle analysis coming soon</li>";
+    }
+
+    async function renderCustomerSegmentation() {
+        const {data:allSales}=await getDB().from('sales').select('customer_id,total_amount');
+        if(!allSales?.length){['highSpenders','occasionalBuyers','atRiskCustomers'].forEach(id=>document.getElementById(id).textContent="No data");return;}
+        const lifetimeByCustomer={};
+        allSales.forEach(s=>{lifetimeByCustomer[s.customer_id]=(lifetimeByCustomer[s.customer_id]||0)+Number(s.total_amount||0);});
+        const values=Object.values(lifetimeByCustomer).sort((a,b)=>b-a);
+        const top15=values[Math.floor(values.length*0.15)]||0;
+        let high=0,occ=0;
+        values.forEach(v=>{if(v>=top15)high++;else if(v<3000)occ++;});
+        document.getElementById('highSpenders').innerHTML=`${high} customers • top 15% • drive most revenue`;
+        document.getElementById('occasionalBuyers').innerHTML=`${occ} customers • low spenders`;
+        document.getElementById('atRiskCustomers').innerHTML="At-risk detection requires last purchase date — coming soon";
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       PREDICTIVE INSIGHTS — fully wired to real Supabase data
+    ═══════════════════════════════════════════════════════════════ */
+    async function renderPredictiveInsights() {
+        const range = await getDateRangeFilter();
+        if (!range) return;
+
+        // show loading, hide content
+        document.getElementById('aiLoading').style.display  = 'flex';
+        document.getElementById('aiContent').style.display  = 'none';
+
+        try {
+            const db       = getDB();
+            const shopId   = window.dataModule?.getCurrentShopId?.();
+            const startD   = new Date(range.start);
+            const endD     = new Date(range.end);
+            const days     = Math.max(1, Math.round((endD - startD) / 86400000) + 1);
+
+            // ── Previous period (same length) for trend comparison ──
+            const prevEnd   = new Date(startD); prevEnd.setDate(prevEnd.getDate() - 1);
+            const prevStart = new Date(prevEnd); prevStart.setDate(prevStart.getDate() - days + 1);
+
+            // ── Parallel fetches ──
+            const [
+                salesRes,
+                allSalesRes,
+                saleItemsRes,
+                productsRes,
+                allCustSalesRes,
+                prevSalesRes
+            ] = await Promise.all([
+                // Current-period sales
+                db.from('sales')
+                  .select('id,total_amount,total_profit,payment_method,items_sold,created_at,customer_id')
+                  .gte('created_at', range.start).lte('created_at', range.end),
+
+                // Last-90-days sales for day/hour patterns
+                db.from('sales')
+                  .select('created_at,total_amount')
+                  .gte('created_at', new Date(Date.now()-90*86400000).toISOString()),
+
+                // Sale items → restock + bundle analysis
+                db.from('sale_items')
+                  .select('sale_id,product_id,quantity,products(id,name,stock)')
+                  .gte('created_at', range.start).lte('created_at', range.end),
+
+                // Products for restock stock levels
+                shopId
+                    ? db.from('products').select('id,name,stock').eq('shop_id', shopId)
+                    : db.from('products').select('id,name,stock'),
+
+                // All-time customer sales for churn
+                db.from('sales').select('customer_id,created_at').order('created_at',{ascending:false}),
+
+                // Previous-period sales for trend
+                db.from('sales')
+                  .select('total_amount')
+                  .gte('created_at', prevStart.toISOString().split('T')[0]+' 00:00:00')
+                  .lte('created_at', prevEnd.toISOString().split('T')[0]+' 23:59:59')
+            ]);
+
+            const sales        = salesRes.data         || [];
+            const allSales     = allSalesRes.data       || [];
+            const saleItems    = saleItemsRes.data      || [];
+            const products     = productsRes.data       || [];
+            const allCustSales = allCustSalesRes.data   || [];
+            const prevSales    = prevSalesRes.data      || [];
+
+            const totalRev  = sales.reduce((s,x) => s + Number(x.total_amount||0), 0);
+            const totalProf = sales.reduce((s,x) => s + Number(x.total_profit||0), 0);
+            const prevRev   = prevSales.reduce((s,x) => s + Number(x.total_amount||0), 0);
+
+            /* ─── ① REVENUE FORECAST ─── */
+            const avgDaily   = totalRev / days;
+            const forecast7  = avgDaily * 7;
+            const trendPct   = prevRev > 0 ? ((totalRev - prevRev) / prevRev * 100) : 0;
+            const trendDir   = trendPct >=  2 ? 'up' : trendPct <= -2 ? 'down' : 'flat';
+            const trendArrow = trendPct >=  2 ? '↑' : trendPct <= -2 ? '↓' : '→';
+            const trendClass = trendDir === 'up' ? 'trend-up' : trendDir === 'down' ? 'trend-down' : 'trend-flat';
+            const barColor   = trendDir === 'up' ? 'var(--accent-green)' : trendDir === 'down' ? 'var(--danger)' : 'var(--accent-orange)';
+            const barPct     = Math.min(100, Math.round((forecast7 / (totalRev * 1.2 || 1)) * 100));
+
+            setText('ai_forecast7', `KES ${fmt(forecast7)}`);
+            setClass('ai_forecast7', `ai-kpi-value ${trendDir==='up'?'green':trendDir==='down'?'red':'orange'}`);
+            document.getElementById('ai_forecastBar').style.width = barPct + '%';
+            document.getElementById('ai_forecastBar').style.background = barColor;
+            set('ai_forecastSub', `<span class="trend-chip ${trendClass}">${trendArrow} ${Math.abs(trendPct).toFixed(1)}% vs prev ${days}-day period</span> &nbsp; Avg/day: KES ${fmt(avgDaily)}`);
+
+            setText('ai_avgDaily', `KES ${fmt(avgDaily)}`);
+            setText('ai_avgDailySub', `Over ${days} day${days!==1?'s':''}`);
+
+            // Day-of-week & hour patterns (90-day window)
+            const dayTotals=Array(7).fill(0), dayCounts=Array(7).fill(0);
+            const hourTotals=Array(24).fill(0), hourCounts=Array(24).fill(0);
+            allSales.forEach(s=>{
+                const d=new Date(s.created_at);
+                const amt=Number(s.total_amount||0);
+                dayTotals[d.getDay()]+=amt; dayCounts[d.getDay()]++;
+                hourTotals[d.getHours()]+=amt; hourCounts[d.getHours()]++;
+            });
+            const dayAvg  = dayTotals.map((t,i)=>dayCounts[i]>0?t/dayCounts[i]:0);
+            const hourAvg = hourTotals.map((t,i)=>hourCounts[i]>0?t/hourCounts[i]:0);
+            const bestDayIdx  = dayAvg.indexOf(Math.max(...dayAvg));
+            const bestHourIdx = hourAvg.indexOf(Math.max(...hourAvg));
+            const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+            setText('ai_bestDay', dayNames[bestDayIdx] || '—');
+            setText('ai_bestDaySub', `Avg KES ${fmt(dayAvg[bestDayIdx])} revenue`);
+            setText('ai_bestHour', `${String(bestHourIdx).padStart(2,'0')}:00 – ${String(bestHourIdx+1).padStart(2,'0')}:00`);
+            setText('ai_bestHourSub', `Avg KES ${fmt(hourAvg[bestHourIdx])} in that window`);
+
+            /* ─── ② RESTOCK ─── */
+            const velocity = {};
+            saleItems.forEach(item => {
+                if (!item.product_id) return;
+                if (!velocity[item.product_id]) {
+                    velocity[item.product_id] = {
+                        name: item.products?.name || `#${item.product_id}`,
+                        sold: 0,
+                        stock: item.products?.stock ?? null
+                    };
+                }
+                velocity[item.product_id].sold += Number(item.quantity || 0);
+            });
+            // Override stock from products table where available
+            products.forEach(p => { if (velocity[p.id]) velocity[p.id].stock = p.stock; });
+
+            const restockRows = Object.values(velocity)
+                .filter(p => p.sold > 0)
+                .map(p => {
+                    const dailyV = p.sold / days;
+                    const daysLeft = (dailyV > 0 && p.stock !== null) ? Math.floor(p.stock / dailyV) : 9999;
+                    return { ...p, dailyV, daysLeft };
+                })
+                .sort((a,b) => a.daysLeft - b.daysLeft)
+                .slice(0, 8);
+
+            if (!restockRows.length) {
+                set('ai_restockList', '<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No restock needed</div><div class="ai-item-sub">All products have sufficient stock for this period</div></div></div>');
             } else {
-                const el = document.getElementById('posLink'); if (el) el.style.display = 'flex';
-            }
-        }
-
-        function switchDashboardTab(tabName, el) {
-            document.querySelectorAll('.dashboard-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            if (el) el.classList.add('active');
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            if (tabName === 'suppliers') loadSupplierOrders();
-        }
-
-        let _rejectionStoreKey = 'dismissedRejections_default';
-        let _dismissedIds = new Set();
-        function _initRejectionStore(userId) {
-            _rejectionStoreKey = `dismissedRejections_${userId}`;
-            try {
-                const raw = localStorage.getItem(_rejectionStoreKey);
-                _dismissedIds = new Set(raw ? JSON.parse(raw) : []);
-            } catch { _dismissedIds = new Set(); }
-        }
-        function _persistDismissed() {
-            try { localStorage.setItem(_rejectionStoreKey, JSON.stringify([..._dismissedIds])); }
-            catch (e) { console.warn('Could not persist dismissed rejections:', e); }
-        }
-        function _isDismissed(id) { return _dismissedIds.has(String(id)); }
-        function _markDismissed(id) { _dismissedIds.add(String(id)); _persistDismissed(); }
-
-        async function loadRejectionNotifications() {
-            const db = getDB();
-            if (!db) return { rejections: [], unseen: 0 };
-            try {
-                const { data, error } = await db
-                    .from('supply_requests')
-                    .select(`id, item_name, quantity, unit, supplier_response, created_at, approved_at, supplier_id, supplier:supplier_id ( id, full_name, email )`)
-                    .eq('status', 'rejected')
-                    .order('approved_at', { ascending: false })
-                    .limit(40);
-                if (error) throw error;
-                const rejections = data || [];
-                const unseen = rejections.filter(r => !_isDismissed(r.id)).length;
-                return { rejections, unseen };
-            } catch (err) {
-                console.error('Rejection load error:', err);
-                return { rejections: [], unseen: 0 };
-            }
-        }
-
-        function renderRejectionSection(rejections) {
-            const section = document.getElementById('sectionRejections');
-            if (!rejections.length) {
-                section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">✅</div><p>No supplier rejections</p></div>';
-                return;
-            }
-            section.innerHTML = rejections.map(r => {
-                const dismissed = _isDismissed(r.id);
-                const supplierName = r.supplier?.full_name || r.supplier?.email || 'Supplier';
-                const supplierId = r.supplier?.id || r.supplier_id || null;
-                const rejectedAt = r.approved_at ? new Date(r.approved_at).toLocaleString() : '—';
-                const itemName = r.item_name || 'Unknown item';
-                const qty = `${r.quantity || '—'} ${r.unit || ''}`.trim();
-                const actionsHtml = dismissed
-                    ? `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder anyway</button></div>`
-                    : `<div class="rejection-actions">
-                        <button class="rej-btn rej-btn-reorder" onclick="reorderRejected('${encodeURIComponent(itemName)}', '${encodeURIComponent(qty)}')">🔄 Reorder</button>
-                        ${supplierId ? `<button class="rej-btn rej-btn-contact" onclick="openContactModal(${supplierId}, '${encodeURIComponent(supplierName)}', '${encodeURIComponent(itemName)}')">💬 Contact</button>` : ''}
-                        <button class="rej-btn rej-btn-dismiss" onclick="dismissRejection(${r.id}, this)">Dismiss</button>
-                       </div>`;
-                return `
-                    <div class="message-item rejection ${dismissed ? 'read' : ''}" id="rejection-${r.id}">
-                        <span class="rejection-label">❌ Request Rejected</span>
-                        <div class="message-header">
-                            <span class="message-sender">🏭 ${supplierName}</span>
-                            <span class="message-time">${rejectedAt}</span>
+                set('ai_restockList', restockRows.map(p => {
+                    let icon, badgeCls, badgeTxt;
+                    if      (p.daysLeft <= 3)  { icon='🔴'; badgeCls='badge-red';    badgeTxt='Critical'; }
+                    else if (p.daysLeft <= 7)  { icon='🟠'; badgeCls='badge-orange'; badgeTxt='Low'; }
+                    else if (p.daysLeft <= 14) { icon='🟡'; badgeCls='badge-orange'; badgeTxt='Watch'; }
+                    else                       { icon='🟢'; badgeCls='badge-green';  badgeTxt='OK'; }
+                    const stockTxt = p.stock !== null ? `${p.stock} units left` : 'stock unknown';
+                    const daysLeftTxt = p.daysLeft === 9999 ? '∞' : p.daysLeft;
+                    return `<div class="ai-list-item">
+                        <span class="ai-icon">${icon}</span>
+                        <div class="ai-item-main">
+                            <div class="ai-item-name">${p.name}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div>
+                            <div class="ai-item-sub">${p.sold} sold · ~${p.dailyV.toFixed(1)}/day · ${stockTxt} · ~${daysLeftTxt} days stock remaining</div>
                         </div>
-                        <div class="message-text"><strong>${itemName}</strong> · Qty: ${qty}</div>
-                        ${r.supplier_response ? `<div class="rejection-reason">"${r.supplier_response}"</div>` : ''}
-                        ${actionsHtml}
                     </div>`;
-            }).join('');
-        }
-
-        function dismissRejection(id, btn) {
-            _markDismissed(id);
-            const card = document.getElementById(`rejection-${id}`);
-            if (card) {
-                card.classList.add('read');
-                const actions = card.querySelector('.rejection-actions');
-                const itemNameEl = card.querySelector('.message-text strong');
-                const itemName = itemNameEl ? encodeURIComponent(itemNameEl.textContent.trim()) : '';
-                if (actions) actions.outerHTML = `<div class="rej-dismissed-label">✔ Dismissed — <button class="rej-btn rej-btn-reorder" style="padding:3px 10px;font-size:0.72rem;" onclick="reorderRejected('${itemName}', '')">🔄 Reorder anyway</button></div>`;
-            }
-            updateBellBadge();
-        }
-
-        function reorderRejected(encodedItem, encodedQty) {
-            window.location.href = `supply-requests.html?prefill_item=${encodedItem}&prefill_qty=${encodedQty}`;
-        }
-
-        let _contactSupplierId = null;
-        function openContactModal(supplierId, encodedName, encodedItem) {
-            _contactSupplierId = supplierId;
-            document.getElementById('contactSupplierName').textContent = decodeURIComponent(encodedName);
-            document.getElementById('contactItemName').textContent = decodeURIComponent(encodedItem);
-            document.getElementById('contactSupplierMessage').value = '';
-            document.getElementById('contactSupplierModal').classList.add('show');
-        }
-
-        function closeContactModal() {
-            document.getElementById('contactSupplierModal').classList.remove('show');
-            _contactSupplierId = null;
-        }
-
-        async function sendContactMessage() {
-            if (!_contactSupplierId) return;
-            const text = document.getElementById('contactSupplierMessage').value.trim();
-            if (!text) { alert('Please enter a message.'); return; }
-            const btn = document.getElementById('contactSendBtn');
-            btn.disabled = true; btn.textContent = '⏳ Sending…';
-            try {
-                let result = { success: false, error: 'messagingModule not available' };
-                if (window.messagingModule) result = await window.messagingModule.sendMessage(parseInt(_contactSupplierId), text);
-                if (result.success) { closeContactModal(); alert('✅ Message sent to supplier!'); }
-                else alert('Failed to send message: ' + (result.error || 'Unknown error'));
-            } catch (err) { alert('Error: ' + err.message); }
-            finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
-        }
-
-        document.getElementById('contactSupplierModal').addEventListener('click', function(e) {
-            if (e.target === this) closeContactModal();
-        });
-
-        async function updateBellBadge() {
-            const { unseen: rejUnseen } = await loadRejectionNotifications();
-            let staffUnseen = 0;
-            try {
-                if (window.messagingModule) {
-                    const r = await window.messagingModule.getUnreadCount();
-                    if (r.success) staffUnseen = r.count || 0;
-                }
-            } catch (_) {}
-            const total = rejUnseen + staffUnseen;
-            const badge = document.getElementById('messageBadge');
-            badge.textContent = total > 99 ? '99+' : total;
-            badge.style.display = total > 0 ? 'flex' : 'none';
-            const rBadge = document.getElementById('rejectionTabBadge');
-            if (rejUnseen > 0) { rBadge.textContent = rejUnseen; rBadge.style.display = 'inline'; }
-            else rBadge.style.display = 'none';
-        }
-
-        async function toggleMessagesPopup() {
-            const popup = document.getElementById('messagesPopup');
-            if (popup.classList.contains('active')) { popup.classList.remove('active'); return; }
-            popup.classList.add('active');
-            document.getElementById('sectionRejections').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-            document.getElementById('sectionStaff').innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>Loading…</p></div>';
-            const { rejections } = await loadRejectionNotifications();
-            renderRejectionSection(rejections);
-            await loadStaffMessagesIntoPopup();
-        }
-
-        document.addEventListener('click', function(e) {
-            const popup = document.getElementById('messagesPopup');
-            const bell = document.getElementById('messageBell');
-            if (popup?.classList.contains('active') && !popup.contains(e.target) && !bell.contains(e.target))
-                popup.classList.remove('active');
-        });
-
-        async function loadStaffMessagesIntoPopup() {
-            const section = document.getElementById('sectionStaff');
-            try {
-                let messages = [];
-                const sentResult = await window.messagingModule?.getSentMessages(20);
-                if (sentResult?.success && sentResult.data)
-                    messages = messages.concat(sentResult.data.map(m => ({ ...m, type: 'sent' })));
-                const allResult = await window.messagingModule?.getAllMessages(30);
-                if (allResult?.success && allResult.data) {
-                    const currentUser = authModule.getCurrentUser();
-                    messages = messages.concat(
-                        allResult.data.filter(m => m.recipient_id === currentUser.id).map(m => ({ ...m, type: 'received' }))
-                    );
-                }
-                messages.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-                if (!messages.length) {
-                    section.innerHTML = '<div class="empty-messages"><div class="empty-messages-icon">📭</div><p>No staff messages yet</p></div>';
-                    return;
-                }
-                section.innerHTML = messages.map(msg => `
-                    <div class="message-item ${msg.type} ${msg.is_read ? 'read' : ''}">
-                        <div class="message-header">
-                            <span class="message-sender">${msg.type === 'sent' ? 'To ' + (msg.recipient?.full_name || 'Staff') : 'From ' + (msg.sender?.full_name || 'Staff')}</span>
-                            <span class="message-time">${new Date(msg.created_at).toLocaleString()}</span>
-                        </div>
-                        <div class="message-text">${msg.message_text || '(empty)'}</div>
-                        <div style="margin-top:6px;font-size:0.78rem;color:var(--text-muted);">
-                            ${msg.is_read ? '✅ Read' : '⏳ Unread'}
-                            ${msg.expires_at ? ' · Expires in ' + Math.max(0, Math.round((new Date(msg.expires_at) - new Date()) / 3600000)) + 'h' : ''}
-                        </div>
-                        ${!msg.is_read && msg.type === 'received' ? `<button class="mark-read-btn" onclick="markMessageAsRead(${msg.id}, event)">Mark as Read</button>` : ''}
-                    </div>`
-                ).join('');
-            } catch (err) {
-                section.innerHTML = `<div class="empty-messages"><p>Error: ${err.message}</p></div>`;
-            }
-        }
-
-        async function markMessageAsRead(messageId, event) {
-            const btn = event.target;
-            const item = btn.closest('.message-item');
-            try {
-                const result = await window.messagingModule.markAsRead(messageId);
-                if (result.success) { btn.remove(); if (item) item.classList.add('read'); updateBellBadge(); }
-            } catch (err) { console.error('Mark read error:', err); }
-        }
-
-        async function getDateRangeFilter() {
-            const start = document.getElementById('startDate').value;
-            const end = document.getElementById('endDate').value;
-            if (!start || !end) return null;
-            return {
-                start: `${start} 00:00:00`,
-                end:   `${end} 23:59:59.999`
-            };
-        }
-
-        let salesHeatmapChart = null;
-        async function renderHeatmapAndInsights() {
-            const ctx = document.getElementById('salesHeatmap').getContext('2d');
-            const range = await getDateRangeFilter();
-            if (!range) return;
-
-            const { data, error } = await getDB()
-                .from('sales')
-                .select('created_at, total_amount')
-                .gte('created_at', range.start)
-                .lte('created_at', range.end);
-
-            if (error || !data?.length) {
-                document.getElementById('topSlots').textContent = "No sales data in selected period";
-                document.getElementById('revenueLeakInsight').style.display = 'none';
-                return;
+                }).join(''));
             }
 
-            const matrix = Array(7).fill().map(() => Array(24).fill(0));
-            data.forEach(sale => {
-                const d = new Date(sale.created_at);
-                const day = d.getDay();
-                const hour = d.getHours();
-                matrix[day][hour] += Number(sale.total_amount || 0);
+            /* ─── ③ BUNDLE / CROSS-SELL ─── */
+            const saleProductMap = {};
+            saleItems.forEach(item => {
+                if (!item.sale_id || !item.product_id) return;
+                if (!saleProductMap[item.sale_id]) saleProductMap[item.sale_id] = [];
+                saleProductMap[item.sale_id].push({ id: item.product_id, name: item.products?.name || `#${item.product_id}` });
             });
-
-            const flat = matrix.flat();
-            const max = Math.max(...flat) || 1;
-            const normalized = matrix.map(row => row.map(v => (v / max) * 100));
-
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const hours = Array.from({length:24}, (_,i) => i.toString().padStart(2,'0') + 'h');
-
-            function getColor(value) {
-                if (value < 20) return 'rgba(248,81,73,0.6)';
-                if (value < 50) return 'rgba(245,158,11,0.7)';
-                return 'rgba(63,185,80,0.8)';
-            }
-
-            if (salesHeatmapChart) salesHeatmapChart.destroy();
-            salesHeatmapChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: hours,
-                    datasets: days.map((day, i) => ({
-                        label: day,
-                        data: normalized[i],
-                        backgroundColor: normalized[i].map(v => getColor(v)),
-                        borderWidth: 0,
-                        barPercentage: 0.95,
-                        categoryPercentage: 0.9
-                    }))
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: { x: { stacked: false }, y: { stacked: false } },
-                    plugins: { legend: { position: 'top' } }
+            const pairCounts = {};
+            Object.values(saleProductMap).forEach(prods => {
+                if (prods.length < 2) return;
+                for (let i=0;i<prods.length;i++) for (let j=i+1;j<prods.length;j++) {
+                    const key = [prods[i].id, prods[j].id].sort().join('|');
+                    if (!pairCounts[key]) pairCounts[key] = { a: prods[i].name, b: prods[j].name, count: 0 };
+                    pairCounts[key].count++;
                 }
             });
+            const topPairs = Object.values(pairCounts).sort((x,y)=>y.count-x.count).slice(0,6);
 
-            let topSlots = [];
-            matrix.forEach((row, dayIdx) => {
-                row.forEach((val, hour) => {
-                    if (val > 0) topSlots.push({ day: days[dayIdx], hour, value: val });
-                });
-            });
-            topSlots.sort((a,b) => b.value - a.value);
-            topSlots = topSlots.slice(0,3).map(s => `${s.day} ${s.hour.toString().padStart(2,'0')}:00–${(s.hour+1).toString().padStart(2,'0')}:00`);
-
-            document.getElementById('topSlots').textContent = topSlots.join(', ') || "No significant peaks";
-
-            const friAfternoon = matrix[5][14] + matrix[5][15];
-            const avg = flat.reduce((a,b)=>a+b,0) / flat.length;
-            if (friAfternoon < avg * 0.5) {
-                document.getElementById('leakMessage').textContent = `Fridays 2–4 PM are ~${Math.round(100 - (friAfternoon/avg*100))}% below average — consider promotions.`;
-                document.getElementById('revenueLeakInsight').style.display = 'block';
+            if (!topPairs.length) {
+                set('ai_bundleList', '<div class="ai-list-item"><span class="ai-icon">ℹ️</span><div class="ai-item-main"><div class="ai-item-name">Not enough multi-item transactions yet</div><div class="ai-item-sub">Encourage customers to buy more per visit to unlock bundle insights</div></div></div>');
             } else {
-                document.getElementById('revenueLeakInsight').style.display = 'none';
-            }
-        }
-
-        async function renderCustomerOverview() {
-            const range = await getDateRangeFilter();
-            if (!range) return;
-
-            const { count: newCount, error: newErr } = await getDB()
-                .from('customers')
-                .select('*', { count: 'exact', head: true })
-                .gte('created_at', range.start)
-                .lte('created_at', range.end);
-
-            if (newErr) return;
-
-            const { data: salesInPeriod } = await getDB()
-                .from('sales')
-                .select('customer_id')
-                .gte('created_at', range.start)
-                .lte('created_at', range.end);
-
-            const uniqueCustomers = new Set(salesInPeriod?.map(s => s.customer_id) || []);
-            const returning = uniqueCustomers.size - (newCount || 0);
-
-            const { data: revenueData } = await getDB()
-                .from('sales')
-                .select('total_amount, customer_id')
-                .gte('created_at', range.start)
-                .lte('created_at', range.end);
-
-            let totalRevenue = 0;
-            const spendByCustomer = {};
-            revenueData?.forEach(s => {
-                const amt = Number(s.total_amount || 0);
-                totalRevenue += amt;
-                spendByCustomer[s.customer_id] = (spendByCustomer[s.customer_id] || 0) + amt;
-            });
-
-            const customerCount = Object.keys(spendByCustomer).length || 1;
-            const avgSpend = totalRevenue / customerCount;
-            const clvApprox = totalRevenue / (newCount + returning || 1);
-
-            document.getElementById('newCustomers').textContent = newCount || 0;
-            document.getElementById('returningCustomers').textContent = returning > 0 ? returning : 0;
-            document.getElementById('newVsReturning').textContent =
-                customerCount > 0
-                    ? `${Math.round((newCount / customerCount) * 100)}% New • ${Math.round((returning / customerCount) * 100)}% Returning`
-                    : "No customers in period";
-
-            document.getElementById('clv').textContent = `KES ${clvApprox.toFixed(2)}`;
-            document.getElementById('avgSpend').textContent = `KES ${avgSpend.toFixed(2)}`;
-        }
-
-        async function renderPurchaseBehavior() {
-            const range = await getDateRangeFilter();
-            if (!range) return;
-
-            const { data: sales } = await getDB()
-                .from('sales')
-                .select('id, customer_id, created_at')
-                .gte('created_at', range.start)
-                .lte('created_at', range.end)
-                .order('created_at');
-
-            if (!sales?.length) {
-                document.getElementById('purchaseFrequency').textContent = "—";
-                document.getElementById('timeBetweenPurchases').textContent = "—";
-                document.getElementById('productBundles').innerHTML = "<li>No data available</li>";
-                return;
-            }
-
-            const ordersByCustomer = {};
-            sales.forEach(s => {
-                if (!ordersByCustomer[s.customer_id]) ordersByCustomer[s.customer_id] = [];
-                ordersByCustomer[s.customer_id].push(new Date(s.created_at));
-            });
-
-            const frequencies = Object.values(ordersByCustomer).map(orders => orders.length);
-            const avgFrequency = frequencies.reduce((a,b)=>a+b,0) / frequencies.length || 0;
-
-            let totalDaysBetween = 0;
-            let pairCount = 0;
-            Object.values(ordersByCustomer).forEach(dates => {
-                if (dates.length < 2) return;
-                dates.sort((a,b)=>a-b);
-                for (let i = 1; i < dates.length; i++) {
-                    const diffDays = (dates[i] - dates[i-1]) / (1000 * 60 * 60 * 24);
-                    totalDaysBetween += diffDays;
-                    pairCount++;
-                }
-            });
-
-            const avgDaysBetween = pairCount > 0 ? totalDaysBetween / pairCount : 0;
-
-            document.getElementById('purchaseFrequency').textContent = avgFrequency.toFixed(1);
-            document.getElementById('timeBetweenPurchases').textContent = Math.round(avgDaysBetween);
-
-            document.getElementById('productBundles').innerHTML = "<li>Advanced bundle analysis coming soon</li>";
-        }
-
-        async function renderCustomerSegmentation() {
-            const { data: allSales } = await getDB()
-                .from('sales')
-                .select('customer_id, total_amount');
-
-            if (!allSales?.length) {
-                document.getElementById('highSpenders').textContent = "No data";
-                document.getElementById('occasionalBuyers').textContent = "No data";
-                document.getElementById('atRiskCustomers').textContent = "No data";
-                return;
-            }
-
-            const lifetimeByCustomer = {};
-            allSales.forEach(s => {
-                lifetimeByCustomer[s.customer_id] = (lifetimeByCustomer[s.customer_id] || 0) + Number(s.total_amount || 0);
-            });
-
-            const values = Object.values(lifetimeByCustomer);
-            const sorted = values.sort((a,b)=>b-a);
-            const top15PercentThreshold = sorted[Math.floor(sorted.length * 0.15)] || 0;
-
-            let highSpenders = 0, occasional = 0;
-            values.forEach(v => {
-                if (v >= top15PercentThreshold) highSpenders++;
-                else if (v < 3000) occasional++;
-            });
-
-            document.getElementById('highSpenders').innerHTML = `${highSpenders} customers • top 15% • drive most revenue`;
-            document.getElementById('occasionalBuyers').innerHTML = `${occasional} customers • low spenders`;
-            document.getElementById('atRiskCustomers').innerHTML = "At-risk detection requires last purchase date — coming soon";
-        }
-
-        async function renderPredictiveInsights() {
-            const range = await getDateRangeFilter();
-            if (!range) return;
-
-            const { data } = await getDB()
-                .from('sales')
-                .select('total_amount, created_at')
-                .gte('created_at', range.start)
-                .lte('created_at', range.end);
-
-            if (!data?.length) {
-                document.getElementById('forecastRevenue').textContent = "KES —";
-                return;
-            }
-
-            const daysInRange = (new Date(range.end) - new Date(range.start)) / (1000*60*60*24) + 1;
-            const totalRev = data.reduce((sum, s) => sum + Number(s.total_amount || 0), 0);
-            const avgDaily = totalRev / daysInRange;
-            const nextWeekForecast = avgDaily * 7;
-
-            const trend = nextWeekForecast > totalRev ? "↑" : "↓";
-            document.getElementById('forecastRevenue').textContent = `KES ${nextWeekForecast.toFixed(0)}`;
-            document.getElementById('forecastTrend').textContent = `${trend} ${Math.round(Math.abs((nextWeekForecast - totalRev)/totalRev * 100))}% vs this period`;
-            document.getElementById('restockSuggestions').innerHTML = "<li>Restock suggestions require velocity analysis — coming soon</li>";
-        }
-
-        (function() {
-            let revenueChart, topProductsChart, expensesByCashierChart;
-
-            function waitFor(getter, cb, interval = 300, max = 40) {
-                let n = 0;
-                const t = setInterval(() => {
-                    if (getter()) { clearInterval(t); cb(); }
-                    else if (++n >= max) clearInterval(t);
-                }, interval);
-            }
-
-            window.addEventListener('DOMContentLoaded', async () => {
-                try {
-                    await window.DukaPOS.initializeSupabase();
-                    _db = window.DukaPOS.supabaseClient;
-                    const isAuthenticated = await authModule.requireAuth();
-                    if (!isAuthenticated) return;
-                    const currentUser = authModule.getCurrentUser();
-                    if (!currentUser) return;
-                    const userRole = (currentUser.role || '').trim().toLowerCase();
-                    const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
-                    if (!isAdmin) {
-                        window.location.replace(userRole === 'supplier' ? 'suppliers.html' : 'pos.html');
-                        return;
-                    }
-                    _initRejectionStore(currentUser.id);
-                    document.body.style.visibility = 'visible';
-                    document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                    setNavigationVisibility(userRole);
-                    setDateRange('month');
-                    await loadDashboard();
-                    updateBellBadge();
-                    setInterval(updateBellBadge, 30000);
-                    waitFor(() => window.messagingModule, () => { loadUsersForMessaging(); loadSentMessages(); });
-                    setTimeout(() => loadSupplierOrders(), 500);
-                    console.log('✅ Dashboard initialized');
-                } catch (err) {
-                    console.error('Dashboard init failed:', err);
-                    document.getElementById('recentTransactions').innerHTML =
-                        `<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
-                }
-            });
-
-            window.setDateRange = function(range) {
-                const today = new Date();
-                let start = new Date(today);
-                if (range === 'today') start = today;
-                else if (range === 'week') start.setDate(today.getDate() - 7);
-                else start.setDate(today.getDate() - 30);
-                document.getElementById('startDate').value = start.toISOString().split('T')[0];
-                document.getElementById('endDate').value = today.toISOString().split('T')[0];
-                loadDashboard();
-            };
-
-            async function loadDashboard() {
-                const start = document.getElementById('startDate').value;
-                const end = document.getElementById('endDate').value;
-                if (!start || !end) { alert('Please select both start and end dates'); return; }
-
-                try {
-                    const result = await window.salesAnalytics.getSalesByCashier(null, start, end);
-                    if (!result.success) throw new Error(result.error || 'Failed to load sales data');
-                    const sales = result.sales || [];
-                    const expensesResult = await window.dataModule.getExpensesByDateRange(start, end);
-                    const expenses = expensesResult.success ? (expensesResult.data || []) : [];
-                    const totalExpenses = expenses.reduce((s, e) => s + parseFloat(e.amount || 0), 0);
-                    const expensesByCashier = expenses.reduce((acc, exp) => {
-                        const name = exp.cashier?.full_name || exp.users?.full_name || exp.created_by?.full_name || 'Unknown Cashier';
-                        acc[name] = (acc[name] || 0) + parseFloat(exp.amount || 0);
-                        return acc;
-                    }, {});
-
-                    document.getElementById('infoBox').style.display = (sales.length === 0 && expenses.length === 0) ? 'block' : 'none';
-                    if (sales.length === 0 && expenses.length === 0)
-                        document.getElementById('infoText').textContent = 'No sales or expenses found in this period.';
-
-                    const grossProfit = sales.reduce((s, x) => s + (x.total_profit || 0), 0);
-                    const netProfit = grossProfit - totalExpenses;
-
-                    document.getElementById('totalRevenue').textContent = `KES ${sales.reduce((s,x) => s+(x.total_amount||0), 0).toFixed(2)}`;
-                    document.getElementById('totalProfit').textContent = `KES ${netProfit.toFixed(2)}`;
-                    document.getElementById('totalExpenses').textContent = `KES ${totalExpenses.toFixed(2)}`;
-                    document.getElementById('transactionCount').textContent = sales.length;
-                    document.getElementById('itemsSold').textContent = sales.reduce((s,x) => s+(x.items_sold||0), 0);
-
-                    document.getElementById('profitBreakdown').textContent = `Gross: KES ${grossProfit.toFixed(2)} - Exp: KES ${totalExpenses.toFixed(2)}`;
-
-                    if (sales.length > 0) {
-                        const top = sales.reduce((m,s) => (s.total_profit||0)>(m.total_profit||0)?s:m, sales[0]);
-                        document.getElementById('topPerformerName').textContent = top.users?.full_name || 'Unknown';
-                        document.getElementById('topPerformerProfit').textContent = (top.total_profit||0).toFixed(2);
-                        document.getElementById('topCashier').style.display = 'block';
-                    } else { document.getElementById('topCashier').style.display = 'none'; }
-
-                    renderCashierChart(sales);
-                    renderExpensesByCashierChart(expensesByCashier);
-                    renderTopProductsChart(sales);
-                    renderRecentTransactions(sales.slice(0, 10));
-
-                    await renderHeatmapAndInsights();
-                    await renderCustomerOverview();
-                    await renderPurchaseBehavior();
-                    await renderCustomerSegmentation();
-                    await renderPredictiveInsights();
-
-                } catch (err) {
-                    console.error('Dashboard load failed:', err);
-                    document.getElementById('recentTransactions').innerHTML = `<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
-                }
-            }
-
-            function renderCashierChart(sales) {
-                const canvas = document.getElementById('cashierChart');
-                const empty = document.getElementById('cashierChartEmpty');
-                if (!sales.length) { canvas.style.display='none'; empty.style.display='block'; if(revenueChart) revenueChart.destroy(); return; }
-                canvas.style.display='block'; empty.style.display='none';
-                if (revenueChart) revenueChart.destroy();
-                const byCashier = sales.reduce((acc, s) => {
-                    const name = s.users?.full_name || 'Unknown';
-                    if (!acc[name]) acc[name] = { revenue:0, profit:0 };
-                    acc[name].revenue += s.total_amount || 0;
-                    acc[name].profit += s.total_profit || 0;
-                    return acc;
-                }, {});
-                const labels = Object.keys(byCashier);
-                revenueChart = new Chart(canvas.getContext('2d'), {
-                    type: 'bar',
-                    data: { labels, datasets: [
-                        { label:'Revenue (KES)', data:labels.map(k=>byCashier[k].revenue), backgroundColor:'rgba(63,185,80,0.65)' },
-                        { label:'Profit (KES)', data:labels.map(k=>byCashier[k].profit), backgroundColor:'rgba(245,158,11,0.65)' }
-                    ]},
-                    options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true } } }
-                });
-            }
-
-            function renderExpensesByCashierChart(expensesByCashier) {
-                const canvas = document.getElementById('expensesByCashierChart');
-                const empty = document.getElementById('expensesChartEmpty');
-                const topSpenderDiv = document.getElementById('topSpender');
-                if (!Object.keys(expensesByCashier).length || Object.values(expensesByCashier).every(v=>v===0)) {
-                    canvas.style.display='none'; empty.style.display='block'; topSpenderDiv.style.display='none';
-                    if (expensesByCashierChart) expensesByCashierChart.destroy(); return;
-                }
-                canvas.style.display='block'; empty.style.display='none';
-                if (expensesByCashierChart) expensesByCashierChart.destroy();
-                const labels = Object.keys(expensesByCashier);
-                const values = labels.map(k => expensesByCashier[k]);
-                expensesByCashierChart = new Chart(canvas.getContext('2d'), {
-                    type:'bar',
-                    data:{ labels, datasets:[{ label:'Expenses (KES)', data:values, backgroundColor:'rgba(248,81,73,0.65)', borderColor:'rgba(248,81,73,0.9)', borderWidth:1 }] },
-                    options:{ responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true}}, plugins:{legend:{display:false}} }
-                });
-                if (values.length > 0) {
-                    const maxIndex = values.indexOf(Math.max(...values));
-                    document.getElementById('topSpenderName').textContent = labels[maxIndex];
-                    document.getElementById('topSpenderAmount').textContent = values[maxIndex].toFixed(2);
-                    topSpenderDiv.style.display = 'block';
-                } else { topSpenderDiv.style.display = 'none'; }
-            }
-
-            function renderTopProductsChart(sales) {
-                const canvas = document.getElementById('topProductsChart');
-                const empty = document.getElementById('productsChartEmpty');
-                const totals = sales.reduce((acc, sale) => {
-                    (sale.sale_items || []).forEach(item => {
-                        const name = item.products?.name || `Item #${item.product_id}`;
-                        acc[name] = (acc[name] || 0) + (item.subtotal || item.unit_price * item.quantity || 0);
-                    });
-                    return acc;
-                }, {});
-                const top5 = Object.entries(totals).sort(([,a],[,b]) => b-a).slice(0, 5);
-                if (!top5.length) { canvas.style.display='none'; empty.style.display='block'; if(topProductsChart) topProductsChart.destroy(); return; }
-                canvas.style.display='block'; empty.style.display='none';
-                if (topProductsChart) topProductsChart.destroy();
-                topProductsChart = new Chart(canvas.getContext('2d'), {
-                    type:'doughnut',
-                    data:{ labels:top5.map(([n])=>n), datasets:[{ data:top5.map(([,v])=>v), backgroundColor:['#3fb950','#f59e0b','#58a6ff','#f85149','#a78bfa'] }] },
-                    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'top' } } }
-                });
-            }
-
-            function renderRecentTransactions(transactions) {
-                const tbody = document.getElementById('recentTransactions');
-                if (!transactions.length) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Recent Transactions</h3></td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = transactions.map(tx => `
-                    <tr>
-                        <td>${new Date(tx.created_at).toLocaleString()}</td>
-                        <td>${tx.users?.full_name || '—'}</td>
-                        <td>KES ${(tx.total_amount||0).toFixed(2)}</td>
-                        <td>KES ${(tx.total_profit||0).toFixed(2)}</td>
-                        <td>${tx.items_sold || '—'}</td>
-                        <td>${tx.payment_method || '—'}</td>
-                    </tr>`
-                ).join('');
-            }
-
-            window.loadDashboard = loadDashboard;
-        })();
-
-        function exportAnalyticsToCSV() {
-            const headers = "Metric,Value\n";
-            const rows = [
-                "Total Revenue," + document.getElementById('totalRevenue').textContent.replace('KES ', ''),
-                "Net Profit," + document.getElementById('totalProfit').textContent.replace('KES ', ''),
-                "CLV," + document.getElementById('clv').textContent.replace('KES ', ''),
-                "Avg Spend," + document.getElementById('avgSpend').textContent.replace('KES ', ''),
-                "Best Time Slots," + document.getElementById('topSlots').textContent
-            ].join("\n");
-            const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `analytics_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        async function loadSupplierOrders() {
-            if (!window.supplierOrdersModule) return;
-            try {
-                const result = await window.supplierOrdersModule.getAllOrders();
-                if (!result.success || !result.data) {
-                    document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Failed to load orders</h3><p>${result.error || 'Unknown error'}</p></div>`;
-                    return;
-                }
-                const orders = result.data;
-                document.getElementById('pendingOrdersCount').textContent = orders.filter(o=>o.status==='pending').length;
-                document.getElementById('processingOrdersCount').textContent = orders.filter(o=>['processing','shipped'].includes(o.status)).length;
-                document.getElementById('deliveredOrdersCount').textContent = orders.filter(o=>o.status==='delivered').length;
-                document.getElementById('totalOrdersValue').textContent = `KES ${orders.reduce((s,o)=>s+(o.total_amount||0),0).toLocaleString()}`;
-                if (!orders.length) {
-                    document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`;
-                    return;
-                }
-                document.getElementById('supplierOrdersList').innerHTML = orders.map(order => `
-                    <div class="supplier-order-card">
-                        <div class="order-card-header">
-                            <div>
-                                <div class="order-id">#${order.id}</div>
-                                <div style="color:var(--text-muted);font-size:0.88rem;margin-top:4px;">${order.suppliers?.name || 'Unknown Supplier'}</div>
-                            </div>
-                            <span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:14px;">
-                            <div><div style="font-size:0.8rem;color:var(--text-muted);">Order Date</div><div style="font-weight:600;font-size:0.9rem;">${new Date(order.created_at).toLocaleDateString()}</div></div>
-                            <div><div style="font-size:0.8rem;color:var(--text-muted);">Expected Delivery</div><div style="font-weight:600;font-size:0.9rem;">${order.expected_delivery ? new Date(order.expected_delivery).toLocaleDateString() : '—'}</div></div>
-                            <div><div style="font-size:0.8rem;color:var(--text-muted);">Total Amount</div><div style="font-weight:600;color:var(--accent-green);font-size:0.9rem;">KES ${(order.total_amount||0).toLocaleString()}</div></div>
-                            <div><div style="font-size:0.8rem;color:var(--text-muted);">Items</div><div style="font-weight:600;font-size:0.9rem;">${order.supplier_order_items?.length || 0} items</div></div>
-                        </div>
-                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                            <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
-                            <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message</button>
+                set('ai_bundleList', topPairs.map(p =>
+                    `<div class="ai-list-item">
+                        <span class="ai-icon">🛒</span>
+                        <div class="ai-item-main">
+                            <div class="ai-item-name">${p.a} <span style="color:var(--text-muted);font-weight:400;">+</span> ${p.b}<span class="ai-badge badge-blue">${p.count}×</span></div>
+                            <div class="ai-item-sub">Bought together ${p.count} time${p.count!==1?'s':''} — consider bundling or cross-promoting</div>
                         </div>
                     </div>`
-                ).join('');
-            } catch (err) {
-                document.getElementById('supplierOrdersList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${err.message}</p></div>`;
+                ).join(''));
+            }
+
+            /* ─── ④ MARGIN ─── */
+            const marginPct = totalRev > 0 ? (totalProf / totalRev * 100) : 0;
+            const marginCls = marginPct >= 30 ? 'green' : marginPct >= 15 ? 'orange' : 'red';
+
+            setText('ai_margin', `${marginPct.toFixed(1)}%`);
+            setClass('ai_margin', `ai-kpi-value ${marginCls}`);
+            setText('ai_marginSub', marginPct >= 30 ? '✅ Healthy — above 30%' : marginPct >= 15 ? '⚠️ Moderate — aim for 30%+' : '🚨 Low — review pricing or costs');
+
+            // Day-level margin
+            const byDate = {};
+            sales.forEach(s => {
+                const d = s.created_at.split('T')[0];
+                if (!byDate[d]) byDate[d] = {rev:0, profit:0};
+                byDate[d].rev    += Number(s.total_amount||0);
+                byDate[d].profit += Number(s.total_profit||0);
+            });
+            const dateEntries = Object.entries(byDate)
+                .map(([date,v]) => ({date, margin: v.rev>0 ? v.profit/v.rev*100 : 0, ...v}));
+            const lowMarginDays = dateEntries.filter(d => d.margin < 20 && d.rev > 0);
+            const sortedByMargin = [...dateEntries].sort((a,b)=>b.margin-a.margin);
+            const bestMarginDay  = sortedByMargin[0];
+
+            setText('ai_lowMarginDays', String(lowMarginDays.length));
+            setClass('ai_lowMarginDays', `ai-kpi-value ${lowMarginDays.length > 0 ? 'red' : 'green'}`);
+            setText('ai_lowMarginSub', lowMarginDays.length > 0
+                ? `Recent: ${lowMarginDays.slice(0,2).map(d=>`${d.date} (${d.margin.toFixed(0)}%)`).join(', ')}`
+                : 'All days above 20% ✅');
+
+            if (bestMarginDay) {
+                setText('ai_bestMarginDay', new Date(bestMarginDay.date).toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric'}));
+                setText('ai_bestMarginDaySub', `${bestMarginDay.margin.toFixed(1)}% margin · KES ${fmt(bestMarginDay.rev)} rev`);
+            }
+
+            // Margin alert box
+            let alertHtml = '';
+            if (marginPct < 10) {
+                alertHtml = `<div class="ai-alert bad">🚨 <strong>Critical margin warning:</strong> Overall margin is ${marginPct.toFixed(1)}%. Review cost prices and selling prices immediately.</div>`;
+            } else if (lowMarginDays.length >= Math.ceil(days * 0.4)) {
+                alertHtml = `<div class="ai-alert warn">⚠️ <strong>Frequent low-margin days:</strong> ${lowMarginDays.length} out of ${dateEntries.length} trading days had margin below 20%. Consider reviewing discounts or high-cost products.</div>`;
+            } else if (marginPct >= 35) {
+                alertHtml = `<div class="ai-alert good">✅ <strong>Excellent margins!</strong> ${marginPct.toFixed(1)}% average — your pricing strategy is working well. Keep it up.</div>`;
+            }
+            set('ai_marginAlert', alertHtml);
+
+            /* ─── ⑤ CHURN RISK ─── */
+            const lastPurchase = {};
+            allCustSales.forEach(s => {
+                if (!s.customer_id) return;
+                const d = new Date(s.created_at);
+                if (!lastPurchase[s.customer_id] || d > lastPurchase[s.customer_id]) lastPurchase[s.customer_id] = d;
+            });
+            const churnCandidates = Object.entries(lastPurchase)
+                .map(([id, d]) => ({ id, daysSince: Math.round((Date.now()-d.getTime())/86400000) }))
+                .filter(c => c.daysSince >= 30 && c.daysSince <= 180)
+                .sort((a,b) => b.daysSince - a.daysSince)
+                .slice(0, 6);
+
+            if (!churnCandidates.length) {
+                set('ai_churnList', '<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No at-risk customers detected</div><div class="ai-item-sub">All recent buyers are within the 30-day window</div></div></div>');
+            } else {
+                const custIds = churnCandidates.map(c => c.id);
+                const {data: custData} = await db.from('customers').select('id,name,phone').in('id', custIds);
+                const custMap = {};
+                (custData||[]).forEach(c => { custMap[c.id] = c; });
+
+                set('ai_churnList', churnCandidates.map(c => {
+                    const cust = custMap[c.id];
+                    const badgeCls = c.daysSince >= 90 ? 'badge-red' : 'badge-orange';
+                    const badgeTxt = c.daysSince >= 90 ? 'High Risk' : c.daysSince >= 60 ? 'Med Risk' : 'Watch';
+                    return `<div class="ai-list-item">
+                        <span class="ai-icon">👤</span>
+                        <div class="ai-item-main">
+                            <div class="ai-item-name">${cust?.name||`Customer #${c.id}`}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div>
+                            <div class="ai-item-sub">Last purchase: ${c.daysSince} days ago${cust?.phone?' · '+cust.phone:''} — consider a win-back offer</div>
+                        </div>
+                    </div>`;
+                }).join(''));
+            }
+
+            /* ─── ⑥ PAYMENT INSIGHTS ─── */
+            const pmCounts = {}, pmRevenue = {};
+            sales.forEach(s => {
+                const pm = s.payment_method || 'Unknown';
+                pmCounts[pm]   = (pmCounts[pm]||0) + 1;
+                pmRevenue[pm]  = (pmRevenue[pm]||0) + Number(s.total_amount||0);
+            });
+            const topPM = Object.entries(pmCounts).sort(([,a],[,b])=>b-a)[0];
+            const creditRev = pmRevenue['Credit'] || pmRevenue['credit'] || 0;
+            const avgTx     = sales.length > 0 ? totalRev / sales.length : 0;
+            const prevAvgTx = prevSales.length > 0 ? prevSales.reduce((s,x)=>s+Number(x.total_amount||0),0) / prevSales.length : 0;
+            const txTrend   = prevAvgTx > 0 ? ((avgTx - prevAvgTx) / prevAvgTx * 100) : 0;
+
+            setText('ai_topPayment', topPM ? topPM[0] : '—');
+            setText('ai_topPaymentSub', topPM ? `${topPM[1]} transactions (${Math.round(topPM[1]/sales.length*100)}% of sales)` : 'No data');
+            setText('ai_avgTx', `KES ${fmt(avgTx)}`);
+            setText('ai_avgTxSub', prevAvgTx > 0 ? `${txTrend>=0?'↑':'↓'} ${Math.abs(txTrend).toFixed(1)}% vs prev period` : 'No prev period data');
+            setText('ai_credit', `KES ${fmt(creditRev)}`);
+            setText('ai_creditSub', creditRev > 0 ? `${pmCounts['Credit']||pmCounts['credit']||0} credit txns — follow up on collections` : 'No credit sales ✅');
+            setClass('ai_credit', `ai-kpi-value ${creditRev > 0 ? 'orange' : 'green'}`);
+
+            /* ─── Done ─── */
+            document.getElementById('aiTimestamp').textContent = `Updated ${new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}`;
+            document.getElementById('aiLoading').style.display = 'none';
+            document.getElementById('aiContent').style.display = 'block';
+
+        } catch (err) {
+            console.error('AI Insights error:', err);
+            document.getElementById('aiLoading').innerHTML = `<span style="color:var(--danger)">⚠️ Failed to load insights: ${err.message}</span>`;
+        }
+    }
+
+    /* ─────────────────────────────────────────────
+       MAIN DASHBOARD LOADER  (unchanged structure)
+    ───────────────────────────────────────────── */
+    (function() {
+        let revenueChart, topProductsChart, expensesByCashierChart;
+
+        function waitFor(getter, cb, interval=300, max=40) {
+            let n=0; const t=setInterval(()=>{if(getter()){clearInterval(t);cb();}else if(++n>=max)clearInterval(t);},interval);
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await window.DukaPOS.initializeSupabase();
+                _db = window.DukaPOS.supabaseClient;
+                const isAuthenticated = await authModule.requireAuth();
+                if (!isAuthenticated) return;
+                const currentUser = authModule.getCurrentUser();
+                if (!currentUser) return;
+                const userRole = (currentUser.role||'').trim().toLowerCase();
+                const isAdmin = ['administrator','admin','superadmin','manager'].includes(userRole);
+                if (!isAdmin) { window.location.replace(userRole==='supplier'?'suppliers.html':'pos.html'); return; }
+                _initRejectionStore(currentUser.id);
+                document.body.style.visibility = 'visible';
+                document.getElementById('currentUserName').textContent = currentUser.full_name||'User';
+                setNavigationVisibility(userRole);
+                setDateRange('month');
+                await loadDashboard();
+                updateBellBadge();
+                setInterval(updateBellBadge, 30000);
+                waitFor(()=>window.messagingModule, ()=>{ loadUsersForMessaging(); loadSentMessages(); });
+                setTimeout(()=>loadSupplierOrders(), 500);
+            } catch(err) {
+                console.error('Dashboard init failed:', err);
+                document.getElementById('recentTransactions').innerHTML=`<tr><td colspan="6" class="error-message">Failed to load dashboard: ${err.message}</td></tr>`;
+            }
+        });
+
+        window.setDateRange = function(range) {
+            const today=new Date(); let start=new Date(today);
+            if(range==='today') start=today;
+            else if(range==='week') start.setDate(today.getDate()-7);
+            else start.setDate(today.getDate()-30);
+            document.getElementById('startDate').value=start.toISOString().split('T')[0];
+            document.getElementById('endDate').value=today.toISOString().split('T')[0];
+            loadDashboard();
+        };
+
+        async function loadDashboard() {
+            const start=document.getElementById('startDate').value;
+            const end=document.getElementById('endDate').value;
+            if(!start||!end){alert('Please select both start and end dates');return;}
+            try {
+                const result=await window.salesAnalytics.getSalesByCashier(null,start,end);
+                if(!result.success) throw new Error(result.error||'Failed to load sales data');
+                const sales=result.sales||[];
+                const expensesResult=await window.dataModule.getExpensesByDateRange(start,end);
+                const expenses=expensesResult.success?(expensesResult.data||[]):[];
+                const totalExpenses=expenses.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+                const expensesByCashier=expenses.reduce((acc,exp)=>{
+                    const name=exp.cashier?.full_name||exp.users?.full_name||exp.created_by?.full_name||'Unknown Cashier';
+                    acc[name]=(acc[name]||0)+parseFloat(exp.amount||0); return acc;
+                },{});
+
+                document.getElementById('infoBox').style.display=(sales.length===0&&expenses.length===0)?'block':'none';
+                if(sales.length===0&&expenses.length===0) document.getElementById('infoText').textContent='No sales or expenses found in this period.';
+
+                const grossProfit=sales.reduce((s,x)=>s+(x.total_profit||0),0);
+                const netProfit=grossProfit-totalExpenses;
+
+                document.getElementById('totalRevenue').textContent=`KES ${fmtDec(sales.reduce((s,x)=>s+(x.total_amount||0),0))}`;
+                document.getElementById('totalProfit').textContent=`KES ${fmtDec(netProfit)}`;
+                document.getElementById('totalExpenses').textContent=`KES ${fmtDec(totalExpenses)}`;
+                document.getElementById('transactionCount').textContent=sales.length;
+                document.getElementById('itemsSold').textContent=sales.reduce((s,x)=>s+(x.items_sold||0),0);
+                document.getElementById('profitBreakdown').textContent=`Gross: KES ${fmtDec(grossProfit)} - Exp: KES ${fmtDec(totalExpenses)}`;
+
+                if(sales.length>0){
+                    const top=sales.reduce((m,s)=>(s.total_profit||0)>(m.total_profit||0)?s:m,sales[0]);
+                    document.getElementById('topPerformerName').textContent=top.users?.full_name||'Unknown';
+                    document.getElementById('topPerformerProfit').textContent=fmtDec(top.total_profit||0);
+                    document.getElementById('topCashier').style.display='block';
+                } else document.getElementById('topCashier').style.display='none';
+
+                renderCashierChart(sales);
+                renderExpensesByCashierChart(expensesByCashier);
+                renderTopProductsChart(sales);
+                renderRecentTransactions(sales.slice(0,10));
+
+                await renderHeatmapAndInsights();
+                await renderCustomerOverview();
+                await renderPurchaseBehavior();
+                await renderCustomerSegmentation();
+                await renderPredictiveInsights();
+
+            } catch(err) {
+                console.error('Dashboard load failed:', err);
+                document.getElementById('recentTransactions').innerHTML=`<tr><td colspan="6" class="error-message">${err.message}</td></tr>`;
             }
         }
 
-        window.createNewSupplierOrder = () => alert('Create New Supplier Order — Coming soon');
-        window.viewOrderDetails = (id) => alert(`View details for order #${id}`);
-        window.messageSupplier = (id) => alert(`Message supplier #${id}`);
-
-        async function loadUsersForMessaging() {
-            try {
-                const result = await window.messagingModule.getUsersForMessaging();
-                if (!result.success) return;
-                const select = document.getElementById('messageRecipient');
-                select.innerHTML = '<option value="">-- Select a user --</option>';
-                result.data.forEach(user => {
-                    const opt = document.createElement('option');
-                    opt.value = user.id;
-                    opt.textContent = `${user.full_name} (${user.role})`;
-                    select.appendChild(opt);
-                });
-            } catch (err) { console.error('Load users error:', err); }
+        function renderCashierChart(sales) {
+            const canvas=document.getElementById('cashierChart'); const empty=document.getElementById('cashierChartEmpty');
+            if(!sales.length){canvas.style.display='none';empty.style.display='block';if(revenueChart)revenueChart.destroy();return;}
+            canvas.style.display='block';empty.style.display='none';
+            if(revenueChart)revenueChart.destroy();
+            const byCashier=sales.reduce((acc,s)=>{const name=s.users?.full_name||'Unknown';if(!acc[name])acc[name]={revenue:0,profit:0};acc[name].revenue+=s.total_amount||0;acc[name].profit+=s.total_profit||0;return acc;},{});
+            const labels=Object.keys(byCashier);
+            revenueChart=new Chart(canvas.getContext('2d'),{type:'bar',data:{labels,datasets:[{label:'Revenue (KES)',data:labels.map(k=>byCashier[k].revenue),backgroundColor:'rgba(63,185,80,0.65)'},{label:'Profit (KES)',data:labels.map(k=>byCashier[k].profit),backgroundColor:'rgba(245,158,11,0.65)'}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});
         }
 
-        async function sendMessageToUser() {
-            const recipientId = document.getElementById('messageRecipient').value;
-            const messageText = document.getElementById('messageText').value.trim();
-            if (!recipientId || !messageText) return alert('Select recipient and enter message');
-            const btn = document.getElementById('sendMessageBtn');
-            btn.disabled = true; btn.textContent = 'Sending…';
-            try {
-                const result = await window.messagingModule.sendMessage(parseInt(recipientId), messageText);
-                if (result.success) {
-                    alert('✅ Message sent!');
-                    document.getElementById('messageRecipient').value = '';
-                    document.getElementById('messageText').value = '';
-                    loadSentMessages();
-                } else { alert('Failed: ' + result.error); }
-            } catch (err) { alert('Error: ' + err.message); }
-            finally { btn.disabled = false; btn.textContent = '📤 Send Message'; }
+        function renderExpensesByCashierChart(expensesByCashier) {
+            const canvas=document.getElementById('expensesByCashierChart'); const empty=document.getElementById('expensesChartEmpty'); const topDiv=document.getElementById('topSpender');
+            if(!Object.keys(expensesByCashier).length||Object.values(expensesByCashier).every(v=>v===0)){canvas.style.display='none';empty.style.display='block';topDiv.style.display='none';if(expensesByCashierChart)expensesByCashierChart.destroy();return;}
+            canvas.style.display='block';empty.style.display='none';
+            if(expensesByCashierChart)expensesByCashierChart.destroy();
+            const labels=Object.keys(expensesByCashier); const values=labels.map(k=>expensesByCashier[k]);
+            expensesByCashierChart=new Chart(canvas.getContext('2d'),{type:'bar',data:{labels,datasets:[{label:'Expenses (KES)',data:values,backgroundColor:'rgba(248,81,73,0.65)',borderColor:'rgba(248,81,73,0.9)',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}});
+            if(values.length>0){const mi=values.indexOf(Math.max(...values));document.getElementById('topSpenderName').textContent=labels[mi];document.getElementById('topSpenderAmount').textContent=fmtDec(values[mi]);topDiv.style.display='block';}
+            else topDiv.style.display='none';
         }
 
-        async function loadSentMessages() {
-            const tbody = document.getElementById('sentMessagesTable');
-            try {
-                const result = await window.messagingModule.getSentMessages(20);
-                if (!result.success || !result.data?.length) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><p>No sent messages yet</p></td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = result.data.map(msg => {
-                    const hoursLeft = Math.round((new Date(msg.expires_at) - new Date()) / 3600000);
-                    return `<tr>
-                        <td>${msg.recipient?.full_name || 'Unknown'}</td>
-                        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${msg.message_text || '(empty)'}</td>
-                        <td>${new Date(msg.created_at).toLocaleString()}</td>
-                        <td><span style="color:${msg.is_read?'#3fb950':'#f59e0b'}">${msg.is_read?'✅ Read':'⏳ Unread'}</span></td>
-                        <td>${hoursLeft > 0 ? hoursLeft+'h' : 'Expired'}</td>
-                    </tr>`;
-                }).join('');
-            } catch (err) { console.error('Load sent error:', err); }
+        function renderTopProductsChart(sales) {
+            const canvas=document.getElementById('topProductsChart'); const empty=document.getElementById('productsChartEmpty');
+            const totals=sales.reduce((acc,sale)=>{(sale.sale_items||[]).forEach(item=>{const name=item.products?.name||`Item #${item.product_id}`;acc[name]=(acc[name]||0)+(item.subtotal||item.unit_price*item.quantity||0);});return acc;},{});
+            const top5=Object.entries(totals).sort(([,a],[,b])=>b-a).slice(0,5);
+            if(!top5.length){canvas.style.display='none';empty.style.display='block';if(topProductsChart)topProductsChart.destroy();return;}
+            canvas.style.display='block';empty.style.display='none';
+            if(topProductsChart)topProductsChart.destroy();
+            topProductsChart=new Chart(canvas.getContext('2d'),{type:'doughnut',data:{labels:top5.map(([n])=>n),datasets:[{data:top5.map(([,v])=>v),backgroundColor:['#3fb950','#f59e0b','#58a6ff','#f85149','#a78bfa']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}}}});
         }
+
+        function renderRecentTransactions(transactions) {
+            const tbody=document.getElementById('recentTransactions');
+            if(!transactions.length){tbody.innerHTML=`<tr><td colspan="6" class="empty-state"><div class="empty-state-icon">💰</div><h3>No Recent Transactions</h3></td></tr>`;return;}
+            tbody.innerHTML=transactions.map(tx=>`<tr><td>${new Date(tx.created_at).toLocaleString()}</td><td>${tx.users?.full_name||'—'}</td><td>KES ${fmtDec(tx.total_amount||0)}</td><td>KES ${fmtDec(tx.total_profit||0)}</td><td>${tx.items_sold||'—'}</td><td>${tx.payment_method||'—'}</td></tr>`).join('');
+        }
+
+        window.loadDashboard = loadDashboard;
+    })();
+
+    /* ─────────────────────────────────────────────
+       EXPORT CSV
+    ───────────────────────────────────────────── */
+    function exportAnalyticsToCSV() {
+        const headers="Metric,Value\n";
+        const rows=[
+            "Total Revenue,"+document.getElementById('totalRevenue').textContent.replace('KES ',''),
+            "Net Profit,"+document.getElementById('totalProfit').textContent.replace('KES ',''),
+            "CLV,"+document.getElementById('clv').textContent.replace('KES ',''),
+            "Avg Spend,"+document.getElementById('avgSpend').textContent.replace('KES ',''),
+            "Best Time Slots,"+document.getElementById('topSlots').textContent,
+            "Predicted Next 7 Days,"+document.getElementById('ai_forecast7').textContent.replace('KES ',''),
+            "Avg Profit Margin,"+document.getElementById('ai_margin').textContent,
+            "Top Payment Method,"+document.getElementById('ai_topPayment').textContent,
+            "Avg Transaction Value,"+document.getElementById('ai_avgTx').textContent.replace('KES ','')
+        ].join("\n");
+        const blob=new Blob([headers+rows],{type:'text/csv;charset=utf-8;'});
+        const url=URL.createObjectURL(blob);
+        const link=document.createElement("a");
+        link.setAttribute("href",url);
+        link.setAttribute("download",`analytics_${new Date().toISOString().slice(0,10)}.csv`);
+        document.body.appendChild(link);link.click();document.body.removeChild(link);
+    }
+
+    /* ─────────────────────────────────────────────
+       SUPPLIER ORDERS
+    ───────────────────────────────────────────── */
+    async function loadSupplierOrders() {
+        if(!window.supplierOrdersModule) return;
+        try {
+            const result=await window.supplierOrdersModule.getAllOrders();
+            if(!result.success||!result.data){document.getElementById('supplierOrdersList').innerHTML=`<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Failed to load orders</h3><p>${result.error||'Unknown error'}</p></div>`;return;}
+            const orders=result.data;
+            document.getElementById('pendingOrdersCount').textContent=orders.filter(o=>o.status==='pending').length;
+            document.getElementById('processingOrdersCount').textContent=orders.filter(o=>['processing','shipped'].includes(o.status)).length;
+            document.getElementById('deliveredOrdersCount').textContent=orders.filter(o=>o.status==='delivered').length;
+            document.getElementById('totalOrdersValue').textContent=`KES ${orders.reduce((s,o)=>s+(o.total_amount||0),0).toLocaleString()}`;
+            if(!orders.length){document.getElementById('supplierOrdersList').innerHTML=`<div class="empty-state"><div class="empty-state-icon">📦</div><h3>No Supplier Orders Yet</h3></div>`;return;}
+            document.getElementById('supplierOrdersList').innerHTML=orders.map(order=>`
+                <div class="supplier-order-card">
+                    <div class="order-card-header">
+                        <div><div class="order-id">#${order.id}</div><div style="color:var(--text-muted);font-size:0.88rem;margin-top:4px;">${order.suppliers?.name||'Unknown Supplier'}</div></div>
+                        <span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:14px;">
+                        <div><div style="font-size:0.8rem;color:var(--text-muted);">Order Date</div><div style="font-weight:600;font-size:0.9rem;">${new Date(order.created_at).toLocaleDateString()}</div></div>
+                        <div><div style="font-size:0.8rem;color:var(--text-muted);">Expected Delivery</div><div style="font-weight:600;font-size:0.9rem;">${order.expected_delivery?new Date(order.expected_delivery).toLocaleDateString():'—'}</div></div>
+                        <div><div style="font-size:0.8rem;color:var(--text-muted);">Total Amount</div><div style="font-weight:600;color:var(--accent-green);font-size:0.9rem;">KES ${(order.total_amount||0).toLocaleString()}</div></div>
+                        <div><div style="font-size:0.8rem;color:var(--text-muted);">Items</div><div style="font-weight:600;font-size:0.9rem;">${order.supplier_order_items?.length||0} items</div></div>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="btn btn-small btn-secondary" onclick="viewOrderDetails(${order.id})">View Details</button>
+                        <button class="btn btn-small btn-primary" onclick="messageSupplier(${order.supplier_id})">💬 Message</button>
+                    </div>
+                </div>`).join('');
+        } catch(err) { document.getElementById('supplierOrdersList').innerHTML=`<div class="empty-state"><div class="empty-state-icon">⚠️</div><h3>Error</h3><p>${err.message}</p></div>`; }
+    }
+    window.createNewSupplierOrder=()=>alert('Create New Supplier Order — Coming soon');
+    window.viewOrderDetails=(id)=>alert(`View details for order #${id}`);
+    window.messageSupplier=(id)=>alert(`Message supplier #${id}`);
+
+    /* ─────────────────────────────────────────────
+       MESSAGING
+    ───────────────────────────────────────────── */
+    async function loadUsersForMessaging() {
+        try {
+            const result=await window.messagingModule.getUsersForMessaging();
+            if(!result.success) return;
+            const select=document.getElementById('messageRecipient');
+            select.innerHTML='<option value="">-- Select a user --</option>';
+            result.data.forEach(user=>{const opt=document.createElement('option');opt.value=user.id;opt.textContent=`${user.full_name} (${user.role})`;select.appendChild(opt);});
+        } catch(err){console.error('Load users error:',err);}
+    }
+
+    async function sendMessageToUser() {
+        const recipientId=document.getElementById('messageRecipient').value;
+        const messageText=document.getElementById('messageText').value.trim();
+        if(!recipientId||!messageText) return alert('Select recipient and enter message');
+        const btn=document.getElementById('sendMessageBtn');
+        btn.disabled=true;btn.textContent='Sending…';
+        try {
+            const result=await window.messagingModule.sendMessage(parseInt(recipientId),messageText);
+            if(result.success){alert('✅ Message sent!');document.getElementById('messageRecipient').value='';document.getElementById('messageText').value='';loadSentMessages();}
+            else alert('Failed: '+result.error);
+        } catch(err){alert('Error: '+err.message);}
+        finally{btn.disabled=false;btn.textContent='📤 Send Message';}
+    }
+
+    async function loadSentMessages() {
+        const tbody=document.getElementById('sentMessagesTable');
+        try {
+            const result=await window.messagingModule.getSentMessages(20);
+            if(!result.success||!result.data?.length){tbody.innerHTML=`<tr><td colspan="5" class="empty-state"><p>No sent messages yet</p></td></tr>`;return;}
+            tbody.innerHTML=result.data.map(msg=>{
+                const hoursLeft=Math.round((new Date(msg.expires_at)-new Date())/3600000);
+                return `<tr>
+                    <td>${msg.recipient?.full_name||'Unknown'}</td>
+                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${msg.message_text||'(empty)'}</td>
+                    <td>${new Date(msg.created_at).toLocaleString()}</td>
+                    <td><span style="color:${msg.is_read?'#3fb950':'#f59e0b'}">${msg.is_read?'✅ Read':'⏳ Unread'}</span></td>
+                    <td>${hoursLeft>0?hoursLeft+'h':'Expired'}</td>
+                </tr>`;
+            }).join('');
+        } catch(err){console.error('Load sent error:',err);}
+    }
     </script>
 
     <footer style="text-align:center;padding:15px;background-color:black;">
