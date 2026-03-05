@@ -4,36 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G&H Solutions - Inventory</title>
-    
-    <!-- ✅ PWA META TAGS - ADD THESE -->
     <meta name="theme-color" content="#f59e0b">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="TheFilmigo">
     <meta name="description" content="Multi-tenant Point of Sale system">
-    
-    <!-- ✅ PWA MANIFEST LINK -->
     <link rel="manifest" href="/manifest.json">
-    <!-- Offline Mode Styles -->
-<link rel="stylesheet" href="assets/offline-styles.css">
-    
-    <!-- ✅ APPLE TOUCH ICONS -->
+    <link rel="stylesheet" href="assets/offline-styles.css">
     <link rel="apple-touch-icon" sizes="152x152" href="/assets/icons/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/assets/icons/icon-192x192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="/assets/icons/icon-512x512.png">
-    
-    <!-- ✅ FAVICON -->
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png">
-    
-    <!-- Your existing styles and scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/nav-styles.css">
-    <link rel="manifest" href="/manifest.json">
     <script src="assets/page-access-guard.js"></script>
     <script src="assets/nav-visibility-controller.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0d1117;
@@ -46,152 +34,143 @@
             --accent-blue: #58a6ff;
             --accent-green: #3fb950;
             --danger: #f85149;
+            --accent-purple: #a371f7;
         }
-        body {
-            font-family: 'Archivo', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-        .product-form {
-            background: var(--bg-secondary);
-            padding: 24px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 32px;
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Archivo', sans-serif; background: var(--bg-primary); color: var(--text); margin: 0; padding: 0; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+
+        .product-form { background: var(--bg-secondary); padding: 24px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 32px; }
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .form-group { margin-bottom: 4px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group.span-2 { grid-column: span 2; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); font-size: 0.9rem; }
+        .form-label .required { color: var(--danger); margin-left: 2px; }
+
         .form-input, .form-select, .form-file {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-primary);
-            color: var(--text);
-            font-size: 14px;
+            width: 100%; padding: 11px 12px; border: 1px solid var(--border);
+            border-radius: 8px; background: var(--bg-primary); color: var(--text);
+            font-size: 14px; font-family: 'Archivo', sans-serif; transition: border-color 0.2s;
         }
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--accent-orange);
-        }
-        .icon-preview {
-            margin-top: 8px;
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--accent-orange); }
+        .form-input[readonly] { background: var(--bg-tertiary); cursor: default; color: var(--text-muted); }
+
+        /* Barcode field with generate button */
+        .barcode-wrap { display: flex; gap: 8px; align-items: stretch; }
+        .barcode-wrap .form-input { flex: 1; font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 0.05em; }
+        .btn-generate { padding: 11px 14px; background: rgba(88,166,255,0.15); border: 1px solid rgba(88,166,255,0.4); color: var(--accent-blue); border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 700; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+        .btn-generate:hover { background: rgba(88,166,255,0.25); }
+
+        /* Expiry date — color warning */
+        .expiry-wrap { position: relative; }
+        .expiry-status { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: 700; pointer-events: none; }
+        .expiry-status.expired  { color: var(--danger); }
+        .expiry-status.soon     { color: var(--accent-orange); }
+        .expiry-status.good     { color: var(--accent-green); }
+
+        .icon-preview { margin-top: 8px; width: 56px; height: 56px; object-fit: contain; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
+
+        .section-divider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 4px 0 8px; }
+        .section-label { grid-column: 1 / -1; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: -8px; }
+
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; font-family: 'Archivo', sans-serif; }
+        .btn:hover { transform: translateY(-1px); }
         .btn-primary { background: var(--accent-green); color: white; }
         .btn-secondary { background: var(--accent-blue); color: white; }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-small { padding: 8px 16px; font-size: 13px; margin-right: 8px; }
-        .table-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-        }
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        th {
-            background: var(--bg-tertiary);
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-        tr:hover {
-            background: rgba(88, 166, 255, 0.08);
-        }
-        .error { color: var(--danger); margin-top: 8px; }
-        .success { color: var(--accent-green); margin-top: 8px; }
+        .btn-orange { background: var(--accent-orange); color: #000; }
+        .btn-small { padding: 7px 14px; font-size: 12px; }
+
+        .table-container { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; overflow-x: auto; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        .table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-tertiary); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; white-space: nowrap; }
+        tr:hover { background: rgba(88,166,255,0.05); }
+
+        .stock-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; }
+        .stock-low    { background: rgba(248,81,73,0.2);    color: var(--danger); }
+        .stock-medium { background: rgba(245,158,11,0.2);   color: var(--accent-orange); }
+        .stock-good   { background: rgba(63,185,80,0.2);    color: var(--accent-green); }
+
+        .expiry-badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; }
+        .expiry-badge.expired  { background: rgba(248,81,73,0.2);  color: var(--danger); }
+        .expiry-badge.soon     { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
+        .expiry-badge.good     { background: rgba(63,185,80,0.15); color: var(--accent-green); }
+        .expiry-badge.none     { color: var(--text-muted); font-size: 0.8rem; }
+
+        .batch-chip { display: inline-block; background: rgba(163,113,247,0.15); border: 1px solid rgba(163,113,247,0.3); color: var(--accent-purple); padding: 2px 8px; border-radius: 5px; font-size: 0.75rem; font-weight: 600; font-family: 'Space Mono', monospace; }
+        .barcode-text { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--text-muted); }
+
+        .error   { color: var(--danger);       margin-top: 8px; font-weight: 600; }
+        .success { color: var(--accent-green);  margin-top: 8px; font-weight: 600; }
         .loading { text-align: center; padding: 40px; color: var(--text-muted); }
-        .stock-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .stock-low { background: rgba(248, 81, 73, 0.2); color: var(--danger); }
-        .stock-medium { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
-        .stock-good { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+
+        /* ── PROFESSIONAL NOTIFICATION SYSTEM ── */
+        #posNotifContainer { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; max-width: 360px; pointer-events: none; }
+        .pos-notif { background: #1c1c1e; border-radius: 14px; padding: 14px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); display: flex; align-items: flex-start; gap: 12px; pointer-events: all; transform: translateX(120%); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity: 0; border-left: 4px solid #6b7280; min-width: 280px; position: relative; overflow: hidden; }
+        .pos-notif.show { transform: translateX(0); opacity: 1; }
+        .pos-notif.hiding { transform: translateX(120%); opacity: 0; }
+        .pos-notif.type-error { border-left-color: #ef4444; }
+        .pos-notif.type-warning { border-left-color: #f59e0b; }
+        .pos-notif.type-success { border-left-color: #10b981; }
+        .pos-notif.type-info { border-left-color: #3b82f6; }
+        .pos-notif-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+        .pos-notif-body { flex: 1; }
+        .pos-notif-title { font-weight: 700; font-size: 0.875rem; color: #f9fafb; margin-bottom: 2px; }
+        .pos-notif-msg { font-size: 0.8rem; color: #9ca3af; line-height: 1.4; }
+        .pos-notif-close { background: none; border: none; color: #6b7280; cursor: pointer; font-size: 1rem; padding: 0; margin-left: 4px; flex-shrink: 0; line-height: 1; transition: color 0.2s; }
+        .pos-notif-close:hover { color: #e5e7eb; }
+        .pos-notif-progress { position: absolute; bottom: 0; left: 0; height: 2px; border-radius: 0 0 14px 14px; animation: notifProgress linear forwards; }
+        .type-error .pos-notif-progress { background: #ef4444; }
+        .type-warning .pos-notif-progress { background: #f59e0b; }
+        .type-success .pos-notif-progress { background: #10b981; }
+        .type-info .pos-notif-progress { background: #3b82f6; }
+        @keyframes notifProgress { from { width: 100%; } to { width: 0%; } }
+
+        /* ── MODAL ── */
+        #posModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 99998; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        #posModalOverlay.show { display: flex; }
+        .pos-modal { background: #1c1c1e; border-radius: 18px; padding: 28px 24px 20px; max-width: 380px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); }
+        .pos-modal-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .pos-modal-title { font-weight: 700; font-size: 1rem; color: #f9fafb; margin-bottom: 8px; }
+        .pos-modal-msg { font-size: 0.875rem; color: #9ca3af; line-height: 1.5; margin-bottom: 20px; }
+        .pos-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .pos-modal-btn { padding: 9px 20px; border-radius: 10px; border: none; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .pos-modal-btn:hover { opacity: 0.85; }
+        .pos-modal-btn.cancel  { background: rgba(255,255,255,0.08); color: #9ca3af; }
+        .pos-modal-btn.confirm { background: #6366f1; color: #fff; }
+        .pos-modal-btn.confirm.danger { background: #ef4444; }
+
         @media (max-width: 768px) {
             .container { padding: 16px 12px; }
-            .form-grid { grid-template-columns: 1fr; }
-            .table-container { padding: 16px; overflow-x: auto; }
-            .table { min-width: 1000px; }
-            .table-header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .form-grid { grid-template-columns: 1fr 1fr; }
+            .form-group.span-2 { grid-column: 1 / -1; }
+            .table-header { flex-direction: column; align-items: stretch; }
             .table-header input { width: 100% !important; }
-            td:last-child .btn { display: block; width: 100%; margin: 4px 0; }
+        }
+        @media (max-width: 480px) {
+            .form-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
+    <div id="posNotifContainer"></div>
+    <div id="posModalOverlay">
+        <div class="pos-modal">
+            <div class="pos-modal-icon" id="posModalIcon">❓</div>
+            <div class="pos-modal-title" id="posModalTitle">Confirm</div>
+            <div class="pos-modal-msg" id="posModalMsg"></div>
+            <div class="pos-modal-actions" id="posModalActions"></div>
+        </div>
+    </div>
+
     <nav class="nav">
         <div class="nav-container">
             <div class="logo"><img src="assets/icons/icon-512x512.png" alt="Logo" class="logo">
-
-<style>
-.logo {
-    width: 120px;
-    height: auto;
-}
-</style></div>
+<style>.logo { width: 120px; height: auto; }</style></div>
             <div class="nav-tabs">
                 <a href="dashboard.html" class="nav-tab" id="dashboardLink" style="display:none;">Dashboard</a>
                 <a href="pos.html" class="nav-tab">Point of Sale</a>
@@ -202,69 +181,105 @@
             </div>
             <div class="user-badge">
                 <div class="user-avatar">👤</div>
-                <div>
-                    <div id="currentUserName">User</div>
-                    <div id="currentDate"></div>
-                </div>
+                <div><div id="currentUserName">User</div><div id="currentDate"></div></div>
             </div>
-            <button onclick="authModule.logout()" style="padding: 10px 18px; background-color: #ef4444; color: #ffffff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); transition: all 0.2s ease;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.transform='translateY(-1px)'" onmouseout="this.style.backgroundColor='#ef4444'; this.style.transform='translateY(0)'">Logout</button>
+            <button onclick="authModule.logout()" style="padding:10px 18px;background-color:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.backgroundColor='#dc2626'" onmouseout="this.style.backgroundColor='#ef4444'">Logout</button>
         </div>
     </nav>
 
     <div class="container">
-        <h1>📦 Inventory Management</h1>
+        <h1 style="margin-bottom:24px;">📦 Inventory Management</h1>
 
         <div class="product-form">
-            <h2 id="formTitle">Add New Product</h2>
+            <h2 id="formTitle" style="margin-bottom:20px;">Add New Product</h2>
             <form id="productForm">
                 <input type="hidden" id="productId">
                 <div class="form-grid">
+
+                    <!-- ── BASIC INFO ── -->
+                    <div class="section-label">Basic Information</div>
+                    <hr class="section-divider">
+
                     <div class="form-group">
-                        <label class="form-label">Product Name *</label>
-                        <input type="text" id="name" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Barcode</label>
-                        <input type="text" id="barcode" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Selling Price (KES) *</label>
-                        <input type="number" id="price" class="form-input" step="0.01" min="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Cost Price (KES)</label>
-                        <input type="number" id="cost" class="form-input" step="0.01" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Stock Quantity *</label>
-                        <input type="number" id="stock" class="form-input" min="0" required>
+                        <label class="form-label">Product Name <span class="required">*</span></label>
+                        <input type="text" id="name" class="form-input" required placeholder="e.g. Samsung X24">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Category</label>
-                        <input type="text" id="category" class="form-input" placeholder="e.g., Electronics, Food, etc.">
+                        <input type="text" id="category" class="form-input" placeholder="e.g. Electronics, Food…">
                     </div>
-                    <div class="form-group full-width">
-                        <label class="form-label">Icon (Emoji or Upload Image)</label>
-                        <input type="text" id="iconEmoji" class="form-input" placeholder="📦 Type emoji here" maxlength="2">
-                        <div style="margin: 10px 0; font-size: 0.9rem; color: var(--text-muted);">OR upload an image:</div>
+                    <div class="form-group">
+                        <label class="form-label">Icon (Emoji)</label>
+                        <input type="text" id="iconEmoji" class="form-input" placeholder="📦" maxlength="2">
+                    </div>
+
+                    <!-- ── PRICING ── -->
+                    <div class="section-label">Pricing & Stock</div>
+                    <hr class="section-divider">
+
+                    <div class="form-group">
+                        <label class="form-label">Selling Price (KES) <span class="required">*</span></label>
+                        <input type="number" id="price" class="form-input" step="0.01" min="0" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cost Price (KES)</label>
+                        <input type="number" id="cost" class="form-input" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Stock Quantity <span class="required">*</span></label>
+                        <input type="number" id="stock" class="form-input" min="0" required placeholder="0">
+                    </div>
+
+                    <!-- ── TRACKING ── -->
+                    <div class="section-label">Tracking & Compliance</div>
+                    <hr class="section-divider">
+
+                    <!-- Barcode with auto-generate -->
+                    <div class="form-group">
+                        <label class="form-label">Barcode</label>
+                        <div class="barcode-wrap">
+                            <input type="text" id="barcode" class="form-input" placeholder="Auto-generated or enter manually" readonly>
+                            <button type="button" class="btn-generate" onclick="generateBarcode()" title="Generate new barcode">⟳ Generate</button>
+                        </div>
+                    </div>
+
+                    <!-- Batch Number -->
+                    <div class="form-group">
+                        <label class="form-label">Batch Number</label>
+                        <input type="text" id="batchNumber" class="form-input" placeholder="e.g. BATCH-2024-001">
+                    </div>
+
+                    <!-- Expiry Date -->
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <div class="expiry-wrap">
+                            <input type="date" id="expiryDate" class="form-input" oninput="updateExpiryStatus(this.value)">
+                            <span class="expiry-status" id="expiryStatus"></span>
+                        </div>
+                    </div>
+
+                    <!-- Image upload -->
+                    <div class="form-group full-width" style="margin-top:4px;">
+                        <label class="form-label">Product Image (optional)</label>
                         <input type="file" id="iconUpload" class="form-file" accept="image/*">
-                        <div id="iconPreview" class="icon-preview">📦</div>
+                        <div id="iconPreview" class="icon-preview" style="margin-top:10px;">📦</div>
                     </div>
+
                 </div>
-                <div class="form-group full-width" style="margin-top: 16px;">
+
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px;">
                     <button type="submit" class="btn btn-primary" id="submitBtn">+ Add Product</button>
-                    <button type="button" class="btn btn-danger" id="clearBtn" style="margin-left: 10px;">Clear Form</button>
+                    <button type="button" class="btn btn-danger" id="clearBtn">Clear Form</button>
                 </div>
-                <div id="formMessage"></div>
+                <div id="formMessage" style="margin-top:10px;"></div>
             </form>
         </div>
 
         <div class="table-container">
             <div class="table-header">
                 <h2>Products List</h2>
-                <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search products..." style="width: 300px;">
+                <input type="text" id="searchInput" class="form-input" placeholder="🔍 Search name, batch, barcode…" style="width:300px;">
             </div>
-           
             <table class="table">
                 <thead>
                     <tr>
@@ -272,6 +287,8 @@
                         <th>Icon</th>
                         <th>Name</th>
                         <th>Barcode</th>
+                        <th>Batch No.</th>
+                        <th>Expiry</th>
                         <th>Price</th>
                         <th>Cost</th>
                         <th>Profit/Unit</th>
@@ -281,7 +298,7 @@
                     </tr>
                 </thead>
                 <tbody id="productsTableBody">
-                    <tr><td colspan="10" class="loading">Loading products...</td></tr>
+                    <tr><td colspan="12" class="loading">Loading products…</td></tr>
                 </tbody>
             </table>
         </div>
@@ -289,11 +306,114 @@
 
     <script src="assets/script.js"></script>
     <script src="assets/auth.js"></script>
+    <script src="assets/nav-role-manager.js"></script>
     <script src="assets/data-module.js"></script>
 
     <script>
+    /* ═══════════════════════════════════════
+       PROFESSIONAL NOTIFICATION SYSTEM
+    ═══════════════════════════════════════ */
+    window.posNotify = (function() {
+        const ICONS     = { error:'❌', warning:'⚠️', success:'✅', info:'ℹ️' };
+        const TITLES    = { error:'Error', warning:'Warning', success:'Success', info:'Info' };
+        const DURATIONS = { error:5000, warning:4500, success:3000, info:3500 };
+
+        function show(type, title, message, duration) {
+            const container = document.getElementById('posNotifContainer');
+            if (!container) return;
+            const d = duration || DURATIONS[type] || 4000;
+            const el = document.createElement('div');
+            el.className = `pos-notif type-${type}`;
+            el.innerHTML = `
+                <div class="pos-notif-icon">${ICONS[type]}</div>
+                <div class="pos-notif-body">
+                    <div class="pos-notif-title">${title || TITLES[type]}</div>
+                    ${message ? `<div class="pos-notif-msg">${message}</div>` : ''}
+                </div>
+                <button class="pos-notif-close" onclick="this.closest('.pos-notif').remove()">✕</button>
+                <div class="pos-notif-progress" style="animation-duration:${d}ms"></div>`;
+            container.appendChild(el);
+            requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+            setTimeout(() => { el.classList.add('hiding'); setTimeout(() => el.remove(), 400); }, d);
+        }
+
+        function confirm(opts) {
+            return new Promise(resolve => {
+                const overlay   = document.getElementById('posModalOverlay');
+                const iconEl    = document.getElementById('posModalIcon');
+                const titleEl   = document.getElementById('posModalTitle');
+                const msgEl     = document.getElementById('posModalMsg');
+                const actionsEl = document.getElementById('posModalActions');
+                iconEl.textContent    = opts.icon    || '❓';
+                titleEl.textContent   = opts.title   || 'Confirm';
+                msgEl.innerHTML       = opts.message || '';
+                actionsEl.innerHTML   = '';
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'pos-modal-btn cancel';
+                cancelBtn.textContent = opts.cancelText || 'Cancel';
+                cancelBtn.onclick = () => { overlay.classList.remove('show'); resolve(false); };
+                const confirmBtn = document.createElement('button');
+                confirmBtn.className = `pos-modal-btn confirm${opts.danger ? ' danger' : ''}`;
+                confirmBtn.textContent = opts.confirmText || 'OK';
+                confirmBtn.onclick = () => { overlay.classList.remove('show'); resolve(true); };
+                actionsEl.appendChild(cancelBtn);
+                actionsEl.appendChild(confirmBtn);
+                overlay.classList.add('show');
+                setTimeout(() => confirmBtn.focus(), 50);
+            });
+        }
+
+        return {
+            error:   (msg, title)   => show('error',   title, msg),
+            warning: (msg, title)   => show('warning', title, msg),
+            success: (msg, title)   => show('success', title, msg),
+            info:    (msg, title)   => show('info',    title, msg),
+            confirm
+        };
+    })();
+
+    /* ═══════════════════════════════════════
+       BARCODE GENERATOR
+       Format: GH + timestamp digits + random 4
+    ═══════════════════════════════════════ */
+    function generateBarcode() {
+        const ts   = Date.now().toString().slice(-8);        // last 8 digits of timestamp
+        const rand = Math.floor(1000 + Math.random() * 9000); // 4-digit random
+        const code = `GH${ts}${rand}`;
+        document.getElementById('barcode').value = code;
+        posNotify.info(`Barcode generated: ${code}`, 'New Barcode');
+    }
+
+    /* ═══════════════════════════════════════
+       EXPIRY DATE STATUS
+    ═══════════════════════════════════════ */
+    function updateExpiryStatus(value) {
+        const el = document.getElementById('expiryStatus');
+        if (!value) { el.textContent = ''; return; }
+        const today  = new Date(); today.setHours(0,0,0,0);
+        const expiry = new Date(value);
+        const diff   = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+        if (diff < 0)   { el.textContent = 'Expired';     el.className = 'expiry-status expired'; }
+        else if (diff <= 30) { el.textContent = `${diff}d left`; el.className = 'expiry-status soon'; }
+        else            { el.textContent = `${diff}d left`; el.className = 'expiry-status good'; }
+    }
+
+    function getExpiryBadge(dateStr) {
+        if (!dateStr) return `<span class="expiry-badge none">—</span>`;
+        const today  = new Date(); today.setHours(0,0,0,0);
+        const expiry = new Date(dateStr);
+        const diff   = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+        const label  = expiry.toLocaleDateString('en-KE', { day:'2-digit', month:'short', year:'numeric' });
+        if (diff < 0)        return `<span class="expiry-badge expired">🔴 ${label}</span>`;
+        if (diff <= 30)      return `<span class="expiry-badge soon">🟠 ${label} (${diff}d)</span>`;
+        return               `<span class="expiry-badge good">🟢 ${label}</span>`;
+    }
+
+    /* ═══════════════════════════════════════
+       MAIN PAGE LOGIC
+    ═══════════════════════════════════════ */
     (function() {
-        let products = [];
+        let products  = [];
         let editingId = null;
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -304,44 +424,42 @@
 
                 const currentUser = authModule.getCurrentUser();
                 if (currentUser.role !== 'administrator') {
-                    alert('⚠️ Access Denied: Inventory management is only for administrators.');
-                    window.location.href = 'products.html';
+                    posNotify.error('Inventory management is restricted to administrators.', 'Access Denied');
+                    setTimeout(() => { window.location.href = 'products.html'; }, 2000);
                     return;
                 }
 
                 document.getElementById('currentUserName').textContent = currentUser.full_name || 'User';
-                document.getElementById('dashboardLink').style.display = 'flex';
-                document.getElementById('inventoryLink').style.display = 'flex';
-                document.getElementById('adminTab').style.display = 'flex';
+                document.getElementById('dashboardLink').style.display  = 'flex';
+                document.getElementById('inventoryLink').style.display  = 'flex';
+                document.getElementById('adminTab').style.display       = 'flex';
+                if (window.setupNavigationForRole) window.setupNavigationForRole();
+
+                /* Auto-generate a barcode for new products on load */
+                generateBarcode();
 
                 await loadProducts();
 
                 document.getElementById('productForm').addEventListener('submit', handleFormSubmit);
                 document.getElementById('clearBtn').addEventListener('click', clearForm);
-                document.getElementById('searchInput').addEventListener('input', filterProducts);
-
-                // NEW: Handle image upload → convert to base64
+                document.getElementById('searchInput').addEventListener('input', e => renderProductsTable(e.target.value));
                 document.getElementById('iconUpload').addEventListener('change', handleImageUpload);
 
-                console.log('✅ Inventory page ready (Admin access)');
             } catch (err) {
-                console.error('Inventory init failed:', err);
+                posNotify.error('Failed to initialize page: ' + err.message, 'Init Error');
                 document.getElementById('productsTableBody').innerHTML =
-                    `<tr><td colspan="10" style="color:var(--danger);text-align:center;padding:40px;">Error: ${err.message}</td></tr>`;
+                    `<tr><td colspan="12" style="color:var(--danger);text-align:center;padding:40px;">Error: ${err.message}</td></tr>`;
             }
         });
 
-        // NEW: Convert uploaded image to base64 and preview
         function handleImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(event) {
-                const base64 = event.target.result;
-                document.getElementById('iconPreview').innerHTML = `<img src="${base64}" alt="Preview" style="max-width:100%; max-height:100%;">`;
-                // Store base64 in hidden field or directly use in submit
-                document.getElementById('iconEmoji').value = base64; // we'll use this field for both emoji & image
+            reader.onload = (ev) => {
+                const base64 = ev.target.result;
+                document.getElementById('iconPreview').innerHTML = `<img src="${base64}" style="max-width:100%;max-height:100%;border-radius:6px;">`;
+                document.getElementById('iconEmoji').value = base64;
             };
             reader.readAsDataURL(file);
         }
@@ -352,87 +470,99 @@
                 if (!result.success) throw new Error(result.error || 'Failed to load products');
                 products = result.data || [];
                 renderProductsTable();
-                console.log('✅ Loaded products:', products.length);
             } catch (err) {
-                console.error('Failed to load products:', err);
+                posNotify.error('Failed to load products: ' + err.message, 'Load Error');
                 document.getElementById('productsTableBody').innerHTML =
-                    `<tr><td colspan="10" style="color:var(--danger);text-align:center;padding:40px;">Failed to load: ${err.message}</td></tr>`;
+                    `<tr><td colspan="12" style="color:var(--danger);text-align:center;padding:40px;">Failed to load: ${err.message}</td></tr>`;
             }
         }
 
         function renderProductsTable(filter = '') {
-            const tbody = document.getElementById('productsTableBody');
+            const tbody    = document.getElementById('productsTableBody');
+            const q        = filter.toLowerCase();
             const filtered = products.filter(p =>
-                p.name.toLowerCase().includes(filter.toLowerCase()) ||
-                (p.barcode && p.barcode.includes(filter)) ||
-                (p.category && p.category.toLowerCase().includes(filter.toLowerCase()))
+                p.name?.toLowerCase().includes(q) ||
+                p.barcode?.toLowerCase().includes(q) ||
+                p.batch_number?.toLowerCase().includes(q) ||
+                p.category?.toLowerCase().includes(q)
             );
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted);">No products found</td></tr>';
+            if (!filtered.length) {
+                tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:40px;color:var(--text-muted);">No products found</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filtered.map(p => {
-                const profit = p.cost ? (p.price - p.cost) : 0;
+                const profit     = p.cost ? (p.price - p.cost) : 0;
                 const stockClass = p.stock < 10 ? 'stock-low' : p.stock < 50 ? 'stock-medium' : 'stock-good';
-
-                // Render icon: emoji if short text, image if base64
-                let iconDisplay = p.icon || '📦';
+                let iconDisplay  = p.icon || '📦';
                 if (iconDisplay.startsWith('data:image')) {
-                    iconDisplay = `<img src="${iconDisplay}" alt="Product icon" style="width:40px;height:40px;object-fit:contain;">`;
+                    iconDisplay = `<img src="${iconDisplay}" style="width:36px;height:36px;object-fit:contain;border-radius:5px;">`;
                 }
-
-                return `
-                <tr>
-                    <td>${p.id}</td>
+                return `<tr>
+                    <td style="color:var(--text-muted);font-size:0.82rem;">${p.id}</td>
                     <td>${iconDisplay}</td>
-                    <td>${p.name}</td>
-                    <td>${p.barcode || '—'}</td>
-                    <td>KES ${p.price.toFixed(2)}</td>
-                    <td>KES ${p.cost ? p.cost.toFixed(2) : '0.00'}</td>
-                    <td style="color: ${profit > 0 ? 'var(--accent-green)' : 'var(--text-muted)'};">
-                        KES ${profit.toFixed(2)}
-                    </td>
+                    <td style="font-weight:600;">${p.name}</td>
+                    <td><span class="barcode-text">${p.barcode || '—'}</span></td>
+                    <td>${p.batch_number ? `<span class="batch-chip">${p.batch_number}</span>` : '<span style="color:var(--text-muted)">—</span>'}</td>
+                    <td>${getExpiryBadge(p.expiry_date)}</td>
+                    <td>KES ${parseFloat(p.price).toFixed(2)}</td>
+                    <td>KES ${p.cost ? parseFloat(p.cost).toFixed(2) : '0.00'}</td>
+                    <td style="color:${profit > 0 ? 'var(--accent-green)' : 'var(--text-muted)'}; font-weight:600;">KES ${profit.toFixed(2)}</td>
                     <td><span class="stock-badge ${stockClass}">${p.stock}</span></td>
                     <td>${p.category || '—'}</td>
-                    <td>
-                        <button class="btn btn-secondary btn-small" onclick="inventoryPage.editProduct(${p.id})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="inventoryPage.deleteProduct(${p.id})">Delete</button>
+                    <td style="white-space:nowrap;">
+                        <button class="btn btn-secondary btn-small" onclick="inventoryPage.editProduct(${p.id})">✏️ Edit</button>
+                        <button class="btn btn-danger btn-small" style="margin-left:6px;" onclick="inventoryPage.deleteProduct(${p.id})">🗑️</button>
                     </td>
-                </tr>
-                `;
+                </tr>`;
             }).join('');
-        }
-
-        function filterProducts(e) {
-            renderProductsTable(e.target.value);
         }
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-
-            const name     = document.getElementById('name').value.trim();
-            const barcode  = document.getElementById('barcode').value.trim();
-            const price    = parseFloat(document.getElementById('price').value);
-            const cost     = parseFloat(document.getElementById('cost').value) || 0;
-            const stock    = parseInt(document.getElementById('stock').value);
-            const category = document.getElementById('category').value.trim();
-            const icon     = document.getElementById('iconEmoji').value.trim(); // now holds either emoji or base64
+            const name        = document.getElementById('name').value.trim();
+            const barcode     = document.getElementById('barcode').value.trim();
+            const price       = parseFloat(document.getElementById('price').value);
+            const cost        = parseFloat(document.getElementById('cost').value) || 0;
+            const stock       = parseInt(document.getElementById('stock').value);
+            const category    = document.getElementById('category').value.trim();
+            const icon        = document.getElementById('iconEmoji').value.trim();
+            const batchNumber = document.getElementById('batchNumber').value.trim();
+            const expiryDate  = document.getElementById('expiryDate').value;
 
             if (!name || isNaN(price) || isNaN(stock)) {
-                showMessage('Please fill required fields correctly', 'error');
+                posNotify.warning('Please fill in all required fields correctly.', 'Incomplete Form');
                 return;
+            }
+
+            /* Warn if expiry is already past */
+            if (expiryDate) {
+                const today  = new Date(); today.setHours(0,0,0,0);
+                const expiry = new Date(expiryDate);
+                if (expiry < today) {
+                    const proceed = await posNotify.confirm({
+                        icon: '⚠️',
+                        title: 'Expired Product',
+                        message: 'The expiry date you entered is in the past. Are you sure you want to add this product?',
+                        confirmText: 'Add Anyway',
+                        cancelText: 'Go Back',
+                        danger: true
+                    });
+                    if (!proceed) return;
+                }
             }
 
             const productData = {
                 name,
-                barcode: barcode || null,
+                barcode:      barcode || null,
                 price,
                 cost,
                 stock,
-                category: category || null,
-                icon: icon || '📦' // base64 or emoji
+                category:     category || null,
+                icon:         icon || '📦',
+                batch_number: batchNumber || null,
+                expiry_date:  expiryDate  || null,
             };
 
             try {
@@ -443,97 +573,88 @@
                     result = await window.dataModule.createProduct(productData);
                 }
                 if (!result.success) throw new Error(result.error);
-
-                showMessage(
-                    editingId ? '✅ Product updated successfully!' : '✅ Product added successfully!',
-                    'success'
+                posNotify.success(
+                    editingId ? `${name} has been updated successfully.` : `${name} has been added to inventory.`,
+                    editingId ? 'Product Updated' : 'Product Added'
                 );
-
                 clearForm();
                 await loadProducts();
             } catch (err) {
-                console.error('Save failed:', err);
-                showMessage('❌ Error saving product: ' + err.message, 'error');
+                posNotify.error('Could not save product: ' + err.message, 'Save Failed');
             }
         }
 
         function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (!product) return;
-
+            const p = products.find(x => x.id === id);
+            if (!p) return;
             editingId = id;
-            document.getElementById('formTitle').textContent = 'Edit Product';
-            document.getElementById('submitBtn').textContent = 'Update Product';
+            document.getElementById('formTitle').textContent     = 'Edit Product';
+            document.getElementById('submitBtn').textContent     = 'Update Product';
+            document.getElementById('productId').value          = p.id;
+            document.getElementById('name').value               = p.name;
+            document.getElementById('barcode').value            = p.barcode     || '';
+            document.getElementById('price').value              = p.price;
+            document.getElementById('cost').value               = p.cost        || '';
+            document.getElementById('stock').value              = p.stock;
+            document.getElementById('category').value           = p.category    || '';
+            document.getElementById('batchNumber').value        = p.batch_number || '';
+            document.getElementById('expiryDate').value         = p.expiry_date  || '';
+            updateExpiryStatus(p.expiry_date || '');
 
-            document.getElementById('productId').value = product.id;
-            document.getElementById('name').value     = product.name;
-            document.getElementById('barcode').value  = product.barcode || '';
-            document.getElementById('price').value    = product.price;
-            document.getElementById('cost').value     = product.cost || '';
-            document.getElementById('stock').value    = product.stock;
-            document.getElementById('category').value = product.category || '';
-
-            // Show current icon in preview
-            const iconValue = product.icon || '📦';
+            const iconValue = p.icon || '📦';
             document.getElementById('iconEmoji').value = iconValue;
             const preview = document.getElementById('iconPreview');
             if (iconValue.startsWith('data:image')) {
-                preview.innerHTML = `<img src="${iconValue}" alt="Current icon" style="max-width:100%; max-height:100%;">`;
+                preview.innerHTML = `<img src="${iconValue}" style="max-width:100%;max-height:100%;border-radius:6px;">`;
             } else {
                 preview.textContent = iconValue;
             }
-
             document.querySelector('.product-form').scrollIntoView({ behavior: 'smooth' });
         }
 
         async function deleteProduct(id) {
-            if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
+            const p = products.find(x => x.id === id);
+            const confirmed = await posNotify.confirm({
+                icon: '🗑️',
+                title: 'Delete Product',
+                message: `Are you sure you want to delete <b>${p?.name || 'this product'}</b>? This cannot be undone.`,
+                confirmText: 'Delete',
+                cancelText: 'Cancel',
+                danger: true
+            });
+            if (!confirmed) return;
             try {
                 const result = await window.dataModule.deleteProduct(id);
                 if (!result.success) throw new Error(result.error);
-                showMessage('✅ Product deleted successfully!', 'success');
+                posNotify.success(`${p?.name || 'Product'} has been deleted.`, 'Deleted');
                 await loadProducts();
             } catch (err) {
-                console.error('Delete failed:', err);
-                showMessage('❌ Error deleting: ' + err.message, 'error');
+                posNotify.error('Could not delete: ' + err.message, 'Delete Failed');
             }
         }
 
         function clearForm() {
             editingId = null;
-            document.getElementById('formTitle').textContent = 'Add New Product';
-            document.getElementById('submitBtn').textContent = '+ Add Product';
+            document.getElementById('formTitle').textContent  = 'Add New Product';
+            document.getElementById('submitBtn').textContent  = '+ Add Product';
             document.getElementById('productForm').reset();
             document.getElementById('iconPreview').textContent = '📦';
             document.getElementById('formMessage').textContent = '';
+            document.getElementById('expiryStatus').textContent = '';
+            /* Auto-generate fresh barcode for the next product */
+            generateBarcode();
         }
 
-        function showMessage(text, type = 'success') {
-            const msgEl = document.getElementById('formMessage');
-            msgEl.textContent = text;
-            msgEl.className = type === 'success' ? 'success' : 'error';
-            setTimeout(() => msgEl.textContent = '', 5000);
-        }
-
-        window.inventoryPage = {
-            editProduct,
-            deleteProduct
-        };
-
-        console.log('✅ Inventory page script loaded (with image upload support)');
+        window.inventoryPage = { editProduct, deleteProduct };
     })();
     </script>
+
     <script src="assets/pwa-registration.js"></script>
-    <!-- Offline Manager -->
-<script src="assets/offline-manager.js"></script>
+    <script src="assets/offline-manager.js"></script>
 
-
-<footer style="text-align: center; padding: 15px; background-color: black;">
-  <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color: gold; font-family: 'Great Vibes', cursive;"> Gordon Onyango.</b> All rights reserved.</p>
-</footer>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+    <footer style="text-align:center;padding:15px;background-color:black;">
+        <p>&copy; <span id="year"></span><b style="color:gold;"> G&amp;H </b>Solutions by <b style="color:gold;font-family:'Great Vibes',cursive;"> Gordon Onyango.</b> All rights reserved.</p>
+    </footer>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
 </html>
