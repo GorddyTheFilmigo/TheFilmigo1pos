@@ -58,71 +58,18 @@
         .pos-tab-btn.active { background: var(--accent-orange); color: white; border-color: var(--accent-orange); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        /* ══ FLOATING CART LAYOUT ══ */
         .pos-container { display: block; padding: 16px; height: calc(100vh - 130px); position: relative; }
-
-        /* Products fills the entire area */
-        .products-section {
-            background: var(--bg-secondary); border: 1px solid var(--border);
-            border-radius: 12px; padding: 16px; overflow-y: auto;
-            height: 100%; width: 100%;
-        }
-
-        /* Cart drawer — fixed right panel, slides in/out */
-        .cart-section {
-            position: fixed; top: 0; right: -480px; width: 460px;
-            height: 100vh; z-index: 3000;
-            background: var(--bg-secondary); border-left: 2px solid var(--accent-orange);
-            display: flex; flex-direction: column;
-            overflow: hidden;
-            transition: right 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: -8px 0 40px rgba(0,0,0,0.6);
-            padding: 16px;
-            padding-top: 14px;
-        }
+        .products-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-y: auto; height: 100%; width: 100%; }
+        .cart-section { position: fixed; top: 0; right: -480px; width: 460px; height: 100vh; z-index: 3000; background: var(--bg-secondary); border-left: 2px solid var(--accent-orange); display: flex; flex-direction: column; overflow: hidden; transition: right 0.32s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: -8px 0 40px rgba(0,0,0,0.6); padding: 16px; padding-top: 14px; }
         .cart-section.cart-open { right: 0; }
-
-        /* Backdrop when cart is open */
-        .cart-backdrop {
-            display: none; position: fixed; inset: 0; z-index: 2999;
-            background: rgba(0,0,0,0.45); backdrop-filter: blur(2px);
-        }
+        .cart-backdrop { display: none; position: fixed; inset: 0; z-index: 2999; background: rgba(0,0,0,0.45); backdrop-filter: blur(2px); }
         .cart-backdrop.show { display: block; }
-
-        /* Floating Cart Toggle Button */
-        .cart-fab {
-            position: fixed; bottom: 28px; right: 28px; z-index: 2998;
-            width: 64px; height: 64px; border-radius: 50%;
-            background: var(--accent-orange); color: #000;
-            border: none; cursor: pointer;
-            box-shadow: 0 6px 24px rgba(245,158,11,0.55);
-            font-size: 1.6rem; font-weight: 900;
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+        .cart-fab { position: fixed; bottom: 28px; right: 28px; z-index: 2998; width: 64px; height: 64px; border-radius: 50%; background: var(--accent-orange); color: #000; border: none; cursor: pointer; box-shadow: 0 6px 24px rgba(245,158,11,0.55); font-size: 1.6rem; font-weight: 900; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; }
         .cart-fab:hover { transform: scale(1.08); box-shadow: 0 8px 30px rgba(245,158,11,0.7); }
         .cart-fab:active { transform: scale(0.95); }
-
-        /* Badge on the FAB showing item count */
-        .cart-fab-badge {
-            position: absolute; top: -4px; right: -4px;
-            background: var(--danger); color: white;
-            border-radius: 50%; min-width: 22px; height: 22px;
-            font-size: 0.72rem; font-weight: 800;
-            display: none; align-items: center; justify-content: center;
-            border: 2px solid var(--bg-primary); padding: 0 3px;
-        }
+        .cart-fab-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; border-radius: 50%; min-width: 22px; height: 22px; font-size: 0.72rem; font-weight: 800; display: none; align-items: center; justify-content: center; border: 2px solid var(--bg-primary); padding: 0 3px; }
         .cart-fab-badge.show { display: flex; }
-
-        /* Close button inside cart drawer */
-        .cart-close-btn {
-            position: absolute; top: 14px; left: 14px;
-            background: rgba(255,255,255,0.07); border: 1px solid var(--border);
-            color: var(--text-muted); border-radius: 8px;
-            width: 32px; height: 32px; cursor: pointer; font-size: 1.1rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s;
-        }
+        .cart-close-btn { position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,0.07); border: 1px solid var(--border); color: var(--text-muted); border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
         .cart-close-btn:hover { background: rgba(248,81,73,0.2); color: var(--danger); border-color: var(--danger); }
         .customer-selector { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 7px 10px; margin-bottom: 8px; flex-shrink: 0; }
         .customer-selector-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
@@ -189,8 +136,8 @@
         .category-btn { padding: 8px 16px; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-weight: 600; font-size: 0.87rem; white-space: nowrap; }
         .category-btn.active { background: var(--accent-orange); color: white; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .product-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: center; }
-        .product-card:hover { transform: translateY(-4px); border-color: var(--accent-orange); }
+        .product-card { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 18px; padding: 14px; cursor: pointer; transition: all 0.2s; text-align: center; aspect-ratio: 1 / 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .product-card:hover { transform: translateY(-4px); border-color: var(--accent-orange); box-shadow: 0 8px 24px rgba(245,158,11,0.15); }
         .product-icon  { font-size: 2.5rem; margin-bottom: 8px; line-height: 1; }
         .product-name  { font-weight: 600; margin-bottom: 4px; font-size: 0.88rem; }
         .product-price { color: var(--accent-orange); font-weight: 700; font-size: 1.1rem; }
@@ -262,8 +209,6 @@
         .pos-modal-btn.cancel  { background: rgba(255,255,255,0.08); color: #9ca3af; }
         .pos-modal-btn.confirm { background: #6366f1; color: #fff; }
         .pos-modal-btn.confirm.danger { background: #ef4444; }
-
-        /* ══════ CART ══════ */
         .cart-header { margin-bottom: 4px; flex-shrink: 0; padding-left: 42px; }
         .cart-header h2 { font-size: 1.05rem; }
         .cart-items { flex: 1; overflow-y: auto; margin-bottom: 4px; min-height: 0; padding: 4px 6px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-primary); }
@@ -287,75 +232,26 @@
         .qty-value { min-width: 28px; text-align: center; font-weight: 700; font-size: 0.95rem; background: var(--bg-secondary); border-radius: 6px; padding: 3px 4px; }
         .remove-btn { width: 30px; height: 30px; background: rgba(248,81,73,0.12); color: var(--danger); border: 1.5px solid rgba(248,81,73,0.3); border-radius: 8px; cursor: pointer; font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
         .remove-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
-
-        /* ══════ PRICE OVERRIDE BUTTON (pencil icon in cart) ══════ */
-        .override-price-btn {
-            width: 28px; height: 28px;
-            background: rgba(245,158,11,0.1);
-            color: var(--accent-orange);
-            border: 1.5px solid rgba(245,158,11,0.3);
-            border-radius: 7px;
-            cursor: pointer; font-size: 0.72rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.15s; flex-shrink: 0;
-        }
-        .override-price-btn:hover, .override-price-btn.active {
-            background: rgba(245,158,11,0.28);
-            border-color: var(--accent-orange);
-        }
-        .override-reason-chip {
-            display: inline-block; font-size: 0.68rem; font-weight: 600;
-            background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);
-            border-radius: 20px; padding: 1px 7px; color: var(--accent-orange);
-            max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            margin-top: 2px;
-        }
-
-        /* ══════ PRICE OVERRIDE MODAL ══════ */
-        #priceOverrideOverlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.78);
-            z-index: 99996; display: none; align-items: center; justify-content: center;
-            backdrop-filter: blur(6px); padding: 16px;
-        }
+        .override-price-btn { width: 28px; height: 28px; background: rgba(245,158,11,0.1); color: var(--accent-orange); border: 1.5px solid rgba(245,158,11,0.3); border-radius: 7px; cursor: pointer; font-size: 0.72rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+        .override-price-btn:hover, .override-price-btn.active { background: rgba(245,158,11,0.28); border-color: var(--accent-orange); }
+        .override-reason-chip { display: inline-block; font-size: 0.68rem; font-weight: 600; background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); border-radius: 20px; padding: 1px 7px; color: var(--accent-orange); max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
+        #priceOverrideOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 99996; display: none; align-items: center; justify-content: center; backdrop-filter: blur(6px); padding: 16px; }
         #priceOverrideOverlay.show { display: flex; }
-        .po-modal {
-            background: #161b22; border: 1.5px solid rgba(245,158,11,0.45);
-            border-radius: 20px; padding: 28px 24px 22px;
-            width: 100%; max-width: 380px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.75);
-            animation: slideInUp 0.28s cubic-bezier(0.34,1.56,0.64,1);
-        }
+        .po-modal { background: #161b22; border: 1.5px solid rgba(245,158,11,0.45); border-radius: 20px; padding: 28px 24px 22px; width: 100%; max-width: 380px; box-shadow: 0 24px 64px rgba(0,0,0,0.75); animation: slideInUp 0.28s cubic-bezier(0.34,1.56,0.64,1); }
         .po-title    { font-size: 1.05rem; font-weight: 800; color: #f9fafb; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
         .po-subtitle { font-size: 0.8rem; color: #6b7280; margin-bottom: 18px; }
-        .po-original-box {
-            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-            border-radius: 10px; padding: 10px 14px; margin-bottom: 16px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .po-original-box { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
         .po-original-label { font-size: 0.77rem; color: var(--text-muted); font-weight: 600; }
         .po-original-value { font-size: 1.1rem; font-weight: 900; color: var(--text); }
         .po-field { margin-bottom: 14px; }
         .po-label { display: block; font-size: 0.77rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-        .po-input {
-            width: 100%; background: #0d1117; border: 1.5px solid rgba(245,158,11,0.3);
-            border-radius: 10px; padding: 11px 14px; color: #f9fafb;
-            font-size: 1.05rem; font-weight: 700; font-family: 'Archivo', sans-serif;
-            transition: border-color 0.2s, box-shadow 0.2s; box-sizing: border-box;
-        }
+        .po-input { width: 100%; background: #0d1117; border: 1.5px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 11px 14px; color: #f9fafb; font-size: 1.05rem; font-weight: 700; font-family: 'Archivo', sans-serif; transition: border-color 0.2s, box-shadow 0.2s; box-sizing: border-box; }
         .po-input:focus { outline: none; border-color: var(--accent-orange); box-shadow: 0 0 0 3px rgba(245,158,11,0.15); }
         .po-input.invalid { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
-        .po-reason-input {
-            width: 100%; background: #0d1117; border: 1px solid var(--border);
-            border-radius: 10px; padding: 10px 14px; color: #e6edf3;
-            font-size: 0.88rem; font-family: 'Archivo', sans-serif;
-            transition: border-color 0.2s; box-sizing: border-box;
-        }
+        .po-reason-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; color: #e6edf3; font-size: 0.88rem; font-family: 'Archivo', sans-serif; transition: border-color 0.2s; box-sizing: border-box; }
         .po-reason-input:focus { outline: none; border-color: rgba(245,158,11,0.5); }
         .po-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; }
-        .po-preview {
-            background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.28);
-            border-radius: 8px; padding: 9px 13px; font-size: 0.82rem; margin-bottom: 14px; display: none;
-        }
+        .po-preview { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.28); border-radius: 8px; padding: 9px 13px; font-size: 0.82rem; margin-bottom: 14px; display: none; }
         .po-preview.show { display: block; }
         .po-preview-saving { color: var(--accent-green); font-weight: 700; }
         .po-preview-pct    { color: var(--text-muted); margin-left: 6px; }
@@ -370,7 +266,6 @@
         .po-btn-reset:hover { background: rgba(248,81,73,0.22); }
         .po-msg { font-size: 0.78rem; font-weight: 600; text-align: center; min-height: 16px; margin-top: 8px; }
         .po-msg.error { color: #ef4444; }
-
         .empty-cart { text-align: center; padding: 28px 16px; color: var(--text-muted); }
         .cart-summary { border-top: 2px solid var(--border); padding-top: 6px; flex-shrink: 0; margin-top: 4px; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-size: 0.85rem; }
@@ -451,7 +346,6 @@
         .intasend-status-bar.success    { display: block; background: rgba(63,185,80,0.15);  border: 1px solid rgba(63,185,80,0.4);  color: var(--accent-green); }
         .intasend-status-bar.error      { display: block; background: rgba(248,81,73,0.15);  border: 1px solid rgba(248,81,73,0.4);  color: var(--danger); }
         .intasend-status-bar.info       { display: block; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.4); color: var(--accent-orange); }
-        /* ══ RECORDS / SALES HISTORY ══ */
         .records-container { padding: 16px; max-width: 1200px; margin: 0 auto; }
         .records-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
         .records-toolbar input[type="date"] { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; color: var(--text); font-family: 'Archivo', sans-serif; font-size: 0.88rem; }
@@ -480,8 +374,6 @@
         .src-badge.credit { background: rgba(245,158,11,0.15);  color: #f59e0b; }
         .src-badge.voided { background: rgba(248,81,73,0.15);   color: #f85149; }
         .src-cashier { font-size: 0.75rem; color: var(--text-muted); }
-
-        /* ══ RECEIPT MODAL ══ */
         #receiptModal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9500; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(4px); }
         #receiptModal.show { display: flex; }
         .receipt-modal-wrap { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 480px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -495,30 +387,7 @@
         .btn-pdf:hover { background: #dc2626; }
         .btn-close-receipt { background: rgba(255,255,255,0.08); color: var(--text-muted); }
         .receipt-scroll { overflow-y: auto; padding: 20px; }
-
-        /* The actual receipt — white paper style */
-        #receiptContent {
-            background: #fff; color: #111; border-radius: 8px;
-            padding: 24px 22px; font-family: 'Courier New', monospace;
-            font-size: 13px; line-height: 1.6; max-width: 340px; margin: 0 auto;
-        }
-        .rct-shop    { text-align: center; font-size: 1.05rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px; }
-        .rct-tagline { text-align: center; font-size: 0.75rem; color: #555; margin-bottom: 10px; }
-        .rct-divider { border: none; border-top: 1px dashed #bbb; margin: 8px 0; }
-        .rct-kv      { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 2px; }
-        .rct-kv span:last-child { font-weight: 700; text-align: right; }
-        .rct-items-header { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; color: #555; padding: 4px 0; border-bottom: 1px solid #ddd; margin-bottom: 4px; }
-        .rct-item    { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 3px 0; border-bottom: 1px dotted #eee; }
-        .rct-item-name { flex: 1; padding-right: 6px; }
-        .rct-item-qty  { min-width: 30px; text-align: center; }
-        .rct-item-price{ min-width: 70px; text-align: right; }
-        .rct-totals  { margin-top: 8px; }
-        .rct-total-row{ display: flex; justify-content: space-between; font-size: 0.82rem; padding: 2px 0; }
-        .rct-grand-total { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 900; padding: 6px 0; border-top: 2px solid #111; border-bottom: 2px solid #111; margin: 4px 0; }
-        .rct-footer  { text-align: center; font-size: 0.72rem; color: #666; margin-top: 12px; line-height: 1.8; }
-        .rct-override-note { font-size: 0.7rem; color: #888; font-style: italic; }
-
-        /* ══ VOID / REFUND ══ */
+        #receiptContent { background: #fff; color: #111; border-radius: 8px; padding: 24px 22px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; max-width: 340px; margin: 0 auto; }
         .voids-container { padding: 16px; max-width: 900px; margin: 0 auto; }
         .void-search-bar { width: 100%; padding: 10px 14px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; font-family: 'Archivo', sans-serif; margin-bottom: 16px; }
         .void-search-bar:focus { outline: none; border-color: var(--danger); }
@@ -531,8 +400,6 @@
         .void-btn:hover { background: var(--danger); color: white; }
         .void-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         .voided-tag { padding: 4px 10px; background: rgba(248,81,73,0.12); color: var(--danger); border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
-
-        /* ══ RECONCILIATION ══ */
         .reconcile-container { padding: 16px; max-width: 900px; margin: 0 auto; }
         .reconcile-date-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
         .reconcile-date-bar input[type="date"] { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; color: var(--text); font-family: 'Archivo', sans-serif; font-size: 0.88rem; }
@@ -559,8 +426,6 @@
         .rct-table td { padding: 10px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .rct-table tr:last-child td { border-bottom: none; }
         .rct-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-        /* void modal */
         #voidReasonModal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9600; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 16px; }
         #voidReasonModal.show { display: flex; }
         .void-reason-modal { background: var(--bg-secondary); border: 2px solid var(--danger); border-radius: 16px; padding: 28px 24px; max-width: 400px; width: 100%; }
@@ -571,46 +436,49 @@
         .void-reason-actions { display: flex; gap: 10px; }
         .void-confirm-btn { flex: 1; padding: 11px; background: var(--danger); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Archivo', sans-serif; }
         .void-cancel-btn  { flex: 1; padding: 11px; background: rgba(255,255,255,0.06); color: var(--text-muted); border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: 'Archivo', sans-serif; }
-
         @media print {
             body > *:not(#receiptPrintArea) { display: none !important; }
             #receiptPrintArea { display: block !important; }
             #receiptContent { box-shadow: none; max-width: 100%; }
         }
-            .pos-container { padding: 10px; height: calc(100vh - 130px); }
-            .products-section { max-height: 100%; padding: 12px; }
-            .cart-section { width: 100%; right: -100%; border-left: none; border-top: 2px solid var(--accent-orange); }
-            .cart-section.cart-open { right: 0; }
-            .cart-fab { bottom: 20px; right: 20px; width: 56px; height: 56px; font-size: 1.4rem; }
-            .products-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
-            .product-card { padding: 10px; }
-            .product-icon { font-size: 2rem; margin-bottom: 6px; }
-            .product-name { font-size: 0.8rem; }
-            .product-price { font-size: 0.95rem; }
-            .cart-item { padding: 8px 10px; }
-            .summary-total { font-size: 1.1rem; }
-            .checkout-btn  { padding: 12px; font-size: 0.95rem; }
-            .payment-btn   { font-size: 11px; padding: 8px 4px; }
-            .expenses-container { padding: 12px; }
-            .expenses-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .expense-item { flex-direction: column; align-items: flex-start; }
-            .expense-amount { align-self: flex-end; }
-            .modal { padding: 10px; }
-            .modal-content { padding: 18px 14px; }
-            .modal-actions { flex-direction: column; }
-            .modal-btn { flex: none; width: 100%; }
-            .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 65vh; }
-            .customer-select-trigger { font-size: 12px; }
-            .cdd-search { font-size: 11px; }
-            .clear-customer-btn { font-size: 11px; padding: 8px 8px; }
-            #subNavLabel { display: none; }
-            #subNavBadge { padding: 7px 8px !important; }
-            .po-modal { padding: 20px 16px 18px; }
+        body { font-size: 16px; }
+        .search-bar { font-size: 1rem; padding: 11px 14px; }
+        .category-btn { font-size: 0.95rem; padding: 8px 16px; }
+        .product-name { font-size: 1rem; }
+        .product-price { font-size: 1.1rem; }
+        .product-stock { font-size: 0.85rem; }
+        .cart-header h2 { font-size: 1.1rem; }
+        .cart-item-name { font-size: 0.95rem; }
+        .cart-item-price { font-size: 0.82rem; }
+        .cart-item-subtotal { font-size: 0.88rem; }
+        .qty-value { font-size: 1rem; }
+        .summary-row { font-size: 0.92rem; }
+        .summary-total { font-size: 1.25rem; }
+        .payment-btn { font-size: 0.88rem; padding: 9px 4px; }
+        .checkout-btn { font-size: 1rem; padding: 13px; }
+        .pos-tab-btn { font-size: 0.97rem; }
+        .customer-selector-label { font-size: 0.78rem; }
+        .customer-select-trigger { font-size: 0.92rem; }
+        @media (max-width: 768px) {
+            .product-name { font-size: 1rem; }
+            .product-price { font-size: 1.05rem; }
+            .product-stock { font-size: 0.85rem; }
+            .category-btn { font-size: 0.92rem; }
+            .search-bar { font-size: 1rem; }
+            .pos-tab-btn { font-size: 0.92rem; }
+            .cart-item-name { font-size: 0.95rem; }
+            .cart-item-price { font-size: 0.82rem; }
+            .summary-row { font-size: 0.92rem; }
+            .summary-total { font-size: 1.2rem; }
+            .payment-btn { font-size: 0.88rem; padding: 10px 4px; }
+            .checkout-btn { font-size: 1rem; padding: 13px; }
+            .customer-select-trigger { font-size: 0.9rem; }
         }
         @media (max-width: 400px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .pos-tabs .pos-tab-btn { font-size: 13px; padding: 9px 14px; }
-            .expenses-stats { grid-template-columns: 1fr; }
+            .product-name { font-size: 0.97rem; }
+            .product-price { font-size: 1rem; }
+            .category-btn { font-size: 0.88rem; padding: 7px 12px; }
+            .pos-tab-btn { font-size: 0.88rem; }
         }
     </style>
 </head>
@@ -627,7 +495,6 @@
     </div>
 </div>
 
-<!-- ══ PRICE OVERRIDE MODAL ══ -->
 <div id="priceOverrideOverlay">
     <div class="po-modal">
         <div class="po-title">✏️ Override Selling Price</div>
@@ -904,7 +771,6 @@
     </div>
 </div>
 
-<!-- ══ RECORDS TAB ══ -->
 <div id="recordsTab" class="tab-content">
     <div class="records-container">
         <div class="records-toolbar">
@@ -925,7 +791,6 @@
     </div>
 </div>
 
-<!-- ══ VOIDS TAB ══ -->
 <div id="voidsTab" class="tab-content">
     <div class="voids-container">
         <h2 style="margin-bottom:6px;">↩ Void / Refund Sales</h2>
@@ -935,7 +800,6 @@
     </div>
 </div>
 
-<!-- ══ RECONCILIATION TAB ══ -->
 <div id="reconcileTab" class="tab-content">
     <div class="reconcile-container">
         <h2 style="margin-bottom:6px;">🗂 Daily Cash Drawer Reconciliation</h2>
@@ -949,7 +813,6 @@
     </div>
 </div>
 
-<!-- ══ RECEIPT MODAL ══ -->
 <div id="receiptModal">
     <div class="receipt-modal-wrap">
         <div class="receipt-modal-header">
@@ -966,10 +829,8 @@
     </div>
 </div>
 
-<!-- Hidden print area -->
 <div id="receiptPrintArea" style="display:none;"></div>
 
-<!-- ══ VOID REASON MODAL ══ -->
 <div id="voidReasonModal">
     <div class="void-reason-modal">
         <h3>↩ Void This Sale?</h3>
@@ -982,7 +843,6 @@
     </div>
 </div>
 
-<!-- Floating Cart Button (FAB) -->
 <button class="cart-fab" id="cartFab" onclick="openCart()" title="Open cart">
     🛒
     <span class="cart-fab-badge" id="cartFabBadge">0</span>
@@ -1172,39 +1032,26 @@ async function applySubscriptionUI(){
 <script>
 /* ═══════════════════════════════════════════════════════════════
    PRICE OVERRIDE MODULE
-   openPriceOverride(productId) — opens modal for that cart item
-   applyPriceOverride()         — saves override to cart item
-   resetPriceOverride()         — restores original price
-   closePriceOverride()         — closes modal
 ════════════════════════════════════════════════════════════════ */
-let _poTargetId = null;   // product id currently being edited
+let _poTargetId = null;
 
 window.openPriceOverride = function(productId) {
-    // Find cart item via the module-level cart array (exposed below)
     const item = window._posCart ? window._posCart.find(i => i.id === productId) : null;
     if (!item) return;
     _poTargetId = productId;
-
     document.getElementById('poProductName').textContent = item.name;
     document.getElementById('poOriginalPrice').textContent = `KES ${item.price.toFixed(2)}`;
-
     const inp = document.getElementById('poNewPriceInput');
     inp.value = item.override_price !== undefined ? item.override_price.toFixed(2) : item.price.toFixed(2);
     inp.max   = item.price;
     inp.classList.remove('invalid');
-
     document.getElementById('poReasonInput').value = item.override_reason || '';
     document.getElementById('poMsg').textContent   = '';
     document.getElementById('poMsg').className     = 'po-msg';
     document.getElementById('poPreview').classList.remove('show');
-
-    // Show reset button only if override already applied
     document.getElementById('poResetBtn').style.display = item.override_price !== undefined ? 'block' : 'none';
-
     document.getElementById('priceOverrideOverlay').classList.add('show');
     setTimeout(() => inp.focus(), 60);
-
-    // Live preview as user types
     inp.oninput = () => {
         const val  = parseFloat(inp.value);
         const orig = item.price;
@@ -1212,7 +1059,6 @@ window.openPriceOverride = function(productId) {
         const msg     = document.getElementById('poMsg');
         inp.classList.remove('invalid');
         msg.textContent = '';
-
         if (isNaN(val) || val < 0) { preview.classList.remove('show'); return; }
         if (val > orig) {
             inp.classList.add('invalid');
@@ -1237,48 +1083,23 @@ window.applyPriceOverride = function() {
     if (_poTargetId === null) return;
     const item = window._posCart ? window._posCart.find(i => i.id === _poTargetId) : null;
     if (!item) return;
-
     const val    = parseFloat(document.getElementById('poNewPriceInput').value);
     const reason = document.getElementById('poReasonInput').value.trim();
     const msg    = document.getElementById('poMsg');
-
-    if (isNaN(val) || val < 0) {
-        msg.textContent = 'Please enter a valid price (0 or greater).';
-        msg.className   = 'po-msg error';
-        return;
-    }
-    if (val > item.price) {
-        msg.textContent = `Cannot exceed listed price of KES ${item.price.toFixed(2)}.`;
-        msg.className   = 'po-msg error';
-        return;
-    }
-
-    if (val === item.price) {
-        // Same as original — effectively remove override
-        delete item.override_price;
-        delete item.override_reason;
-    } else {
-        item.override_price  = val;
-        item.override_reason = reason || null;
-    }
-
+    if (isNaN(val) || val < 0) { msg.textContent = 'Please enter a valid price (0 or greater).'; msg.className = 'po-msg error'; return; }
+    if (val > item.price) { msg.textContent = `Cannot exceed listed price of KES ${item.price.toFixed(2)}.`; msg.className = 'po-msg error'; return; }
+    if (val === item.price) { delete item.override_price; delete item.override_reason; }
+    else { item.override_price = val; item.override_reason = reason || null; }
     closePriceOverride();
-    // Re-render cart (exposed from POS core below)
     if (window._posRenderCart) window._posRenderCart();
-    posNotify.success(
-        val === item.price
-            ? `Price for <b>${item.name}</b> reset to KES ${item.price.toFixed(2)}.`
-            : `Price for <b>${item.name}</b> set to KES ${val.toFixed(2)}.`,
-        'Price Updated'
-    );
+    posNotify.success(val === item.price ? `Price for <b>${item.name}</b> reset to KES ${item.price.toFixed(2)}.` : `Price for <b>${item.name}</b> set to KES ${val.toFixed(2)}.`, 'Price Updated');
 };
 
 window.resetPriceOverride = function() {
     if (_poTargetId === null) return;
     const item = window._posCart ? window._posCart.find(i => i.id === _poTargetId) : null;
     if (!item) return;
-    delete item.override_price;
-    delete item.override_reason;
+    delete item.override_price; delete item.override_reason;
     closePriceOverride();
     if (window._posRenderCart) window._posRenderCart();
     posNotify.info(`Price for <b>${item.name}</b> restored to KES ${item.price.toFixed(2)}.`, 'Price Restored');
@@ -1289,7 +1110,6 @@ window.closePriceOverride = function() {
     _poTargetId = null;
 };
 
-// Close on backdrop click
 document.getElementById('priceOverrideOverlay').addEventListener('click', function(e) {
     if (e.target === this) closePriceOverride();
 });
@@ -1396,7 +1216,7 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   POS CORE — with price override support
+   POS CORE
 ════════════════════════════════════════════════════════════════ */
 (function(){
     let cart             = [];
@@ -1406,7 +1226,6 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
     let redeemedPoints   = 0;
     let selectedPayment  = 'Cash';
 
-    // Expose cart + renderCart for the price override module
     window._posCart       = cart;
     window._posRenderCart = renderCart;
 
@@ -1622,7 +1441,6 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
             else if(product.stock<=20)posNotify.show('warning','Low Stock',`<b>${product.name}</b> is running low — <b>${product.stock}</b> unit(s) left.`);
         }
         renderCart();
-        // Update FAB badge
         const totalQty=cart.reduce((s,i)=>s+i.quantity,0);
         const badge=document.getElementById('cartFabBadge');
         if(badge){badge.textContent=totalQty>99?'99+':totalQty;badge.classList.add('show');}
@@ -1637,24 +1455,16 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
             const effectivePrice = item.override_price !== undefined ? item.override_price : item.price;
             const subtotal = effectivePrice * item.quantity;
             const hasOverride = item.override_price !== undefined;
-
             const priceDisplay = hasOverride
-                ? `<span class="cart-item-price struck">KES ${item.price.toFixed(2)}</span>
-                   <span class="cart-item-override-price">KES ${item.override_price.toFixed(2)}</span>`
+                ? `<span class="cart-item-price struck">KES ${item.price.toFixed(2)}</span><span class="cart-item-override-price">KES ${item.override_price.toFixed(2)}</span>`
                 : `<span class="cart-item-price">KES ${item.price.toFixed(2)} each</span>`;
-
             const reasonChip = (hasOverride && item.override_reason)
                 ? `<div><span class="override-reason-chip" title="${item.override_reason}">✏️ ${item.override_reason}</span></div>`
                 : '';
-
             return `<div class="cart-item ${hasOverride ? 'price-overridden' : ''}">
                 <div class="cart-item-info">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-meta">
-                        ${priceDisplay}
-                        <span style="color:var(--text-muted);font-size:0.72rem;">•</span>
-                        <span class="cart-item-subtotal">KES ${subtotal.toFixed(2)}</span>
-                    </div>
+                    <div class="cart-item-meta">${priceDisplay}<span style="color:var(--text-muted);font-size:0.72rem;">•</span><span class="cart-item-subtotal">KES ${subtotal.toFixed(2)}</span></div>
                     ${reasonChip}
                 </div>
                 <div class="cart-item-controls">
@@ -1669,7 +1479,6 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
         btn.disabled=false;updateCartSummary();
     }
 
-    // Keep module-level references in sync
     window._posCart       = cart;
     window._posRenderCart = renderCart;
 
@@ -1687,32 +1496,21 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
 
     function updateCartSummary(){
         const itemCount=cart.reduce((s,i)=>s+i.quantity,0);
-        // Use override_price if set, otherwise listed price
         const subtotalAtOriginal = cart.reduce((s,i)=>s+i.price*i.quantity,0);
-        const overrideSavings    = cart.reduce((s,i)=>{
-            if(i.override_price!==undefined) return s+(i.price-i.override_price)*i.quantity;
-            return s;
-        },0);
+        const overrideSavings    = cart.reduce((s,i)=>{if(i.override_price!==undefined)return s+(i.price-i.override_price)*i.quantity;return s;},0);
         const subtotalEffective = subtotalAtOriginal - overrideSavings;
         const discount          = redeemedPoints / POINTS_TO_KES;
         const total             = Math.max(0, subtotalEffective - discount);
         const pointsEarned      = Math.floor(total * POINTS_PER_KES);
-
         document.getElementById('itemCount').textContent      = itemCount;
         document.getElementById('subtotalAmount').textContent = `KES ${subtotalAtOriginal.toFixed(2)}`;
-
-        // Override savings row
         const overrideRow = document.getElementById('overrideSavingsRow');
         if(overrideSavings>0){overrideRow.style.display='flex';document.getElementById('overrideSavingsAmount').textContent=`- KES ${overrideSavings.toFixed(2)}`;}
         else overrideRow.style.display='none';
-
-        // Loyalty discount row
         const discountRow=document.getElementById('discountRow');
         if(discount>0){discountRow.style.display='flex';document.getElementById('discountAmount').textContent=`- KES ${discount.toFixed(2)}`;}
         else discountRow.style.display='none';
-
         document.getElementById('totalAmount').textContent=`KES ${total.toFixed(2)}`;
-
         const earnNote=document.getElementById('loyaltyEarnNote');
         if(selectedCustomer&&itemCount>0){earnNote.style.display='block';earnNote.textContent=`⭐ ${selectedCustomer.name} earns ${pointsEarned} pts`;}
         else earnNote.style.display='none';
@@ -1743,36 +1541,23 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
         try{
             const currentUser=authModule.getCurrentUser();if(!currentUser)throw new Error('Not authenticated');
             const itemsSold=cartItems.reduce((s,i)=>s+i.quantity,0);
-
-            // Record actual sold price per item (override_price takes precedence)
             const saleItems=cartItems.map(i=>({
-                product_id: i.id,
-                quantity:   i.quantity,
+                product_id: i.id, quantity: i.quantity,
                 unit_price: i.override_price !== undefined ? i.override_price : i.price,
-                listed_price: i.price,                         // original for reference
+                listed_price: i.price,
                 price_overridden: i.override_price !== undefined,
                 override_reason: i.override_reason || null
             }));
-
             const saleRecord={
-                user_id:         currentUser.id,
-                total_amount:    total,
-                items_sold:      itemsSold,
-                payment_method:  paymentMethod,
-                customer_id:     selectedCustomer?.id||null,
-                discount_amount: (subtotalOriginal-total),  // total discount including overrides + loyalty
-                points_redeemed: redeemedPoints
+                user_id: currentUser.id, total_amount: total, items_sold: itemsSold,
+                payment_method: paymentMethod, customer_id: selectedCustomer?.id||null,
+                discount_amount: (subtotalOriginal-total), points_redeemed: redeemedPoints
             };
-
             const saleResult=await window.dataModule.createSale(saleRecord,saleItems);
             if(!saleResult.success)throw new Error(saleResult.error);
-
-            // Update inventory using actual sold quantities (stock deduction is qty-based, not price-based)
             let stockFailed=[];
             for(const item of cartItems){const r=await window.dataModule.updateInventory(item.id,item.quantity,'subtract');if(!r.success)stockFailed.push(item.name);}
             if(stockFailed.length)posNotify.warning('Sale recorded, but stock update failed for: '+stockFailed.join(', '),'Partial Warning');
-
-            // Loyalty points (calculated on actual paid total)
             let pointsEarned=0;let newTotalPoints=0;
             if(selectedCustomer){
                 pointsEarned=Math.floor(total*POINTS_PER_KES);
@@ -1782,55 +1567,27 @@ document.getElementById('expenseForm').addEventListener('submit',async(e)=>{
                 if(!lr.success)console.warn('Loyalty update failed:',lr.error);
                 else{const idx=allCustomers.findIndex(c=>c.id===selectedCustomer.id);if(idx!==-1)allCustomers[idx].loyalty_points=newTotalPoints;}
             }
-
-            // Success modal
             document.getElementById('saleTotal').textContent=`KES ${total.toFixed(2)}`;
             const loySection=document.getElementById('loyaltyEarnedSection');
             if(selectedCustomer&&(pointsEarned>0||redeemedPoints>0)){
                 loySection.style.display='block';
                 loySection.innerHTML=`<div class="loyalty-earned"><div class="loyalty-earned-title">⭐ Loyalty — ${selectedCustomer.name}</div>${redeemedPoints>0?`<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">🎁 Redeemed: ${redeemedPoints} pts (KES ${(redeemedPoints/POINTS_TO_KES).toFixed(2)} off)</div>`:''}<div class="loyalty-earned-pts">+${pointsEarned} pts earned</div><div class="loyalty-total">Total: ${newTotalPoints} pts</div></div>`;
             }else loySection.style.display='none';
-
-            // Show override summary if any prices were overridden
             const overrideSection=document.getElementById('overrideSummarySection');
             const overriddenItems=cartItems.filter(i=>i.override_price!==undefined);
             if(overriddenItems.length){
                 overrideSection.style.display='block';
-                overrideSection.innerHTML=`<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 14px;font-size:0.82rem;text-align:left;">
-                    <div style="font-weight:700;color:var(--accent-orange);margin-bottom:6px;">✏️ Price Overrides Applied</div>
-                    ${overriddenItems.map(i=>`<div style="color:var(--text-muted);margin-bottom:3px;">${i.name}: <span style="text-decoration:line-through;">KES ${i.price.toFixed(2)}</span> → <span style="color:var(--accent-orange);font-weight:600;">KES ${i.override_price.toFixed(2)}</span>${i.override_reason?` <span style="font-style:italic;">(${i.override_reason})</span>`:''}</div>`).join('')}
-                    <div style="margin-top:6px;font-weight:700;color:var(--accent-orange);">Saved: KES ${overrideSavings.toFixed(2)}</div>
-                </div>`;
+                overrideSection.innerHTML=`<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:10px 14px;font-size:0.82rem;text-align:left;"><div style="font-weight:700;color:var(--accent-orange);margin-bottom:6px;">✏️ Price Overrides Applied</div>${overriddenItems.map(i=>`<div style="color:var(--text-muted);margin-bottom:3px;">${i.name}: <span style="text-decoration:line-through;">KES ${i.price.toFixed(2)}</span> → <span style="color:var(--accent-orange);font-weight:600;">KES ${i.override_price.toFixed(2)}</span>${i.override_reason?` <span style="font-style:italic;">(${i.override_reason})</span>`:''}</div>`).join('')}<div style="margin-top:6px;font-weight:700;color:var(--accent-orange);">Saved: KES ${overrideSavings.toFixed(2)}</div></div>`;
             }else overrideSection.style.display='none';
-
             document.getElementById('successModal').classList.add('show');
-
-            // ── Store receipt data for print/PDF ──
             window._lastSaleReceipt = {
-                saleId:      saleResult.data?.id || ('TXN-'+Date.now()),
-                date:        new Date(),
-                cashier:     currentUser.full_name || 'Cashier',
-                customer:    selectedCustomer ? selectedCustomer.name : null,
-                items:       cartItems.map(i=>({
-                    name:     i.name,
-                    qty:      i.quantity,
-                    price:    i.override_price !== undefined ? i.override_price : i.price,
-                    listed:   i.price,
-                    overridden: i.override_price !== undefined,
-                    reason:   i.override_reason || null
-                })),
-                subtotal:    subtotalOriginal,
-                overrideSavings,
-                loyaltyDiscount: redeemedPoints / POINTS_TO_KES,
-                total,
-                paymentMethod,
-                pointsEarned,
-                pointsRedeemed: redeemedPoints
+                saleId: saleResult.data?.id || ('TXN-'+Date.now()), date: new Date(),
+                cashier: currentUser.full_name||'Cashier', customer: selectedCustomer?selectedCustomer.name:null,
+                items: cartItems.map(i=>({name:i.name,qty:i.quantity,price:i.override_price!==undefined?i.override_price:i.price,listed:i.price,overridden:!!( i.override_price!==undefined),reason:i.override_reason||null})),
+                subtotal: subtotalOriginal, overrideSavings, loyaltyDiscount: redeemedPoints/POINTS_TO_KES,
+                total, paymentMethod, pointsEarned, pointsRedeemed: redeemedPoints
             };
-
-            // Reset cart state
             cart.length=0;window._posCart=cart;
-            // Reset FAB badge & close drawer
             const badge=document.getElementById('cartFabBadge');if(badge)badge.classList.remove('show');
             closeCart();
             selectedCustomer=null;redeemedPoints=0;
@@ -1851,20 +1608,81 @@ window.addEventListener('beforeunload',()=>{if(messagesCheckInterval)clearInterv
 ═══════════════════════════════════════════════════════════ */
 function rDb(){ return window.DukaPOS?.supabaseClient || null; }
 function rShop(){ return window.authModule?.getCurrentShop() || null; }
-const _PTS = 100; // points per KES
+const _PTS = 100;
 
 /* ═══════════════════════════════════════════════════════════
-   RECEIPT — build, print, PDF
+   SHOP NAME — dynamic, cached, no hardcoding
 ═══════════════════════════════════════════════════════════ */
-function buildReceiptHTML(d) {
-    const shop    = window.authModule?.getCurrentShop()?.name || 'G&H Solutions';
-    const dateStr = new Date(d.date).toLocaleString('en-KE',{dateStyle:'medium',timeStyle:'short'});
-    const txnId   = String(d.saleId||'').slice(-8).toUpperCase() || Date.now();
+let _cachedShopName = null;
 
-    const rows = (d.items||[]).map(i=>{
-        const sub  = (i.price * i.qty).toFixed(2);
+async function getShopName() {
+    // Return cached value immediately if available
+    if (_cachedShopName) return _cachedShopName;
+
+    try {
+        // Priority 1: getCurrentShop() may already have the name loaded in memory
+        const shopObj = window.authModule?.getCurrentShop();
+        if (shopObj?.name) {
+            _cachedShopName = shopObj.name;
+            return _cachedShopName;
+        }
+
+        // Priority 2: Query the shops table directly
+        const db = window.DukaPOS?.supabaseClient;
+        if (!db) return 'My Shop';
+
+        // Try shop_id from user object first
+        const currentUser = authModule?.getCurrentUser?.();
+        let shopId = currentUser?.shop_id || shopObj?.id;
+
+        if (!shopId) {
+            console.warn('getShopName: no shop_id found');
+            return 'My Shop';
+        }
+
+        const { data, error } = await db
+            .from('shops')
+            .select('name')
+            .eq('id', shopId)
+            .single();
+
+        if (error || !data?.name) {
+            console.warn('getShopName: DB query failed:', error?.message);
+            return 'My Shop';
+        }
+
+        _cachedShopName = data.name;
+        console.log('✅ Shop name loaded:', _cachedShopName);
+        return _cachedShopName;
+
+    } catch (err) {
+        console.error('getShopName error:', err);
+        return 'My Shop';
+    }
+}
+
+// Pre-warm the cache as soon as auth is ready
+window.addEventListener('DOMContentLoaded', () => {
+    // Small delay to let auth module initialize first
+    setTimeout(() => {
+        getShopName().then(name => console.log('🏪 Shop name cached:', name));
+    }, 1500);
+});
+
+/* ═══════════════════════════════════════════════════════════
+   RECEIPT MODULE — fully dynamic shop name
+═══════════════════════════════════════════════════════════ */
+
+async function buildReceiptHTML(d) {
+    const shop = await getShopName();
+    const dateStr = new Date(d.date).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' });
+    const txnId = String(d.saleId || '').slice(-8).toUpperCase() || Date.now();
+
+    const rows = (d.items || []).map(i => {
+        const sub = (i.price * i.qty).toFixed(2);
         const note = i.overridden
-            ? `<div style="font-size:0.7rem;color:#888;font-style:italic;">  ↳ listed KES ${i.listed.toFixed(2)}${i.reason?' · '+i.reason:''}</div>` : '';
+            ? `<div style="font-size:0.7rem;color:#888;font-style:italic;">  ↳ listed KES ${i.listed.toFixed(2)}${i.reason ? ' · ' + i.reason : ''}</div>`
+            : '';
         return `<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:3px 0;border-bottom:1px dotted #eee;">
             <div style="flex:1;padding-right:6px;">${i.name}${note}</div>
             <div style="min-width:28px;text-align:center;">${i.qty}</div>
@@ -1873,12 +1691,17 @@ function buildReceiptHTML(d) {
     }).join('');
 
     const discRows = [
-        d.overrideSavings  > 0 ? `<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:2px 0;"><span>Price adjustments:</span><span>- KES ${d.overrideSavings.toFixed(2)}</span></div>` : '',
-        d.loyaltyDiscount  > 0 ? `<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:2px 0;"><span>🎁 Loyalty discount:</span><span>- KES ${d.loyaltyDiscount.toFixed(2)}</span></div>` : '',
+        d.overrideSavings > 0
+            ? `<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:2px 0;"><span>Price adjustments:</span><span>- KES ${d.overrideSavings.toFixed(2)}</span></div>`
+            : '',
+        d.loyaltyDiscount > 0
+            ? `<div style="display:flex;justify-content:space-between;font-size:0.8rem;padding:2px 0;"><span>🎁 Loyalty discount:</span><span>- KES ${d.loyaltyDiscount.toFixed(2)}</span></div>`
+            : '',
     ].join('');
 
     const ptsRow = d.pointsEarned > 0
-        ? `<div style="text-align:center;margin-top:6px;font-size:0.72rem;color:#555;">⭐ ${d.customer||'Customer'} earned ${d.pointsEarned} loyalty pts</div>` : '';
+        ? `<div style="text-align:center;margin-top:6px;font-size:0.72rem;color:#555;">⭐ ${d.customer || 'Customer'} earned ${d.pointsEarned} loyalty pts</div>`
+        : '';
 
     return `
     <div style="text-align:center;font-size:1.05rem;font-weight:900;letter-spacing:1px;margin-bottom:2px;">${shop}</div>
@@ -1887,7 +1710,7 @@ function buildReceiptHTML(d) {
     <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Receipt #:</span><span style="font-weight:700;">${txnId}</span></div>
     <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Date:</span><span style="font-weight:700;">${dateStr}</span></div>
     <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Cashier:</span><span style="font-weight:700;">${d.cashier}</span></div>
-    ${d.customer?`<div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Customer:</span><span style="font-weight:700;">${d.customer}</span></div>`:''}
+    ${d.customer ? `<div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Customer:</span><span style="font-weight:700;">${d.customer}</span></div>` : ''}
     <div style="display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:2px;"><span>Payment:</span><span style="font-weight:700;">${d.paymentMethod}</span></div>
     <hr style="border:none;border-top:1px dashed #bbb;margin:8px 0;">
     <div style="display:flex;justify-content:space-between;font-size:0.72rem;font-weight:700;color:#555;padding:4px 0;border-bottom:1px solid #ddd;margin-bottom:4px;">
@@ -1903,60 +1726,66 @@ function buildReceiptHTML(d) {
     ${ptsRow}
     <hr style="border:none;border-top:1px dashed #bbb;margin:8px 0;">
     <div style="text-align:center;font-size:0.72rem;color:#666;margin-top:12px;line-height:1.8;">
-        Thank you for your business!<br>Powered by G&amp;H Solutions POS<br>${new Date().getFullYear()}
+        Thank you for your business!<br>Powered by ${shop} POS<br>${new Date().getFullYear()}
     </div>`;
 }
 
-function openReceiptModal(data) {
+async function openReceiptModal(data) {
     window._currentReceiptData = data;
-    document.getElementById('receiptContent').innerHTML = buildReceiptHTML(data);
+    const html = await buildReceiptHTML(data);
+    document.getElementById('receiptContent').innerHTML = html;
     document.getElementById('receiptModal').classList.add('show');
 }
-window.closeReceiptModal = function(){ document.getElementById('receiptModal').classList.remove('show'); };
 
-window.openReceiptFromSuccess = function(){
-    if(!window._lastSaleReceipt){ posNotify.warning('No receipt data.','Receipt'); return; }
-    document.getElementById('successModal').classList.remove('show');
-    openReceiptModal(window._lastSaleReceipt);
+window.closeReceiptModal = function() {
+    document.getElementById('receiptModal').classList.remove('show');
 };
-window.downloadReceiptPDFFromSuccess = function(){
-    if(!window._lastSaleReceipt){ posNotify.warning('No receipt data.','PDF'); return; }
+
+window.openReceiptFromSuccess = async function() {
+    if (!window._lastSaleReceipt) { posNotify.warning('No receipt data.', 'Receipt'); return; }
     document.getElementById('successModal').classList.remove('show');
-    openReceiptModal(window._lastSaleReceipt);
+    await openReceiptModal(window._lastSaleReceipt);
+};
+
+window.downloadReceiptPDFFromSuccess = async function() {
+    if (!window._lastSaleReceipt) { posNotify.warning('No receipt data.', 'PDF'); return; }
+    document.getElementById('successModal').classList.remove('show');
+    await openReceiptModal(window._lastSaleReceipt);
     setTimeout(window.downloadReceiptPDF, 350);
 };
 
-window.printReceipt = function(){
+window.printReceipt = async function() {
     const html = document.getElementById('receiptContent').innerHTML;
-    const shop = window.authModule?.getCurrentShop()?.name || 'G&H Solutions';
+    const shop = await getShopName();
     const full = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Receipt — ${shop}</title>
     <style>body{font-family:'Courier New',monospace;background:#fff;color:#111;padding:20px;max-width:360px;margin:0 auto;}@media print{body{padding:0;}}</style>
     </head><body>${html}</body></html>`;
-    const w = window.open('','_blank','width=400,height=600');
+    const w = window.open('', '_blank', 'width=400,height=600');
     w.document.write(full); w.document.close();
-    setTimeout(()=>w.print(), 400);
+    setTimeout(() => w.print(), 400);
 };
 
-window.downloadReceiptPDF = function(){
-    const data  = window._currentReceiptData || window._lastSaleReceipt;
-    const shop  = window.authModule?.getCurrentShop()?.name || 'GH-Solutions';
-    const txnId = String(data?.saleId||Date.now()).slice(-8).toUpperCase();
-    const html  = document.getElementById('receiptContent').innerHTML;
-    const full  = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Receipt-${txnId}</title>
-    <style>body{font-family:'Courier New',monospace;background:#fff;color:#111;padding:24px;max-width:360px;margin:0 auto;}
-    @media print{body{padding:0;}}</style></head><body>${html}
-    <script>window.onload=()=>window.print();<\/script></body></html>`;
-    const blob = new Blob([full],{type:'text/html'});
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href=url; a.download=`Receipt-${shop.replace(/\s+/g,'-')}-${txnId}.html`; a.click();
-    URL.revokeObjectURL(url);
-    posNotify.success('Receipt saved. Open in browser → Ctrl+P → Save as PDF.','Downloaded ✓');
+window.downloadReceiptPDF = async function() {
+    const data = window._currentReceiptData || window._lastSaleReceipt;
+    const shop = await getShopName();
+    const txnId = String(data?.saleId || Date.now()).slice(-8).toUpperCase();
+    const html = document.getElementById('receiptContent').innerHTML;
+    const full = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Receipt-${txnId}</title>
+    <style>body{font-family:'Courier New',monospace;background:#fff;color:#111;padding:24px;max-width:360px;margin:0 auto;}@media print{body{padding:0;}}</style>
+    </head><body>${html}<script>window.onload=()=>window.print();<\/script></body></html>`;
+    const blob = new Blob([full], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `Receipt-${shop.replace(/\s+/g,'-')}-${txnId}.html`;
+    a.click(); URL.revokeObjectURL(url);
+    posNotify.success('Receipt saved. Open in browser → Ctrl+P → Save as PDF.', 'Downloaded ✓');
 };
 
-document.getElementById('receiptModal').addEventListener('click',function(e){
-    if(e.target===this) window.closeReceiptModal();
-});
+if (document.getElementById('receiptModal')) {
+    document.getElementById('receiptModal').addEventListener('click', function(e) {
+        if (e.target === this) window.closeReceiptModal();
+    });
+}
 
 /* ═══════════════════════════════════════════════════════════
    SALES RECORDS
@@ -1986,7 +1815,7 @@ async function loadSalesRecords(){
     const list = document.getElementById('recSalesList');
     list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">Loading…</div>';
     try {
-        const db   = rDb(); const shop = rShop();
+        const db=rDb(); const shop=rShop();
         if(!db||!shop?.id) throw new Error('Not connected');
         const from = document.getElementById('recDateFrom').value+'T00:00:00';
         const to   = document.getElementById('recDateTo').value+'T23:59:59';
@@ -2012,11 +1841,7 @@ function renderSalesRecords(sales){
     document.getElementById('recCount').textContent   = live.length;
     document.getElementById('recVoided').textContent  = vCount;
     document.getElementById('recItems').textContent   = totalItems;
-
-    if(!sales.length){
-        list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No sales in this period.</div>';
-        return;
-    }
+    if(!sales.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No sales in this period.</div>';return;}
     list.innerHTML = sales.map(s=>{
         const pm = (s.payment_method||'Cash').toLowerCase().replace('-','');
         const pmBadge = {'cash':'cash','mpesa':'mpesa','card':'card','credit':'credit'}[pm]||'cash';
@@ -2041,7 +1866,7 @@ function renderSalesRecords(sales){
 
 window.viewSaleReceipt = async function(saleId){
     try {
-        const db = rDb(); const shop = rShop();
+        const db=rDb(); const shop=rShop();
         if(!db||!shop?.id) throw new Error('Not connected');
         const {data:sale,error:se} = await db.from('sales')
             .select('*,user:user_id(full_name),customer:customer_id(name)')
@@ -2052,25 +1877,17 @@ window.viewSaleReceipt = async function(saleId){
         if(ie) throw new Error(ie.message);
         const lp = parseFloat(sale.points_redeemed||0);
         const receiptData = {
-            saleId:        sale.id,
-            date:          new Date(sale.created_at),
-            cashier:       sale.user?.full_name||'Cashier',
-            customer:      sale.customer?.name||null,
-            items:         (items||[]).map(i=>({
-                name:      i.product?.name||'Item',
-                qty:       i.quantity,
-                price:     parseFloat(i.unit_price),
-                listed:    parseFloat(i.listed_price||i.unit_price),
-                overridden:!!(i.price_overridden),
-                reason:    i.override_reason||null
+            saleId: sale.id, date: new Date(sale.created_at),
+            cashier: sale.user?.full_name||'Cashier', customer: sale.customer?.name||null,
+            items: (items||[]).map(i=>({
+                name: i.product?.name||'Item', qty: i.quantity,
+                price: parseFloat(i.unit_price), listed: parseFloat(i.listed_price||i.unit_price),
+                overridden: !!(i.price_overridden), reason: i.override_reason||null
             })),
-            subtotal:      (items||[]).reduce((a,i)=>a+parseFloat(i.listed_price||i.unit_price)*i.quantity,0),
-            overrideSavings:(items||[]).reduce((a,i)=>{const d=parseFloat(i.listed_price||i.unit_price)-parseFloat(i.unit_price);return a+d*i.quantity;},0),
-            loyaltyDiscount: lp/_PTS,
-            total:          parseFloat(sale.total_amount),
-            paymentMethod:  sale.payment_method||'Cash',
-            pointsEarned:   0,
-            pointsRedeemed: lp
+            subtotal: (items||[]).reduce((a,i)=>a+parseFloat(i.listed_price||i.unit_price)*i.quantity,0),
+            overrideSavings: (items||[]).reduce((a,i)=>{const d=parseFloat(i.listed_price||i.unit_price)-parseFloat(i.unit_price);return a+d*i.quantity;},0),
+            loyaltyDiscount: lp/_PTS, total: parseFloat(sale.total_amount),
+            paymentMethod: sale.payment_method||'Cash', pointsEarned: 0, pointsRedeemed: lp
         };
         openReceiptModal(receiptData);
     } catch(err){ posNotify.error('Could not load receipt: '+err.message,'Error'); }
@@ -2086,7 +1903,7 @@ async function loadVoidList(){
     const list = document.getElementById('voidSalesList');
     list.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-muted);">Loading…</div>';
     try {
-        const db = rDb(); const shop = rShop();
+        const db=rDb(); const shop=rShop();
         if(!db||!shop?.id) throw new Error('Not connected');
         const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
         const {data,error} = await db.from('sales')
@@ -2113,10 +1930,7 @@ window.filterVoidList = function(q){
 
 function renderVoidList(sales){
     const list = document.getElementById('voidSalesList');
-    if(!sales.length){
-        list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No sales found.</div>';
-        return;
-    }
+    if(!sales.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-muted);">No sales found.</div>';return;}
     list.innerHTML = sales.map(s=>{
         const t = new Date(s.created_at).toLocaleString('en-KE',{dateStyle:'short',timeStyle:'short'});
         const cust = s.customer?.name?' · '+s.customer.name:'';
@@ -2128,9 +1942,7 @@ function renderVoidList(sales){
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                 <div class="void-amount">KES ${parseFloat(s.total_amount).toFixed(2)}</div>
-                ${s.is_voided
-                    ?'<span class="voided-tag">✕ Voided</span>'
-                    :`<button class="void-btn" onclick="openVoidModal('${s.id}')">↩ Void</button>`}
+                ${s.is_voided?'<span class="voided-tag">✕ Voided</span>':`<button class="void-btn" onclick="openVoidModal('${s.id}')">↩ Void</button>`}
             </div>
         </div>`;
     }).join('');
@@ -2138,11 +1950,9 @@ function renderVoidList(sales){
 
 window.openVoidModal = function(saleId){
     _voidTargetId = saleId;
-    document.getElementById('voidModalDesc').textContent =
-        `Sale #${String(saleId).slice(-6).toUpperCase()} will be marked as voided and stock will be restored.`;
+    document.getElementById('voidModalDesc').textContent=`Sale #${String(saleId).slice(-6).toUpperCase()} will be marked as voided and stock will be restored.`;
     document.getElementById('voidReasonInput').value='';
-    const btn=document.getElementById('voidConfirmBtn');
-    btn.disabled=false; btn.textContent='↩ Confirm Void';
+    const btn=document.getElementById('voidConfirmBtn');btn.disabled=false;btn.textContent='↩ Confirm Void';
     document.getElementById('voidReasonModal').classList.add('show');
 };
 window.closeVoidModal = function(){
@@ -2153,36 +1963,22 @@ window.confirmVoid = async function(){
     if(!_voidTargetId) return;
     const reason = document.getElementById('voidReasonInput').value.trim();
     if(!reason){ posNotify.warning('Please enter a reason for the void.','Required'); return; }
-    const btn=document.getElementById('voidConfirmBtn');
-    btn.disabled=true; btn.textContent='⏳ Processing…';
+    const btn=document.getElementById('voidConfirmBtn');btn.disabled=true;btn.textContent='⏳ Processing…';
     try {
         const db=rDb(); const shop=rShop();
         if(!db||!shop?.id) throw new Error('Not connected');
-
-        // Fetch items to restore stock
-        const {data:items,error:ie}=await db.from('sale_items')
-            .select('product_id,quantity').eq('sale_id',_voidTargetId);
+        const {data:items,error:ie}=await db.from('sale_items').select('product_id,quantity').eq('sale_id',_voidTargetId);
         if(ie) throw new Error(ie.message);
-
-        // Mark voided
-        const {error:ve}=await db.from('sales')
-            .update({is_voided:true,void_reason:reason,voided_at:new Date().toISOString()})
-            .eq('id',_voidTargetId).eq('shop_id',shop.id);
+        const {error:ve}=await db.from('sales').update({is_voided:true,void_reason:reason,voided_at:new Date().toISOString()}).eq('id',_voidTargetId).eq('shop_id',shop.id);
         if(ve) throw new Error(ve.message);
-
-        // Restore stock
         let failed=[];
-        for(const item of (items||[])){
-            const r=await window.dataModule.updateInventory(item.product_id,item.quantity,'add');
-            if(!r.success) failed.push(item.product_id);
-        }
+        for(const item of (items||[])){const r=await window.dataModule.updateInventory(item.product_id,item.quantity,'add');if(!r.success)failed.push(item.product_id);}
         window.closeVoidModal();
-        const msg = failed.length ? 'Voided. Some stock items could not be restored.' : 'Sale voided and stock restored.';
-        posNotify.success(msg,'Void Complete ✓');
+        posNotify.success(failed.length?'Voided. Some stock items could not be restored.':'Sale voided and stock restored.','Void Complete ✓');
         loadVoidList();
     } catch(err){
         posNotify.error('Void failed: '+err.message,'Error');
-        btn.disabled=false; btn.textContent='↩ Confirm Void';
+        btn.disabled=false;btn.textContent='↩ Confirm Void';
     }
 };
 
@@ -2202,14 +1998,9 @@ window.loadReconciliation = async function(){
         const db=rDb(); const shop=rShop();
         if(!db||!shop?.id) throw new Error('Not connected');
         const from=dateVal+'T00:00:00', to=dateVal+'T23:59:59';
-
         const [{data:sales,error:se},{data:exps,error:ee}] = await Promise.all([
-            db.from('sales')
-              .select('id,total_amount,items_sold,payment_method,discount_amount,is_voided,created_at,user:user_id(full_name)')
-              .eq('shop_id',shop.id).gte('created_at',from).lte('created_at',to),
-            db.from('expenses')
-              .select('amount,category,description')
-              .eq('shop_id',shop.id).eq('date',dateVal)
+            db.from('sales').select('id,total_amount,items_sold,payment_method,discount_amount,is_voided,created_at,user:user_id(full_name)').eq('shop_id',shop.id).gte('created_at',from).lte('created_at',to),
+            db.from('expenses').select('amount,category,description').eq('shop_id',shop.id).eq('date',dateVal)
         ]);
         if(se) throw new Error(se.message);
         renderReconciliation(sales||[], exps||[], dateVal);
@@ -2220,159 +2011,97 @@ window.loadReconciliation = async function(){
 
 function renderReconciliation(sales, expenses, dateVal){
     const content = document.getElementById('reconContent');
-    const live    = sales.filter(s=>!s.is_voided);
-    const voided  = sales.filter(s=>s.is_voided);
-    const revenue = live.reduce((a,s)=>a+parseFloat(s.total_amount||0),0);
+    const live=sales.filter(s=>!s.is_voided); const voided=sales.filter(s=>s.is_voided);
+    const revenue=live.reduce((a,s)=>a+parseFloat(s.total_amount||0),0);
     const discounts=live.reduce((a,s)=>a+parseFloat(s.discount_amount||0),0);
-    const items   = live.reduce((a,s)=>a+parseInt(s.items_sold||0),0);
-    const totalExp= expenses.reduce((a,e)=>a+parseFloat(e.amount||0),0);
-    const net     = revenue - totalExp;
-
-    // Payment breakdown
+    const items=live.reduce((a,s)=>a+parseInt(s.items_sold||0),0);
+    const totalExp=expenses.reduce((a,e)=>a+parseFloat(e.amount||0),0);
+    const net=revenue-totalExp;
     const byMethod={};
     live.forEach(s=>{ const m=s.payment_method||'Cash'; byMethod[m]=(byMethod[m]||0)+parseFloat(s.total_amount||0); });
     const mIcons={'Cash':'💵','M-Pesa':'📱','Card':'💳','Credit':'📋'};
-
-    // Cashier breakdown
     const byCashier={};
-    live.forEach(s=>{
-        const n=s.user?.full_name||'Unknown';
-        if(!byCashier[n]) byCashier[n]={count:0,revenue:0,items:0};
-        byCashier[n].count++; byCashier[n].revenue+=parseFloat(s.total_amount||0);
-        byCashier[n].items+=parseInt(s.items_sold||0);
-    });
-
-    const dLabel = new Date(dateVal+'T12:00:00').toLocaleDateString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-
-    const gridCards = [
-        {label:'💰 Gross Revenue',   val:`KES ${revenue.toFixed(2)}`,  cls:'green'},
-        {label:'💸 Total Expenses',  val:`KES ${totalExp.toFixed(2)}`, cls:'red'},
-        {label:'🧾 Net Cash',        val:`KES ${net.toFixed(2)}`,      cls:net>=0?'green':'red'},
-        {label:'🎁 Discounts Given', val:`KES ${discounts.toFixed(2)}`,cls:'orange'},
-        {label:'🛒 Items Sold',      val:items,                        cls:'blue'},
-        {label:'↩ Voided Sales',     val:voided.length,                cls:voided.length?'red':'green'},
+    live.forEach(s=>{const n=s.user?.full_name||'Unknown';if(!byCashier[n])byCashier[n]={count:0,revenue:0,items:0};byCashier[n].count++;byCashier[n].revenue+=parseFloat(s.total_amount||0);byCashier[n].items+=parseInt(s.items_sold||0);});
+    const dLabel=new Date(dateVal+'T12:00:00').toLocaleDateString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    const gridCards=[
+        {label:'💰 Gross Revenue',val:`KES ${revenue.toFixed(2)}`,cls:'green'},
+        {label:'💸 Total Expenses',val:`KES ${totalExp.toFixed(2)}`,cls:'red'},
+        {label:'🧾 Net Cash',val:`KES ${net.toFixed(2)}`,cls:net>=0?'green':'red'},
+        {label:'🎁 Discounts Given',val:`KES ${discounts.toFixed(2)}`,cls:'orange'},
+        {label:'🛒 Items Sold',val:items,cls:'blue'},
+        {label:'↩ Voided Sales',val:voided.length,cls:voided.length?'red':'green'},
     ].map(c=>`<div class="recon-card"><div class="recon-card-label">${c.label}</div><div class="recon-card-value ${c.cls}">${c.val}</div></div>`).join('');
-
-    const methodRows = Object.entries(byMethod).map(([m,v])=>
-        `<div class="recon-method-row">
-            <div class="recon-method-label">${mIcons[m]||'💰'} ${m}</div>
-            <div class="recon-method-amount" style="color:var(--accent-green);">KES ${v.toFixed(2)}</div>
-        </div>`).join('') || '<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0;">No sales recorded.</div>';
-
-    const cashierRows = Object.entries(byCashier).map(([n,d])=>
-        `<tr><td><strong>${n}</strong></td><td>${d.count}</td><td>${d.items}</td>
-         <td style="color:var(--accent-green);font-weight:700;">KES ${d.revenue.toFixed(2)}</td></tr>`
-    ).join('') || '<tr><td colspan="4" style="color:var(--text-muted);text-align:center;">No data.</td></tr>';
-
-    const expRows = expenses.length ? expenses.map(e=>
-        `<div class="recon-method-row">
-            <div class="recon-method-label">📁 ${e.category}${e.description?' — <span style="font-weight:400;font-size:0.78rem;">'+e.description+'</span>':''}</div>
-            <div class="recon-method-amount" style="color:var(--danger);">KES ${parseFloat(e.amount).toFixed(2)}</div>
-        </div>`).join('') : '';
-
-    content.innerHTML = `
-    <div id="reconPrintBody">
+    const methodRows=Object.entries(byMethod).map(([m,v])=>`<div class="recon-method-row"><div class="recon-method-label">${mIcons[m]||'💰'} ${m}</div><div class="recon-method-amount" style="color:var(--accent-green);">KES ${v.toFixed(2)}</div></div>`).join('')||'<div style="color:var(--text-muted);font-size:0.85rem;padding:8px 0;">No sales recorded.</div>';
+    const cashierRows=Object.entries(byCashier).map(([n,d])=>`<tr><td><strong>${n}</strong></td><td>${d.count}</td><td>${d.items}</td><td style="color:var(--accent-green);font-weight:700;">KES ${d.revenue.toFixed(2)}</td></tr>`).join('')||'<tr><td colspan="4" style="color:var(--text-muted);text-align:center;">No data.</td></tr>';
+    const expRows=expenses.length?expenses.map(e=>`<div class="recon-method-row"><div class="recon-method-label">📁 ${e.category}${e.description?' — <span style="font-weight:400;font-size:0.78rem;">'+e.description+'</span>':''}</div><div class="recon-method-amount" style="color:var(--danger);">KES ${parseFloat(e.amount).toFixed(2)}</div></div>`).join(''):'';
+    content.innerHTML=`<div id="reconPrintBody">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
             <h3 style="font-size:1rem;color:var(--text-muted);">📅 ${dLabel}</h3>
             <span style="font-size:0.78rem;color:var(--text-muted);">${live.length} sale${live.length!=1?'s':''} · ${voided.length} voided</span>
         </div>
         <div class="reconcile-grid">${gridCards}</div>
-        <div class="recon-breakdown">
-            <h3>💳 Payment Method Breakdown</h3>${methodRows}
-        </div>
-        <div class="recon-cashier-table">
-            <h3>👤 Cashier Performance</h3>
-            <table class="rct-table">
-                <thead><tr><th>Cashier</th><th>Sales</th><th>Items</th><th>Revenue</th></tr></thead>
-                <tbody>${cashierRows}</tbody>
-            </table>
+        <div class="recon-breakdown"><h3>💳 Payment Method Breakdown</h3>${methodRows}</div>
+        <div class="recon-cashier-table"><h3>👤 Cashier Performance</h3>
+            <table class="rct-table"><thead><tr><th>Cashier</th><th>Sales</th><th>Items</th><th>Revenue</th></tr></thead><tbody>${cashierRows}</tbody></table>
         </div>
         ${expenses.length?`<div class="recon-breakdown" style="margin-top:14px;"><h3>💸 Expenses Breakdown</h3>${expRows}</div>`:''}
     </div>`;
 }
 
-window.printReconciliation = function(){
+/* ─── printReconciliation: async so it can fetch shop name ─── */
+window.printReconciliation = async function(){
     const body = document.getElementById('reconPrintBody');
     if(!body){ posNotify.warning('Load a report first.','Nothing to Print'); return; }
     const date = document.getElementById('reconDate').value;
-    const shop = window.authModule?.getCurrentShop()?.name||'G&H Solutions';
-    const inner= body.innerHTML;
-    // Substitute CSS variables with real colors for print
-    const clean = inner
+    // Fetch shop name dynamically — no hardcoded fallback
+    const shop = await getShopName();
+    const inner = body.innerHTML
         .replace(/var\(--accent-green\)/g,'#16a34a').replace(/var\(--danger\)/g,'#dc2626')
         .replace(/var\(--accent-orange\)/g,'#d97706').replace(/var\(--accent-blue\)/g,'#2563eb')
         .replace(/var\(--text-muted\)/g,'#6b7280').replace(/var\(--border\)/g,'#e5e7eb')
         .replace(/var\(--bg-secondary\)/g,'#f9fafb').replace(/var\(--text\)/g,'#111');
-    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reconciliation ${date}</title>
-    <style>
-        body{font-family:Arial,sans-serif;color:#111;padding:20px;max-width:820px;margin:0 auto;}
-        h2{text-align:center;} h3{font-size:0.9rem;color:#555;margin-bottom:10px;}
-        .reconcile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
-        .recon-card{border:1px solid #ddd;border-radius:8px;padding:12px;}
-        .recon-card-label{font-size:0.72rem;color:#666;text-transform:uppercase;margin-bottom:6px;}
-        .recon-card-value{font-size:1.2rem;font-weight:900;}
-        .green{color:#16a34a;}.red{color:#dc2626;}.orange{color:#d97706;}.blue{color:#2563eb;}
-        .recon-breakdown,.recon-cashier-table{border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:16px;}
-        .recon-method-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;}
-        .recon-method-label{font-weight:600;}
-        .recon-method-amount{font-weight:700;}
-        .rct-table{width:100%;border-collapse:collapse;}
-        .rct-table th{text-align:left;padding:8px;background:#f5f5f5;font-size:0.8rem;}
-        .rct-table td{padding:8px;border-bottom:1px solid #eee;font-size:0.85rem;}
-        @media print{body{padding:0;}}
-    </style></head><body>
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reconciliation ${date}</title>
+    <style>body{font-family:Arial,sans-serif;color:#111;padding:20px;max-width:820px;margin:0 auto;}h2{text-align:center;}h3{font-size:0.9rem;color:#555;margin-bottom:10px;}.reconcile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}.recon-card{border:1px solid #ddd;border-radius:8px;padding:12px;}.recon-card-label{font-size:0.72rem;color:#666;text-transform:uppercase;margin-bottom:6px;}.recon-card-value{font-size:1.2rem;font-weight:900;}.green{color:#16a34a;}.red{color:#dc2626;}.orange{color:#d97706;}.blue{color:#2563eb;}.recon-breakdown,.recon-cashier-table{border:1px solid #ddd;border-radius:8px;padding:14px;margin-bottom:16px;}.recon-method-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;}.recon-method-label{font-weight:600;}.recon-method-amount{font-weight:700;}.rct-table{width:100%;border-collapse:collapse;}.rct-table th{text-align:left;padding:8px;background:#f5f5f5;font-size:0.8rem;}.rct-table td{padding:8px;border-bottom:1px solid #eee;font-size:0.85rem;}@media print{body{padding:0;}}</style>
+    </head><body>
     <h2>${shop} — Daily Reconciliation</h2>
     <p style="text-align:center;color:#666;font-size:0.85rem;margin-bottom:20px;">${new Date(date+'T12:00:00').toLocaleDateString('en-KE',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
-    ${clean}
-    <p style="text-align:center;margin-top:30px;font-size:0.72rem;color:#aaa;">Generated by G&H Solutions POS · ${new Date().toLocaleString('en-KE')}</p>
+    ${inner}
+    <p style="text-align:center;margin-top:30px;font-size:0.72rem;color:#aaa;">Generated by ${shop} POS · ${new Date().toLocaleString('en-KE')}</p>
     </body></html>`;
-    const w = window.open('','_blank','width=900,height=700');
-    w.document.write(html); w.document.close();
+    const w=window.open('','_blank','width=900,height=700');
+    w.document.write(html);w.document.close();
     setTimeout(()=>w.print(),500);
 };
 
 /* ═══ FLOATING CART DRAWER ═══ */
-function openCart() {
+function openCart(){
     document.getElementById('cartSection').classList.add('cart-open');
     document.getElementById('cartBackdrop').classList.add('show');
-    document.getElementById('cartFab').style.display = 'none';
+    document.getElementById('cartFab').style.display='none';
 }
-function closeCart() {
+function closeCart(){
     document.getElementById('cartSection').classList.remove('cart-open');
     document.getElementById('cartBackdrop').classList.remove('show');
-    document.getElementById('cartFab').style.display = 'flex';
+    document.getElementById('cartFab').style.display='flex';
 }
-// Close cart with Escape key
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeCart(); });
 
-// Patch renderCart to also update FAB badge
-(function() {
-    const _orig = window._posRenderCart;
-    function patchFab() {
-        // Count items from the live cart array
-        const totalQty = (window._posCart || []).reduce((s, i) => s + i.quantity, 0);
-        const badge = document.getElementById('cartFabBadge');
-        const fab   = document.getElementById('cartFab');
-        if (!badge || !fab) return;
-        if (totalQty > 0) {
-            badge.textContent = totalQty > 99 ? '99+' : totalQty;
-            badge.classList.add('show');
-            // Pulse the FAB when item added
-            fab.style.transform = 'scale(1.18)';
-            setTimeout(() => fab.style.transform = '', 200);
-        } else {
-            badge.classList.remove('show');
-        }
-    }
-    // Intercept every renderCart call
-    const intervalId = setInterval(() => {
-        if (window._posRenderCart && window._posRenderCart !== patchedRender) {
-            const orig = window._posRenderCart;
-            function patchedRender() { orig(); patchFab(); }
-            window._posRenderCart = patchedRender;
+(function(){
+    const intervalId=setInterval(()=>{
+        if(window._posRenderCart&&window._posRenderCart!==patchedRender){
+            const orig=window._posRenderCart;
+            function patchedRender(){orig();patchFab();}
+            window._posRenderCart=patchedRender;
             clearInterval(intervalId);
         }
-    }, 100);
+    },100);
+    function patchFab(){
+        const totalQty=(window._posCart||[]).reduce((s,i)=>s+i.quantity,0);
+        const badge=document.getElementById('cartFabBadge');const fab=document.getElementById('cartFab');
+        if(!badge||!fab)return;
+        if(totalQty>0){badge.textContent=totalQty>99?'99+':totalQty;badge.classList.add('show');fab.style.transform='scale(1.18)';setTimeout(()=>fab.style.transform='',200);}
+        else badge.classList.remove('show');
+    }
 })();
 </script>
 
