@@ -463,214 +463,242 @@
     .customer-selector-label { font-size: 0.78rem; }
     .customer-select-trigger { font-size: 0.92rem; }
 
-    /* ── MOBILE ≤ 768px — improved layout + controlled sizing ── */
-@media (max-width: 768px) {
+    /* ══════════════════════════════════════════
+       MOBILE — ≤ 768px
+       Professional, readable, clean layout
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
 
-    .products-grid { 
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
-        gap: 8px; 
+        /* ── TABS ── */
+        .pos-tabs { gap: 6px; padding: 10px 12px; }
+        .pos-tab-btn {
+            font-size: 1.05rem;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* ── PRODUCT SEARCH & CATEGORIES ── */
+        .search-bar {
+            font-size: 1.1rem;
+            padding: 13px 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .categories { gap: 8px; margin-bottom: 12px; }
+        .category-btn {
+            font-size: 1rem;
+            padding: 9px 16px;
+            border-radius: 8px;
+        }
+        .category-btn.active { font-weight: 800; }
+
+        /* ── PRODUCT GRID ── */
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        /* ── PRODUCT CARD ── */
+        .product-card {
+            border-radius: 14px;
+            padding: 14px 10px;
+            min-height: 0;
+            aspect-ratio: unset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+        }
+
+        /* Image vs emoji icon */
+        .product-img {
+            width: 72px;
+            height: 64px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 2px;
+        }
+        .product-icon {
+            font-size: 2.6rem;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .product-name {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.25;
+            word-break: break-word;
+            margin-bottom: 2px;
+        }
+        .product-price {
+            font-size: 1.15rem;
+            font-weight: 900;
+        }
+        .product-stock {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .stock-badge {
+            font-size: 0.78rem;
+            padding: 3px 9px;
+        }
+
+        /* ── STOCK / EXPIRY BANNERS ── */
+        .stock-alert-title,
+        .expiry-alert-title { font-size: 1rem; }
+        .stock-alert-chip,
+        .expiry-alert-chip { font-size: 0.85rem; padding: 4px 10px; }
+
+        /* ── CART SUMMARY ── */
+        .summary-row { font-size: 1rem; }
+        .summary-total { font-size: 1.35rem; }
+        .loyalty-earn-note { font-size: 0.85rem; }
+
+        /* ── PAYMENT BUTTONS ── */
+        .payment-methods { gap: 6px; margin: 8px 0; }
+        .payment-btn {
+            font-size: 0.95rem;
+            padding: 11px 4px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        /* ── CHECKOUT BUTTON ── */
+        .checkout-btn {
+            font-size: 1.15rem;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        /* ── CART ITEMS ── */
+        .cart-item-name { font-size: 1rem; }
+        .cart-item-price { font-size: 0.88rem; }
+        .cart-item-override-price { font-size: 0.88rem; }
+        .cart-item-subtotal { font-size: 0.95rem; }
+        .qty-value { font-size: 1.05rem; }
+        .override-reason-chip { font-size: 0.8rem; }
+
+        /* ── CUSTOMER SELECTOR ── */
+        .customer-selector-label { font-size: 0.85rem; }
+        .customer-select-trigger { font-size: 1rem; }
+        .customer-opt-name { font-size: 0.95rem; }
+        .customer-opt-pts { font-size: 0.85rem; }
+        .cdd-search { font-size: 1rem; }
+        .cdd-count { font-size: 0.82rem; }
+        .selected-customer-info .cust-name { font-size: 1rem; }
+        .selected-customer-info .cust-pts { font-size: 0.88rem; }
+        .redeem-btn { font-size: 0.9rem; }
+        .redeem-badge { font-size: 0.9rem; }
+
+        /* ── MESSAGES ── */
+        .message-sender { font-size: 1rem; }
+        .message-time { font-size: 0.85rem; }
+        .message-text { font-size: 1rem; }
+        .message-expiry { font-size: 0.82rem; }
+        .mark-read-btn, .reply-btn { font-size: 0.88rem; }
+
+        /* ── RECORDS TAB ── */
+        .rec-stat-label { font-size: 0.82rem; }
+        .rec-stat-value { font-size: 1.5rem; }
+        .rec-filter-btn { font-size: 0.95rem; padding: 9px 14px; }
+        .src-id, .src-time, .src-cashier { font-size: 0.82rem; }
+        .src-total { font-size: 1.15rem; }
+        .src-badge { font-size: 0.8rem; }
+
+        /* ── VOIDS TAB ── */
+        .void-search-bar { font-size: 1.05rem; }
+        .void-info h4 { font-size: 1rem; }
+        .void-meta { font-size: 0.85rem; }
+        .void-amount { font-size: 1.15rem; }
+        .void-btn { font-size: 0.92rem; }
+        .voided-tag { font-size: 0.82rem; }
+
+        /* ── RECONCILE TAB ── */
+        .recon-card-label { font-size: 0.82rem; }
+        .recon-card-value { font-size: 1.5rem; }
+        .recon-breakdown h3 { font-size: 1rem; }
+        .recon-method-label { font-size: 0.95rem; }
+        .recon-method-amount { font-size: 1.1rem; }
+        .rct-table th { font-size: 0.82rem; }
+        .rct-table td { font-size: 0.92rem; }
+
+        /* ── EXPENSES TAB ── */
+        .stat-label { font-size: 0.88rem; }
+        .stat-value { font-size: 1.5rem; }
+        .expense-info h4 { font-size: 1rem; }
+        .expense-meta { font-size: 0.88rem; }
+        .expense-amount { font-size: 1.15rem; }
+        .add-expense-btn { font-size: 0.95rem; }
+
+        /* ── MODALS ── */
+        .pos-modal-title { font-size: 1.1rem; }
+        .pos-modal-msg { font-size: 0.95rem; }
+        .pos-modal-input { font-size: 1rem; }
+        .pos-modal-btn { font-size: 1rem; padding: 11px 20px; }
+
+        .qac-title { font-size: 1.15rem; }
+        .qac-subtitle { font-size: 0.88rem; }
+        .qac-label { font-size: 0.88rem; }
+        .qac-input { font-size: 1rem; }
+        .qac-btn { font-size: 1rem; }
+
+        .po-title { font-size: 1.15rem; }
+        .po-subtitle { font-size: 0.9rem; }
+        .po-original-label { font-size: 0.88rem; }
+        .po-original-value { font-size: 1.2rem; }
+        .po-label { font-size: 0.88rem; }
+        .po-input { font-size: 1.1rem; }
+        .po-hint { font-size: 0.82rem; }
+        .po-btn { font-size: 1rem; }
     }
 
-    .product-card { 
-        border-radius: 12px;
-        padding: 8px 6px;
+    /* ══════════════════════════════════════════
+       SMALL MOBILE — ≤ 400px
+       Tighten grid, keep text legible
+    ══════════════════════════════════════════ */
+    @media (max-width: 400px) {
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        text-align: center;
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .product-card {
+            padding: 10px 8px;
+            border-radius: 12px;
+        }
+
+        .product-img {
+            width: 58px;
+            height: 52px;
+        }
+        .product-icon { font-size: 2.2rem; }
+
+        .product-name {
+            font-size: 0.92rem;
+            -webkit-line-clamp: 2;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-price { font-size: 1.05rem; }
+        .product-stock { font-size: 0.76rem; }
+        .stock-badge { font-size: 0.72rem; padding: 2px 7px; }
+
+        .pos-tab-btn { font-size: 0.9rem; padding: 9px 10px; }
+        .search-bar { font-size: 1rem; }
+        .category-btn { font-size: 0.88rem; padding: 8px 12px; }
+
+        .checkout-btn { font-size: 1.05rem; padding: 13px; }
+        .summary-total { font-size: 1.25rem; }
+        .payment-btn { font-size: 0.88rem; }
     }
-
-    .product-img { 
-        width: 100%;
-        max-width: 60px;
-        height: 50px;
-        object-fit: contain;
-        margin-bottom: 6px;
-    }
-
-    .product-icon { font-size: 1.8rem; margin-bottom: 6px; }
-
-    /* ⚠️ reduced slightly to prevent overflow */
-    .product-name { 
-        font-size: 1.2rem; 
-        line-height: 1.2;
-        word-break: break-word;
-    }
-
-    .product-price { font-size: 1.3rem; }
-    .product-stock { font-size: 1rem; }
-
-    /* keep rest as-is */
-    .category-btn { font-size: 1.2rem; }
-    .search-bar { font-size: 1.2rem; }
-    .pos-tab-btn { font-size: 1.2rem; }
-
-    .cart-item-name { font-size: 1.2rem; }
-    .cart-item-price { font-size: 1rem; }
-    .cart-item-override-price { font-size: 0.95rem; }
-    .cart-item-subtotal { font-size: 1.1rem; }
-    .qty-value { font-size: 1.2rem; }
-
-    .summary-row { font-size: 1.1rem; }
-    .summary-total { font-size: 1.4rem; }
-
-    .payment-btn { font-size: 1.1rem; padding: 10px 4px; }
-    .checkout-btn { font-size: 1.3rem; padding: 13px; }
-
-    .customer-select-trigger { font-size: 1.1rem; }
-    .customer-selector-label { font-size: 1rem; }
-
-    .customer-opt-name { font-size: 1.1rem; }
-    .customer-opt-pts { font-size: 0.95rem; }
-
-    .cdd-search { font-size: 1rem; }
-    .cdd-count { font-size: 0.9rem; }
-
-    .selected-customer-info .cust-name { font-size: 1.1rem; }
-    .selected-customer-info .cust-pts { font-size: 1rem; }
-
-    .redeem-btn { font-size: 1rem; }
-    .redeem-badge { font-size: 1rem; }
-
-    .override-reason-chip { font-size: 0.9rem; }
-    .stock-badge { font-size: 0.9rem; }
-
-    .stock-alert-chip,
-    .expiry-alert-chip { font-size: 0.95rem; }
-
-    .expiry-alert-title,
-    .stock-alert-title { font-size: 1.1rem; }
-
-    .loyalty-earn-note { font-size: 0.9rem; }
-
-    .message-sender { font-size: 1.1rem; }
-    .message-time { font-size: 0.95rem; }
-    .message-text { font-size: 1.1rem; }
-    .message-expiry { font-size: 0.9rem; }
-
-    .mark-read-btn,
-    .reply-btn { font-size: 0.95rem; }
-
-    .rec-stat-label { font-size: 0.9rem; }
-    .rec-stat-value { font-size: 1.6rem; }
-
-    .src-id,
-    .src-time,
-    .src-cashier { font-size: 0.9rem; }
-
-    .src-total { font-size: 1.3rem; }
-    .src-badge { font-size: 0.9rem; }
-
-    .rec-filter-btn { font-size: 1rem; }
-
-    .void-info h4 { font-size: 1.1rem; }
-    .void-meta { font-size: 0.9rem; }
-    .void-amount { font-size: 1.3rem; }
-
-    .void-btn { font-size: 1rem; }
-    .voided-tag { font-size: 0.9rem; }
-    .void-search-bar { font-size: 1.2rem; }
-
-    .recon-card-label { font-size: 0.9rem; }
-    .recon-card-value { font-size: 1.6rem; }
-
-    .recon-breakdown h3 { font-size: 1.2rem; }
-    .recon-method-label { font-size: 1rem; }
-    .recon-method-amount { font-size: 1.3rem; }
-
-    .rct-table th { font-size: 0.9rem; }
-    .rct-table td { font-size: 1rem; }
-
-    .stat-label { font-size: 1rem; }
-    .stat-value { font-size: 1.6rem; }
-
-    .expense-info h4 { font-size: 1.2rem; }
-    .expense-meta { font-size: 1rem; }
-    .expense-amount { font-size: 1.4rem; }
-
-    .add-expense-btn { font-size: 1rem; }
-
-    .pos-modal-title { font-size: 1.3rem; }
-    .pos-modal-msg { font-size: 1.1rem; }
-    .pos-modal-input { font-size: 1.1rem; }
-    .pos-modal-btn { font-size: 1.1rem; }
-
-    .qac-title { font-size: 1.3rem; }
-    .qac-subtitle { font-size: 1rem; }
-    .qac-label { font-size: 1rem; }
-    .qac-input { font-size: 1.1rem; }
-    .qac-btn { font-size: 1.1rem; }
-
-    .po-title { font-size: 1.3rem; }
-    .po-subtitle { font-size: 1rem; }
-
-    .po-original-label,
-    .po-label { font-size: 1rem; }
-
-    .po-original-value { font-size: 1.3rem; }
-    .po-input { font-size: 1.2rem; }
-
-    .po-hint { font-size: 0.9rem; }
-    .po-btn { font-size: 1.1rem; }
-}
-
-
-/* ── MOBILE ≤ 400px — PERFECT SQUARE CARDS ── */
-@media (max-width: 400px) {
-
-    .products-grid { 
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
-        gap: 8px; 
-    }
-
-    .product-card { 
-        aspect-ratio: 1 / 1;              /* ✅ force square */
-        border-radius: 14px;              /* ✅ smooth corners */
-        overflow: hidden;
-        padding: 8px;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        text-align: center;
-    }
-
-    .product-img { 
-        width: 42px;
-        height: 42px;
-        object-fit: contain;
-    }
-
-    .product-name { 
-        font-size: 0.85rem;
-        line-height: 1.1;
-
-        display: -webkit-box;
-        -webkit-line-clamp: 2;           /* ✅ prevent stretching */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .product-price { 
-        font-size: 0.95rem;
-        font-weight: bold;
-        color: orange;
-    }
-
-    .product-stock {
-        font-size: 0.7rem;
-        opacity: 0.8;
-    }
-
-    .low-stock {
-        font-size: 0.65rem;
-        padding: 3px 6px;
-        border-radius: 8px;
-    }
-}
 </style>
 </head>
 <body>
