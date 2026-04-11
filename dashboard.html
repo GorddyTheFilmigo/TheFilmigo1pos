@@ -175,7 +175,7 @@
         .export-btn { background: var(--accent-blue); color: white; margin-left: auto; }
         .export-btn:hover { background: #3b8de8; }
 
-        /* ── AI INSIGHTS ── */
+        /* ── AI INSIGHTS (original) ── */
         .ai-section { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
         .ai-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
         .ai-header h2 { font-size: clamp(1rem,3vw,1.3rem); font-weight: 700; margin: 0; }
@@ -183,8 +183,6 @@
         .ai-spinner-wrap { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.88rem; padding: 20px 0; }
         .ai-spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent-orange); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* KPI row */
         .ai-kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%,170px),1fr)); gap: 12px; margin: 16px 0; }
         .ai-kpi { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
         .ai-kpi-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 6px; }
@@ -194,12 +192,8 @@
         .ai-kpi-value.red    { color: var(--danger); }
         .ai-kpi-value.blue   { color: var(--accent-blue); }
         .ai-kpi-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
-
-        /* Section divider */
         .ai-divider { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin: 20px 0 10px; display: flex; align-items: center; gap: 8px; }
         .ai-divider::after { content:''; flex:1; height:1px; background: var(--border); }
-
-        /* List cards */
         .ai-list-card { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
         .ai-list-item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 0.86rem; line-height: 1.45; }
         .ai-list-item:last-child { border-bottom: none; }
@@ -213,79 +207,465 @@
         .badge-green  { background: rgba(63,185,80,0.18);  color: var(--accent-green); }
         .badge-blue   { background: rgba(88,166,255,0.18); color: var(--accent-blue); }
         .badge-purple { background: rgba(167,139,250,0.18); color: #a78bfa; }
-
-        /* Forecast bar */
         .ai-forecast-bar { height: 6px; background: var(--border); border-radius: 3px; margin: 6px 0 2px; overflow: hidden; }
         .ai-forecast-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
-
-        /* Trend chip */
         .trend-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .trend-up   { background: rgba(63,185,80,0.15);  color: var(--accent-green); }
         .trend-down { background: rgba(248,81,73,0.15);  color: var(--danger); }
         .trend-flat { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
-
-        /* Alert box */
         .ai-alert { border-radius: 8px; padding: 12px 14px; font-size: 0.88rem; line-height: 1.5; margin: 10px 0; }
         .ai-alert.warn  { background: rgba(245,158,11,0.1); border-left: 3px solid var(--accent-orange); }
         .ai-alert.good  { background: rgba(63,185,80,0.1);  border-left: 3px solid var(--accent-green); }
         .ai-alert.bad   { background: rgba(248,81,73,0.1);  border-left: 3px solid var(--danger); }
         .ai-alert.info  { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent-blue); }
 
+        /* ══════════════════════════════════════════════
+           ✨  NEW: CLAUDE AI BUSINESS ADVISOR SECTION
+           ══════════════════════════════════════════════ */
+        .claude-advisor-section {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a2030 100%);
+            border: 1px solid rgba(245,158,11,0.4);
+            border-radius: 16px;
+            padding: 0;
+            margin-bottom: 28px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(245,158,11,0.06), 0 8px 32px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        .claude-advisor-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #58a6ff, #3fb950, #f59e0b);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .claude-advisor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid rgba(245,158,11,0.15);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .claude-advisor-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .claude-advisor-title h2 {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .claude-brain-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(88,166,255,0.2));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            border: 1px solid rgba(245,158,11,0.3);
+            flex-shrink: 0;
+        }
+        .claude-advisor-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .claude-model-badge {
+            background: rgba(88,166,255,0.12);
+            border: 1px solid rgba(88,166,255,0.3);
+            color: var(--accent-blue);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.05em;
+        }
+        .claude-advisor-ts {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .btn-run-advisor {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #000;
+            font-weight: 800;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(245,158,11,0.3);
+            white-space: nowrap;
+        }
+        .btn-run-advisor:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245,158,11,0.45);
+        }
+        .btn-run-advisor:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .claude-advisor-body {
+            padding: 20px 24px 24px;
+        }
+
+        /* Loading animation */
+        .advisor-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            gap: 16px;
+        }
+        .advisor-loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+        .advisor-loading-dots span {
+            width: 8px; height: 8px;
+            background: var(--accent-orange);
+            border-radius: 50%;
+            animation: bounce 1.2s infinite;
+        }
+        .advisor-loading-dots span:nth-child(2) { animation-delay: 0.2s; background: var(--accent-blue); }
+        .advisor-loading-dots span:nth-child(3) { animation-delay: 0.4s; background: var(--accent-green); }
+        @keyframes bounce {
+            0%,80%,100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+        .advisor-loading-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .advisor-loading-text strong {
+            display: block;
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        /* Advice cards grid */
+        .advice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .advice-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .advice-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+        }
+        .advice-card.priority-high::before { background: var(--danger); }
+        .advice-card.priority-medium::before { background: var(--accent-orange); }
+        .advice-card.priority-low::before { background: var(--accent-green); }
+        .advice-card.priority-info::before { background: var(--accent-blue); }
+        .advice-card:hover { transform: translateY(-3px); border-color: rgba(245,158,11,0.3); }
+        .advice-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .advice-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .advice-title-block { flex: 1; }
+        .advice-title {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .advice-category {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+        .advice-priority-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+        .priority-high .advice-priority-badge { background: rgba(248,81,73,0.18); color: var(--danger); }
+        .priority-medium .advice-priority-badge { background: rgba(245,158,11,0.18); color: var(--accent-orange); }
+        .priority-low .advice-priority-badge { background: rgba(63,185,80,0.18); color: var(--accent-green); }
+        .priority-info .advice-priority-badge { background: rgba(88,166,255,0.18); color: var(--accent-blue); }
+        .advice-body {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+        .advice-action-box {
+            background: rgba(88,166,255,0.08);
+            border: 1px solid rgba(88,166,255,0.2);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .advice-action-box::before { content: '⚡ '; }
+        .advice-metric-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .advice-metric {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+        .advice-metric-val {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--accent-orange);
+            display: block;
+        }
+        .advice-metric-lbl {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Full analysis block (streaming text) */
+        .advisor-full-analysis {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            line-height: 1.75;
+            color: var(--text);
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .advisor-full-analysis h3 {
+            color: var(--accent-orange);
+            font-size: 1rem;
+            margin: 16px 0 6px;
+            font-weight: 800;
+        }
+        .advisor-full-analysis h3:first-child { margin-top: 0; }
+        .advisor-cursor {
+            display: inline-block;
+            width: 2px; height: 1em;
+            background: var(--accent-orange);
+            animation: blink 0.8s infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+        @keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+
+        /* Summary bar */
+        .advisor-summary-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .advisor-summary-pill {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 140px;
+        }
+        .advisor-summary-pill span:first-child { font-size: 1.2rem; }
+        .advisor-summary-pill strong { color: var(--accent-orange); }
+
+        /* Tabs inside advisor */
+        .advisor-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .advisor-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .advisor-tab.active { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
+        .advisor-tab-content { display: none; }
+        .advisor-tab-content.active { display: block; }
+
+        /* Prompt area */
+        .advisor-question-area {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .advisor-question-input {
+            flex: 1;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Archivo', sans-serif;
+            font-size: 0.88rem;
+            padding: 10px 14px;
+            resize: none;
+            min-height: 48px;
+            transition: border-color 0.2s;
+        }
+        .advisor-question-input:focus { outline: none; border-color: var(--accent-orange); }
+        .btn-ask-advisor {
+            background: var(--accent-orange);
+            color: #000;
+            font-weight: 800;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .btn-ask-advisor:hover { background: #fbbf24; transform: translateY(-1px); }
+        .btn-ask-advisor:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Placeholder (before first run) */
+        .advisor-placeholder {
+            text-align: center;
+            padding: 48px 24px;
+        }
+        .advisor-placeholder-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.6; }
+        .advisor-placeholder h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+        .advisor-placeholder p { font-size: 0.88rem; color: var(--text-muted); max-width: 400px; margin: 0 auto 24px; line-height: 1.6; }
+        .advisor-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .advisor-feature-chip {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
         @media (max-width: 768px) {
-    .container { padding: 12px; }
-    .page-header { margin-bottom: 16px; }
-    .page-header h1 { font-size: clamp(3rem, 10vw, 5rem); }   /* doubled */
-    .page-header p { font-size: 1.64rem; }                      /* doubled from 0.82rem */
-    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-    .stat-card { padding: 14px 12px; }
-    .stat-value { font-size: 2.7rem; }                          /* doubled from 1.35rem */
-    .stat-title { font-size: 1.56rem; }                         /* doubled from 0.78rem */
-    .date-range { gap: 6px; }
-    .date-input { max-width: 100%; flex: 1 1 100px; font-size: 1.6rem; padding: 7px 8px; }  /* doubled from 0.8rem */
-    .btn { padding: 8px 12px; font-size: 1.6rem; }              /* doubled from 0.8rem */
-    .chart-container { padding: 14px; }
-    .chart-title { font-size: 2rem; }                           /* doubled from 1rem */
-    canvas { max-height: 260px !important; }
-    .table-container::before { content: '← scroll →'; display: block; text-align: center; font-size: 1.4rem; color: var(--text-muted); margin-bottom: 6px; }  /* doubled from 0.7rem */
-    th, td { padding: 10px 8px; font-size: 1.6rem; }            /* doubled from 0.8rem */
-    .supplier-order-card > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
-    #messageText { min-height: 80px; font-size: 1.8rem; }       /* doubled from 0.9rem */
-    .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 75vh; }
-    .modal-box { padding: 18px; }
-    .modal-actions { flex-direction: column; }
-    .modal-actions .btn, .modal-actions button { width: 100%; }
-    .top-cashier { font-size: 1.7rem; padding: 10px 12px; }     /* doubled from 0.85rem */
-    #sentMessagesTable td:nth-child(5), #sentMessagesTable th:nth-child(5) { display: none; }
-    .ai-kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .ai-section { padding: 14px; }
+            .container { padding: 12px; }
+            .page-header { margin-bottom: 16px; }
+            .page-header h1 { font-size: clamp(3rem, 10vw, 5rem); }
+            .page-header p { font-size: 1.64rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+            .stat-card { padding: 14px 12px; }
+            .stat-value { font-size: 2.7rem; }
+            .stat-title { font-size: 1.56rem; }
+            .date-range { gap: 6px; }
+            .date-input { max-width: 100%; flex: 1 1 100px; font-size: 1.6rem; padding: 7px 8px; }
+            .btn { padding: 8px 12px; font-size: 1.6rem; }
+            .chart-container { padding: 14px; }
+            .chart-title { font-size: 2rem; }
+            canvas { max-height: 260px !important; }
+            .table-container::before { content: '← scroll →'; display: block; text-align: center; font-size: 1.4rem; color: var(--text-muted); margin-bottom: 6px; }
+            th, td { padding: 10px 8px; font-size: 1.6rem; }
+            .supplier-order-card > div[style*="grid"] { grid-template-columns: 1fr 1fr !important; }
+            #messageText { min-height: 80px; font-size: 1.8rem; }
+            .messages-popup { top: 60px; right: 8px; left: 8px; width: auto; max-height: 75vh; }
+            .modal-box { padding: 18px; }
+            .modal-actions { flex-direction: column; }
+            .modal-actions .btn, .modal-actions button { width: 100%; }
+            .top-cashier { font-size: 1.7rem; padding: 10px 12px; }
+            #sentMessagesTable td:nth-child(5), #sentMessagesTable th:nth-child(5) { display: none; }
+            .ai-kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .ai-section { padding: 14px; }
+            .ai-kpi-label { font-size: 1.44rem; }
+            .ai-kpi-value { font-size: 2.8rem; }
+            .ai-kpi-sub { font-size: 1.5rem; }
+            .ai-divider { font-size: 1.56rem; }
+            .ai-list-item { font-size: 1.72rem; }
+            .ai-item-sub { font-size: 1.56rem; }
+            .ai-badge { font-size: 1.4rem; }
+            .ai-alert { font-size: 1.76rem; }
+            .trend-chip { font-size: 1.5rem; }
+            .message-text { font-size: 1.8rem; }
+            .message-header { font-size: 1.7rem; }
+            .message-time { font-size: 1.56rem; }
+            .popup-tab { font-size: 1.7rem; }
+            .dashboard-tab { padding: 8px 12px; font-size: 1.64rem; }
+            .mark-read-btn, .reply-btn { font-size: 1.56rem; }
+            .status-badge { font-size: 1.56rem; }
+            .claude-advisor-header { padding: 16px; }
+            .claude-advisor-body { padding: 14px 16px 18px; }
+            .advice-grid { grid-template-columns: 1fr; }
+        }
 
-    /* AI section mobile overrides */
-    .ai-kpi-label { font-size: 1.44rem; }                       /* doubled from 0.72rem */
-    .ai-kpi-value { font-size: 2.8rem; }                        /* doubled from 1.4rem */
-    .ai-kpi-sub { font-size: 1.5rem; }                          /* doubled from 0.75rem */
-    .ai-divider { font-size: 1.56rem; }                         /* doubled from 0.78rem */
-    .ai-list-item { font-size: 1.72rem; }                       /* doubled from 0.86rem */
-    .ai-item-sub { font-size: 1.56rem; }                        /* doubled from 0.78rem */
-    .ai-badge { font-size: 1.4rem; }                            /* doubled from 0.7rem */
-    .ai-alert { font-size: 1.76rem; }                           /* doubled from 0.88rem */
-    .trend-chip { font-size: 1.5rem; }                          /* doubled from 0.75rem */
-
-    /* Message/notification overrides */
-    .message-text { font-size: 1.8rem; }                        /* doubled from 0.9rem */
-    .message-header { font-size: 1.7rem; }                      /* doubled from 0.85rem */
-    .message-time { font-size: 1.56rem; }                       /* doubled from 0.78rem */
-    .popup-tab { font-size: 1.7rem; }                           /* doubled from 0.85rem */
-    .dashboard-tab { padding: 8px 12px; font-size: 1.64rem; }  /* doubled from 0.82rem */
-    .mark-read-btn, .reply-btn { font-size: 1.56rem; }          /* doubled from 0.78rem */
-    .status-badge { font-size: 1.56rem; }                       /* doubled from 0.78rem */
-}
-
-@media (max-width: 400px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .stat-value { font-size: 3.2rem; }                          /* doubled from 1.6rem */
-    .dashboard-tab { padding: 8px 12px; font-size: 1.64rem; }  /* doubled from 0.82rem */
-    .ai-kpi-row { grid-template-columns: 1fr; }
-}
+        @media (max-width: 400px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-value { font-size: 3.2rem; }
+            .dashboard-tab { padding: 8px 12px; font-size: 1.64rem; }
+            .ai-kpi-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body style="visibility:hidden;">
@@ -364,7 +744,7 @@
     <div class="container">
         <div class="page-header">
             <h1>📊 Dashboard Overview</h1>
-            <p>Real-time sales, performance insights, and supplier communications</p>
+            <p>Real-time sales, performance insights, and AI-powered business advice</p>
         </div>
 
         <div class="dashboard-tabs">
@@ -396,6 +776,89 @@
                 <div class="stat-card"><div class="stat-title">Total Expenses</div><div class="stat-value" style="color:var(--danger);" id="totalExpenses">KES 0.00</div></div>
                 <div class="stat-card"><div class="stat-title">Transactions</div><div class="stat-value" id="transactionCount">0</div></div>
                 <div class="stat-card"><div class="stat-title">Items Sold</div><div class="stat-value" id="itemsSold">0</div></div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                 ✨ CLAUDE AI BUSINESS ADVISOR — NEW INTEGRATED SECTION
+                 ═══════════════════════════════════════════════════════════════ -->
+            <div class="claude-advisor-section" id="claudeAdvisorSection">
+                <div class="claude-advisor-header">
+                    <div class="claude-advisor-title">
+                        <div class="claude-brain-icon">🧠</div>
+                        <div>
+                            <h2>AI Business Advisor</h2>
+                            <div style="font-size:0.78rem;color:var(--text-muted);margin-top:2px;">Powered by Claude — analyses your real business data</div>
+                        </div>
+                    </div>
+                    <div class="claude-advisor-meta">
+                        <span class="claude-model-badge">claude-sonnet-4-20250514</span>
+                        <span class="claude-advisor-ts" id="advisorTimestamp"></span>
+                        <button class="btn-run-advisor" id="btnRunAdvisor" onclick="runClaudeAdvisor()">
+                            <span id="advisorBtnIcon">✨</span>
+                            <span id="advisorBtnText">Analyse My Business</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="claude-advisor-body" id="claudeAdvisorBody">
+                    <!-- Placeholder (before first run) -->
+                    <div class="advisor-placeholder" id="advisorPlaceholder">
+                        <div class="advisor-placeholder-icon">🤖</div>
+                        <h3>Real AI Analysis of Your Business</h3>
+                        <p>Claude reads your actual sales figures, margins, top products, cashier performance, payment patterns and customer data — then gives you specific, actionable advice to grow your business.</p>
+                        <div class="advisor-features">
+                            <span class="advisor-feature-chip">📈 Revenue opportunities</span>
+                            <span class="advisor-feature-chip">📉 Margin warnings</span>
+                            <span class="advisor-feature-chip">📦 Stock strategies</span>
+                            <span class="advisor-feature-chip">👥 Customer retention</span>
+                            <span class="advisor-feature-chip">🕐 Timing optimisation</span>
+                            <span class="advisor-feature-chip">💳 Payment insights</span>
+                            <span class="advisor-feature-chip">👤 Staff performance</span>
+                            <span class="advisor-feature-chip">⚠️ Risk alerts</span>
+                        </div>
+                        <button class="btn-run-advisor" onclick="runClaudeAdvisor()" style="margin:0 auto;">
+                            ✨ Run AI Analysis
+                        </button>
+                    </div>
+
+                    <!-- Loading state -->
+                    <div class="advisor-loading" id="advisorLoading" style="display:none;">
+                        <div class="advisor-loading-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="advisor-loading-text">
+                            <strong id="advisorLoadingMsg">Gathering your business data…</strong>
+                            <span id="advisorLoadingSub">Fetching sales, expenses, products, and customer records</span>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="advisorResults" style="display:none;">
+                        <!-- Summary pills -->
+                        <div class="advisor-summary-bar" id="advisorSummaryBar"></div>
+
+                        <!-- Tabs -->
+                        <div class="advisor-tabs">
+                            <button class="advisor-tab active" onclick="switchAdvisorTab('cards',this)">📋 Action Cards</button>
+                            <button class="advisor-tab" onclick="switchAdvisorTab('full',this)">📄 Full Report</button>
+                        </div>
+
+                        <!-- Cards tab -->
+                        <div class="advisor-tab-content active" id="advisorTabCards">
+                            <div class="advice-grid" id="adviceGrid"></div>
+                        </div>
+
+                        <!-- Full report tab -->
+                        <div class="advisor-tab-content" id="advisorTabFull">
+                            <div class="advisor-full-analysis" id="advisorFullText"></div>
+                        </div>
+
+                        <!-- Follow-up question -->
+                        <div class="advisor-question-area">
+                            <textarea class="advisor-question-input" id="advisorQuestion" placeholder="Ask a follow-up question about your business… e.g. 'How can I improve my Friday afternoons?' or 'Which products should I promote next month?'" rows="2"></textarea>
+                            <button class="btn-ask-advisor" id="btnAskAdvisor" onclick="askAdvisorFollowUp()">Ask Claude →</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="chart-container">
@@ -463,26 +926,17 @@
                 </div>
             </div>
 
-            <!-- ═══════════════════════════════════════════════════════
-                 PREDICTIVE INSIGHTS & AI SUGGESTIONS
-                 All data sourced live from Supabase
-                 ═══════════════════════════════════════════════════════ -->
+            <!-- Original predictive insights kept intact -->
             <div class="ai-section" id="aiSection">
                 <div class="ai-header">
-                    <h2>🤖 Predictive Insights &amp; AI Suggestions</h2>
+                    <h2>🤖 Predictive Insights &amp; Data Analytics</h2>
                     <span class="ai-timestamp" id="aiTimestamp"></span>
                 </div>
-
-                <!-- Loading state -->
                 <div class="ai-spinner-wrap" id="aiLoading">
                     <div class="ai-spinner"></div>
                     <span>Analysing your data…</span>
                 </div>
-
-                <!-- Content (hidden until loaded) -->
                 <div id="aiContent" style="display:none;">
-
-                    <!-- ① REVENUE FORECAST -->
                     <div class="ai-divider">📅 Revenue Forecast</div>
                     <div class="ai-kpi-row">
                         <div class="ai-kpi">
@@ -507,20 +961,14 @@
                             <div class="ai-kpi-sub" id="ai_avgDailySub">In selected period</div>
                         </div>
                     </div>
-
-                    <!-- ② RESTOCK SUGGESTIONS -->
                     <div class="ai-divider">📦 Restock Suggestions</div>
                     <div class="ai-list-card" id="ai_restockList">
                         <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
                     </div>
-
-                    <!-- ③ BUNDLE / CROSS-SELL -->
                     <div class="ai-divider">🛒 Cross-sell Opportunities</div>
                     <div class="ai-list-card" id="ai_bundleList">
                         <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
                     </div>
-
-                    <!-- ④ MARGIN ALERTS -->
                     <div class="ai-divider">📉 Margin &amp; Profitability</div>
                     <div class="ai-kpi-row">
                         <div class="ai-kpi">
@@ -540,14 +988,10 @@
                         </div>
                     </div>
                     <div id="ai_marginAlert"></div>
-
-                    <!-- ⑤ CHURN RISK -->
                     <div class="ai-divider">🔔 Customer Churn Risk</div>
                     <div class="ai-list-card" id="ai_churnList">
                         <div class="ai-list-item"><div class="ai-spinner" style="margin:auto;"></div></div>
                     </div>
-
-                    <!-- ⑥ PAYMENT INSIGHTS -->
                     <div class="ai-divider">💳 Payment Behaviour</div>
                     <div class="ai-kpi-row">
                         <div class="ai-kpi">
@@ -566,9 +1010,8 @@
                             <div class="ai-kpi-sub" id="ai_creditSub">Unpaid / deferred</div>
                         </div>
                     </div>
-
-                </div><!-- /aiContent -->
-            </div><!-- /ai-section -->
+                </div>
+            </div>
 
             <div class="chart-container">
                 <div class="chart-header"><h2 class="chart-title">Sales by Cashier</h2></div>
@@ -694,21 +1137,12 @@
     const fmt = (n) => Number(n).toLocaleString('en-KE', { maximumFractionDigits: 0 });
     const fmtDec = (n, d=2) => Number(n).toLocaleString('en-KE', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-    function set(id, html) {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
-    }
-    function setText(id, txt) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = txt;
-    }
-    function setClass(id, cls) {
-        const el = document.getElementById(id);
-        if (el) el.className = cls;
-    }
+    function set(id, html) { const el=document.getElementById(id); if(el) el.innerHTML=html; }
+    function setText(id, txt) { const el=document.getElementById(id); if(el) el.textContent=txt; }
+    function setClass(id, cls) { const el=document.getElementById(id); if(el) el.className=cls; }
 
     /* ─────────────────────────────────────────────
-       POPUP / NAV / MISC  (unchanged from original)
+       POPUP / NAV / MISC
     ───────────────────────────────────────────── */
     function switchPopupTab(tab) {
         document.getElementById('tabRejections').classList.toggle('active', tab==='rejections');
@@ -720,10 +1154,10 @@
     function setNavigationVisibility(userRole) {
         const role = userRole.toLowerCase().trim();
         ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-            .forEach(id => { const el = document.getElementById(id); if (el) el.style.display='none'; });
+            .forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
         if (['admin','administrator','manager'].includes(role)) {
             ['dashboardLink','posLink','productsLink','inventoryLink','customersLink','suppliersLink','adminTab']
-                .forEach(id => { const el = document.getElementById(id); if (el) el.style.display='flex'; });
+                .forEach(id => { const el=document.getElementById(id); if(el) el.style.display='flex'; });
         } else if (role==='cashier') {
             ['posLink','productsLink','customersLink'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='flex'; });
         } else {
@@ -737,6 +1171,13 @@
         if(el) el.classList.add('active');
         document.getElementById(tabName+'Tab').classList.add('active');
         if(tabName==='suppliers') loadSupplierOrders();
+    }
+
+    function switchAdvisorTab(tab, el) {
+        document.querySelectorAll('.advisor-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.advisor-tab-content').forEach(c=>c.classList.remove('active'));
+        if(el) el.classList.add('active');
+        document.getElementById('advisorTab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
     }
 
     let _rejectionStoreKey = 'dismissedRejections_default';
@@ -887,7 +1328,7 @@
     }
 
     async function markMessageAsRead(messageId,event) {
-        const btn=event.target;const item=btn.closest('.message-item');
+        const btn=event.target; const item=btn.closest('.message-item');
         try{const result=await window.messagingModule.markAsRead(messageId);if(result.success){btn.remove();if(item)item.classList.add('read');updateBellBadge();}}
         catch(err){console.error('Mark read error:',err);}
     }
@@ -900,7 +1341,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       HEATMAP  (unchanged)
+       HEATMAP
     ───────────────────────────────────────────── */
     let salesHeatmapChart=null;
     async function renderHeatmapAndInsights() {
@@ -929,7 +1370,7 @@
     }
 
     /* ─────────────────────────────────────────────
-       CUSTOMER OVERVIEW / PURCHASE BEHAVIOR / SEGMENTATION  (unchanged)
+       CUSTOMER OVERVIEW / PURCHASE BEHAVIOR / SEGMENTATION
     ───────────────────────────────────────────── */
     async function renderCustomerOverview() {
         const range=await getDateRangeFilter(); if(!range) return;
@@ -981,309 +1422,574 @@
         document.getElementById('atRiskCustomers').innerHTML="At-risk detection requires last purchase date — coming soon";
     }
 
-    /* ═══════════════════════════════════════════════════════════════
-       PREDICTIVE INSIGHTS — fully wired to real Supabase data
-    ═══════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════
+       ORIGINAL PREDICTIVE INSIGHTS (DATA ANALYTICS)
+    ══════════════════════════════════════════════════════ */
     async function renderPredictiveInsights() {
         const range = await getDateRangeFilter();
         if (!range) return;
-
-        // show loading, hide content
         document.getElementById('aiLoading').style.display  = 'flex';
         document.getElementById('aiContent').style.display  = 'none';
+        try {
+            const db=getDB(); const shopId=window.dataModule?.getCurrentShopId?.();
+            const startD=new Date(range.start); const endD=new Date(range.end);
+            const days=Math.max(1,Math.round((endD-startD)/86400000)+1);
+            const prevEnd=new Date(startD); prevEnd.setDate(prevEnd.getDate()-1);
+            const prevStart=new Date(prevEnd); prevStart.setDate(prevStart.getDate()-days+1);
+            const [salesRes,allSalesRes,saleItemsRes,productsRes,allCustSalesRes,prevSalesRes]=await Promise.all([
+                ddb.from('sales').select('id,total_amount,payment_method,items_sold,created_at,customer_id').gte('created_at',range.start).lte('created_at',range.end),
+                db.from('sales').select('created_at,total_amount').gte('created_at',new Date(Date.now()-90*86400000).toISOString()),
+                db.from('sale_items').select('sale_id,product_id,quantity,unit_price,subtotal').gte('created_at',range.start).lte('created_at',range.end),
+                shopId?db.from('products').select('id,name,stock').eq('shop_id',shopId):db.from('products').select('id,name,stock'),
+                db.from('sales').select('customer_id,created_at').order('created_at',{ascending:false}),
+                db.from('sales').select('total_amount').gte('created_at',prevStart.toISOString().split('T')[0]+' 00:00:00').lte('created_at',prevEnd.toISOString().split('T')[0]+' 23:59:59')
+            ]);
+            const sales=salesRes.data||[]; const allSales=allSalesRes.data||[]; const saleItems=saleItemsRes.data||[];
+            const products=productsRes.data||[]; const allCustSales=allCustSalesRes.data||[]; const prevSales=prevSalesRes.data||[];
+            const totalRev=sales.reduce((s,x)=>s+Number(x.total_amount||0),0);
+            const totalProf=sales.reduce((s,x)=>s+Number(x.total_profit||0),0);
+            const prevRev=prevSales.reduce((s,x)=>s+Number(x.total_amount||0),0);
+            const avgDaily=totalRev/days; const forecast7=avgDaily*7;
+            const trendPct=prevRev>0?((totalRev-prevRev)/prevRev*100):0;
+            const trendDir=trendPct>=2?'up':trendPct<=-2?'down':'flat';
+            const trendArrow=trendPct>=2?'↑':trendPct<=-2?'↓':'→';
+            const trendClass=trendDir==='up'?'trend-up':trendDir==='down'?'trend-down':'trend-flat';
+            const barColor=trendDir==='up'?'var(--accent-green)':trendDir==='down'?'var(--danger)':'var(--accent-orange)';
+            const barPct=Math.min(100,Math.round((forecast7/(totalRev*1.2||1))*100));
+            setText('ai_forecast7',`KES ${fmt(forecast7)}`);
+            setClass('ai_forecast7',`ai-kpi-value ${trendDir==='up'?'green':trendDir==='down'?'red':'orange'}`);
+            document.getElementById('ai_forecastBar').style.width=barPct+'%';
+            document.getElementById('ai_forecastBar').style.background=barColor;
+            set('ai_forecastSub',`<span class="trend-chip ${trendClass}">${trendArrow} ${Math.abs(trendPct).toFixed(1)}% vs prev ${days}-day period</span> &nbsp; Avg/day: KES ${fmt(avgDaily)}`);
+            setText('ai_avgDaily',`KES ${fmt(avgDaily)}`);
+            setText('ai_avgDailySub',`Over ${days} day${days!==1?'s':''}`);
+            const dayTotals=Array(7).fill(0),dayCounts=Array(7).fill(0);
+            const hourTotals=Array(24).fill(0),hourCounts=Array(24).fill(0);
+            allSales.forEach(s=>{const d=new Date(s.created_at);const amt=Number(s.total_amount||0);dayTotals[d.getDay()]+=amt;dayCounts[d.getDay()]++;hourTotals[d.getHours()]+=amt;hourCounts[d.getHours()]++;});
+            const dayAvg=dayTotals.map((t,i)=>dayCounts[i]>0?t/dayCounts[i]:0);
+            const hourAvg=hourTotals.map((t,i)=>hourCounts[i]>0?t/hourCounts[i]:0);
+            const bestDayIdx=dayAvg.indexOf(Math.max(...dayAvg));
+            const bestHourIdx=hourAvg.indexOf(Math.max(...hourAvg));
+            const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+            setText('ai_bestDay',dayNames[bestDayIdx]||'—');
+            setText('ai_bestDaySub',`Avg KES ${fmt(dayAvg[bestDayIdx])} revenue`);
+            setText('ai_bestHour',`${String(bestHourIdx).padStart(2,'0')}:00 – ${String(bestHourIdx+1).padStart(2,'0')}:00`);
+            setText('ai_bestHourSub',`Avg KES ${fmt(hourAvg[bestHourIdx])} in that window`);
+            const velocity={};
+            saleItems.forEach(item=>{if(!item.product_id)return;if(!velocity[item.product_id])velocity[item.product_id]={name:item.products?.name||`#${item.product_id}`,sold:0,stock:item.products?.stock??null};velocity[item.product_id].sold+=Number(item.quantity||0);});
+            products.forEach(p=>{if(velocity[p.id])velocity[p.id].stock=p.stock;});
+            const restockRows=Object.values(velocity).filter(p=>p.sold>0).map(p=>{const dailyV=p.sold/days;const daysLeft=(dailyV>0&&p.stock!==null)?Math.floor(p.stock/dailyV):9999;return{...p,dailyV,daysLeft};}).sort((a,b)=>a.daysLeft-b.daysLeft).slice(0,8);
+            if(!restockRows.length){set('ai_restockList','<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No restock needed</div></div></div>');}
+            else{set('ai_restockList',restockRows.map(p=>{let icon,badgeCls,badgeTxt;if(p.daysLeft<=3){icon='🔴';badgeCls='badge-red';badgeTxt='Critical';}else if(p.daysLeft<=7){icon='🟠';badgeCls='badge-orange';badgeTxt='Low';}else if(p.daysLeft<=14){icon='🟡';badgeCls='badge-orange';badgeTxt='Watch';}else{icon='🟢';badgeCls='badge-green';badgeTxt='OK';}const stockTxt=p.stock!==null?`${p.stock} units left`:'stock unknown';const daysLeftTxt=p.daysLeft===9999?'∞':p.daysLeft;return`<div class="ai-list-item"><span class="ai-icon">${icon}</span><div class="ai-item-main"><div class="ai-item-name">${p.name}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div><div class="ai-item-sub">${p.sold} sold · ~${p.dailyV.toFixed(1)}/day · ${stockTxt} · ~${daysLeftTxt} days stock remaining</div></div></div>`;}).join(''));}
+            const saleProductMap={};
+            saleItems.forEach(item=>{if(!item.sale_id||!item.product_id)return;if(!saleProductMap[item.sale_id])saleProductMap[item.sale_id]=[];saleProductMap[item.sale_id].push({id:item.product_id,name:item.products?.name||`#${item.product_id}`});});
+            const pairCounts={};
+            Object.values(saleProductMap).forEach(prods=>{if(prods.length<2)return;for(let i=0;i<prods.length;i++)for(let j=i+1;j<prods.length;j++){const key=[prods[i].id,prods[j].id].sort().join('|');if(!pairCounts[key])pairCounts[key]={a:prods[i].name,b:prods[j].name,count:0};pairCounts[key].count++;}});
+            const topPairs=Object.values(pairCounts).sort((x,y)=>y.count-x.count).slice(0,6);
+            if(!topPairs.length){set('ai_bundleList','<div class="ai-list-item"><span class="ai-icon">ℹ️</span><div class="ai-item-main"><div class="ai-item-name">Not enough multi-item transactions yet</div></div></div>');}
+            else{set('ai_bundleList',topPairs.map(p=>`<div class="ai-list-item"><span class="ai-icon">🛒</span><div class="ai-item-main"><div class="ai-item-name">${p.a} <span style="color:var(--text-muted);font-weight:400;">+</span> ${p.b}<span class="ai-badge badge-blue">${p.count}×</span></div><div class="ai-item-sub">Bought together ${p.count} time${p.count!==1?'s':''}</div></div></div>`).join(''));}
+            const marginPct=totalRev>0?(totalProf/totalRev*100):0;
+            const marginCls=marginPct>=30?'green':marginPct>=15?'orange':'red';
+            setText('ai_margin',`${marginPct.toFixed(1)}%`);
+            setClass('ai_margin',`ai-kpi-value ${marginCls}`);
+            setText('ai_marginSub',marginPct>=30?'✅ Healthy — above 30%':marginPct>=15?'⚠️ Moderate — aim for 30%+':'🚨 Low — review pricing or costs');
+            const byDate={};
+            sales.forEach(s=>{const d=s.created_at.split('T')[0];if(!byDate[d])byDate[d]={rev:0,profit:0};byDate[d].rev+=Number(s.total_amount||0);byDate[d].profit+=Number(s.total_profit||0);});
+            const dateEntries=Object.entries(byDate).map(([date,v])=>({date,margin:v.rev>0?v.profit/v.rev*100:0,...v}));
+            const lowMarginDays=dateEntries.filter(d=>d.margin<20&&d.rev>0);
+            const sortedByMargin=[...dateEntries].sort((a,b)=>b.margin-a.margin);
+            const bestMarginDay=sortedByMargin[0];
+            setText('ai_lowMarginDays',String(lowMarginDays.length));
+            setClass('ai_lowMarginDays',`ai-kpi-value ${lowMarginDays.length>0?'red':'green'}`);
+            setText('ai_lowMarginSub',lowMarginDays.length>0?`Recent: ${lowMarginDays.slice(0,2).map(d=>`${d.date} (${d.margin.toFixed(0)}%)`).join(', ')}`:'All days above 20% ✅');
+            if(bestMarginDay){setText('ai_bestMarginDay',new Date(bestMarginDay.date).toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric'}));setText('ai_bestMarginDaySub',`${bestMarginDay.margin.toFixed(1)}% margin · KES ${fmt(bestMarginDay.rev)} rev`);}
+            let alertHtml='';
+            if(marginPct<10)alertHtml=`<div class="ai-alert bad">🚨 <strong>Critical margin warning:</strong> Overall margin is ${marginPct.toFixed(1)}%. Review cost prices and selling prices immediately.</div>`;
+            else if(lowMarginDays.length>=Math.ceil(days*0.4))alertHtml=`<div class="ai-alert warn">⚠️ <strong>Frequent low-margin days:</strong> ${lowMarginDays.length} out of ${dateEntries.length} trading days had margin below 20%.</div>`;
+            else if(marginPct>=35)alertHtml=`<div class="ai-alert good">✅ <strong>Excellent margins!</strong> ${marginPct.toFixed(1)}% average — your pricing strategy is working well.</div>`;
+            set('ai_marginAlert',alertHtml);
+            const lastPurchase={};
+            allCustSales.forEach(s=>{if(!s.customer_id)return;const d=new Date(s.created_at);if(!lastPurchase[s.customer_id]||d>lastPurchase[s.customer_id])lastPurchase[s.customer_id]=d;});
+            const churnCandidates=Object.entries(lastPurchase).map(([id,d])=>({id,daysSince:Math.round((Date.now()-d.getTime())/86400000)})).filter(c=>c.daysSince>=30&&c.daysSince<=180).sort((a,b)=>b.daysSince-a.daysSince).slice(0,6);
+            if(!churnCandidates.length){set('ai_churnList','<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No at-risk customers detected</div></div></div>');}
+            else{const custIds=churnCandidates.map(c=>c.id);const{data:custData}=await db.from('customers').select('id,name,phone').in('id',custIds);const custMap={};(custData||[]).forEach(c=>{custMap[c.id]=c;});set('ai_churnList',churnCandidates.map(c=>{const cust=custMap[c.id];const badgeCls=c.daysSince>=90?'badge-red':'badge-orange';const badgeTxt=c.daysSince>=90?'High Risk':c.daysSince>=60?'Med Risk':'Watch';return`<div class="ai-list-item"><span class="ai-icon">👤</span><div class="ai-item-main"><div class="ai-item-name">${cust?.name||`Customer #${c.id}`}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div><div class="ai-item-sub">Last purchase: ${c.daysSince} days ago${cust?.phone?' · '+cust.phone:''}</div></div></div>`;}).join(''));}
+            const pmCounts={},pmRevenue={};
+            sales.forEach(s=>{const pm=s.payment_method||'Unknown';pmCounts[pm]=(pmCounts[pm]||0)+1;pmRevenue[pm]=(pmRevenue[pm]||0)+Number(s.total_amount||0);});
+            const topPM=Object.entries(pmCounts).sort(([,a],[,b])=>b-a)[0];
+            const creditRev=pmRevenue['Credit']||pmRevenue['credit']||0;
+            const avgTx=sales.length>0?totalRev/sales.length:0;
+            const prevAvgTx=prevSales.length>0?prevSales.reduce((s,x)=>s+Number(x.total_amount||0),0)/prevSales.length:0;
+            const txTrend=prevAvgTx>0?((avgTx-prevAvgTx)/prevAvgTx*100):0;
+            setText('ai_topPayment',topPM?topPM[0]:'—');
+            setText('ai_topPaymentSub',topPM?`${topPM[1]} transactions (${Math.round(topPM[1]/sales.length*100)}% of sales)`:'No data');
+            setText('ai_avgTx',`KES ${fmt(avgTx)}`);
+            setText('ai_avgTxSub',prevAvgTx>0?`${txTrend>=0?'↑':'↓'} ${Math.abs(txTrend).toFixed(1)}% vs prev period`:'No prev period data');
+            setText('ai_credit',`KES ${fmt(creditRev)}`);
+            setText('ai_creditSub',creditRev>0?`${pmCounts['Credit']||pmCounts['credit']||0} credit txns — follow up on collections`:'No credit sales ✅');
+            setClass('ai_credit',`ai-kpi-value ${creditRev>0?'orange':'green'}`);
+            document.getElementById('aiTimestamp').textContent=`Updated ${new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}`;
+            document.getElementById('aiLoading').style.display='none';
+            document.getElementById('aiContent').style.display='block';
+        } catch(err) {
+            console.error('AI Insights error:',err);
+            document.getElementById('aiLoading').innerHTML=`<span style="color:var(--danger)">⚠️ Failed to load insights: ${err.message}</span>`;
+        }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       ✨  CLAUDE AI BUSINESS ADVISOR — NEW CORE LOGIC
+       Gathers real data from Supabase → sends to Claude API → renders advice
+    ══════════════════════════════════════════════════════════════════════ */
+
+    // Cached context for follow-up questions
+    let _advisorContext = null;
+    let _advisorConversationHistory = [];
+
+    function setAdvisorLoading(msg, sub) {
+        document.getElementById('advisorPlaceholder').style.display = 'none';
+        document.getElementById('advisorLoading').style.display = 'flex';
+        document.getElementById('advisorResults').style.display = 'none';
+        document.getElementById('advisorLoadingMsg').textContent = msg || 'Analysing…';
+        document.getElementById('advisorLoadingSub').textContent = sub || '';
+    }
+
+    function setAdvisorIdle() {
+        const btn = document.getElementById('btnRunAdvisor');
+        document.getElementById('advisorBtnIcon').textContent = '✨';
+        document.getElementById('advisorBtnText').textContent = 'Re-analyse';
+        btn.disabled = false;
+    }
+
+    async function gatherBusinessContext() {
+    const db = getDB();
+    if (!db) throw new Error('Database not connected');
+    const range = await getDateRangeFilter();
+    if (!range) throw new Error('Please select a date range first');
+    const startD = new Date(range.start);
+    const endD   = new Date(range.end);
+    const days   = Math.max(1, Math.round((endD - startD) / 86400000) + 1);
+
+    const prevEnd   = new Date(startD); prevEnd.setDate(prevEnd.getDate() - 1);
+    const prevStart = new Date(prevEnd); prevStart.setDate(prevStart.getDate() - days + 1);
+
+    // ── Queries using ONLY confirmed columns ──
+    const [salesRes, saleItemsRes, productsRes, allCustSalesRes, prevSalesRes, allSalesRes] = await Promise.all([
+        db.from('sales')
+          .select('id,total_amount,payment_method,items_sold,created_at,customer_id,shop_id,is_voided,discount_amount')
+          .gte('created_at', range.start).lte('created_at', range.end)
+          .eq('is_voided', false),
+
+        db.from('sale_items')
+          .select('sale_id,product_id,quantity,unit_price,subtotal,listed_price')
+          .gte('created_at', range.start).lte('created_at', range.end),
+
+        db.from('products')
+          .select('id,name,stock'),
+
+        db.from('sales')
+          .select('customer_id,created_at,total_amount')
+          .eq('is_voided', false)
+          .order('created_at', {ascending: false}).limit(500),
+
+        db.from('sales')
+          .select('total_amount')
+          .gte('created_at', prevStart.toISOString().split('T')[0]+' 00:00:00')
+          .lte('created_at', prevEnd.toISOString().split('T')[0]+' 23:59:59')
+          .eq('is_voided', false),
+
+        db.from('sales')
+          .select('created_at,total_amount')
+          .gte('created_at', new Date(Date.now()-90*86400000).toISOString())
+          .eq('is_voided', false)
+    ]);
+
+    const sales        = salesRes.data        || [];
+    const saleItems    = saleItemsRes.data     || [];
+    const products     = productsRes.data      || [];
+    const allCustSales = allCustSalesRes.data  || [];
+    const prevSales    = prevSalesRes.data      || [];
+    const allSales90   = allSalesRes.data       || [];
+
+    // ── Revenue (no total_profit column — calculate from items) ──
+    const totalRev = sales.reduce((s,x) => s + Number(x.total_amount||0), 0);
+
+    // Calculate profit from sale_items: subtotal - (unit_price * quantity) gives discount impact
+    // Use listed_price vs unit_price to estimate margin where possible
+    const totalDiscount = sales.reduce((s,x) => s + Number(x.discount_amount||0), 0);
+
+    // Estimate gross profit from items: (unit_price - cost) * qty
+    // Since we don't have cost_price, estimate margin at ~30% of revenue as baseline
+    // but also calculate actual discount impact
+    let itemsRevenue = 0;
+    saleItems.forEach(item => { itemsRevenue += Number(item.subtotal||0); });
+    const discountPct = itemsRevenue > 0 ? (totalDiscount / itemsRevenue * 100) : 0;
+
+    const prevRev  = prevSales.reduce((s,x)=>s+Number(x.total_amount||0),0);
+    const revTrend = prevRev > 0 ? ((totalRev-prevRev)/prevRev*100) : null;
+
+    // ── Product map ──
+    const prodMap = {};
+    products.forEach(p => { prodMap[p.id] = p; });
+
+    // ── Top products by revenue ──
+    const prodRevenue = {};
+    saleItems.forEach(item => {
+        const name = prodMap[item.product_id]?.name || `Product #${item.product_id}`;
+        if (!prodRevenue[name]) prodRevenue[name] = { revenue:0, qty:0, stock: prodMap[item.product_id]?.stock ?? null };
+        prodRevenue[name].revenue += Number(item.subtotal||0);
+        prodRevenue[name].qty     += Number(item.quantity||0);
+    });
+    const topProducts = Object.entries(prodRevenue)
+        .sort(([,a],[,b]) => b.revenue - a.revenue).slice(0,8)
+        .map(([name,d]) => ({ name, revenue: Math.round(d.revenue), qty: d.qty, stock: d.stock }));
+
+    // ── Stock velocity ──
+    const velocity = {};
+    saleItems.forEach(item => {
+        if (!item.product_id) return;
+        const name = prodMap[item.product_id]?.name || `#${item.product_id}`;
+        if (!velocity[item.product_id]) velocity[item.product_id] = { name, sold:0, stock: prodMap[item.product_id]?.stock ?? null };
+        velocity[item.product_id].sold += Number(item.quantity||0);
+    });
+    const criticalStock = Object.values(velocity).filter(p=>p.sold>0).map(p => {
+        const dailyV   = p.sold / days;
+        const daysLeft = (dailyV>0 && p.stock!==null) ? Math.floor(p.stock/dailyV) : 999;
+        return { name:p.name, daysLeft, stock:p.stock, dailyVelocity: parseFloat(dailyV.toFixed(2)) };
+    }).filter(p=>p.daysLeft<=14).sort((a,b)=>a.daysLeft-b.daysLeft).slice(0,6);
+
+    // ── Payment breakdown ──
+    const pmCounts={}, pmRevenue={};
+    sales.forEach(s => {
+        const pm = s.payment_method||'Unknown';
+        pmCounts[pm]  = (pmCounts[pm]||0)+1;
+        pmRevenue[pm] = (pmRevenue[pm]||0)+Number(s.total_amount||0);
+    });
+    const paymentBreakdown = Object.entries(pmCounts).sort(([,a],[,b])=>b-a)
+        .map(([method,count]) => ({
+            method, count,
+            revenue: Math.round(pmRevenue[method]||0),
+            pct: Math.round(count/Math.max(sales.length,1)*100)
+        }));
+
+    // ── Day/hour patterns (90-day window) ──
+    const dayTotals=Array(7).fill(0), dayCounts=Array(7).fill(0);
+    const hourTotals=Array(24).fill(0), hourCounts=Array(24).fill(0);
+    allSales90.forEach(s => {
+        const d=new Date(s.created_at); const amt=Number(s.total_amount||0);
+        dayTotals[d.getDay()]+=amt; dayCounts[d.getDay()]++;
+        hourTotals[d.getHours()]+=amt; hourCounts[d.getHours()]++;
+    });
+    const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const dayAvg  = dayTotals.map((t,i) => dayCounts[i]>0 ? Math.round(t/dayCounts[i]) : 0);
+    const hourAvg = hourTotals.map((t,i) => hourCounts[i]>0 ? Math.round(t/hourCounts[i]) : 0);
+    const peakDay  = dayNames[dayAvg.indexOf(Math.max(...dayAvg))];
+    const peakHour = hourAvg.indexOf(Math.max(...hourAvg));
+
+    // ── Churn ──
+    const lastPurchase={};
+    allCustSales.forEach(s => {
+        if (!s.customer_id) return;
+        const d=new Date(s.created_at);
+        if (!lastPurchase[s.customer_id]||d>lastPurchase[s.customer_id]) lastPurchase[s.customer_id]=d;
+    });
+    const churnCount  = Object.values(lastPurchase).filter(d=>(Date.now()-d.getTime())>30*86400000).length;
+    const activeCount = Object.values(lastPurchase).filter(d=>(Date.now()-d.getTime())<=30*86400000).length;
+
+    // ── Bundles ──
+    const saleProductMap={};
+    saleItems.forEach(item => {
+        if (!item.sale_id||!item.product_id) return;
+        if (!saleProductMap[item.sale_id]) saleProductMap[item.sale_id]=[];
+        saleProductMap[item.sale_id].push(prodMap[item.product_id]?.name||`#${item.product_id}`);
+    });
+    const pairCounts={};
+    Object.values(saleProductMap).forEach(prods => {
+        if (prods.length<2) return;
+        for(let i=0;i<prods.length;i++) for(let j=i+1;j<prods.length;j++){
+            const key=[prods[i],prods[j]].sort().join(' + ');
+            pairCounts[key]=(pairCounts[key]||0)+1;
+        }
+    });
+    const topBundles = Object.entries(pairCounts).sort(([,a],[,b])=>b-a).slice(0,5)
+        .map(([pair,count])=>({pair,count}));
+
+    return {
+        period:       { start: range.start.split(' ')[0], end: range.end.split(' ')[0], days },
+        revenue:      { total: Math.round(totalRev), avgDaily: Math.round(totalRev/days), trend: revTrend!==null ? parseFloat(revTrend.toFixed(1)) : null },
+        profit:       { gross: 'N/A — no cost data in schema', net: 'N/A', marginPct: 'N/A', totalDiscount: Math.round(totalDiscount), discountPct: parseFloat(discountPct.toFixed(1)) },
+        prevPeriod:   { revenue: Math.round(prevRev) },
+        transactions: { count: sales.length, avgValue: sales.length>0 ? Math.round(totalRev/sales.length) : 0 },
+        topProducts, criticalStock, paymentBreakdown,
+        timing:       { peakDay, peakHour: `${String(peakHour).padStart(2,'0')}:00`, dayByDayAvg: dayNames.map((d,i)=>({day:d,avgRevenue:dayAvg[i]})) },
+        customers:    { atChurnRisk: churnCount, activeIn30Days: activeCount, total: Object.keys(lastPurchase).length },
+        bundles:      topBundles,
+        currency:     'KES',
+        businessName: 'G&H Solutions'
+    };
+}
+
+    function buildAdvisorPrompt(ctx, userQuestion = null) {
+        const ctxJson = JSON.stringify(ctx, null, 2);
+        if (userQuestion) {
+            return `You are a senior retail business consultant for ${ctx.businessName}, a point-of-sale business in Kenya operating in KES.
+
+Here is the latest business data snapshot:
+${ctxJson}
+
+The business owner is asking a specific follow-up question. Answer it thoroughly, with concrete numbers from the data, practical steps they can take immediately, and honest assessment. Be direct, specific, and genuinely helpful.
+
+Question: ${userQuestion}`;
+        }
+
+        return `You are a senior retail business consultant and data analyst. You have been given real business data from ${ctx.businessName}, a point-of-sale retail business in Kenya. All amounts are in Kenyan Shillings (KES).
+
+BUSINESS DATA:
+${ctxJson}
+
+Your task: Provide a comprehensive, honest business analysis with SPECIFIC, ACTIONABLE advice. Focus on insights that directly use the numbers in the data — not generic advice. Be like a trusted advisor who knows this business deeply.
+
+Return your response in this EXACT JSON format (no markdown, no backticks, pure JSON):
+{
+  "summary": {
+    "healthScore": <0-100 integer>,
+    "healthLabel": "<Excellent|Good|Fair|Needs Attention|Critical>",
+    "headline": "<one punchy sentence summarising the business situation>",
+    "totalRevenue": "${ctx.revenue.total}",
+    "netProfit": "${ctx.profit.net}",
+    "topOpportunity": "<biggest single growth opportunity in 1 sentence>"
+  },
+  "adviceCards": [
+    {
+      "id": "card1",
+      "icon": "<relevant emoji>",
+      "category": "<Revenue|Margins|Inventory|Customers|Operations|Timing|Staff|Risk>",
+      "priority": "<high|medium|low|info>",
+      "title": "<short, punchy title>",
+      "body": "<2-4 sentences of specific, data-driven insight using actual numbers from the data>",
+      "actionStep": "<one concrete, immediate action the owner can take this week>",
+      "metrics": [
+        {"label": "<metric name>", "value": "<KES amount or % or number>"}
+      ]
+    }
+  ],
+  "fullReport": "<A detailed paragraph-by-paragraph analysis (500-800 words). Use the section headers: REVENUE & GROWTH, PROFITABILITY, TOP PRODUCTS & INVENTORY, CUSTOMER BASE, TIMING & PEAK HOURS, STAFF PERFORMANCE, EXPENSES, IMMEDIATE PRIORITIES. Write naturally, reference specific numbers, and give honest, actionable advice a Kenyan SME owner can actually use. Do not use JSON or markdown — write prose.>"
+}
+
+Generate 6-9 advice cards covering different aspects. Make every card specific to THIS business's actual numbers. Prioritise issues that would have the highest immediate financial impact.`;
+    }
+
+    function renderAdvisorResults(parsed, ctx) {
+        const s = parsed.summary;
+
+        // Summary bar
+        const healthColor = s.healthScore >= 75 ? 'var(--accent-green)' : s.healthScore >= 50 ? 'var(--accent-orange)' : 'var(--danger)';
+        set('advisorSummaryBar', `
+            <div class="advisor-summary-pill" style="border-color:${healthColor}20;">
+                <span>❤️</span>
+                <div><strong style="color:${healthColor};">${s.healthScore}/100</strong><br><span style="font-size:0.75rem;color:var(--text-muted);">${s.healthLabel}</span></div>
+            </div>
+            <div class="advisor-summary-pill" style="flex:2;min-width:200px;">
+                <span>💡</span>
+                <div style="font-size:0.82rem;line-height:1.5;">${s.headline}</div>
+            </div>
+            <div class="advisor-summary-pill">
+                <span>🚀</span>
+                <div style="font-size:0.78rem;line-height:1.4;"><strong style="color:var(--accent-orange);font-size:0.7rem;">TOP OPPORTUNITY</strong><br>${s.topOpportunity}</div>
+            </div>
+        `);
+
+        // Advice cards
+        const cards = (parsed.adviceCards || []).map(card => {
+            const metricsHtml = (card.metrics||[]).length > 0
+                ? `<div class="advice-metric-row">${card.metrics.map(m=>`<div class="advice-metric"><span class="advice-metric-val">${m.value}</span><span class="advice-metric-lbl">${m.label}</span></div>`).join('')}</div>`
+                : '';
+            return `
+            <div class="advice-card priority-${card.priority}">
+                <div class="advice-card-header">
+                    <div class="advice-icon">${card.icon}</div>
+                    <div class="advice-title-block">
+                        <div class="advice-title">${card.title}</div>
+                        <div class="advice-category">${card.category}</div>
+                    </div>
+                    <span class="advice-priority-badge">${card.priority.toUpperCase()}</span>
+                </div>
+                ${metricsHtml}
+                <div class="advice-body">${card.body}</div>
+                <div class="advice-action-box">${card.actionStep}</div>
+            </div>`;
+        }).join('');
+        set('adviceGrid', cards || '<div style="color:var(--text-muted);padding:20px;text-align:center;">No advice cards generated</div>');
+
+        // Full report
+        const reportText = (parsed.fullReport || '').replace(/\n(REVENUE|PROFITABILITY|TOP PRODUCTS|CUSTOMER|TIMING|STAFF|EXPENSES|IMMEDIATE)/g, '\n<h3>$1');
+        set('advisorFullText', reportText);
+
+        // Timestamp
+        document.getElementById('advisorTimestamp').textContent = `Analysed ${new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}`;
+
+        // Show results
+        document.getElementById('advisorLoading').style.display = 'none';
+        document.getElementById('advisorResults').style.display = 'block';
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       CLAUDE API PROXY HELPER
+       Routes all Anthropic calls through your Supabase Edge Function
+       to avoid CORS + keep API key server-side.
+    ───────────────────────────────────────────────────────────── */
+    async function callClaude(payload) {
+    // Keys found from console inspection
+    const supabaseUrl = window.DukaPOS.SUPABASE_URL 
+                     || window.DukaPOS.supabaseClient.supabaseUrl;
+    
+    const supabaseKey = window.DukaPOS.SUPABASE_ANON_KEY 
+                     || window.DukaPOS.supabaseClient.supabaseKey;
+
+    if (!supabaseUrl) throw new Error('Supabase URL not found');
+    if (!supabaseKey) throw new Error('Supabase anon key not found');
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/claude-proxy`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${supabaseKey}`,
+            'apikey': supabaseKey,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || err.message || `Proxy error ${response.status}`);
+    }
+
+    return await response.json();
+}
+    /* ─────────────────────────────────────────────────────────────
+       RUN FULL AI ANALYSIS
+    ───────────────────────────────────────────────────────────── */
+    async function runClaudeAdvisor() {
+        const btn = document.getElementById('btnRunAdvisor');
+        btn.disabled = true;
+        document.getElementById('advisorBtnIcon').textContent = '⏳';
+        document.getElementById('advisorBtnText').textContent = 'Analysing…';
 
         try {
-            const db       = getDB();
-            const shopId   = window.dataModule?.getCurrentShopId?.();
-            const startD   = new Date(range.start);
-            const endD     = new Date(range.end);
-            const days     = Math.max(1, Math.round((endD - startD) / 86400000) + 1);
+            // Step 1: Gather live data from Supabase
+            setAdvisorLoading(
+                'Gathering your business data…',
+                'Fetching sales, products, expenses, and customer records from database'
+            );
+            const ctx = await gatherBusinessContext();
+            _advisorContext = ctx;
+            _advisorConversationHistory = [];
 
-            // ── Previous period (same length) for trend comparison ──
-            const prevEnd   = new Date(startD); prevEnd.setDate(prevEnd.getDate() - 1);
-            const prevStart = new Date(prevEnd); prevStart.setDate(prevStart.getDate() - days + 1);
+            // Step 2: Send to Claude via Supabase proxy
+            setAdvisorLoading(
+                'Analysing with Claude AI…',
+                `Processing ${ctx.transactions.count} transactions, ${ctx.topProducts.length} products, and ${ctx.customers.total} customers`
+            );
 
-            // ── Parallel fetches ──
-            const [
-                salesRes,
-                allSalesRes,
-                saleItemsRes,
-                productsRes,
-                allCustSalesRes,
-                prevSalesRes
-            ] = await Promise.all([
-                // Current-period sales
-                db.from('sales')
-                  .select('id,total_amount,total_profit,payment_method,items_sold,created_at,customer_id')
-                  .gte('created_at', range.start).lte('created_at', range.end),
+            const prompt = buildAdvisorPrompt(ctx);
 
-                // Last-90-days sales for day/hour patterns
-                db.from('sales')
-                  .select('created_at,total_amount')
-                  .gte('created_at', new Date(Date.now()-90*86400000).toISOString()),
-
-                // Sale items → restock + bundle analysis
-                db.from('sale_items')
-                  .select('sale_id,product_id,quantity,products(id,name,stock)')
-                  .gte('created_at', range.start).lte('created_at', range.end),
-
-                // Products for restock stock levels
-                shopId
-                    ? db.from('products').select('id,name,stock').eq('shop_id', shopId)
-                    : db.from('products').select('id,name,stock'),
-
-                // All-time customer sales for churn
-                db.from('sales').select('customer_id,created_at').order('created_at',{ascending:false}),
-
-                // Previous-period sales for trend
-                db.from('sales')
-                  .select('total_amount')
-                  .gte('created_at', prevStart.toISOString().split('T')[0]+' 00:00:00')
-                  .lte('created_at', prevEnd.toISOString().split('T')[0]+' 23:59:59')
-            ]);
-
-            const sales        = salesRes.data         || [];
-            const allSales     = allSalesRes.data       || [];
-            const saleItems    = saleItemsRes.data      || [];
-            const products     = productsRes.data       || [];
-            const allCustSales = allCustSalesRes.data   || [];
-            const prevSales    = prevSalesRes.data      || [];
-
-            const totalRev  = sales.reduce((s,x) => s + Number(x.total_amount||0), 0);
-            const totalProf = sales.reduce((s,x) => s + Number(x.total_profit||0), 0);
-            const prevRev   = prevSales.reduce((s,x) => s + Number(x.total_amount||0), 0);
-
-            /* ─── ① REVENUE FORECAST ─── */
-            const avgDaily   = totalRev / days;
-            const forecast7  = avgDaily * 7;
-            const trendPct   = prevRev > 0 ? ((totalRev - prevRev) / prevRev * 100) : 0;
-            const trendDir   = trendPct >=  2 ? 'up' : trendPct <= -2 ? 'down' : 'flat';
-            const trendArrow = trendPct >=  2 ? '↑' : trendPct <= -2 ? '↓' : '→';
-            const trendClass = trendDir === 'up' ? 'trend-up' : trendDir === 'down' ? 'trend-down' : 'trend-flat';
-            const barColor   = trendDir === 'up' ? 'var(--accent-green)' : trendDir === 'down' ? 'var(--danger)' : 'var(--accent-orange)';
-            const barPct     = Math.min(100, Math.round((forecast7 / (totalRev * 1.2 || 1)) * 100));
-
-            setText('ai_forecast7', `KES ${fmt(forecast7)}`);
-            setClass('ai_forecast7', `ai-kpi-value ${trendDir==='up'?'green':trendDir==='down'?'red':'orange'}`);
-            document.getElementById('ai_forecastBar').style.width = barPct + '%';
-            document.getElementById('ai_forecastBar').style.background = barColor;
-            set('ai_forecastSub', `<span class="trend-chip ${trendClass}">${trendArrow} ${Math.abs(trendPct).toFixed(1)}% vs prev ${days}-day period</span> &nbsp; Avg/day: KES ${fmt(avgDaily)}`);
-
-            setText('ai_avgDaily', `KES ${fmt(avgDaily)}`);
-            setText('ai_avgDailySub', `Over ${days} day${days!==1?'s':''}`);
-
-            // Day-of-week & hour patterns (90-day window)
-            const dayTotals=Array(7).fill(0), dayCounts=Array(7).fill(0);
-            const hourTotals=Array(24).fill(0), hourCounts=Array(24).fill(0);
-            allSales.forEach(s=>{
-                const d=new Date(s.created_at);
-                const amt=Number(s.total_amount||0);
-                dayTotals[d.getDay()]+=amt; dayCounts[d.getDay()]++;
-                hourTotals[d.getHours()]+=amt; hourCounts[d.getHours()]++;
+            const data = await callClaude({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 4096,
+                system: 'You are a senior retail business analyst specialising in Kenyan SMEs. You always respond with valid JSON only — no markdown, no code fences, no preamble.',
+                messages: [{ role: 'user', content: prompt }]
             });
-            const dayAvg  = dayTotals.map((t,i)=>dayCounts[i]>0?t/dayCounts[i]:0);
-            const hourAvg = hourTotals.map((t,i)=>hourCounts[i]>0?t/hourCounts[i]:0);
-            const bestDayIdx  = dayAvg.indexOf(Math.max(...dayAvg));
-            const bestHourIdx = hourAvg.indexOf(Math.max(...hourAvg));
-            const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-            setText('ai_bestDay', dayNames[bestDayIdx] || '—');
-            setText('ai_bestDaySub', `Avg KES ${fmt(dayAvg[bestDayIdx])} revenue`);
-            setText('ai_bestHour', `${String(bestHourIdx).padStart(2,'0')}:00 – ${String(bestHourIdx+1).padStart(2,'0')}:00`);
-            setText('ai_bestHourSub', `Avg KES ${fmt(hourAvg[bestHourIdx])} in that window`);
+            const rawText = data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || '';
 
-            /* ─── ② RESTOCK ─── */
-            const velocity = {};
-            saleItems.forEach(item => {
-                if (!item.product_id) return;
-                if (!velocity[item.product_id]) {
-                    velocity[item.product_id] = {
-                        name: item.products?.name || `#${item.product_id}`,
-                        sold: 0,
-                        stock: item.products?.stock ?? null
-                    };
-                }
-                velocity[item.product_id].sold += Number(item.quantity || 0);
-            });
-            // Override stock from products table where available
-            products.forEach(p => { if (velocity[p.id]) velocity[p.id].stock = p.stock; });
-
-            const restockRows = Object.values(velocity)
-                .filter(p => p.sold > 0)
-                .map(p => {
-                    const dailyV = p.sold / days;
-                    const daysLeft = (dailyV > 0 && p.stock !== null) ? Math.floor(p.stock / dailyV) : 9999;
-                    return { ...p, dailyV, daysLeft };
-                })
-                .sort((a,b) => a.daysLeft - b.daysLeft)
-                .slice(0, 8);
-
-            if (!restockRows.length) {
-                set('ai_restockList', '<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No restock needed</div><div class="ai-item-sub">All products have sufficient stock for this period</div></div></div>');
-            } else {
-                set('ai_restockList', restockRows.map(p => {
-                    let icon, badgeCls, badgeTxt;
-                    if      (p.daysLeft <= 3)  { icon='🔴'; badgeCls='badge-red';    badgeTxt='Critical'; }
-                    else if (p.daysLeft <= 7)  { icon='🟠'; badgeCls='badge-orange'; badgeTxt='Low'; }
-                    else if (p.daysLeft <= 14) { icon='🟡'; badgeCls='badge-orange'; badgeTxt='Watch'; }
-                    else                       { icon='🟢'; badgeCls='badge-green';  badgeTxt='OK'; }
-                    const stockTxt = p.stock !== null ? `${p.stock} units left` : 'stock unknown';
-                    const daysLeftTxt = p.daysLeft === 9999 ? '∞' : p.daysLeft;
-                    return `<div class="ai-list-item">
-                        <span class="ai-icon">${icon}</span>
-                        <div class="ai-item-main">
-                            <div class="ai-item-name">${p.name}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div>
-                            <div class="ai-item-sub">${p.sold} sold · ~${p.dailyV.toFixed(1)}/day · ${stockTxt} · ~${daysLeftTxt} days stock remaining</div>
-                        </div>
-                    </div>`;
-                }).join(''));
+            // Parse JSON — strip any accidental fences
+            const clean = rawText.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+            let parsed;
+            try {
+                parsed = JSON.parse(clean);
+            } catch (e) {
+                const match = clean.match(/\{[\s\S]*\}/);
+                if (match) parsed = JSON.parse(match[0]);
+                else throw new Error('Could not parse AI response as JSON. Raw: ' + clean.slice(0, 200));
             }
 
-            /* ─── ③ BUNDLE / CROSS-SELL ─── */
-            const saleProductMap = {};
-            saleItems.forEach(item => {
-                if (!item.sale_id || !item.product_id) return;
-                if (!saleProductMap[item.sale_id]) saleProductMap[item.sale_id] = [];
-                saleProductMap[item.sale_id].push({ id: item.product_id, name: item.products?.name || `#${item.product_id}` });
-            });
-            const pairCounts = {};
-            Object.values(saleProductMap).forEach(prods => {
-                if (prods.length < 2) return;
-                for (let i=0;i<prods.length;i++) for (let j=i+1;j<prods.length;j++) {
-                    const key = [prods[i].id, prods[j].id].sort().join('|');
-                    if (!pairCounts[key]) pairCounts[key] = { a: prods[i].name, b: prods[j].name, count: 0 };
-                    pairCounts[key].count++;
-                }
-            });
-            const topPairs = Object.values(pairCounts).sort((x,y)=>y.count-x.count).slice(0,6);
+            // Cache history for follow-up Q&A
+            _advisorConversationHistory = [
+                { role: 'user',      content: prompt  },
+                { role: 'assistant', content: rawText }
+            ];
 
-            if (!topPairs.length) {
-                set('ai_bundleList', '<div class="ai-list-item"><span class="ai-icon">ℹ️</span><div class="ai-item-main"><div class="ai-item-name">Not enough multi-item transactions yet</div><div class="ai-item-sub">Encourage customers to buy more per visit to unlock bundle insights</div></div></div>');
-            } else {
-                set('ai_bundleList', topPairs.map(p =>
-                    `<div class="ai-list-item">
-                        <span class="ai-icon">🛒</span>
-                        <div class="ai-item-main">
-                            <div class="ai-item-name">${p.a} <span style="color:var(--text-muted);font-weight:400;">+</span> ${p.b}<span class="ai-badge badge-blue">${p.count}×</span></div>
-                            <div class="ai-item-sub">Bought together ${p.count} time${p.count!==1?'s':''} — consider bundling or cross-promoting</div>
-                        </div>
-                    </div>`
-                ).join(''));
-            }
-
-            /* ─── ④ MARGIN ─── */
-            const marginPct = totalRev > 0 ? (totalProf / totalRev * 100) : 0;
-            const marginCls = marginPct >= 30 ? 'green' : marginPct >= 15 ? 'orange' : 'red';
-
-            setText('ai_margin', `${marginPct.toFixed(1)}%`);
-            setClass('ai_margin', `ai-kpi-value ${marginCls}`);
-            setText('ai_marginSub', marginPct >= 30 ? '✅ Healthy — above 30%' : marginPct >= 15 ? '⚠️ Moderate — aim for 30%+' : '🚨 Low — review pricing or costs');
-
-            // Day-level margin
-            const byDate = {};
-            sales.forEach(s => {
-                const d = s.created_at.split('T')[0];
-                if (!byDate[d]) byDate[d] = {rev:0, profit:0};
-                byDate[d].rev    += Number(s.total_amount||0);
-                byDate[d].profit += Number(s.total_profit||0);
-            });
-            const dateEntries = Object.entries(byDate)
-                .map(([date,v]) => ({date, margin: v.rev>0 ? v.profit/v.rev*100 : 0, ...v}));
-            const lowMarginDays = dateEntries.filter(d => d.margin < 20 && d.rev > 0);
-            const sortedByMargin = [...dateEntries].sort((a,b)=>b.margin-a.margin);
-            const bestMarginDay  = sortedByMargin[0];
-
-            setText('ai_lowMarginDays', String(lowMarginDays.length));
-            setClass('ai_lowMarginDays', `ai-kpi-value ${lowMarginDays.length > 0 ? 'red' : 'green'}`);
-            setText('ai_lowMarginSub', lowMarginDays.length > 0
-                ? `Recent: ${lowMarginDays.slice(0,2).map(d=>`${d.date} (${d.margin.toFixed(0)}%)`).join(', ')}`
-                : 'All days above 20% ✅');
-
-            if (bestMarginDay) {
-                setText('ai_bestMarginDay', new Date(bestMarginDay.date).toLocaleDateString('en-KE',{weekday:'short',month:'short',day:'numeric'}));
-                setText('ai_bestMarginDaySub', `${bestMarginDay.margin.toFixed(1)}% margin · KES ${fmt(bestMarginDay.rev)} rev`);
-            }
-
-            // Margin alert box
-            let alertHtml = '';
-            if (marginPct < 10) {
-                alertHtml = `<div class="ai-alert bad">🚨 <strong>Critical margin warning:</strong> Overall margin is ${marginPct.toFixed(1)}%. Review cost prices and selling prices immediately.</div>`;
-            } else if (lowMarginDays.length >= Math.ceil(days * 0.4)) {
-                alertHtml = `<div class="ai-alert warn">⚠️ <strong>Frequent low-margin days:</strong> ${lowMarginDays.length} out of ${dateEntries.length} trading days had margin below 20%. Consider reviewing discounts or high-cost products.</div>`;
-            } else if (marginPct >= 35) {
-                alertHtml = `<div class="ai-alert good">✅ <strong>Excellent margins!</strong> ${marginPct.toFixed(1)}% average — your pricing strategy is working well. Keep it up.</div>`;
-            }
-            set('ai_marginAlert', alertHtml);
-
-            /* ─── ⑤ CHURN RISK ─── */
-            const lastPurchase = {};
-            allCustSales.forEach(s => {
-                if (!s.customer_id) return;
-                const d = new Date(s.created_at);
-                if (!lastPurchase[s.customer_id] || d > lastPurchase[s.customer_id]) lastPurchase[s.customer_id] = d;
-            });
-            const churnCandidates = Object.entries(lastPurchase)
-                .map(([id, d]) => ({ id, daysSince: Math.round((Date.now()-d.getTime())/86400000) }))
-                .filter(c => c.daysSince >= 30 && c.daysSince <= 180)
-                .sort((a,b) => b.daysSince - a.daysSince)
-                .slice(0, 6);
-
-            if (!churnCandidates.length) {
-                set('ai_churnList', '<div class="ai-list-item"><span class="ai-icon">✅</span><div class="ai-item-main"><div class="ai-item-name">No at-risk customers detected</div><div class="ai-item-sub">All recent buyers are within the 30-day window</div></div></div>');
-            } else {
-                const custIds = churnCandidates.map(c => c.id);
-                const {data: custData} = await db.from('customers').select('id,name,phone').in('id', custIds);
-                const custMap = {};
-                (custData||[]).forEach(c => { custMap[c.id] = c; });
-
-                set('ai_churnList', churnCandidates.map(c => {
-                    const cust = custMap[c.id];
-                    const badgeCls = c.daysSince >= 90 ? 'badge-red' : 'badge-orange';
-                    const badgeTxt = c.daysSince >= 90 ? 'High Risk' : c.daysSince >= 60 ? 'Med Risk' : 'Watch';
-                    return `<div class="ai-list-item">
-                        <span class="ai-icon">👤</span>
-                        <div class="ai-item-main">
-                            <div class="ai-item-name">${cust?.name||`Customer #${c.id}`}<span class="ai-badge ${badgeCls}">${badgeTxt}</span></div>
-                            <div class="ai-item-sub">Last purchase: ${c.daysSince} days ago${cust?.phone?' · '+cust.phone:''} — consider a win-back offer</div>
-                        </div>
-                    </div>`;
-                }).join(''));
-            }
-
-            /* ─── ⑥ PAYMENT INSIGHTS ─── */
-            const pmCounts = {}, pmRevenue = {};
-            sales.forEach(s => {
-                const pm = s.payment_method || 'Unknown';
-                pmCounts[pm]   = (pmCounts[pm]||0) + 1;
-                pmRevenue[pm]  = (pmRevenue[pm]||0) + Number(s.total_amount||0);
-            });
-            const topPM = Object.entries(pmCounts).sort(([,a],[,b])=>b-a)[0];
-            const creditRev = pmRevenue['Credit'] || pmRevenue['credit'] || 0;
-            const avgTx     = sales.length > 0 ? totalRev / sales.length : 0;
-            const prevAvgTx = prevSales.length > 0 ? prevSales.reduce((s,x)=>s+Number(x.total_amount||0),0) / prevSales.length : 0;
-            const txTrend   = prevAvgTx > 0 ? ((avgTx - prevAvgTx) / prevAvgTx * 100) : 0;
-
-            setText('ai_topPayment', topPM ? topPM[0] : '—');
-            setText('ai_topPaymentSub', topPM ? `${topPM[1]} transactions (${Math.round(topPM[1]/sales.length*100)}% of sales)` : 'No data');
-            setText('ai_avgTx', `KES ${fmt(avgTx)}`);
-            setText('ai_avgTxSub', prevAvgTx > 0 ? `${txTrend>=0?'↑':'↓'} ${Math.abs(txTrend).toFixed(1)}% vs prev period` : 'No prev period data');
-            setText('ai_credit', `KES ${fmt(creditRev)}`);
-            setText('ai_creditSub', creditRev > 0 ? `${pmCounts['Credit']||pmCounts['credit']||0} credit txns — follow up on collections` : 'No credit sales ✅');
-            setClass('ai_credit', `ai-kpi-value ${creditRev > 0 ? 'orange' : 'green'}`);
-
-            /* ─── Done ─── */
-            document.getElementById('aiTimestamp').textContent = `Updated ${new Date().toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'})}`;
-            document.getElementById('aiLoading').style.display = 'none';
-            document.getElementById('aiContent').style.display = 'block';
+            renderAdvisorResults(parsed, ctx);
 
         } catch (err) {
-            console.error('AI Insights error:', err);
-            document.getElementById('aiLoading').innerHTML = `<span style="color:var(--danger)">⚠️ Failed to load insights: ${err.message}</span>`;
+            console.error('Claude Advisor error:', err);
+            document.getElementById('advisorLoading').style.display = 'none';
+            document.getElementById('advisorPlaceholder').style.display = 'block';
+            document.getElementById('advisorPlaceholder').innerHTML = `
+                <div class="advisor-placeholder-icon">⚠️</div>
+                <h3>Analysis Failed</h3>
+                <p style="color:var(--danger);font-size:0.88rem;max-width:420px;margin:0 auto 16px;line-height:1.6;">${err.message}</p>
+                <button class="btn-run-advisor" onclick="runClaudeAdvisor()" style="margin:0 auto;">🔄 Try Again</button>
+            `;
+        } finally {
+            setAdvisorIdle();
+        }
+    }
+
+    /* ─────────────────────────────────────────────────────────────
+       FOLLOW-UP Q&A
+    ───────────────────────────────────────────────────────────── */
+    async function askAdvisorFollowUp() {
+        const questionEl = document.getElementById('advisorQuestion');
+        const question   = questionEl.value.trim();
+        if (!question)        { questionEl.focus(); return; }
+        if (!_advisorContext) { alert('Please run the analysis first.'); return; }
+
+        const btn = document.getElementById('btnAskAdvisor');
+        btn.disabled    = true;
+        btn.textContent = '⏳';
+
+        // Switch to Full Report tab so the answer is visible
+        document.querySelectorAll('.advisor-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.advisor-tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.advisor-tab')[1].classList.add('active');
+        document.getElementById('advisorTabFull').classList.add('active');
+
+        const answerEl = document.getElementById('advisorFullText');
+        answerEl.innerHTML = `<strong style="color:var(--accent-orange);">Q: ${question}</strong>\n\n<span class="advisor-cursor"></span>`;
+
+        try {
+            const followUpPrompt = buildAdvisorPrompt(_advisorContext, question);
+            const messages = [
+                ..._advisorConversationHistory,
+                { role: 'user', content: followUpPrompt }
+            ];
+
+            const data = await callClaude({
+                model:      'claude-sonnet-4-20250514',
+                max_tokens: 1024,
+                messages,
+            });
+
+            const answer = data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || 'No response received.';
+
+            answerEl.innerHTML = `<strong style="color:var(--accent-orange);">Q: ${question}</strong>\n\n${answer}`;
+
+            // Append to conversation history for chained follow-ups
+            _advisorConversationHistory.push({ role: 'user',      content: followUpPrompt });
+            _advisorConversationHistory.push({ role: 'assistant', content: answer         });
+
+            questionEl.value = '';
+
+        } catch (err) {
+            answerEl.innerHTML = `<strong style="color:var(--accent-orange);">Q: ${question}</strong>\n\n<span style="color:var(--danger);">Error: ${err.message}</span>`;
+        } finally {
+            btn.disabled    = false;
+            btn.textContent = 'Ask Claude →';
         }
     }
 
     /* ─────────────────────────────────────────────
-       MAIN DASHBOARD LOADER  (unchanged structure)
+       MAIN DASHBOARD LOADER
     ───────────────────────────────────────────── */
     (function() {
         let revenueChart, topProductsChart, expensesByCashierChart;
